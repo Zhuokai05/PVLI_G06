@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/sprites/icon.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <link rel="stylesheet" href="./lib/game.css">
+    <script src="./lib/phaser.js"></script>
+
+    <title>Highway To Hell</title>
+</head>
+
+<body>
+    <!-- 🔥 Contenedor principal para centrar todo -->
+    <div class="container">
+
+        <header>
+            <p> <strong>HIGH WAY TO HEAVEN</strong></p>
+        </header>
+
+        <div id="game"></div>
+
+        <nav>
+            <button onclick="showTab('controles')">Controles</button>
+            <button onclick="showTab('objetivo')">Objetivo</button>
+            <button onclick="showTab('lore')">Lore</button>
+            <button onclick="showTab('sobre-MI')">Sobre NOSOTROS </button>
+        </nav>
+
+        <section id="controles" class="active">
+            <h2>Controles</h2>
+            <p>Utiliza las siguientes teclas para interactuar:</p>
+            <ul style="display: inline-block; text-align: left; margin: 0 auto; padding-left: 0; list-style-position: inside;">
+                <li><b>Para Jugar</b></li>
+                <li><b>D:</b> Mover a la derecha</li>
+                <li><b>A:</b> Mover a la izquierda</li>
+                <li><b>Space:</b> Saltar</li>
+                <li><b>E:</b> Usar item</li>
+            </ul>
+        </section>
+
+        <section id="objetivo" style="display:none;">
+            <h2>Objetivo</h2>
+            <p></p>
+        </section>
+
+        <section id="sobre-MI" style="display:none;">
+            <h2>Sobre Los Autores</h2>
+            <p></p>
+        </section>
+
+        <section id="lore" style="display:none;">
+            <h2>Lore</h2>
+            <p></p>
+        </section>
+
+        <footer>
+            <p>Grado en Desarrollo de Videojuegos &middot; 
+                <a target="_blank" href="http://informatica.ucm.es">Facultad de Informática</a> &middot; 
+                <a target="_blank" href="http://www.ucm.es">UCM</a>
+            </p>
+        </footer>
+
+    </div> <!-- 🔥 cierre de .container -->
+
+    <script src="./src/game.js" type="module"></script>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.querySelectorAll('nav button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById(tabId).style.display = 'block';
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

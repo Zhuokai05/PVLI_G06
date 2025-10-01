@@ -1,0 +1,151 @@
+@font-face {
+  font-family: 'arcade_classic';
+  src: url('../assets/fonts/arcade.ttf') format('truetype');
+}
+
+/* === General === */
+body {
+  margin: 0;
+  font-family: 'arcade_classic', Arial, sans-serif;
+  background: radial-gradient(circle at top, #330000, #0d0d0d 70%);
+  color: #f5f5f5;
+  overflow-x: hidden;
+}
+
+/* === Header === */
+header {
+  background: linear-gradient(180deg, rgba(255,0,0,0.15), transparent);
+  height: 40vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #ff3333;
+  font-size: 5.5em;
+  font-weight: bold;
+  text-shadow: 0 0 20px #ff0000, 0 0 40px #660000, 0 0 60px #800080;
+  letter-spacing: 4px;
+  position: relative;
+}
+
+header::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: linear-gradient(to right, transparent, #ff0000, transparent);
+  filter: blur(8px);
+}
+
+/* === Game screen === */
+#game {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 1000px;
+  min-height: 400px;
+  background: rgba(26,0,0,0.7);
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(255,0,0,0.4), inset 0 0 40px rgba(255,0,0,0.15);
+  backdrop-filter: blur(4px);
+}
+
+/* === Navigation (Tabs) === */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0;
+  background: rgba(10,0,0,0.6);
+  border-top: 2px solid rgba(255,0,0,0.3);
+  border-bottom: 2px solid rgba(255,0,0,0.3);
+  backdrop-filter: blur(2px);
+}
+
+nav button {
+  background: linear-gradient(145deg, #400000, #800000);
+  color: #f5f5f5;
+  border: 1px solid rgba(255,0,0,0.3);
+  padding: 12px 28px;
+  font-size: 1.1em;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px #ff3333;
+}
+
+nav button:hover {
+  background: linear-gradient(145deg, #b30000, #660000);
+  transform: scale(1.08);
+  box-shadow: 0 0 15px #ff0000;
+}
+
+nav button.active {
+  background: linear-gradient(145deg, #ff0000, #b30000);
+  color: #fff;
+  box-shadow: 0 0 25px #ff3333, inset 0 0 15px #800000;
+}
+
+/* === Sections === */
+section {
+  display: none;
+  padding: 2rem;
+  text-align: center;
+  max-width: 700px;
+  margin: 2rem auto;
+  border-radius: 12px;
+  background: rgba(20,0,0,0.6);
+  box-shadow: inset 0 0 20px rgba(255,0,0,0.2);
+  animation: fadeIn 0.7s ease;
+}
+
+section.active {
+  display: block;
+}
+
+section h2 {
+  color: #ff4444;
+  text-shadow: 0 0 10px #ff0000, 0 0 20px #800000;
+  margin-bottom: 1rem;
+}
+
+section p, section ul {
+  color: #f0f0f0;
+  line-height: 1.6;
+}
+
+/* === Footer === */
+footer {
+  background: rgba(20,0,0,0.7);
+  color: #ffcccc;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  font-weight: bold;
+  font-size: 1em;
+  border-top: 2px solid rgba(255,0,0,0.3);
+  box-shadow: 0 -5px 15px rgba(255,0,0,0.2);
+}
+
+footer a {
+  color: #ff6666;
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+footer a:hover {
+  color: #fff;
+  text-shadow: 0 0 10px #ff3333;
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
