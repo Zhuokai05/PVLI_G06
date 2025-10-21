@@ -11,6 +11,7 @@ export default class StateMachine {
     addState(name, state) {
         this.states.set(name, state);
         state.stateMachine = this; 
+        return this
     }
 
     setState(name) {
@@ -32,6 +33,8 @@ export default class StateMachine {
         if (this.currentState.enter) {
             this.currentState.enter(this.context);
         }
+
+        console.log(`State of ${this.id}: ${name}`);
     }
 
     step(time, delta) {

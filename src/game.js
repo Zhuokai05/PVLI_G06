@@ -1,5 +1,4 @@
-
-
+import TestPlayerScene from './testPlayerScene.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -26,7 +25,7 @@ const config = {
         },
     
     },
-    scene: [],
+    scene: [TestPlayerScene],
     title: "Highway To Hell",
     version: "1.0.0"
 };
