@@ -6,11 +6,6 @@ export default class TestPlayerScene extends Phaser.Scene {
         super('TestScene');
     }
 
-    preload() {
-        this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
-        this.load.image('ground', 'https://labs.phaser.io/assets/sprites/platform.png');
-    }
-
     create() {
         this.inputManager = new InputManager(this);
 
