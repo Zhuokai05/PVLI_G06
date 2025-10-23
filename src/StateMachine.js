@@ -6,6 +6,7 @@ export default class StateMachine {
         this.context = context;       // objeto que la usa, ej: player
         this.states = new Map();      // todos los estados registrados
         this.currentState = null;     // estado actual
+        this.previousState = null;    // estado anterior
     }
 
     addState(name, state) {
