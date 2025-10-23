@@ -3,11 +3,11 @@ export class PreloadScene extends Phaser.Scene
   preload() 
   {
     //imagenes  y sprites
-    this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
+    this.load.image('player', './assets/Player/Angel.png');
     this.load.image('ground', 'https://labs.phaser.io/assets/sprites/platform.png');
-    this.load.image('background', './assets/logo.png.png');
-    this.load.image('jugar', './assets/jugar.png');
-    this.load.image('name', './assets/name.png');
+    this.load.image('background', './assets/Menu/logo.png.png');
+    this.load.image('jugar', './assets/Menu/jugar.png');
+    this.load.image('name', './assets/Menu/name.png');
   }
 
   create() 
