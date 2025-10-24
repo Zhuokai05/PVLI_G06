@@ -1,6 +1,7 @@
 import TestPlayerScene from './testPlayerScene.js';
 import { PreloadScene } from './PreloadScene.js';
 import { MainMenuScene } from './MainMenuScene.js';
+import { PauseScene } from './PauseScene.js';
 const config = {
     type: Phaser.AUTO,
     parent: 'game',
@@ -26,7 +27,7 @@ const config = {
         },
     
     },
-    scene: [PreloadScene,MainMenuScene, TestPlayerScene],
+    scene: [PreloadScene,MainMenuScene, TestPlayerScene,PauseScene],
     title: "Highway To Hell",
     version: "1.0.0"
 };

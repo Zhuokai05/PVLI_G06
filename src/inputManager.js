@@ -7,6 +7,7 @@ export default class InputManager {
             jump: Phaser.Input.Keyboard.KeyCodes.SPACE,
             attack: Phaser.Input.Keyboard.KeyCodes.J,
             dash: Phaser.Input.Keyboard.KeyCodes.L,
+            pause: Phaser.Input.Keyboard.KeyCodes.ESC,
         });
     }
 }

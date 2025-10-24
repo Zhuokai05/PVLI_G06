@@ -21,6 +21,11 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.basicEnemySad = this.add.sprite(400, 100, 'basicEnemySad');
         this.basicEnemyHappy = this.add.sprite(900, 480, 'basicEnemyHappy');
         this.basicEnemyFear = this.add.sprite(100, 650, 'basicEnemyFear');
+
+  this.input.keyboard.on('keydown-ESC', () => {
+  this.scene.pause('TestScene'); 
+  this.scene.launch('Pause');    
+});
     }
 
     update(time, delta) {
