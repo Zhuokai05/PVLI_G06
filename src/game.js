@@ -1,4 +1,4 @@
-import TestPlayerScene from './scenes/testPlayerScene.js';
+import TestPlayerScene from './scenes/TestPlayerScene.js';
 import { PreloadScene } from './scenes/PreloadScene.js';
 import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { PauseScene } from './scenes/PauseScene.js';

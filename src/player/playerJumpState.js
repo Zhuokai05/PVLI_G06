@@ -4,12 +4,10 @@ export default class PlayerJumpState {
     }
 
     execute(player) {
-        const { left, right } = player.keys;
-
-        if (left.isDown) {
+        if (player.keys.left.isDown) {
             player.setVelocityX(-player.movementSpeed * 0.8);
             player.setFlipX(true);
-        } else if (right.isDown) {
+        } else if (player.keys.right.isDown) {
             player.setVelocityX(player.movementSpeed * 0.8);
             player.setFlipX(false);
         }

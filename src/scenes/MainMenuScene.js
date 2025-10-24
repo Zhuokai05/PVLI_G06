@@ -18,7 +18,7 @@ class MainMenuScene extends Phaser.Scene
 
         play.on('pointerdown', () => {
             this.scene.stop();
-            this.scene.start('TestScene');
+            this.scene.start('TestPlayerScene');
             
         });
 

@@ -1,9 +1,9 @@
-import Player from '../player/player.js';
-import InputManager from '../managers/inputManager.js';
+import Player from '../player/Player.js';
+import InputManager from '../managers/InputManager.js';
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
-        super('TestScene');
+        super('TestPlayerScene');
     }
 
     create() {
@@ -13,6 +13,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         ground.create(300, 220, 'ground').setScale(2).refreshBody();
         ground.create(900, 600, 'ground').setScale(2).refreshBody();
         ground.create(220, 750, 'ground').setScale(2).refreshBody();
+        
 
         this.player = new Player(this, 100, 100);
         this.physics.add.collider(this.player, ground);
@@ -22,10 +23,10 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.basicEnemyHappy = this.add.sprite(900, 480, 'basicEnemyHappy');
         this.basicEnemyFear = this.add.sprite(100, 650, 'basicEnemyFear');
 
-  this.input.keyboard.on('keydown-ESC', () => {
-  this.scene.pause('TestScene'); 
-  this.scene.launch('Pause');    
-});
+        this.input.keyboard.on('keydown-ESC', () => {
+            this.scene.pause('TestPlayerScene'); 
+            this.scene.launch('Pause');    
+        });
     }
 
     update(time, delta) {

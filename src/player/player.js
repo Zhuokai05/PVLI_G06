@@ -1,7 +1,7 @@
 import StateMachine from '../stateMachine/StateMachine.js';
-import PlayerIdleState from './playerIdleState.js';
-import PlayerMoveState from './playerMoveState.js';
-import PlayerJumpState from './playerJumpState.js';
+import PlayerIdleState from './PlayerIdleState.js';
+import PlayerMoveState from './PlayerMoveState.js';
+import PlayerJumpState from './PlayerJumpState.js';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
@@ -15,7 +15,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.scene = scene;
 
-        this.health = 100;
+        this.health = 5;
         this.direction = 1; // 1 derecha, -1 izquierda
         this.hasDash = false;
         this.hasShield = false;
