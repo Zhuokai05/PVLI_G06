@@ -1,4 +1,4 @@
-import StateMachine from './StateMachine.js';
+import StateMachine from '../stateMachine/StateMachine.js';
 import PlayerIdleState from './playerIdleState.js';
 import PlayerMoveState from './playerMoveState.js';
 import PlayerJumpState from './playerJumpState.js';

@@ -1,7 +1,7 @@
-import TestPlayerScene from './testPlayerScene.js';
-import { PreloadScene } from './PreloadScene.js';
-import { MainMenuScene } from './MainMenuScene.js';
-import { PauseScene } from './PauseScene.js';
+import TestPlayerScene from './scenes/testPlayerScene.js';
+import { PreloadScene } from './scenes/PreloadScene.js';
+import { MainMenuScene } from './scenes/MainMenuScene.js';
+import { PauseScene } from './scenes/PauseScene.js';
 const config = {
     type: Phaser.AUTO,
     parent: 'game',

@@ -1,5 +1,5 @@
-import Player from './player.js';
-import InputManager from './inputManager.js';
+import Player from '../player/player.js';
+import InputManager from '../managers/inputManager.js';
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
