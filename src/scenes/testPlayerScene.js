@@ -39,6 +39,9 @@ export default class TestPlayerScene extends Phaser.Scene {
 
     update(time, delta) {
         this.player.update(time, delta);
-        this.enemies.getChildren().forEach(e => e.update(time, delta));
+
+        this.enemies.getChildren().forEach(enemy => {
+            enemy.update(time, delta);
+        });
     }
 }

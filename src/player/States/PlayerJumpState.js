@@ -1,4 +1,4 @@
-import BaseState from '../stateMachine/BaseState.js';
+import BaseState from '../../stateMachine/BaseState.js';
 
 export default class PlayerJumpState extends BaseState {
     enter(player) {
@@ -21,6 +21,12 @@ export default class PlayerJumpState extends BaseState {
                 player.stateMachine.setState('move');
             else
                 player.stateMachine.setState('idle');
+        }
+
+        if (player.attackDir && !player.isAttacking) {
+    
+            player.stateMachine.setState('attack');
+            return;
         }
     }
 }

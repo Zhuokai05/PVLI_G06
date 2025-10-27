@@ -13,13 +13,14 @@ export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
     this.attackRange = 80;
     this.health = 3;
     this.distanceBtwEnemies = 20;
-
+    this.dead=false;
     this.body.pushable = false;
 
     this.stateMachine = new StateMachine(this, 'enemy');
   }
 
   update(time, delta) {
+    if (this.dead) return;
     this.stateMachine.step(time, delta);
   }
 
@@ -39,4 +40,27 @@ export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
       }
     });
   }
+
+  takeDamage(amount) {
+    this.health -= amount;
+    console.log(`Enemy HP: ${this.health}`);
+
+    if (this.health <= 0) {
+      this.die();
+    }
+  }
+
+  die() {
+    if (this.dead) return; 
+    this.dead = true;
+    
+    this.setVelocity(0);
+    this.setActive(false);
+    this.setVisible(false);
+    
+    this.scene.time.delayedCall(100, () => {
+     this.destroy();
+    });
+  }
+
 }
