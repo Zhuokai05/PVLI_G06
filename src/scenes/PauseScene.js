@@ -20,12 +20,12 @@ class PauseScene extends Phaser.Scene
 
         play.on('pointerdown', () => {
             this.scene.stop();
-            this.scene.resume('TestScene')
+            this.scene.resume('TestPlayerScene')
         });
 
         this.input.keyboard.on('keydown-ESC', () => {
             this.scene.stop();
-            this.scene.resume('TestScene')    
+            this.scene.resume('TestPlayerScene')    
         });
     }
 
