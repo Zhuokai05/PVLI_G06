@@ -10,7 +10,7 @@ export default class TestPlayerScene extends Phaser.Scene {
     create() {
         this.inputManager = new InputManager(this);
 
-        const ground = this.physics.add.staticGroup();
+        let ground = this.physics.add.staticGroup();
         ground.create(300, 220, 'ground').setScale(2).refreshBody();
         ground.create(900, 600, 'ground').setScale(2).refreshBody();
         ground.create(220, 750, 'ground').setScale(2).refreshBody();
@@ -21,11 +21,10 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.enemies = this.physics.add.group();
         this.enemies.add(new BasicMeleeEnemy(this, 300, 100, 'basicEnemyAngry'));
-
-        this.basicEnemySad = this.add.sprite(700, 480, 'basicEnemySad');
-        this.basicEnemyHappy = this.add.sprite(900, 480, 'basicEnemyHappy');
-        this.basicEnemyFear = this.add.sprite(100, 650, 'basicEnemyFear');
-
+        this.enemies.add(new BasicMeleeEnemy(this, 700, 480, 'basicEnemySad'));
+        this.enemies.add(new BasicMeleeEnemy(this, 900, 480, 'basicEnemyHappy'));
+        this.enemies.add(new BasicMeleeEnemy(this, 100, 650, 'basicEnemyFear'));
+  
         this.physics.add.collider(this.player, ground);
         this.physics.add.collider(this.player, this.enemies);
         this.physics.add.collider(ground, this.enemies);

@@ -6,7 +6,7 @@ export default class PlayerJumpState extends BaseState {
     }
 
     execute(player) {
-        const { left, right } = player.keys;
+        let { left, right } = player.keys;
 
         if (left.isDown) {
             player.setVelocityX(-player.movementSpeed * 0.8);

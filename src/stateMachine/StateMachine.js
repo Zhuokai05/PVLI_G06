@@ -16,7 +16,7 @@ export default class StateMachine {
     }
 
     setState(name) {
-        const newState = this.states.get(name);
+        let newState = this.states.get(name);
         if (!newState) {
             console.warn('estado no encontrado');
             return;
@@ -45,7 +45,7 @@ export default class StateMachine {
     }
 
     getStateName() {
-        for (const [name, state] of this.states.entries()) {
+        for (let [name, state] of this.states.entries()) {
             if (state === this.currentState) return name;
         }
         return null;

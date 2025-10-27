@@ -25,21 +25,35 @@ export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
   }
 
   canSeePlayer() {
-    const distX = Math.abs(this.player.x - this.x);
-    const distY = Math.abs(this.player.y - this.y);
+    let distX = Math.abs(this.player.x - this.x);
+    let distY = Math.abs(this.player.y - this.y);
     return distX < 300 && distY < 50;
   }
 
+  /*
   separateFromOthers(enemies) {
+
+    const margin = 2;      
+
     enemies.forEach(other => {
-      if (other === this) return;
-      const dist = Math.abs(this.x - other.x);
-      if (dist < distanceBtwEnemies) {
-        const pushDir = this.x < other.x ? -1 : 1;
-        this.x += pushDir * 1.5;
+
+      if (other === this || !other.active || other.dead) return;
+
+      const dx = this.x - other.x;
+      const dist = Math.abs(dx);
+
+      if (dist < this.distanceBtwEnemies - margin) {
+
+        //solo mueve a uno
+        if (this.x > other.x) {
+          this.x += (this.distanceBtwEnemies - dist);
+        }
+
       }
+      
     });
-  }
+    
+  }*/
 
   takeDamage(amount) {
     this.health -= amount;
@@ -57,7 +71,7 @@ export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
     this.setVelocity(0);
     this.setActive(false);
     this.setVisible(false);
-    
+
     this.scene.time.delayedCall(100, () => {
      this.destroy();
     });

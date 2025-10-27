@@ -4,8 +4,8 @@ export default class MeleeEnemyMoveState extends EnemyMoveState {
   execute(enemy, time, delta) {
     super.execute(enemy, time, delta); 
 
-    const player = enemy.player;
-    const distance = Math.abs(enemy.x - player.x);
+    let player = enemy.player;
+    let distance = Math.abs(enemy.x - player.x);
 
     if (distance < enemy.attackRange && enemy.canSeePlayer()) {
       enemy.setVelocityX(0);

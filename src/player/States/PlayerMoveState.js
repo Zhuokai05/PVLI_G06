@@ -4,7 +4,7 @@ export default class PlayerMoveState extends BaseState {
     enter(player) {}
 
     execute(player) {
-        const { left, right, jump } = player.keys;
+        let { left, right, jump } = player.keys;
 
         if (!left.isDown && !right.isDown) {
             player.stateMachine.setState('idle');

@@ -63,9 +63,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     getAttackDirection() {
-        const { upArrow, downArrow, leftArrow, rightArrow } = this.keys;
+        let { upArrow, downArrow, leftArrow, rightArrow } = this.keys;
 
-        const JustDown = Phaser.Input.Keyboard.JustDown;
+        let JustDown = Phaser.Input.Keyboard.JustDown;
 
         if (JustDown(upArrow))   return 'up';
         if (JustDown(downArrow)) return 'down';
@@ -97,11 +97,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             case 'down': offsetY = this.meleeAttackDist; break;
         }
 
-        const hitbox = this.scene.add.rectangle(this.x + offsetX, this.y + offsetY, this.meleeAttackWidge, this.meleeAttackHeight, 0xff0000, 0.5);
+        let hitbox = this.scene.add.rectangle(this.x + offsetX, this.y + offsetY, this.meleeAttackWidge, this.meleeAttackHeight, 0xff0000, 0.5);
         this.scene.physics.add.existing(hitbox);
         hitbox.body.allowGravity = false;
 
-        const hitEnemies = new Set();
+        let hitEnemies = new Set();
         this.scene.physics.add.overlap(hitbox, this.scene.enemies, (hb, enemy) => {
 
             if (hitEnemies.has(enemy)) return; 
@@ -109,7 +109,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
             enemy.takeDamage?.(this.damage);
 
-            const knockback = 50 * (enemy.x < this.x ? -1 : 1);
+            let knockback = 50 * (enemy.x < this.x ? -1 : 1);
             enemy.setVelocityX(knockback);
 
         });
