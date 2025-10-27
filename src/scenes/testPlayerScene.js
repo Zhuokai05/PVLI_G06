@@ -1,5 +1,6 @@
 import Player from '../player/Player.js';
 import InputManager from '../managers/InputManager.js';
+import BasicMeleeEnemy from '../enemy/BasicMeleeEnemy.js';
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
@@ -16,12 +17,19 @@ export default class TestPlayerScene extends Phaser.Scene {
         
 
         this.player = new Player(this, 100, 100);
-        this.physics.add.collider(this.player, ground);
 
-        this.basicEnemyAngry = this.add.sprite(300, 100, 'basicEnemyAngry');
-        this.basicEnemySad = this.add.sprite(400, 100, 'basicEnemySad');
+
+        this.enemies = this.physics.add.group();
+        this.enemies.add(new BasicMeleeEnemy(this, 300, 100, 'basicEnemyAngry'));
+
+        this.basicEnemySad = this.add.sprite(700, 480, 'basicEnemySad');
         this.basicEnemyHappy = this.add.sprite(900, 480, 'basicEnemyHappy');
         this.basicEnemyFear = this.add.sprite(100, 650, 'basicEnemyFear');
+
+        this.physics.add.collider(this.player, ground);
+        this.physics.add.collider(this.player, this.enemies);
+        this.physics.add.collider(ground, this.enemies);
+
 
         this.input.keyboard.on('keydown-ESC', () => {
             this.scene.pause('TestPlayerScene'); 
@@ -31,5 +39,6 @@ export default class TestPlayerScene extends Phaser.Scene {
 
     update(time, delta) {
         this.player.update(time, delta);
+        this.enemies.getChildren().forEach(e => e.update(time, delta));
     }
 }
