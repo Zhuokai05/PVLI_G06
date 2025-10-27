@@ -1,4 +1,6 @@
-export default class PlayerMoveState {
+import BaseState from '../stateMachine/BaseState.js';
+
+export default class PlayerMoveState extends BaseState {
     enter(player) {}
 
     execute(player) {

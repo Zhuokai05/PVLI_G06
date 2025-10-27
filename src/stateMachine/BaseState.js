@@ -1,7 +1,12 @@
-export default class BaseState{
+export default class BaseState {
+  constructor() {
+    this.stateMachine = null; 
+  }
 
-    constructor(){
-    }
+  enter(player) {}
 
 
+  execute(player, time, delta) {}
+
+  exit(player) {}
 }

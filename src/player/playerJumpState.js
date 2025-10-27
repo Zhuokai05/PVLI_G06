@@ -1,13 +1,17 @@
-export default class PlayerJumpState {
+import BaseState from '../stateMachine/BaseState.js';
+
+export default class PlayerJumpState extends BaseState {
     enter(player) {
         player.setVelocityY(-player.jumpSpeed);
     }
 
     execute(player) {
-        if (player.keys.left.isDown) {
+        const { left, right } = player.keys;
+
+        if (left.isDown) {
             player.setVelocityX(-player.movementSpeed * 0.8);
             player.setFlipX(true);
-        } else if (player.keys.right.isDown) {
+        } else if (right.isDown) {
             player.setVelocityX(player.movementSpeed * 0.8);
             player.setFlipX(false);
         }
