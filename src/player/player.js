@@ -24,13 +24,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.hasShield = false;
         this.grounded = false;
         this.movementSpeed = 300;
-        this.jumpSpeed = 600;
+        this.jumpSpeed = 800;
         this.attackCooldown = 300;
-        this.meleeAttackDist = 50;
-        this.meleeAttackWidge = 50;
-        this.meleeAttackHeight = 50;
+        this.meleeAttackDist = 80;
+        this.meleeAttackWidge = 120;
+        this.meleeAttackHeight = 70;
         this.invulnerableTime = 1000;
         this.knockbackTime = 200;
+        this.knockbackDistance = 200;
 
         this.keys = scene.inputManager.keys;
 
@@ -82,14 +83,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     getAttackDirection() {
-        let { upArrow, downArrow, leftArrow, rightArrow } = this.keys;
 
-        let JustDown = Phaser.Input.Keyboard.JustDown;
-
-        if (JustDown(upArrow))   return 'up';
-        if (JustDown(downArrow)) return 'down';
-        if (JustDown(leftArrow)) return 'left';
-        if (JustDown(rightArrow))return 'right';
+        if (Phaser.Input.Keyboard.JustDown(this.keys.upArrow))   return 'up';
+        if (Phaser.Input.Keyboard.JustDown(this.keys.downArrow)) return 'down';
+        if (Phaser.Input.Keyboard.JustDown(this.keys.leftArrow)) return 'left';
+        if (Phaser.Input.Keyboard.JustDown(this.keys.rightArrow)) return 'right';
 
         return null;
     }
@@ -109,14 +107,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         let offsetX = 0, offsetY = 0;
 
+        let w = this.meleeAttackWidge;
+        let h = this.meleeAttackHeight;
+
         switch (direction) {
-            case 'left': offsetX = -this.meleeAttackDist; break;
-            case 'right': offsetX = this.meleeAttackDist; break;
-            case 'up': offsetY = -this.meleeAttackDist; break;
-            case 'down': offsetY = this.meleeAttackDist; break;
+            case 'left': 
+                offsetX = -this.meleeAttackDist; 
+                break;
+            case 'right': 
+                offsetX = this.meleeAttackDist; 
+                break;
+            case 'up': 
+                offsetY = -this.meleeAttackDist; 
+                [w,h] = [h,w]   
+                break;
+            case 'down': 
+                offsetY = this.meleeAttackDist; 
+                [w,h] = [h,w] 
+                break;
         }
 
-        let hitbox = this.scene.add.rectangle(this.x + offsetX, this.y + offsetY, this.meleeAttackWidge, this.meleeAttackHeight, 0xff0000, 0.5);
+        let hitbox = this.scene.add.rectangle(this.x + offsetX, this.y + offsetY, h, w, 0xff0000, 0.5);
         this.scene.physics.add.existing(hitbox);
         hitbox.body.allowGravity = false;
 
@@ -126,10 +137,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (hitEnemies.has(enemy)) return; 
             hitEnemies.add(enemy);
 
-            enemy.takeDamage?.(this.damage);
-
-            let knockback = 50 * (enemy.x < this.x ? -1 : 1);
-            enemy.setVelocityX(knockback);
+            enemy.takeDamage(this.damage);
 
         });
 

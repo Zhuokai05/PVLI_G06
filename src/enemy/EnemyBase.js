@@ -26,7 +26,6 @@ export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
       this
     );
 
-    
   }
 
   update(time, delta) {
@@ -42,7 +41,7 @@ export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
 
   CollisionWithPlayer(player, enemy) {
     console.log('Colision con enemigo');
-    let knockbackDirection = player.x < enemy.x ? -1 : 1;
+    let knockbackDirection = player.x < enemy.x ? 1 : -1;
     this.player.takeDamage(1,knockbackDirection);
   }
   

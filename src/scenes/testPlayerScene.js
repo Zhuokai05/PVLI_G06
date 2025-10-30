@@ -11,9 +11,9 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.inputManager = new InputManager(this);
 
         let ground = this.physics.add.staticGroup();
-        ground.create(300, 220, 'ground').setScale(2).refreshBody();
-        ground.create(900, 600, 'ground').setScale(2).refreshBody();
-        ground.create(220, 750, 'ground').setScale(2).refreshBody();
+        ground.create(0, 500, 'ground').setScale(2).refreshBody();
+        ground.create(500, 500, 'ground').setScale(2).refreshBody();
+        ground.create(1000, 500, 'ground').setScale(2).refreshBody();
         
 
         this.player = new Player(this, 100, 100);
@@ -46,10 +46,10 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
 
         this.enemies = this.physics.add.group();
-        this.enemies.add(new BasicMeleeEnemy(this, 300, 100, 'basicEnemyAngry'));
-        this.enemies.add(new BasicMeleeEnemy(this, 700, 480, 'basicEnemySad'));
-        this.enemies.add(new BasicMeleeEnemy(this, 900, 480, 'basicEnemyHappy'));
-        this.enemies.add(new BasicMeleeEnemy(this, 100, 650, 'basicEnemyFear'));
+        this.enemies.add(new BasicMeleeEnemy(this, 200, 300, 'basicEnemyAngry'));
+        this.enemies.add(new BasicMeleeEnemy(this, 600, 300, 'basicEnemySad'));
+        this.enemies.add(new BasicMeleeEnemy(this, 1000, 300, 'basicEnemyHappy'));
+        this.enemies.add(new BasicMeleeEnemy(this, 1400, 300, 'basicEnemyFear'));
   
         this.physics.add.collider(this.player, ground);
         this.physics.add.collider(ground, this.enemies);
@@ -59,6 +59,8 @@ export default class TestPlayerScene extends Phaser.Scene {
             this.scene.pause('TestPlayerScene'); 
             this.scene.launch('Pause');    
         });
+
+        this.cameras.main.startFollow(this.player);
     }
 
     update(time, delta) {

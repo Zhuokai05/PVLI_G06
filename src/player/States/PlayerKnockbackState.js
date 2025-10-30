@@ -3,9 +3,7 @@ import BaseState from '../../stateMachine/BaseState.js';
 export default class PlayerKnockbackState extends BaseState {
   enter(player,direction) {
 
-    const knockX = 250 * -direction;
-
-    player.setVelocity(knockX, player.velocityY);
+    player.setVelocity(player.knockbackDistance * direction, -player.knockbackDistance);
 
     player.scene.time.delayedCall(player.knockbackTime, () => {
     player.stateMachine.setState('idle');
