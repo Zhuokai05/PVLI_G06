@@ -13,11 +13,18 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('basicEnemyHappy', './assets/Enemigos basicos/Sun.png');
     this.load.image('basicEnemyFear', './assets/Enemigos basicos/Ghost.png');
     this.load.image('angelHealth', './assets/UI/Ghost.png');
+
     this.load.image('angel_sword_idle', 'assets/Player/Angel Espada normal 1.png');
     this.load.image('angel_sword_walk_1', 'assets/Player/Angel Espada normal 1.png');
     this.load.image('angel_sword_walk_2', 'assets/Player/Angel Espada normal 2.png');
     this.load.image('angel_sword_walk_3', 'assets/Player/Angel Espada normal 3.png');
     this.load.image('angel_sword_jump', 'assets/Player/Angel Espada normal Salto.png');
+
+    this.load.image('angel_idle', 'assets/Player/Angel inicial 1.png');
+    this.load.image('angel_walk_1', 'assets/Player/Angel inicial 1.png');
+    this.load.image('angel_walk_2', 'assets/Player/Angel inicial 2.png');
+    this.load.image('angel_walk_3', 'assets/Player/Angel inicial 3.png');
+    this.load.image('angel_jump', 'assets/Player/Angel inicial Salto.png');
   }
 
   create() 

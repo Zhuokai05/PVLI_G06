@@ -20,11 +20,13 @@ const config = {
     },
     pixelArt: true,
     physics: {
-        default: 'arcade', 
+        default: 'arcade',
         arcade: {
-            gravity: { y: 300 }, 
-            debug: false,
-        },
+        gravity: { y: 1000 },
+        debug: true,
+        debugShowBody: true,
+        debugShowVelocity: true,
+    },
     
     },
     scene: [PreloadScene,MainMenuScene, TestPlayerScene,PauseScene],
