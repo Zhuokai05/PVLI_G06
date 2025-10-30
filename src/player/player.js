@@ -3,6 +3,7 @@ import PlayerIdleState from './States/PlayerIdleState.js';
 import PlayerMoveState from './States/PlayerMoveState.js';
 import PlayerJumpState from './States/PlayerJumpState.js';
 import PlayerMeleeAttackState from './States/PlayerMeleeAttackState.js';
+import PlayerDeathState from './States/PlayerDeathState.js';
 import PlayerKnockbackState from './States/PlayerKnockbackState.js';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
@@ -17,7 +18,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.scene = scene;
 
-        this.health = 500;
+        this.health = 5;
+        this.maxHealth = 5;
         this.damage = 1;
         this.direction = 1; // 1 derecha, -1 izquierda
         this.hasDash = false;
@@ -42,6 +44,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         .addState('jump', new PlayerJumpState())
         .addState('attack', new PlayerMeleeAttackState())
         .addState('knockback', new PlayerKnockbackState())
+        .addState('dead', new PlayerDeathState())
         .setState('idle');
     }
 
@@ -64,6 +67,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         this.health -= damage;
+        this.emit('healthChanged', this.health);
         console.log(damage + ' daño recibido. Vida: ', + this.health);
 
         this.scene.time.delayedCall(this.invulnerableTime, () => (this.invulnerable = false));
@@ -76,6 +80,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     die() {
         console.log('jugador muerto');
         this.setVelocity(0, 0);
+        this.stateMachine.setState('dead');
     }
 
     isGrounded() {

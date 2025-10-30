@@ -12,7 +12,8 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('basicEnemySad', './assets/Enemigos basicos/Water.png');
     this.load.image('basicEnemyHappy', './assets/Enemigos basicos/Sun.png');
     this.load.image('basicEnemyFear', './assets/Enemigos basicos/Ghost.png');
-    this.load.image('angelHealth', './assets/UI/Ghost.png');
+    this.load.image('angelHealth', './assets/UI/AngelHeart.png');
+    this.load.image('angelEmptyHealth', './assets/UI/AngelEmptyHeart_PlaceHolder.png');
 
     this.load.image('angel_sword_idle', 'assets/Player/Angel Espada normal 1.png');
     this.load.image('angel_sword_walk_1', 'assets/Player/Angel Espada normal 1.png');
