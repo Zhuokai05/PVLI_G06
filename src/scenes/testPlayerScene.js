@@ -33,7 +33,15 @@ export default class TestPlayerScene extends Phaser.Scene {
             { key: 'angel_sword_walk_2' },
             { key: 'angel_sword_walk_3' }
             ],
-            frameRate: 8, 
+            frameRate: 6, 
+            repeat: -1
+        });
+
+        this.anims.create({
+
+            key: 'jump',
+            frames: [{ key: 'angel_sword_jump' }],
+            frameRate: 1, 
             repeat: -1
         });
 

@@ -17,7 +17,7 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('angel_sword_walk_1', 'assets/Player/Angel Espada normal 1.png');
     this.load.image('angel_sword_walk_2', 'assets/Player/Angel Espada normal 2.png');
     this.load.image('angel_sword_walk_3', 'assets/Player/Angel Espada normal 3.png');
-
+    this.load.image('angel_sword_jump', 'assets/Player/Angel Espada normal Salto.png');
   }
 
   create() 

@@ -3,6 +3,7 @@ import BaseState from '../../stateMachine/BaseState.js';
 export default class PlayerJumpState extends BaseState {
     enter(player) {
         player.setVelocityY(-player.jumpSpeed);
+        player.play('jump', true);
     }
 
     execute(player) {
