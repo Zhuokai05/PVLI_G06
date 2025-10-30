@@ -52,7 +52,6 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.enemies.add(new BasicMeleeEnemy(this, 100, 650, 'basicEnemyFear'));
   
         this.physics.add.collider(this.player, ground);
-        this.physics.add.collider(this.player, this.enemies);
         this.physics.add.collider(ground, this.enemies);
 
 

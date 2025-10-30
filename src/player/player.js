@@ -3,6 +3,7 @@ import PlayerIdleState from './States/PlayerIdleState.js';
 import PlayerMoveState from './States/PlayerMoveState.js';
 import PlayerJumpState from './States/PlayerJumpState.js';
 import PlayerMeleeAttackState from './States/PlayerMeleeAttackState.js';
+import PlayerKnockbackState from './States/PlayerKnockbackState.js';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
@@ -16,7 +17,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.scene = scene;
 
-        this.health = 5;
+        this.health = 500;
         this.damage = 1;
         this.direction = 1; // 1 derecha, -1 izquierda
         this.hasDash = false;
@@ -28,6 +29,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.meleeAttackDist = 50;
         this.meleeAttackWidge = 50;
         this.meleeAttackHeight = 50;
+        this.invulnerableTime = 1000;
+        this.knockbackTime = 200;
 
         this.keys = scene.inputManager.keys;
 
@@ -37,6 +40,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         .addState('move', new PlayerMoveState())
         .addState('jump', new PlayerJumpState())
         .addState('attack', new PlayerMeleeAttackState())
+        .addState('knockback', new PlayerKnockbackState())
         .setState('idle');
     }
 
@@ -45,16 +49,31 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackDir = this.getAttackDirection();
     }
 
-    takeDamage(amount) {
+    takeDamage(damage,knockbackdirection) {
 
-        this.health -= amount;
+        if (this.invulnerable) return;
+
+        this.setTint(0xff0000);
+        this.scene.time.delayedCall(this.invulnerableTime*0.8, () => this.clearTint());
+
+        this.invulnerable = true;
+
+        if (knockbackdirection){
+            this.stateMachine.setState('knockback', knockbackdirection);
+        }
+
+        this.health -= damage;
+        console.log(damage + ' daño recibido. Vida: ', + this.health);
+
+        this.scene.time.delayedCall(this.invulnerableTime, () => (this.invulnerable = false));
 
         if (this.health <= 0) {
-            this.die();
+        this.die();
         }
     }
 
     die() {
+        console.log('jugador muerto');
         this.setVelocity(0, 0);
     }
 

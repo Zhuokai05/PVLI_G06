@@ -17,6 +17,16 @@ export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
     this.body.pushable = false;
 
     this.stateMachine = new StateMachine(this, 'enemy');
+
+    this.playerOverlap = scene.physics.add.overlap(
+      this,
+      this.player,
+      this.CollisionWithPlayer,
+      null,
+      this
+    );
+
+    
   }
 
   update(time, delta) {
@@ -29,6 +39,14 @@ export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
     let distY = Math.abs(this.player.y - this.y);
     return distX < 300 && distY < 50;
   }
+
+  CollisionWithPlayer(player, enemy) {
+    console.log('Colision con enemigo');
+    let knockbackDirection = player.x < enemy.x ? -1 : 1;
+    this.player.takeDamage(1,knockbackDirection);
+  }
+  
+ 
 
   /*
   separateFromOthers(enemies) {

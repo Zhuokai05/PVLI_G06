@@ -15,7 +15,7 @@ export default class StateMachine {
         return this
     }
 
-    setState(name) {
+    setState(name,data) {
         let newState = this.states.get(name);
         if (!newState) {
             console.warn('estado no encontrado');
@@ -32,7 +32,7 @@ export default class StateMachine {
 
         // llamar enter del nuevo estado
         if (this.currentState.enter) {
-            this.currentState.enter(this.context);
+            this.currentState.enter(this.context,data);
         }
 
         console.log(`State of ${this.id}: ${name}`);
