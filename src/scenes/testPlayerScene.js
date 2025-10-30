@@ -18,6 +18,24 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.player = new Player(this, 100, 100);
 
+        this.anims.create({
+            key: 'idle',
+            frames: [{ key: 'angel_sword_idle' }],
+            frameRate: 1,
+            repeat: -1
+        });
+
+        this.anims.create({
+
+            key: 'walk',
+            frames: [
+            { key: 'angel_sword_walk_1' },
+            { key: 'angel_sword_walk_2' },
+            { key: 'angel_sword_walk_3' }
+            ],
+            frameRate: 8, 
+            repeat: -1
+        });
 
         this.enemies = this.physics.add.group();
         this.enemies.add(new BasicMeleeEnemy(this, 300, 100, 'basicEnemyAngry'));

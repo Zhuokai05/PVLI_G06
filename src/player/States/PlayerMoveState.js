@@ -1,7 +1,9 @@
 import BaseState from '../../stateMachine/BaseState.js';
 
 export default class PlayerMoveState extends BaseState {
-    enter(player) {}
+    enter(player) {
+        player.play('walk', true);
+    }
 
     execute(player) {
         let { left, right, jump } = player.keys;
