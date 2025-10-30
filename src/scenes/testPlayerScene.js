@@ -10,9 +10,13 @@ export default class TestPlayerScene extends Phaser.Scene {
     create() {
         this.inputManager = new InputManager(this);
 
+        this.physics.world.setBounds(-200, 0, 1400, 1000);
+
+
         let ground = this.physics.add.staticGroup();
         ground.create(0, 500, 'ground').setScale(2).refreshBody();
         ground.create(500, 500, 'ground').setScale(2).refreshBody();
+        ground.create(500, 400, 'ground').setScale(2).refreshBody();
         ground.create(1000, 500, 'ground').setScale(2).refreshBody();
         
 
@@ -48,8 +52,8 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.enemies = this.physics.add.group();
         this.enemies.add(new BasicMeleeEnemy(this, 200, 300, 'basicEnemyAngry'));
         this.enemies.add(new BasicMeleeEnemy(this, 600, 300, 'basicEnemySad'));
-        this.enemies.add(new BasicMeleeEnemy(this, 1000, 300, 'basicEnemyHappy'));
-        this.enemies.add(new BasicMeleeEnemy(this, 1400, 300, 'basicEnemyFear'));
+        this.enemies.add(new BasicMeleeEnemy(this, 900, 300, 'basicEnemyHappy'));
+        this.enemies.add(new BasicMeleeEnemy(this, 1000, 300, 'basicEnemyFear'));
   
         this.physics.add.collider(this.player, ground);
         this.physics.add.collider(ground, this.enemies);
@@ -61,9 +65,11 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
 
         this.cameras.main.startFollow(this.player);
+        this.cameras.main.setBounds(-200, 0, 1400, 600);
     }
 
     update(time, delta) {
+
         this.player.update(time, delta);
 
         this.enemies.getChildren().forEach(enemy => {
