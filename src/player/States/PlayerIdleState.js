@@ -7,11 +7,10 @@ export default class PlayerIdleState extends BaseState {
     }
 
     execute(player) {
-        let { left, right, jump } = player.keys;
 
-        if (left.isDown || right.isDown) {
+        if (player.keys.left.isDown || player.keys.right.isDown) {
             player.stateMachine.setState('move');
-        } else if (jump.isDown && player.isGrounded()) {
+        } else if (player.keys.jump.isDown && player.isGrounded()) {
             player.stateMachine.setState('jump');
         }
 

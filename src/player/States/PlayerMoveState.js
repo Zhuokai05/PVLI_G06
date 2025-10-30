@@ -6,22 +6,21 @@ export default class PlayerMoveState extends BaseState {
     }
 
     execute(player) {
-        let { left, right, jump } = player.keys;
 
-        if (!left.isDown && !right.isDown) {
+        if (!player.keys.left.isDown && !player.keys.right.isDown) {
             player.stateMachine.setState('idle');
             return;
         }
 
-        if (left.isDown) {
+        if (player.keys.left.isDown) {
             player.setVelocityX(-player.movementSpeed);
             player.setFlipX(true);
-        } else if (right.isDown) {
+        } else if (player.keys.right.isDown) {
             player.setVelocityX(player.movementSpeed);
             player.setFlipX(false);
         }
 
-        if (jump.isDown && player.isGrounded()) {
+        if (player.keys.jump.isDown && player.isGrounded()) {
             player.stateMachine.setState('jump');
         }
         
