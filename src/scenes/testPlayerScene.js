@@ -79,7 +79,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             enemy.update(time, delta);
         });
 
-        if (this.player.body.blocked.right) {
+        if (this.player.x > 1100) {
              this.scene.stop(); 
             this.scene.launch('BossScene'); 
        }
