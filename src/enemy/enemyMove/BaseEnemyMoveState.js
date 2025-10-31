@@ -1,6 +1,6 @@
 import BaseState from '../../stateMachine/BaseState.js';
 
-export default class EnemyMoveState extends BaseState {
+export default class BaseEnemyMoveState extends BaseState {
   enter(enemy) {}
 
   execute(enemy, time, delta) {

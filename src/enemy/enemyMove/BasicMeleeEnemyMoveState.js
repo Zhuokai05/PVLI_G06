@@ -1,6 +1,6 @@
-import EnemyMoveState from './EnemyMoveState.js';
+import BaseEnemyMoveState from './BaseEnemyMoveState.js';
 
-export default class MeleeEnemyMoveState extends EnemyMoveState {
+export default class MeleeEnemyMoveState extends BaseEnemyMoveState {
   execute(enemy, time, delta) {
     super.execute(enemy, time, delta); 
 

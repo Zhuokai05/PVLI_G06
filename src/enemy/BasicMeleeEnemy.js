@@ -1,7 +1,7 @@
-import EnemyBase from './EnemyBase.js';
+import BaseEnemy from './BaseEnemy.js';
 import BasicMeleeEnemyMoveState from './enemyMove/BasicMeleeEnemyMoveState.js';
 
-export default class MeleeEnemy extends EnemyBase {
+export default class MeleeEnemy extends BaseEnemy {
   constructor(scene, x, y, sprite) {
     super(scene, x, y, sprite);
 

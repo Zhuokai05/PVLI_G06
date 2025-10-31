@@ -1,6 +1,6 @@
 import StateMachine from '../stateMachine/StateMachine.js';
 
-export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
+export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
 
   constructor(scene, x, y, texture = 'enemy') {
     super(scene, x, y, texture);
