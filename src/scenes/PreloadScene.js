@@ -2,7 +2,6 @@ export class PreloadScene extends Phaser.Scene
 {
   preload() 
   {
-    
     //imagenes  y sprites
     this.load.image('player', './assets/Player/Angel.png');
     this.load.image('ira', './assets/Bosses/ira.png');
@@ -28,6 +27,9 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('angel_walk_2', 'assets/Player/Angel inicial 2.png');
     this.load.image('angel_walk_3', 'assets/Player/Angel inicial 3.png');
     this.load.image('angel_jump', 'assets/Player/Angel inicial Salto.png');
+    //this.load.image('angelHealth', './assets/UI/Ghost.png');
+    this.load.spritesheet('heartbreak', './assets/UI/heartbreak.png',
+    {frameWidth: 25,frameHeight: 25});
   }
 
   create() 
@@ -36,4 +38,6 @@ export class PreloadScene extends Phaser.Scene
     this.scene.start('MainMenu');
     
   }
+  
+
 }

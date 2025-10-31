@@ -51,6 +51,14 @@ export default class TestPlayerScene extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'heartbreakAnimation',
+            frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 15 }),
+            frameRate: 12,
+            repeat: 0
+        });
+
+
         this.enemies = this.physics.add.group();
         this.enemies.add(new BasicMeleeEnemy(this, 200, 300, 'basicEnemyAngry'));
         this.enemies.add(new BasicMeleeEnemy(this, 600, 300, 'basicEnemySad'));

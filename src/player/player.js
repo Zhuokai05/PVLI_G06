@@ -57,6 +57,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (this.invulnerable) return;
 
+
         this.setTint(0xff0000);
         this.scene.time.delayedCall(this.invulnerableTime*0.8, () => this.clearTint());
 
