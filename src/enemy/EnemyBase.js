@@ -15,6 +15,7 @@ export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
     this.distanceBtwEnemies = 20;
     this.dead=false;
     this.body.pushable = false;
+    this.applyKnockbackToPlayer = true;
 
     this.stateMachine = new StateMachine(this, 'enemy');
 
@@ -41,8 +42,14 @@ export default class EnemyBase extends Phaser.Physics.Arcade.Sprite {
 
   CollisionWithPlayer(player, enemy) {
     console.log('Colision con enemigo');
-    let knockbackDirection = player.x < enemy.x ? 1 : -1;
-    this.player.takeDamage(1,knockbackDirection);
+    if (this.applyKnockbackToPlayer){
+      let knockbackDirection = player.x < enemy.x ? 1 : -1;
+      this.player.takeDamage(1,knockbackDirection);
+    }
+    else 
+    {
+      this.player.takeDamage(1);
+    }
   }
   
  
