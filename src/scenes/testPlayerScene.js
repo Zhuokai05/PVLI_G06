@@ -1,5 +1,5 @@
-import Player from '../player/Player.js';
-import InputManager from '../managers/InputManager.js';
+import Player from '../player/player.js';
+import InputManager from '../managers/inputManager.js';
 import BasicMeleeEnemy from '../enemy/BasicMeleeEnemy.js';
 import UiManager from '../ui/UiManager.js';
 
@@ -68,14 +68,21 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setBounds(-200, 0, 1400, 600);
+        
     }
 
     update(time, delta) {
-
+    
         this.player.update(time, delta);
 
         this.enemies.getChildren().forEach(enemy => {
             enemy.update(time, delta);
         });
+
+        if (this.player.body.blocked.right) {
+             this.scene.stop(); 
+            this.scene.launch('BossScene'); 
+       }
+      
     }
 }
