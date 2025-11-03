@@ -7,6 +7,8 @@ export default class IraOrb extends Orb {
 
   onActivate(player) {
     player.damageMultiplier = 2;
+    player.orbTint = 0xff9900;
+    player.setTint(player.orbTint);
   }
 
   onDeactivate(player) {

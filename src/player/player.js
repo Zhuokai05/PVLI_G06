@@ -40,6 +40,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.activeOrbIndex = 0;        // indice del orbe activo (0 o 1)
         this.damageMultiplier = 1.0;    // modificador de daño 
         this.speedMultiplier = 1.0;
+        this.orbTint = 0xffffff;
 
 
         this.keys = scene.inputManager.keys;
@@ -70,9 +71,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (this.invulnerable) return;
 
-
         this.setTint(0xff0000);
-        this.scene.time.delayedCall(this.invulnerableTime*0.8, () => this.clearTint());
+        this.scene.time.delayedCall(this.invulnerableTime*0.8, () => this.setTint(this.orbTint));
 
         this.invulnerable = true;
 
