@@ -13,10 +13,10 @@ export default class PlayerMoveState extends BaseState {
         }
 
         if (player.keys.left.isDown) {
-            player.setVelocityX(-player.movementSpeed);
+            player.setVelocityX(-player.movementSpeed*player.speedMultiplier);
             player.setFlipX(true);
         } else if (player.keys.right.isDown) {
-            player.setVelocityX(player.movementSpeed);
+            player.setVelocityX(player.movementSpeed*player.speedMultiplier);
             player.setFlipX(false);
         }
 

@@ -35,6 +35,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.knockbackTime = 200;
         this.knockbackDistance = 200;
 
+        this.orbs = [];                 //  orbes recogidos
+        this.equippedOrbs = [null, null]; // orbes 2 equipados
+        this.activeOrbIndex = 0;        // indice del orbe activo (0 o 1)
+        this.damageMultiplier = 1.0;    // modificador de daño 
+        this.speedMultiplier = 1.0;
+
+
         this.keys = scene.inputManager.keys;
 
        this.stateMachine = new StateMachine(this, 'player');
@@ -46,6 +53,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         .addState('knockback', new PlayerKnockbackState())
         .addState('dead', new PlayerDeathState())
         .setState('idle');
+
+
+        this.keys.changeOrb.on('down', () => {
+            this.switchActiveOrb();
+        });
+
     }
 
     update(time, delta) {
@@ -78,6 +91,69 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    // recoge el orbe si no lo tiene ya el player
+    collectOrb(orb) {
+        if (!this.orbs.includes(orb)) {
+            this.orbs.push(orb);
+            console.log('orbe recogido: ' + orb.name);
+        }
+
+
+        for (let i=0; i<this.equippedOrbs.length; i++){
+            if (!this.equippedOrbs[i]) {
+                this.equipOrb(i,orb)
+                console.log('orbe equipado automaticamente en slot: ' + i);
+
+                if (this.activeOrbIndex === i){
+                    this.ActivateOrb(i)
+                }
+                return; 
+            }
+        }
+    }
+
+    //equipar orbe orb en el slot slotIndex
+    equipOrb(slotIndex, orb) {
+        if(!orb) return;
+        if (slotIndex < 0 || slotIndex > 1) return;
+       
+        if (!this.orbs.includes(orb)) {
+            return;
+        }
+
+        if (this.equippedOrbs[slotIndex]) {
+            this.equippedOrbs[slotIndex].onUnequip(this);
+            this.equippedOrbs[slotIndex].onDeactivate(this);
+        }
+
+        this.equippedOrbs[slotIndex] = orb;
+        orb.onEquip(this);
+        console.log('orbe equipado en slot ' +slotIndex + 1 + ' ' + orb.name);
+        this.emit('orbChanged');
+    }
+
+
+    //cambiar orbe activo al siguiente slot
+    switchActiveOrb() {
+        let nextIndex = (this.activeOrbIndex + 1) % this.equippedOrbs.length;
+        this.ActivateOrb(nextIndex);
+   }
+
+   //cambiar orbe activo introduciendo manualmente el slot como parametro
+   ActivateOrb(slotIndex) {
+        let currentOrb = this.equippedOrbs[this.activeOrbIndex];
+        let nextOrb = this.equippedOrbs[slotIndex];
+
+        if (nextOrb) {
+            if (currentOrb) currentOrb.onDeactivate(this);
+            nextOrb.onActivate(this);
+            this.activeOrbIndex = slotIndex;
+            console.log('orbe activo: ' + nextOrb.name);
+            this.emit('orbChanged');
+        }
+   }
+
+
     die() {
         console.log('jugador muerto');
         this.setVelocity(0, 0);
@@ -96,57 +172,5 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (Phaser.Input.Keyboard.JustDown(this.keys.rightArrow)) return 'right';
 
         return null;
-    }
-
-    meleeAttack(direction) {
-
-        if (this.attackCooldownTimer > 0) return;
-
-        console.log("attack")
-
-        this.attackCooldownTimer = this.attackCooldown; 
-
-        this.scene.time.delayedCall(this.attackCooldown, () => {
-            this.isAttacking = false;
-            this.attackCooldownTimer = 0;
-        });
-
-        let offsetX = 0, offsetY = 0;
-
-        let w = this.meleeAttackWidge;
-        let h = this.meleeAttackHeight;
-
-        switch (direction) {
-            case 'left': 
-                offsetX = -this.meleeAttackDist; 
-                break;
-            case 'right': 
-                offsetX = this.meleeAttackDist; 
-                break;
-            case 'up': 
-                offsetY = -this.meleeAttackDist; 
-                [w,h] = [h,w]   
-                break;
-            case 'down': 
-                offsetY = this.meleeAttackDist; 
-                [w,h] = [h,w] 
-                break;
-        }
-
-        let hitbox = this.scene.add.rectangle(this.x + offsetX, this.y + offsetY, h, w, 0xff0000, 0.5);
-        this.scene.physics.add.existing(hitbox);
-        hitbox.body.allowGravity = false;
-
-        let hitEnemies = new Set();
-        this.scene.physics.add.overlap(hitbox, this.scene.enemies, (hb, enemy) => {
-
-            if (hitEnemies.has(enemy)) return; 
-            hitEnemies.add(enemy);
-
-            enemy.takeDamage(this.damage);
-
-        });
-
-        this.scene.time.delayedCall(100, () => hitbox.destroy());
     }
 }

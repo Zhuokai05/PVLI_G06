@@ -2,6 +2,8 @@ import Player from '../player/player.js';
 import InputManager from '../managers/inputManager.js';
 import BasicMeleeEnemy from '../enemy/BasicMeleeEnemy.js';
 import UiManager from '../ui/UiManager.js';
+import TristezaOrb from '../orbs/TristezaOrb.js';
+import IraOrb from '../orbs/IraOrb.js';
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
@@ -20,6 +22,11 @@ export default class TestPlayerScene extends Phaser.Scene {
         ground.create(500, 400, 'ground').setScale(2).refreshBody();
         ground.create(1000, 500, 'ground').setScale(2).refreshBody();
         
+        this.orbGroup = this.physics.add.group();
+        const iraOrb = new IraOrb(this, 400, 300);
+        const tristezaOrb = new TristezaOrb(this, 800, 300);
+        this.orbGroup.add(iraOrb);
+        this.orbGroup.add(tristezaOrb);
 
         this.player = new Player(this, 100, 100);
         this.uiManager = new UiManager(this, this.player);
@@ -68,6 +75,10 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.physics.add.collider(this.player, ground);
         this.physics.add.collider(ground, this.enemies);
 
+
+        this.physics.add.overlap(this.player, this.orbGroup, (player, orb) => {
+            orb.collect(player);
+        });
 
         this.input.keyboard.on('keydown-ESC', () => {
             this.scene.pause('TestPlayerScene'); 
