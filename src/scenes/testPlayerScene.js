@@ -60,7 +60,7 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.anims.create({
             key: 'heartbreakAnimation',
-            frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 15 }),
+            frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 10 }),
             frameRate: 12,
             repeat: 0
         });

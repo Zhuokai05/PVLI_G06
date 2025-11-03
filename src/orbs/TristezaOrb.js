@@ -2,7 +2,7 @@ import Orb from './Orb.js';
 
 export default class TristezaOrb extends Orb {
  constructor(scene, x, y) {
-    super(scene, x, y, 'orbTristeza', 'Orb Tristeza', 'Aumenta la mitad de velocidad');
+    super(scene, x, y, 'orbTristeza', 'Orb Tristeza', 'Aumenta la velocidad un 50%');
   }
 
   onActivate(player) {

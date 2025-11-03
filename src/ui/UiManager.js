@@ -39,23 +39,28 @@ export default class UIManager {
   }
 
   updateHearts(currentHealth) {
+
     for (let i = 0; i < this.hearts.length; i++) {
       let heart = this.hearts[i];
 
       if (i < currentHealth) {
         heart.setTexture('heartbreak', 0);
       } 
+
       else {
+        if (i === currentHealth) {
           heart.setFrame(0);
-          heart.play('heartbreakAnimation',true);
+          heart.play('heartbreakAnimation', true);
           heart.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-          heart.setTexture('angelEmptyHealth');
-          heart.destroy();
-          this.hearts.splice(i,1);
-        });
-      }
+            heart.setTexture('heartbreak', 10);
+          });
+        } 
+        else {
+          heart.setTexture('heartbreak', 10);
+        }
     }
   }
+}
 
   createOrbs() {
     this.orbs = [];
@@ -78,7 +83,6 @@ export default class UIManager {
       let orb = this.orbs[i];
 
       if (this.player.equippedOrbs[i]) {
-        console.log(this.player.equippedOrbs[i])
         orb.setTexture(this.player.equippedOrbs[i].texture.key);
 
         // oscurecer el orbe no activo
@@ -92,7 +96,6 @@ export default class UIManager {
         orb.setAlpha(0.5);
       }
     }
-    console.log(this.orbs)
   }
 
 }

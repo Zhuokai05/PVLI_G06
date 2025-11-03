@@ -128,7 +128,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.equippedOrbs[slotIndex] = orb;
         orb.onEquip(this);
-        console.log('orbe equipado en slot ' +slotIndex + 1 + ' ' + orb.name);
+        console.log('orbe equipado en slot ' +slotIndex + ' ' + orb.name);
         this.emit('orbChanged');
     }
 
@@ -148,7 +148,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (currentOrb) currentOrb.onDeactivate(this);
             nextOrb.onActivate(this);
             this.activeOrbIndex = slotIndex;
-            console.log('orbe activo: ' + nextOrb.name);
+            console.log('orbe activo: ' + nextOrb.name + ' efecto: ' + nextOrb.description);
             this.emit('orbChanged');
         }
    }
