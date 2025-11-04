@@ -16,7 +16,8 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     this.dead=false; //si esta muerto
     this.body.pushable = false; //para que no pueda ser empujado
     this.applyKnockbackToPlayer = true; // si aplica knockback al jugador
-
+    this.detectPlayerRangeX = 500; //rango en X que empieza a detecta el jugador
+    this.detectPlayerRangeY = 50; //rango en Y que empieza a detecta el jugador
     this.isAttacking = false;
     this.damage = 1; // el daño que hace
     this.meleeAttackWidge = 60;
@@ -40,18 +41,22 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
   }
 
   update(time, delta) {
-    if (this.dead) return;
+    if (this.dead || this.player.dead) return;
     this.stateMachine.step(time, delta);
   }
 
+  //detecta si la posicion del jugador esta dentro de su rango de deteccion
   canSeePlayer() {
     let distX = Math.abs(this.player.x - this.x);
     let distY = Math.abs(this.player.y - this.y);
-    return distX < 300 && distY < 50;
+    return distX < this.detectPlayerRangeX && distY < this.detectPlayerRangeY;
   }
 
+  //funcion que se llama al colisionar con el jugador
   CollisionWithPlayer(player, enemy) {
     console.log('Colision con enemigo');
+
+    //si hace knockback le aplicamos knockback 
     if (this.applyKnockbackToPlayer){
       let knockbackDirection = player.x < enemy.x ? 1 : -1;
       this.player.takeDamage(1,knockbackDirection);
