@@ -4,13 +4,13 @@ export default class UIManager {
     this.player = player;
 
     this.hearts = [];
-    this.heartSpacing = 60;  
+    this.heartSpacing = 60;  //espacio entre corazones
     this.heartX = 40;
     this.heartY = 40;       
     this.maxHearts = player.maxHealth;
 
     this.orbs = [];
-    this.orbSpacing = 60;  
+    this.orbSpacing = 60;  //espacio entre orbes 
     this.orbX = 40;
     this.orbY = 100;       
     this.maxOrbs = player.equippedOrbs.length;
@@ -18,13 +18,14 @@ export default class UIManager {
     this.createHearts();
     this.createOrbs();
 
-    player.on('healthChanged', this.updateHearts, this);
+    player.on('removeHealth', this.removeHearts, this);
 
     player.on('orbChanged', this.updateOrbs, this);
   }
 
   
 
+  //crea la lista de corazones
   createHearts() {
 
     for (let i = 0; i < this.maxHearts; i++) {
@@ -38,7 +39,8 @@ export default class UIManager {
     }
   }
 
-  updateHearts(currentHealth) {
+  //actualiza la lista de corazones 
+  removeHearts(currentHealth) {
 
     for (let i = 0; i < this.hearts.length; i++) {
       let heart = this.hearts[i];
@@ -58,10 +60,11 @@ export default class UIManager {
         else {
           heart.setTexture('heartbreak', 10);
         }
+      }
     }
   }
-}
 
+  //crea la lista de orbes
   createOrbs() {
     this.orbs = [];
 
@@ -78,6 +81,7 @@ export default class UIManager {
     this.updateOrbs();
   }
 
+  //actualiza la lista de orbes
   updateOrbs() {
     for (let i = 0; i < this.orbs.length; i++) {
       let orb = this.orbs[i];

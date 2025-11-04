@@ -3,10 +3,10 @@ export default class BaseState {
     this.stateMachine = null; 
   }
 
-  enter(context) {}
+  enter(context) {} //lo que hace al entrar en el estado
 
 
-  execute(context, time, delta) {}
+  execute(context, time, delta) {} //el update propio del estado
 
-  exit(context) {}
+  exit(context) {} // lo que hace al salir del estado
 }

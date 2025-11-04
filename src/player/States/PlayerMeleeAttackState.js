@@ -17,12 +17,16 @@ export default class PlayerAttackState extends BaseState {
 
   meleeAttack(direction) {
 
+    //si no ha pasado el cooldown no mueve atacar
     if (this.player.attackCooldownTimer > 0) return;
 
     console.log('attack')
 
+    //actualiza cooldown
     this.player.attackCooldownTimer = this.player.attackCooldown; 
 
+
+    //terminar estado de ataque
     this.player.scene.time.delayedCall(this.player.attackCooldown, () => {
         this.player.isAttacking = false;
         this.player.attackCooldownTimer = 0;
@@ -33,6 +37,7 @@ export default class PlayerAttackState extends BaseState {
     let w = this.player.meleeAttackWidge;
     let h = this.player.meleeAttackHeight;
 
+    //cambiamos la direccion de ataque segun el input del jugador
     switch (direction) {
         case 'left': 
             offsetX = -this.player.meleeAttackDist; 
@@ -50,6 +55,8 @@ export default class PlayerAttackState extends BaseState {
             break;
     }
 
+
+    //creamos un rectangulo como hitbox de ataque
     let hitbox = this.player.scene.add.rectangle(this.player.x + offsetX, this.player.y + offsetY, h, w, 0xff0000, 0.5);
     this.player.scene.physics.add.existing(hitbox);
     hitbox.body.allowGravity = false;
@@ -57,13 +64,15 @@ export default class PlayerAttackState extends BaseState {
     let hitEnemies = new Set();
     this.player.scene.physics.add.overlap(hitbox, this.player.scene.enemies, (hb, enemy) => {
 
-        if (hitEnemies.has(enemy)) return; 
-        hitEnemies.add(enemy);
+      //si ya ha sido dañado no le aplicamos daño otra vesz
+      if (hitEnemies.has(enemy)) return; 
+      hitEnemies.add(enemy);
 
-        enemy.takeDamage(this.player.damage *this.player.damageMultiplier);
+      enemy.takeDamage(this.player.damage *this.player.damageMultiplier);
 
     });
 
+    // destruir hitbox tras attackDuration
     this.player.scene.time.delayedCall(this.player.attackDuration, () => hitbox.destroy());
   }
 

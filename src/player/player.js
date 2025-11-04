@@ -84,7 +84,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         this.health -= damage;
-        this.emit('healthChanged', this.health);
+        this.emit('removeHealth', this.health);
         console.log(damage + ' daño recibido. Vida: ', + this.health);
 
         this.scene.time.delayedCall(this.invulnerableTime, () => (this.invulnerable = false));
