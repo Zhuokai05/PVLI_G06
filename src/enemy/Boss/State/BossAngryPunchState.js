@@ -70,19 +70,20 @@ export default class BossAngryPunchState extends BaseState {
 
     spawnPunch(direction, spawnX, spawnY) {
         const { scene, punches } = this.boss;
-        const speed = this.boss.punchSpeed;
+        const Yspeed = this.boss.punchYSpeed;
+        const Xspeed = this.boss.punchXSpeed;
         let punch;
 
         if (direction === 'down') {
             punch = punches.create(spawnX, 0, 'punch');
-            punch.setVelocityY(speed);
+            punch.setVelocityY(Yspeed);
         } else if (direction === 'left') {
             punch = punches.create(0, spawnY, 'punch');
-            punch.setVelocityX(speed);
+            punch.setVelocityX(Xspeed);
             punch.setAngle(-90);
         } else if (direction === 'right') {
             punch = punches.create(scene.cameras.main.width, spawnY, 'punch');
-            punch.setVelocityX(-speed);
+            punch.setVelocityX(-Xspeed);
             punch.setAngle(90);
         }
 
