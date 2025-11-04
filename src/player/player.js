@@ -26,10 +26,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.grounded = false;
         this.movementSpeed = 300;
         this.jumpSpeed = 800;
+        this.canPogoJump = false;
+        this.pogoJumpJudgeTime = 200; //tiempo que puedes hacer pogo jump tras atacar hacia abajo y dar a un enemigo
+        this.pogoJumpSpeed = 600; //velocidad de pogo jump 
         this.dead = false;
 
 
-        this.meleeAttackDist = 80;
+        this.meleeAttackDist = 100;
         this.meleeAttackWidge = 120;
         this.meleeAttackHeight = 70;
         this.attackCooldown = 300; //el tiempo que debe de pasar tras un ataque para poder atacar otra vez 
@@ -224,6 +227,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (hitEnemies.has(enemy)) return;
             hitEnemies.add(enemy);
             enemy.takeDamage(this.damage * this.damageMultiplier);
+
+            if (direction === 'down' && enemy.active && !enemy.dead) {
+            this.canPogoJump = true;
+            this.scene.time.delayedCall(this.pogoJumpJudgeTime, () => this.canPogoJump = false);
+        }
         });
 
         //destruir el hitbox tras attackduration

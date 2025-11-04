@@ -28,6 +28,10 @@ export default class PlayerJumpState extends BaseState {
                 player.stateMachine.setState('idle');
         }
 
+        if (player.canPogoJump && player.keys.jump.isDown){
+            player.canPogoJump = false;
+            player.setVelocityY(-player.pogoJumpSpeed);
+        }
         /*
         //ataque del jugador
         if (player.attackDir && !player.isAttacking) {
