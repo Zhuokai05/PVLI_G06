@@ -48,8 +48,15 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
         // Las bolas de fuego danan al jugador
         this.scene.physics.add.overlap(this.fireballs, this.scene.player, (obj1, obj2) => {
-            const fireball = obj1.texture.key === 'fire_ball' ? obj1 : obj2;
-            const player = obj1 === fireball ? obj2 : obj1;
+            let fireball, player;
+
+            if (obj1.texture.key === 'fire_ball') {
+            fireball = obj1;
+            player = obj2;
+            } else {
+            fireball = obj2;
+            player = obj1;
+            }
 
             if (player && typeof player.takeDamage === 'function') {
                 player.takeDamage(this.damage);
