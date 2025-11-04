@@ -1,3 +1,4 @@
+/*
 import BaseState from '../../stateMachine/BaseState.js';
 
 export default class PlayerAttackState extends BaseState {
@@ -77,3 +78,4 @@ export default class PlayerAttackState extends BaseState {
   }
 
 }
+*/

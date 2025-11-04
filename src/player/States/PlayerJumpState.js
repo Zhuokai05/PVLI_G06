@@ -28,11 +28,12 @@ export default class PlayerJumpState extends BaseState {
                 player.stateMachine.setState('idle');
         }
 
+        /*
         //ataque del jugador
         if (player.attackDir && !player.isAttacking) {
     
             player.stateMachine.setState('attack');
             return;
-        }
+        } */
     }
 }

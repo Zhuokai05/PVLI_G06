@@ -2,7 +2,6 @@ import StateMachine from '../stateMachine/StateMachine.js';
 import PlayerIdleState from './States/PlayerIdleState.js';
 import PlayerMoveState from './States/PlayerMoveState.js';
 import PlayerJumpState from './States/PlayerJumpState.js';
-import PlayerMeleeAttackState from './States/PlayerMeleeAttackState.js';
 import PlayerDeathState from './States/PlayerDeathState.js';
 import PlayerKnockbackState from './States/PlayerKnockbackState.js';
 
@@ -29,11 +28,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.jumpSpeed = 800;
         this.dead = false;
 
-        this.attackCooldown = 300; 
+
         this.meleeAttackDist = 80;
         this.meleeAttackWidge = 120;
         this.meleeAttackHeight = 70;
+        this.attackCooldown = 300; //el tiempo que debe de pasar tras un ataque para poder atacar otra vez 
         this.attackDuration = 100; //cuanto dura el hitbox de su ataque
+        this.isAttacking = false; //si esta atacando
 
         this.invulnerableTime = 1000; //tiempo invulnerable despues de recibir daño
         this.knockbackTime = 200; // tiempo de su knockback
@@ -54,7 +55,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         .addState('idle', new PlayerIdleState())
         .addState('move', new PlayerMoveState())
         .addState('jump', new PlayerJumpState())
-        .addState('attack', new PlayerMeleeAttackState())
         .addState('knockback', new PlayerKnockbackState())
         .addState('dead', new PlayerDeathState())
         .setState('idle');
@@ -68,7 +68,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(time, delta) {
         this.stateMachine.step(time, delta);
+
         this.attackDir = this.getAttackDirection();
+        if (this.attackDir) {
+            this.performAttack(this.attackDir);
+        }
     }
 
     takeDamage(damage,knockbackdirection) {
@@ -159,6 +163,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
    }
 
 
+   //funcion que se llama cuando el jugador muere
     die() {
         if (this.dead) return;
         this.dead = true;
@@ -167,10 +172,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.setState('dead');
     }
 
+    //comprueba si el jugador esta en el suelo
     isGrounded() {
         return this.body.onFloor();
     }
 
+    //detecta si el jugador ha pulsado alguna tecla de ataque y si es el caso devuelve en que direccion
     getAttackDirection() {
 
         if (Phaser.Input.Keyboard.JustDown(this.keys.upArrow))   return 'up';
@@ -180,4 +187,47 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         return null;
     }
+
+    //realiza el ataque segun la direccion
+    performAttack(direction) {
+        //comprueba si puede atacar
+        if (this.isAttacking) return;
+
+        console.log('attack');
+
+        //cooldown entre ataques
+        this.scene.time.delayedCall(this.attackCooldown, () => {
+            this.isAttacking = false;
+        });
+
+        let offsetX = 0, offsetY = 0;
+        let w = this.meleeAttackWidge;
+        let h = this.meleeAttackHeight;
+
+        //calculamos el offset del hitbox segun la direccion
+        switch (direction) {
+            case 'left':  offsetX = -this.meleeAttackDist; break;
+            case 'right': offsetX = this.meleeAttackDist;  break;
+            case 'up':    offsetY = -this.meleeAttackDist; [w, h] = [h, w]; break;
+            case 'down':  offsetY = this.meleeAttackDist;  [w, h] = [h, w]; break;
+        }
+
+        //creamos el hitbox de ataqeu rectangular
+        let hitbox = this.scene.add.rectangle(this.x + offsetX, this.y + offsetY, h, w, 0xff0000, 0.5);
+        this.scene.physics.add.existing(hitbox);
+        hitbox.body.allowGravity = false;
+
+        let hitEnemies = new Set(); // guarda enemigos dañados
+
+        this.scene.physics.add.overlap(hitbox, this.scene.enemies, (hb, enemy) => {
+           //no hacer daño varias veces al mismo enemigo
+            if (hitEnemies.has(enemy)) return;
+            hitEnemies.add(enemy);
+            enemy.takeDamage(this.damage * this.damageMultiplier);
+        });
+
+        //destruir el hitbox tras attackduration
+        this.scene.time.delayedCall(this.attackDuration, () => hitbox.destroy());
+    }
+
 }

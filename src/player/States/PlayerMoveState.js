@@ -29,11 +29,13 @@ export default class PlayerMoveState extends BaseState {
             player.stateMachine.setState('jump');
         }
         
-        //si el jugador ataca
-        if (player.attackDir && !player.isAttacking) {      
+        /*
+        //ataque del jugador
+        if (player.attackDir && !player.isAttacking) {
+    
             player.stateMachine.setState('attack');
             return;
-        }
+        } */
     }
 
     exit(player) {
