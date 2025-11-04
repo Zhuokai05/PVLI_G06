@@ -24,7 +24,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.health = 5;
         this.maxHealth = 5;
         this.damage = 1;
-        this.fireballSpeed = 500;
+        this.fireballSpeed = 300;
         this.punchYSpeed = 1000;
         this.punchXSpeed = 800;
 
