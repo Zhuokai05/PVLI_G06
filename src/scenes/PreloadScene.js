@@ -4,7 +4,6 @@ export class PreloadScene extends Phaser.Scene
   {
     //imagenes  y sprites
     this.load.image('player', './assets/Player/Angel.png');
-    this.load.image('ira', './assets/Bosses/ira.png');
     this.load.image('ground', './assets/Escena/Plataforma ira.png');
     this.load.image('background', './assets/Menu/logo.png.png');
     this.load.image('jugar', './assets/Menu/jugar.png');
@@ -18,20 +17,28 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('orbTristeza', './assets/UI/OrbeHielo.png');
     this.load.image('angelEmptyHealth', './assets/UI/AngelEmptyHeart_PlaceHolder.png');
 
+    // Angel espada normal
     this.load.image('angel_sword_idle', 'assets/Player/Angel Espada normal 1.png');
     this.load.image('angel_sword_walk_1', 'assets/Player/Angel Espada normal 1.png');
     this.load.image('angel_sword_walk_2', 'assets/Player/Angel Espada normal 2.png');
     this.load.image('angel_sword_walk_3', 'assets/Player/Angel Espada normal 3.png');
     this.load.image('angel_sword_jump', 'assets/Player/Angel Espada normal Salto.png');
 
+    // Angel inicial
     this.load.image('angel_idle', 'assets/Player/Angel inicial 1.png');
     this.load.image('angel_walk_1', 'assets/Player/Angel inicial 1.png');
     this.load.image('angel_walk_2', 'assets/Player/Angel inicial 2.png');
     this.load.image('angel_walk_3', 'assets/Player/Angel inicial 3.png');
     this.load.image('angel_jump', 'assets/Player/Angel inicial Salto.png');
+
+    // UI
     //this.load.image('angelHealth', './assets/UI/Ghost.png');
     this.load.spritesheet('heartbreak', './assets/UI/heartbreak.png',
     {frameWidth: 25,frameHeight: 25});
+
+    // Boss
+    this.load.image('ira', './assets/Bosses/ira.png');
+    this.load.image('fire_ball', 'assets/Bosses/Fire ball.png');
   }
 
   create() 

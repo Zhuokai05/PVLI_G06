@@ -3,10 +3,10 @@ export default class BaseState {
     this.stateMachine = null; 
   }
 
-  enter(player) {}
+  enter(context) {}
 
 
-  execute(player, time, delta) {}
+  execute(context, time, delta) {}
 
-  exit(player) {}
+  exit(context) {}
 }
