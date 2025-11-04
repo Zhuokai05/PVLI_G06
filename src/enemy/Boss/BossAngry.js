@@ -59,7 +59,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         if (!fireball.active || !player.active) return;
 
         // Calcular direccion del golpe para knockback
-        const knockbackDirection = player.x < fireball.x ? 1 : -1;
+        const knockbackDirection = player.x < fireball.x ? -1 : 1;
 
         // Aplicar dano y knockback
         player.takeDamage(this.damage, knockbackDirection);
