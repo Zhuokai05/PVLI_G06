@@ -198,6 +198,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         console.log('attack');
 
+        this.isAttacking = true;
         //cooldown entre ataques
         this.scene.time.delayedCall(this.attackCooldown, () => {
             this.isAttacking = false;
