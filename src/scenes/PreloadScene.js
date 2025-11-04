@@ -38,6 +38,7 @@ export class PreloadScene extends Phaser.Scene
     // Boss
     this.load.image('ira', './assets/Bosses/ira.png');
     this.load.image('fire_ball', 'assets/Bosses/Fire ball.png');
+    this.load.image('punch', 'assets/Bosses/Angry punch.png');
   }
 
   create() 
