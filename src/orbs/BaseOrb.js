@@ -1,4 +1,4 @@
-export default class Orb extends Phaser.Physics.Arcade.Sprite {
+export default class BaseOrb extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, texture, name, description) {
     super(scene, x, y, texture);
 
@@ -17,13 +17,18 @@ export default class Orb extends Phaser.Physics.Arcade.Sprite {
     
   }
 
+  //cuando el jugador recoge este orbe
   collect(player) {
     player.collectOrb(this);
     this.destroy();
   }
 
+  //funcion que se llama cuando el jugador equipa el orbe
   onEquip(player) {}
+    //funcion que se llama cuando el jugador desequipa el orbe
   onUnequip(player) {}
+    //funcion que se llama cuando el jugador activa el orbe
   onActivate(player) {}
+    //funcion que se llama cuando el jugador desactiva el orbe
   onDeactivate(player) {}
 }

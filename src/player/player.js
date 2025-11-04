@@ -27,6 +27,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.grounded = false;
         this.movementSpeed = 300;
         this.jumpSpeed = 800;
+        this.dead = false;
 
         this.attackCooldown = 300; 
         this.meleeAttackDist = 80;
@@ -79,9 +80,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.invulnerable = true;
 
-        if (knockbackdirection){
-            this.stateMachine.setState('knockback', knockbackdirection);
-        }
 
         this.health -= damage;
         this.emit('removeHealth', this.health);
@@ -91,6 +89,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (this.health <= 0) {
         this.die();
+        }
+
+        if (knockbackdirection && !this.dead){
+            this.stateMachine.setState('knockback', knockbackdirection);
         }
     }
 
@@ -158,6 +160,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
 
     die() {
+        if (this.dead) return;
+        this.dead = true;
         console.log('jugador muerto');
         this.setVelocity(0, 0);
         this.stateMachine.setState('dead');

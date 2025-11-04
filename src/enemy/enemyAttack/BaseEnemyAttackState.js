@@ -9,6 +9,7 @@ export default class BaseEnemyAttackState extends BaseState {
 
   execute(enemy, time, delta) {
 
+    //si no esta atacando. sale del estado
     if (!enemy.isAttacking) {
       enemy.stateMachine.setState('move');
     }
