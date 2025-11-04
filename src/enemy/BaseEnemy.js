@@ -17,6 +17,16 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     this.body.pushable = false;
     this.applyKnockbackToPlayer = true;
 
+    this.isAttacking = false;
+    this.damage = 1;
+    this.meleeAttackWidge = 60;
+    this.meleeAttackHeight = 60;
+    this.meleeAttackDist = 40; //distancia de su ataque
+    this.attackCooldown = 1000; //cuanto tarda entre ataques
+    this.attackCooldownTimer = 0; 
+    this.startAttackTime = 1000; //en cuanto tiempo empieza el ataque estando player delante
+    this.attackDuration = 100; //cuanto dura el hitbox de ataque
+
     this.stateMachine = new StateMachine(this, 'enemy');
 
     this.playerOverlap = scene.physics.add.overlap(

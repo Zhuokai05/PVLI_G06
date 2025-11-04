@@ -1,6 +1,11 @@
 import BaseEnemyMoveState from './BaseEnemyMoveState.js';
 
-export default class MeleeEnemyMoveState extends BaseEnemyMoveState {
+export default class BasicMeleeEnemyMoveState extends BaseEnemyMoveState {
+  enter(enemy){
+    super.enter(enemy)
+    this.startAttackTimer = 0;
+  }
+  
   execute(enemy, time, delta) {
     super.execute(enemy, time, delta); 
 
@@ -8,9 +13,16 @@ export default class MeleeEnemyMoveState extends BaseEnemyMoveState {
     let distance = Math.abs(enemy.x - player.x);
 
     if (distance < enemy.attackRange && enemy.canSeePlayer()) {
+      this.startAttackTimer += delta;
+    }
+    else {
+      this.startAttackTimer = 0;
+    }
+
+    if (this.startAttackTimer > enemy.startAttackTime){
       enemy.setVelocityX(0);
-      return;
-      //enemy.stateMachine.setState('attack');
+      enemy.stateMachine.setState('attack');
+      this.startAttackTimer = 0;
     }
   }
 }

@@ -27,13 +27,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.grounded = false;
         this.movementSpeed = 300;
         this.jumpSpeed = 800;
-        this.attackCooldown = 300;
+
+        this.attackCooldown = 300; 
         this.meleeAttackDist = 80;
         this.meleeAttackWidge = 120;
         this.meleeAttackHeight = 70;
-        this.invulnerableTime = 1000;
-        this.knockbackTime = 200;
-        this.knockbackDistance = 200;
+        this.attackDuration = 100; //cuanto dura el hitbox de su ataque
+
+        this.invulnerableTime = 1000; //tiempo invulnerable despues de recibir daño
+        this.knockbackTime = 200; // tiempo de su knockback
+        this.knockbackDistance = 200; //distancia de su knockback
 
         this.orbs = [];                 //  orbes recogidos
         this.equippedOrbs = [null, null]; // orbes 2 equipados

@@ -64,7 +64,7 @@ export default class PlayerAttackState extends BaseState {
 
     });
 
-    this.player.scene.time.delayedCall(100, () => hitbox.destroy());
+    this.player.scene.time.delayedCall(this.player.attackDuration, () => hitbox.destroy());
   }
 
 }

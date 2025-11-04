@@ -1,4 +1,4 @@
-import Orb from './Orb.js';
+import Orb from './BaseOrb.js';
 
 export default class TristezaOrb extends Orb {
  constructor(scene, x, y) {
