@@ -43,7 +43,15 @@ export class PreloadScene extends Phaser.Scene
     // Menus
     this.load.image('defeat_background', './assets/Menu/Fondo derrota.png');
     this.load.image('defeat_player', './assets/Menu/Player derrota.png');
-  }
+
+    // Tiles
+    this.load.spritesheet('tiles', './assets/Escena/tiles.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+
+        this.load.text('map', './assets/map.txt');
+    }
 
   create() 
   {

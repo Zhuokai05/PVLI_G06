@@ -1,5 +1,5 @@
-import Player from '../player/player.js';
-import InputManager from '../managers/inputManager.js';
+import Player from '../player/Player.js';
+import InputManager from '../managers/InputManager.js';
 import BasicMeleeEnemy from '../enemy/BasicMeleeEnemy.js';
 import UiManager from '../ui/UiManager.js';
 import TristezaOrb from '../orbs/TristezaOrb.js';
