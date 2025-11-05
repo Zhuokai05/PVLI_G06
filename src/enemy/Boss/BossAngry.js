@@ -24,17 +24,17 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
         // Stats
         this.phase = 1;
-        this.health = 5;
-        this.maxHealth = 5;
+        this.health = 10;
+        this.maxHealth = 10;
         this.damage = 1;
-        this.fireballSpeed = 300;
+        this.fireballSpeed = 450;
         this.punchYSpeed = 1000;
         this.punchXSpeed = 600;
 
         // Cooldown entre ataques
         this.attackCooldown = 0;
-        this.minCooldown = 1500;
-        this.maxCooldown = 3000; 
+        this.minCooldown = 1000;
+        this.maxCooldown = 1500; 
 
         // Grupos
         this.fireballs = scene.physics.add.group();
