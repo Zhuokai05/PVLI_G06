@@ -3,7 +3,7 @@ export class PreloadScene extends Phaser.Scene
   preload() 
   {
     //imagenes  y sprites
-    this.load.image('ground', './assets/Escena/Plataforma_ira.png');
+    this.load.image('ground', './assets/Escena/Plataforma_Ira.png');
     this.load.image('background', './assets/Menu/logo.png');
     this.load.image('jugar', './assets/Menu/jugar.png');
     this.load.image('name', './assets/Menu/name.png');
@@ -14,7 +14,6 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('angelHealth', './assets/UI/AngelHeart.png');
     this.load.image('orbIra', './assets/UI/OrbeFuego.png');
     this.load.image('orbTristeza', './assets/UI/OrbeHielo.png');
-    this.load.image('angelEmptyHealth', './assets/UI/AngelEmptyHeart_PlaceHolder.png');
 
     // Angel espada normal
     this.load.image('angel_sword_idle', 'assets/Player/Angel_Espada_normal_1.png');
@@ -24,11 +23,11 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('angel_sword_jump', 'assets/Player/Angel_Espada_normal_Salto.png');
 
     // Angel inicial
-    this.load.image('angel_idle', 'assets/Player/Angel_inicial_1.png');
-    this.load.image('angel_walk_1', 'assets/Player/Angel_inicial_1.png');
-    this.load.image('angel_walk_2', 'assets/Player/Angel_inicial_2.png');
-    this.load.image('angel_walk_3', 'assets/Player/Angel_inicial_3.png');
-    this.load.image('angel_jump', 'assets/Player/Angel_inicial_Salto.png');
+    this.load.image('angel_idle', 'assets/Player/Angel_Inicial_1.png');
+    this.load.image('angel_walk_1', 'assets/Player/Angel_Inicial_1.png');
+    this.load.image('angel_walk_2', 'assets/Player/Angel_Inicial_2.png');
+    this.load.image('angel_walk_3', 'assets/Player/Angel_Inicial_3.png');
+    this.load.image('angel_jump', 'assets/Player/Angel_Inicial_Salto.png');
 
     // UI
     //this.load.image('angelHealth', './assets/UI/Ghost.png');
