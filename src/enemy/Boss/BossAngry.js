@@ -19,7 +19,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         const spriteWidth = this.displayWidth;
         const spriteHeight = this.displayHeight;
         this.body.setSize(spriteWidth / 35, spriteHeight / 35);
-        this.body.setOffset(spriteWidth / 10, spriteHeight / 12);
+        this.body.setOffset(spriteWidth / 9.9, spriteHeight / 12);
         this.body.moves = false;
 
         // Stats

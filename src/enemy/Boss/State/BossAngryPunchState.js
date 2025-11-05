@@ -8,6 +8,8 @@ export default class BossAngryPunchState extends BaseState {
         this.warningDuration = 1000;
         this.attackDuration = 500;
         this.cooldownDuration = 500;
+
+        this.fixedSpawnY = 625;
         
         // Iniciar fase de advertencia
         this.startWarningPhase();
@@ -23,7 +25,7 @@ export default class BossAngryPunchState extends BaseState {
 
         // Rectangulo horizontal de advertencia
         const warningHeight = 120;
-        this.spawnY = player.y;
+        this.spawnY = this.fixedSpawnY;
         this.spawnX = this.attackDirection === 'left' ? 0 : cam.width;
 
         this.warningRect = scene.add.rectangle(
@@ -75,11 +77,11 @@ export default class BossAngryPunchState extends BaseState {
         let punch;
 
         if (this.attackDirection === 'left') {
-            punch = punches.create(0, this.spawnY, 'punch');
+            punch = punches.create(0, this.fixedSpawnY, 'punch');
             punch.setVelocityX(Xspeed);
             punch.setAngle(-90);
         } else {
-            punch = punches.create(scene.cameras.main.width, this.spawnY, 'punch');
+            punch = punches.create(scene.cameras.main.width, this.fixedSpawnY, 'punch');
             punch.setVelocityX(-Xspeed);
             punch.setAngle(90);
         }
