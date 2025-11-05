@@ -81,7 +81,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.performAttack(this.attackDir);
         }
 
-        if (Phaser.Input.Keyboard.JustDown(this.keys.jump)) 
+        if (Phaser.Input.Keyboard.JustDown(this.keys.jump) || Phaser.Input.Keyboard.JustDown(this.keys.space)) 
         {
             this.jumpBufferTimer = this.jumpBufferTime;
         }
