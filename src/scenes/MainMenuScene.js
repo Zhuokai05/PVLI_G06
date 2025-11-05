@@ -1,4 +1,4 @@
-import MapManager from "../managers/mapManager.js";
+import MapManager from "../managers/MapManager.js";
 import Player from '../player/Player.js';
 import InputManager from '../managers/InputManager.js';
 import UiManager from '../ui/UiManager.js'
