@@ -5,7 +5,8 @@ export default class InputManager {
         this.keys = scene.input.keyboard.addKeys({
             left: Phaser.Input.Keyboard.KeyCodes.A,
             right: Phaser.Input.Keyboard.KeyCodes.D,
-            jump: Phaser.Input.Keyboard.KeyCodes.SPACE,
+            jump: Phaser.Input.Keyboard.KeyCodes.W,
+            space: Phaser.Input.Keyboard.KeyCodes.SPACE,
             dash: Phaser.Input.Keyboard.KeyCodes.L,
             pause: Phaser.Input.Keyboard.KeyCodes.ESC,
             upArrow: Phaser.Input.Keyboard.KeyCodes.UP,
