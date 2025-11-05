@@ -39,6 +39,15 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('ira', './assets/Bosses/ira.png');
     this.load.image('fire_ball', 'assets/Bosses/Fire ball.png');
     this.load.image('punch', 'assets/Bosses/Angry punch.png');
+
+
+
+    this.load.spritesheet('tiles', './assets/Escena/tiles.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+
+        this.load.text('map', './assets/map.txt');
   }
 
   create() 
