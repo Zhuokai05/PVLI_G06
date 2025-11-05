@@ -19,18 +19,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.health = 5;
         this.maxHealth = 5;
+        this.dead = false;
         this.damage = 1;
         this.direction = 1; // 1 derecha, -1 izquierda
         this.hasDash = false;
         this.hasShield = false;
         this.grounded = false;
+
         this.movementSpeed = 300;
         this.jumpSpeed = 800;
         this.canPogoJump = false;
-        this.pogoJumpJudgeTime = 200; //tiempo que puedes hacer pogo jump tras atacar hacia abajo y dar a un enemigo
+        this.pogoJumpJudgeTime = 100; //tiempo que puedes hacer pogo jump tras atacar hacia abajo y dar a un enemigo
         this.pogoJumpSpeed = 600; //velocidad de pogo jump 
-        this.dead = false;
-
+        this.jumpBufferTime = 200; //tiempo de margen de salto
+        this.jumpBufferTimer = 0;
+        this.speedReduceRatioAtJump = 0.8;
 
         this.meleeAttackDist = 100;
         this.meleeAttackWidge = 120;
@@ -73,9 +76,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.step(time, delta);
 
         this.attackDir = this.getAttackDirection();
-        if (this.attackDir) {
+        if (this.attackDir) 
+        {
             this.performAttack(this.attackDir);
         }
+
+        if (Phaser.Input.Keyboard.JustDown(this.keys.jump)) 
+        {
+            this.jumpBufferTimer = this.jumpBufferTime;
+        }
+
+        else {
+            this.jumpBufferTimer -= delta;
+        }
+
     }
 
     takeDamage(damage,knockbackdirection) {
@@ -229,10 +243,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             hitEnemies.add(enemy);
             enemy.takeDamage(this.damage * this.damageMultiplier);
 
-            if (direction === 'down' && enemy.active && !enemy.dead) {
-            this.canPogoJump = true;
-            this.scene.time.delayedCall(this.pogoJumpJudgeTime, () => this.canPogoJump = false);
-        }
+            if (direction === 'down') {
+                this.canPogoJump = true;
+
+                this.scene.time.delayedCall(this.pogoJumpJudgeTime, () => {
+                    this.canPogoJump = false;
+                });
+            
+            }
         });
 
         //destruir el hitbox tras attackduration

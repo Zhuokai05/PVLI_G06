@@ -3,6 +3,7 @@ import BaseState from '../../stateMachine/BaseState.js';
 export default class PlayerJumpState extends BaseState {
     enter(player) {
         //aplicar velocidad salto
+        
         player.setVelocityY(-player.jumpSpeed);
         player.play('jump', true);
     }
@@ -11,12 +12,12 @@ export default class PlayerJumpState extends BaseState {
 
         //si el jugador ha pulsado A 
         if (player.keys.left.isDown) {
-            player.setVelocityX(-player.movementSpeed * 0.8);
+            player.setVelocityX(-player.movementSpeed * player.speedMultiplier * player.speedReduceRatioAtJump);
             player.setFlipX(true);
         }
          //si el jugador ha pulsado D 
         else if (player.keys.right.isDown) {
-            player.setVelocityX(player.movementSpeed * 0.8);
+            player.setVelocityX(player.movementSpeed * player.speedMultiplier * player.speedReduceRatioAtJump);
             player.setFlipX(false);
         }
 
@@ -28,9 +29,11 @@ export default class PlayerJumpState extends BaseState {
                 player.stateMachine.setState('idle');
         }
 
-        if (player.canPogoJump && player.keys.jump.isDown){
+        if (player.canPogoJump && player.jumpBufferTimer >0){
             player.canPogoJump = false;
             player.setVelocityY(-player.pogoJumpSpeed);
+            player.play('jump', true);
+            
         }
         /*
         //ataque del jugador
@@ -39,5 +42,9 @@ export default class PlayerJumpState extends BaseState {
             player.stateMachine.setState('attack');
             return;
         } */
+    }
+
+    exit(player){
+        player.canPogoJump = false;
     }
 }

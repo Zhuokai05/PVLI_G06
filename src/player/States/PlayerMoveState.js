@@ -25,7 +25,7 @@ export default class PlayerMoveState extends BaseState {
         }
 
         //si el jugador pulsa salto
-        if (player.keys.jump.isDown && player.isGrounded()) {
+        if (player.jumpBufferTimer > 0 && player.isGrounded()) {
             player.stateMachine.setState('jump');
         }
         
