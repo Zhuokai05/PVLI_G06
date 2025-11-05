@@ -1,6 +1,8 @@
 import StateMachine from '../../stateMachine/StateMachine.js';
 import BossAngryFireBallState from './State/BossAngryFireBallState.js';
 import BossAngryPunchState from './State/BossAngryPunchState.js';
+import BossAngryPunchPlatformState from './State/BossAngryPunchPlatformState.js';
+import BossAngryCooldownState from './State/BossAngryCooldownState.js';
 
 export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {
@@ -28,34 +30,66 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.punchYSpeed = 1000;
         this.punchXSpeed = 800;
 
+        // Cooldown entre ataques
+        this.attackCooldown = 0;
+        this.minCooldown = 1500;
+        this.maxCooldown = 3000; 
+
         // Grupos
         this.fireballs = scene.physics.add.group();
         this.punches = scene.physics.add.group();
 
         // Maquina de estados
-        this.punchState = new BossAngryPunchState();
-        this.fireballState = new BossAngryFireBallState();
         this.stateMachine = new StateMachine(this, 'boss');
+        
+        // Registrar todos los estados
+        this.stateMachine.addState('punch', new BossAngryPunchState());
+        this.stateMachine.addState('fireball', new BossAngryFireBallState());
+        this.stateMachine.addState('punchPlatform', new BossAngryPunchPlatformState());
 
-        // Solo el puno activo al inicio
-        this.activeStates = [this.punchState];
-        this.punchState.enter(this);
+        // Estados disponibles por fase
+        this.availableStates = ['punch', 'fireball'];
+        
+        // Estado especial para cooldown
+        this.stateMachine.addState('cooldown', new BossAngryCooldownState());
+        
+        // Iniciar con cooldown inicial
+        this.stateMachine.setState('cooldown');
 
         // Colisiones
-        this.fireballOverlap = scene.physics.add.overlap(
+        this.setupCollisions();
+    }
+
+    setupCollisions() {
+        this.fireballOverlap = this.scene.physics.add.overlap(
             this.fireballs,
             this.player,
             this.FireballCollisionWithPlayer,
             null,
             this
         );
-        this.punchOverlap = scene.physics.add.overlap(
+        this.punchOverlap = this.scene.physics.add.overlap(
             this.punches,
             this.player,
             this.PunchCollisionWithPlayer,
             null,
             this
         );
+    }
+
+    startRandomState() {
+        const randomState = Phaser.Math.RND.pick(this.availableStates);
+        this.stateMachine.setState(randomState);
+    }
+
+    selectNextState() {
+        // En lugar de cambiar inmediatamente el ataque, entrar en cooldown
+        this.generateNewCooldown();
+        this.stateMachine.setState('cooldown');
+    }
+
+    generateNewCooldown() {
+        this.attackCooldown = Phaser.Math.Between(this.minCooldown, this.maxCooldown);
     }
 
     FireballCollisionWithPlayer(player, fireball) {
@@ -72,10 +106,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
-        // Ejecutar todos los estados activos
-        for (const state of this.activeStates) {
-            state.execute(this, time, delta);
-        }
+        this.stateMachine.step(time, delta);
     }
 
     takeDamage(damage) {
@@ -86,41 +117,45 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         if (this.health <= 0) this.nextPhase();
     }
 
-nextPhase() {
-    if (this.phase === 1) {
-        console.log('Boss entra en FASE 2');
-        this.phase = 2;
-        this.health = this.maxHealth + 3;
+    nextPhase() {
+        if (this.phase === 1) {
+            console.log('Boss entra en FASE 2');
+            this.phase = 2;
+            this.health = this.maxHealth + 3;
 
-        // Efecto visual y pausa de 2 segundos
-        this.setActive(false);
-        this.setVisible(false);
-        this.scene.cameras.main.shake(800, 0.02); // vibracion camara
+            // Anadir el estado de plataforma a los disponibles
+            this.availableStates.push('punchPlatform');
 
-        // Efecto de desaparicion 
-        this.scene.cameras.main.flash(500, 255, 50, 0);
+            // Reducir cooldowns en fase 2 para mas dificultad
+            //this.minCooldown = 1000;
+            //this.maxCooldown = 2500;
 
-        // Esperar y revivir
-        this.scene.time.delayedCall(2000, () => {
-            this.setActive(true);
-            this.setVisible(true);
+            // Efecto visual y pausa
+            this.setActive(false);
+            this.setVisible(false);
+            this.scene.cameras.main.shake(800, 0.02);
+            this.scene.cameras.main.flash(500, 255, 50, 0);
 
-            // Pequeno efecto de aparicion
-            this.scene.tweens.add({
-                targets: this,
-                alpha: { from: 0, to: 1 },
-                duration: 800,
-                ease: 'Sine.easeInOut'
+            // Esperar y revivir
+            this.scene.time.delayedCall(2000, () => {
+                this.setActive(true);
+                this.setVisible(true);
+
+                this.scene.tweens.add({
+                    targets: this,
+                    alpha: { from: 0, to: 1 },
+                    duration: 800,
+                    ease: 'Sine.easeInOut'
+                });
+
+                // Iniciar cooldown antes del primer ataque
+                this.generateNewCooldown();
+                this.stateMachine.setState('cooldown');
             });
-
-            // Anadir bola de fuego
-            this.fireballState.enter(this);
-            this.activeStates.push(this.fireballState);
-        });
-    } else {
-        this.die();
+        } else {
+            this.die();
+        }
     }
-}
 
     die() {
         console.log('Boss derrotado definitivamente');

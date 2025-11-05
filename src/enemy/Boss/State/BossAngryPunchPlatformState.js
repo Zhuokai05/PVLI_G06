@@ -1,15 +1,14 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
-export default class BossAngryPunchState extends BaseState {
+export default class BossAngryPunchPlatformState extends BaseState {
     enter(context) {
         this.boss = context;
         this.stateTime = 0;
         this.currentPhase = 'warning'; // warning -> attack -> cooldown
-        this.warningDuration = 1000;
+        this.warningDuration = 1200;
         this.attackDuration = 500;
         this.cooldownDuration = 500;
         
-        // Iniciar fase de advertencia
         this.startWarningPhase();
     }
 
@@ -18,19 +17,15 @@ export default class BossAngryPunchState extends BaseState {
         const player = this.boss.player;
         const cam = scene.cameras.main;
 
-        // Solo ataques laterales
-        this.attackDirection = Phaser.Math.Between(0, 1) === 0 ? 'left' : 'right';
-
-        // Rectangulo horizontal de advertencia
-        const warningHeight = 120;
-        this.spawnY = player.y;
-        this.spawnX = this.attackDirection === 'left' ? 0 : cam.width;
-
+        // Crear advertencia vertical
+        const warningWidth = 120;
+        this.spawnX = player.x;
+        
         this.warningRect = scene.add.rectangle(
-            cam.width / 2,   
-            this.spawnY,            
-            cam.width,          
-            warningHeight,       
+            this.spawnX,
+            cam.height / 2,
+            warningWidth,
+            cam.height,
             0xff0000,
             0.5
         );
@@ -64,31 +59,20 @@ export default class BossAngryPunchState extends BaseState {
         this.currentPhase = 'attack';
         this.stateTime = 0;
         
-        // Destruir advertencia y crear puno
         this.warningRect.destroy();
         this.spawnPunch();
     }
 
     spawnPunch() {
         const { scene, punches } = this.boss;
-        const Xspeed = this.boss.punchXSpeed;
-        let punch;
-
-        if (this.attackDirection === 'left') {
-            punch = punches.create(0, this.spawnY, 'punch');
-            punch.setVelocityX(Xspeed);
-            punch.setAngle(-90);
-        } else {
-            punch = punches.create(scene.cameras.main.width, this.spawnY, 'punch');
-            punch.setVelocityX(-Xspeed);
-            punch.setAngle(90);
-        }
-
+        const Yspeed = this.boss.punchYSpeed;
+        
+        const punch = punches.create(this.spawnX, 0, 'punch');
+        punch.setVelocityY(Yspeed);
         punch.setScale(2.5);
         punch.body.allowGravity = false;
-        punch.setTint(0x6b6bff);
+        punch.setTint(0xff6b6b);
 
-        // Destruccion cuando sale de camara
         this.cleanupPunch(punch);
     }
 
@@ -97,7 +81,7 @@ export default class BossAngryPunchState extends BaseState {
         scene.events.on('update', () => {
             if (!punch.active) return;
             const cam = scene.cameras.main;
-            if (punch.x < -200 || punch.x > cam.width + 200 || punch.y > cam.height + 200) {
+            if (punch.y > cam.height + 200) {
                 punch.destroy();
             }
         });
@@ -109,7 +93,6 @@ export default class BossAngryPunchState extends BaseState {
     }
 
     exit(context) {
-        // Limpiar advertencia si aun existe
         if (this.warningRect && this.warningRect.active) {
             this.warningRect.destroy();
         }
