@@ -39,6 +39,10 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('ira', './assets/Bosses/ira.png');
     this.load.image('fire_ball', 'assets/Bosses/Fire ball.png');
     this.load.image('punch', 'assets/Bosses/Angry punch.png');
+
+    // Menus
+    this.load.image('defeat_background', './assets/Menu/Fondo derrota.png');
+    this.load.image('defeat_player', './assets/Menu/Player derrota.png');
   }
 
   create() 

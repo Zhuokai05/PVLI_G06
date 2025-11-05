@@ -183,6 +183,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
    //funcion que se llama cuando el jugador muere
     die() {
         if (this.dead) return;
+        console.log('Intentando cambiar a GameOver scene...');
+        this.scene.scene.stop(); 
+        this.scene.scene.launch('GameOver');  
         this.dead = true;
         console.log('jugador muerto');
         this.setVelocity(0, 0);
