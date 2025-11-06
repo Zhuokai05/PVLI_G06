@@ -727,11 +727,11 @@ mapa.
 -   Los movimientos del personaje como la cámara, está inspirado en
      Hollow Knight.
 
-![](images/hollow.png)
+![](images/Hollow.png)
 
 -   La mecánica en general está inspirada en Cup Head.
 
-![](image/Cuphead.png)
+![](images/Cuphead.png)
 
 -   El diseño de las plataformas está inspirado sobre todo en Mario.
 
