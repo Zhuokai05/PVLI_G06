@@ -12,6 +12,8 @@ Un proyecto universitario desarrollado por **Rocky Games**
 El jugador controla a un **ángel caído en el infierno**, que deberá derrotar a los **cuatro jefes emocionales** (Ira, Tristeza, Miedo y Alegría) para recuperar su poder y ascender de nuevo al cielo.  
 El juego combina combates ágiles, secciones de plataformas precisas y un ambiente oscuro con fuerte carga simbólica.
 
+**Todos los Assets de este proyecto son de creación propia y su licencia es exclusiva para este proyecto**
+
 ---
 
 ## Características principales
