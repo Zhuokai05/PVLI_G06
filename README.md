@@ -25,8 +25,12 @@ El juego combina combates ágiles, secciones de plataformas precisas y un ambien
 ## Pagina del juego
 *https://zhuokai05.github.io/PVLI_G06/*
 
+---
+
 ## Nuestro red social
 *https://x.com/Rocky_Games2025*
+
+---
 
 ## Controles
 
