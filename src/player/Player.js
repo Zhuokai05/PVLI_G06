@@ -53,6 +53,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.speedMultiplier = 1.0;
         this.orbTint = 0xffffff;
 
+        this.setDepth(5);
 
         this.keys = scene.inputManager.keys;
 
