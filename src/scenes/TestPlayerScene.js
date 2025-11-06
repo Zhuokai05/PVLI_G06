@@ -4,6 +4,7 @@ import BasicMeleeEnemy from '../enemy/BasicMeleeEnemy.js';
 import UiManager from '../ui/UiManager.js';
 import TristezaOrb from '../orbs/TristezaOrb.js';
 import IraOrb from '../orbs/IraOrb.js';
+import PlayerDataManager from '../managers/PlayerDataManager.js';
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
@@ -12,6 +13,11 @@ export default class TestPlayerScene extends Phaser.Scene {
 
     create() {
         this.inputManager = new InputManager(this);
+
+        this.orbRegistry = [
+            { name: 'Orb Ira' },
+            { name: 'Orb Tristeza' },
+        ];
 
         this.physics.world.setBounds(-200, 0, 1400, 1000);
 
@@ -99,6 +105,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
 
         if (this.player.x > 1100) {
+            PlayerDataManager.saveFromPlayer(this.player);
              this.scene.stop(); 
             this.scene.launch('BossScene'); 
        }

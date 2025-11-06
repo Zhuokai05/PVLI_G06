@@ -20,6 +20,8 @@ export default class UIManager {
 
     player.on('removeHealth', this.removeHearts, this);
 
+    player.on('updateHearts', this.updateHearts, this);
+
     player.on('orbChanged', this.updateOrbs, this);
   }
 
@@ -39,7 +41,7 @@ export default class UIManager {
     }
   }
 
-  //actualiza la lista de corazones 
+  //quita el ultimo corazon de la lista de corazones 
   removeHearts(currentHealth) {
 
     for (let i = 0; i < this.hearts.length; i++) {
@@ -60,6 +62,23 @@ export default class UIManager {
         else {
           heart.setTexture('heartbreak', 10);
         }
+      }
+    }
+  }
+
+  
+  //actualiza la lista de corazones 
+  updateHearts(currentHealth) {
+
+    for (let i = 0; i < this.hearts.length; i++) {
+      let heart = this.hearts[i];
+
+      if (i < currentHealth) {
+        heart.setTexture('heartbreak', 0);
+      } 
+
+      else {
+        heart.setTexture('heartbreak', 10);    
       }
     }
   }

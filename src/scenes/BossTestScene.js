@@ -2,6 +2,7 @@ import Player from '../player/Player.js';
 import InputManager from '../managers/InputManager.js';
 import Boss from '../enemy/Boss/BossAngry.js';
 import UiManager from '../ui/UiManager.js';
+import PlayerDataManager from '../managers/PlayerDataManager.js';
 
 class BossTestScene extends Phaser.Scene {
     constructor() {
@@ -11,6 +12,11 @@ class BossTestScene extends Phaser.Scene {
     create() {
         this.inputManager = new InputManager(this);
 
+        this.orbRegistry = [
+            { name: 'Orb Ira' },
+            { name: 'Orb Tristeza' },
+        ];
+
         // Crear suelo
         const ground = this.physics.add.staticGroup();
         ground.create(this.cameras.main.width/2, this.cameras.main.height, 'ground')
@@ -19,8 +25,11 @@ class BossTestScene extends Phaser.Scene {
 
         // Crear jugador
         this.player = new Player(this, 100, 400);
-        this.physics.add.collider(this.player, ground);
         this.uiManager = new UiManager(this, this.player);
+
+        PlayerDataManager.applyToPlayer(this.player);
+
+        this.physics.add.collider(this.player, ground);
 
         // Grupo de enemigos
         this.enemies = this.physics.add.group();
