@@ -70,6 +70,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.switchActiveOrb();
         });
 
+        // Sonidos
+        this.jumpSound = this.scene.sound.add('jump_sound', {
+            volume: 0.5, 
+        loop: false
+        });
+
+        this.damageSound = this.scene.sound.add('damage_sound', {
+            volume: 0.5, 
+            loop: false
+        });
     }
 
     update(time, delta) {
@@ -95,6 +105,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     takeDamage(damage,knockbackdirection) {
 
         if (this.invulnerable) return;
+
+        if (this.damageSound) {
+            this.damageSound.play();
+        }
 
         this.setTint(0xff0000);
         this.scene.time.delayedCall(this.invulnerableTime*0.8, () => this.setTint(this.orbTint));
