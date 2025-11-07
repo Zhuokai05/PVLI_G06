@@ -62,6 +62,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.setupCollisions();
 
         this.attackCooldown = this.startCooldown;
+        this.notdead = true;
     }
 
     setupCollisions() {
@@ -110,7 +111,11 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
-        this.stateMachine.step(time, delta);
+        if (this.notdead) 
+            {
+              this.stateMachine.step(time, delta);
+            }
+       
     }
 
     takeDamage(damage) {
@@ -157,12 +162,18 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
                 this.stateMachine.setState('cooldown');
             });
         } else {
+            this.notdead = false;
+            this.setVisible(false);
+
             this.die();
         }
     }
 
     die() {
         console.log('Boss derrotado definitivamente');
-        this.destroy();
+         this.scene.time.delayedCall(2000, () => {   this.scene.scene.stop(); 
+        this.scene.scene.launch('Win')
+           this.destroy();});
+     
     }
 }
