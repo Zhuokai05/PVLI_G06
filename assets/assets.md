@@ -42,7 +42,7 @@ Principalmente se usa la paleta de color rojo, como el fuego, magma, lava, calor
 
 Principalmente se usa la paleta de color azul, como el agua, frío, hielo, etc.
 
-![](../assets/Bosses/tristeza.png) ![](../assets/Enemigos_basicos/Water.png)
+![](../assets/Bosses/trsiteza.png) ![](../assets/Enemigos_basicos/Water.png)
 
 ### **Zona de alegría**
 
