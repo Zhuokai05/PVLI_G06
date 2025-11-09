@@ -88,7 +88,7 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.input.keyboard.on('keydown-ESC', () => {
             this.scene.pause('TestPlayerScene'); 
-            this.scene.launch('Pause');    
+            this.scene.launch('Pause' , { file: 'TestPlayerScene' });    
         });
 
         this.cameras.main.startFollow(this.player);
