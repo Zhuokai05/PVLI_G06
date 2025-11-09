@@ -50,7 +50,7 @@ export default class BossSadWaterBallState extends BaseState {
         const bossY = this.boss.y;
         
         this.waterBall = waterBalls.create(bossX, bossY - 50, 'water_ball');
-        // Reducir tamaño a un tercio (scale 1 en lugar de 3)
+        // Reducir tamaño 
         this.waterBall.setScale(1);
         this.waterBall.body.allowGravity = false;
         this.waterBall.setTint(0x4169e1);
@@ -94,7 +94,7 @@ export default class BossSadWaterBallState extends BaseState {
 
     createExplosion() {
         const { scene } = this.boss;
-        const explosionRadius = 80; // Radio reducido para coincidir con el tamaño más pequeño
+        const explosionRadius = 80; 
         
         // Crear efecto visual de explosión
         const explosionCircle = scene.add.circle(

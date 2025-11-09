@@ -56,7 +56,6 @@ export default class BossSadRadialState extends BaseState {
             icicle.setTint(0xadd8e6); // Azul claro
             
             // Rotar el carámbano según la dirección del movimiento
-            // El sprite original mira hacia la izquierda, así que lo rotamos según el ángulo
             const rotationAngle = Math.atan2(velocityY, velocityX);
             icicle.setRotation(rotationAngle);
 
@@ -82,6 +81,6 @@ export default class BossSadRadialState extends BaseState {
     }
 
     exit(context) {
-        // Limpiar cualquier carámbano restante
+
     }
 }

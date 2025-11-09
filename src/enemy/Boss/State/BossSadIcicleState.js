@@ -74,7 +74,7 @@ export default class BossSadIcicleState extends BaseState {
         icicle.setTint(0x6b6bff);
         
         // Rotar el carámbano 90 grados para que apunte hacia abajo
-        icicle.setRotation(Math.PI / 2); // 90 grados en radianes
+        icicle.setRotation(Math.PI / 2); 
 
         this.cleanupIcicle(icicle);
     }

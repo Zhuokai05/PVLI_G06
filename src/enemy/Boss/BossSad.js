@@ -18,8 +18,8 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
         // Posicionar en el extremo derecho de la cámara
         const cam = scene.cameras.main;
-        this.setX(cam.width - 100); // Extremo derecho
-        this.setY(cam.height / 2); // Centrado verticalmente
+        this.setX(cam.width - 100); 
+        this.setY(cam.height / 2); 
 
         const spriteWidth = this.displayWidth;
         const spriteHeight = this.displayHeight;
@@ -70,7 +70,6 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
         this.notdead = true;
     }
 
-    // ... el resto del código se mantiene igual ...
     setupCollisions() {
         this.icicleOverlap = this.scene.physics.add.overlap(
             this.icicles,
