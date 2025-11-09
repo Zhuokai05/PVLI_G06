@@ -1,10 +1,10 @@
 import StateMachine from '../../stateMachine/StateMachine.js';
-import BossAngryFireBallState from './State/BossAngryFireBallState.js';
-import BossAngryPunchState from './State/BossAngryPunchState.js';
-import BossAngryPunchPlatformState from './State/BossAngryPunchPlatformState.js';
-import BossAngryCooldownState from './State/BossAngryCooldownState.js';
+import BossSadIcicleState from './State/BossSadIcicleState.js';
+import BossSadRadialState from './State/BossSadRadialState.js';
+import BossSadWaterBallState from './State/BossSadWaterBallState.js';
+import BossSadCooldownState from './State/BossSadCooldownState.js';
 
-export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
+export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'tristeza');
         this.scene = scene;
@@ -12,14 +12,19 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setScale(4.3);
+        this.setScale(3.8); // Cambiado de 4.3 a 3.8
         this.setCollideWorldBounds(true);
         this.setImmovable(true);
+
+        // Posicionar en el extremo derecho de la cámara
+        const cam = scene.cameras.main;
+        this.setX(cam.width - 100); // Extremo derecho
+        this.setY(cam.height / 2); // Centrado verticalmente
 
         const spriteWidth = this.displayWidth;
         const spriteHeight = this.displayHeight;
         this.body.setSize(spriteWidth / 35, spriteHeight / 35);
-        this.body.setOffset(spriteWidth / 9.9, spriteHeight / 12);
+        this.body.setOffset(spriteWidth / 8.9, spriteHeight / 12);
         this.body.moves = false;
 
         // Stats
@@ -27,33 +32,33 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.health = 10;
         this.maxHealth = 10;
         this.damage = 1;
-        this.fireballSpeed = 450;
-        this.punchYSpeed = 1000;
-        this.punchXSpeed = 600;
+        this.icicleSpeed = 450;
+        this.waterBallSpeed = 200;
 
         // Cooldown entre ataques
         this.startCooldown = 2000;
         this.attackCooldown = 0;
         this.minCooldown = 1000;
-        this.maxCooldown = 1500; 
+        this.maxCooldown = 1500;
 
         // Grupos
-        this.fireballs = scene.physics.add.group();
-        this.punches = scene.physics.add.group();
+        this.icicles = scene.physics.add.group();
+        this.waterBalls = scene.physics.add.group();
+        this.radialIcicles = scene.physics.add.group();
 
-        // Maquina de estados
+        // Máquina de estados
         this.stateMachine = new StateMachine(this, 'boss');
         
         // Registrar todos los estados
-        this.stateMachine.addState('punch', new BossAngryPunchState());
-        this.stateMachine.addState('fireball', new BossAngryFireBallState());
-        this.stateMachine.addState('punchPlatform', new BossAngryPunchPlatformState());
+        this.stateMachine.addState('icicle', new BossSadIcicleState());
+        this.stateMachine.addState('radial', new BossSadRadialState());
+        this.stateMachine.addState('waterball', new BossSadWaterBallState());
 
-        // Estados disponibles por fase
-        this.availableStates = ['punch', 'fireball'];
+        // Estados disponibles por fase - FASE 1: solo radial y waterball
+        this.availableStates = ['radial', 'waterball'];
         
         // Estado especial para cooldown
-        this.stateMachine.addState('cooldown', new BossAngryCooldownState());
+        this.stateMachine.addState('cooldown', new BossSadCooldownState());
         
         // Iniciar con cooldown inicial
         this.stateMachine.setState('cooldown');
@@ -65,18 +70,26 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.notdead = true;
     }
 
+    // ... el resto del código se mantiene igual ...
     setupCollisions() {
-        this.fireballOverlap = this.scene.physics.add.overlap(
-            this.fireballs,
+        this.icicleOverlap = this.scene.physics.add.overlap(
+            this.icicles,
             this.player,
-            this.FireballCollisionWithPlayer,
+            this.icicleCollisionWithPlayer,
             null,
             this
         );
-        this.punchOverlap = this.scene.physics.add.overlap(
-            this.punches,
+        this.waterBallOverlap = this.scene.physics.add.overlap(
+            this.waterBalls,
             this.player,
-            this.PunchCollisionWithPlayer,
+            this.waterBallCollisionWithPlayer,
+            null,
+            this
+        );
+        this.radialIcicleOverlap = this.scene.physics.add.overlap(
+            this.radialIcicles,
+            this.player,
+            this.radialIcicleCollisionWithPlayer,
             null,
             this
         );
@@ -88,7 +101,6 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     }
 
     selectNextState() {
-        // En lugar de cambiar inmediatamente el ataque, entrar en cooldown
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
     }
@@ -97,30 +109,36 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.attackCooldown = Phaser.Math.Between(this.minCooldown, this.maxCooldown);
     }
 
-    FireballCollisionWithPlayer(player, fireball) {
-        if (!fireball.active || !player.active) return;
-        const dir = player.x < fireball.x ? -1 : 1;
+    icicleCollisionWithPlayer(player, icicle) {
+        if (!icicle.active || !player.active) return;
+        const dir = player.x < icicle.x ? -1 : 1;
         player.takeDamage(this.damage, dir);
-        fireball.destroy();
+        icicle.destroy();
     }
 
-    PunchCollisionWithPlayer(player, punch) {
-        if (!punch.active || !player.active) return;
-        const dir = player.x < punch.x ? -1 : 1;
+    waterBallCollisionWithPlayer(player, waterBall) {
+        if (!waterBall.active || !player.active) return;
+        const dir = player.x < waterBall.x ? -1 : 1;
         player.takeDamage(this.damage, dir);
+        waterBall.destroy();
+    }
+
+    radialIcicleCollisionWithPlayer(player, icicle) {
+        if (!icicle.active || !player.active) return;
+        const dir = player.x < icicle.x ? -1 : 1;
+        player.takeDamage(this.damage, dir);
+        icicle.destroy();
     }
 
     update(time, delta) {
-        if (this.notdead) 
-            {
-              this.stateMachine.step(time, delta);
-            }
-       
+        if (this.notdead) {
+            this.stateMachine.step(time, delta);
+        }
     }
 
     takeDamage(damage) {
         this.health -= damage;
-        this.setTint(0xff0000);
+        this.setTint(0x0000ff);
         this.scene.time.delayedCall(200, () => this.clearTint());
 
         if (this.health <= 0) this.nextPhase();
@@ -128,27 +146,28 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
     nextPhase() {
         if (this.phase === 1) {
-            console.log('Boss entra en FASE 2');
+            console.log('BossSad entra en FASE 2');
             this.phase = 2;
             this.health = this.maxHealth + 3;
 
-            // Anadir el estado de plataforma a los disponibles
-            this.availableStates.push('punchPlatform');
-
-            // Reducir cooldowns en fase 2 para mas dificultad
-            //this.minCooldown = 1000;
-            //this.maxCooldown = 2500;
+            // FASE 2: añadir el estado icicle a los disponibles
+            this.availableStates.push('icicle');
 
             // Efecto visual y pausa
             this.setActive(false);
             this.setVisible(false);
             this.scene.cameras.main.shake(800, 0.02);
-            this.scene.cameras.main.flash(500, 255, 50, 0);
+            this.scene.cameras.main.flash(500, 50, 50, 255);
 
             // Esperar y revivir
             this.scene.time.delayedCall(2000, () => {
                 this.setActive(true);
                 this.setVisible(true);
+
+                // Volver a posicionar en el extremo derecho después del respawn
+                const cam = this.scene.cameras.main;
+                this.setX(cam.width - (this.displayWidth / 2));
+                this.setY(cam.height / 2);
 
                 this.scene.tweens.add({
                     targets: this,
@@ -164,16 +183,16 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         } else {
             this.notdead = false;
             this.setVisible(false);
-
             this.die();
         }
     }
 
     die() {
-        console.log('Boss derrotado definitivamente');
-         this.scene.time.delayedCall(2000, () => {   this.scene.scene.stop(); 
-        this.scene.scene.launch('Win')
-           this.destroy();});
-     
+        console.log('BossSad derrotado definitivamente');
+        this.scene.time.delayedCall(2000, () => {
+            this.scene.scene.stop();
+            this.scene.scene.launch('Win');
+            this.destroy();
+        });
     }
 }
