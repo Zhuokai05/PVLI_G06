@@ -32,7 +32,7 @@ const config = {
     },
     
     },
-    scene: [PreloadScene,MainMenuScene, TestPlayerScene,BossTestScene, PauseScene, GameOverScene,WinScene],
+    scene: [PreloadScene,MainMenuScene, TestPlayerScene,PauseScene,BossTestScene, GameOverScene,WinScene],
     title: "Highway To Hell",
     version: "1.0.0"
 };

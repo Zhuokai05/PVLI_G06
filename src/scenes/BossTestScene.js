@@ -43,7 +43,7 @@ class BossTestScene extends Phaser.Scene {
         // Configurar tecla ESC para pausa
         this.input.keyboard.on('keydown-ESC', () => {
             this.scene.pause('BossScene'); 
-            this.scene.launch('Pause' , { file: 'BossScene' });    
+            this.scene.launch('Pause');    
         });
     }
 
