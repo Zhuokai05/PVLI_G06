@@ -42,6 +42,8 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('punch', 'assets/Bosses/Angry_punch.png');
 
     this.load.image('tristeza', './assets/Bosses/tristeza.png');
+    this.load.image('icicle', './assets/Bosses/Sad_ice.png');
+    this.load.image('water_ball', './assets/Bosses/Water_ball.png');
 
     // Menus
     this.load.image('defeat_background', './assets/Menu/Fondo_derrota.png');
