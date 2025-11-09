@@ -3,13 +3,9 @@ class PauseScene extends Phaser.Scene
     constructor() 
     {
         super('Pause'); 
-       
         
     }
-init (data) 
-{
-    this.file = data.file; 
-}
+
     create() 
     {
         this.add.rectangle(
@@ -24,12 +20,12 @@ init (data)
 
         play.on('pointerdown', () => {
             this.scene.stop();
-            this.scene.resume(this.file)
+            this.scene.resume('TestPlayerScene')
         });
 
         this.input.keyboard.on('keydown-ESC', () => {
             this.scene.stop();
-            this.scene.resume(this.file)    
+            this.scene.resume('TestPlayerScene')    
         });
     }
 
