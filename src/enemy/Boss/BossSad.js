@@ -165,8 +165,13 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
                 // Volver a posicionar en el extremo derecho después del respawn
                 const cam = this.scene.cameras.main;
-                this.setX(cam.width - (this.displayWidth / 2));
-                this.setY(cam.height / 2);
+                this.setX(cam.width - 100);
+                this.setY(cam.height / 2); 
+
+                const spriteWidth = this.displayWidth;
+                const spriteHeight = this.displayHeight;
+                this.body.setSize(spriteWidth / 35, spriteHeight / 35);
+                this.body.setOffset(spriteWidth / 8.9, spriteHeight / 12);
 
                 this.scene.tweens.add({
                     targets: this,
