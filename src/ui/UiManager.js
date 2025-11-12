@@ -18,8 +18,6 @@ export default class UIManager {
     this.createHearts();
     this.createOrbs();
 
-    player.on('removeHealth', this.removeHearts, this);
-
     player.on('updateHearts', this.updateHearts, this);
 
     player.on('orbChanged', this.updateOrbs, this);
@@ -41,7 +39,13 @@ export default class UIManager {
     }
   }
 
+  
   //quita el ultimo corazon de la lista de corazones 
+  /**
+   * 
+   * @param {int} currentHealth corazones que pinta en la pantalla 
+   */
+  /*
   removeHearts(currentHealth) {
 
     for (let i = 0; i < this.hearts.length; i++) {
@@ -65,16 +69,30 @@ export default class UIManager {
       }
     }
   }
-
+*/
   
+
   //actualiza la lista de corazones 
-  updateHearts(currentHealth) {
+  /**
+   * 
+   * @param {int} currentHealth corazones que pinta en la pantalla
+   * @param {bool} removeHealthAnimation si reproduce la animacion de quitar corazon 
+   */
+
+  updateHearts(currentHealth,removeHealthAnimation = false) {
 
     for (let i = 0; i < this.hearts.length; i++) {
       let heart = this.hearts[i];
 
       if (i < currentHealth) {
         heart.setTexture('heartbreak', 0);
+      } 
+      else if (i === currentHealth && removeHealthAnimation) {
+        heart.setFrame(0);
+        heart.play('heartbreakAnimation', true);
+        heart.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+          heart.setTexture('heartbreak', 10);
+        });
       } 
 
       else {

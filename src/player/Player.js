@@ -5,6 +5,12 @@ import PlayerJumpState from './States/PlayerJumpState.js';
 import PlayerDeathState from './States/PlayerDeathState.js';
 import PlayerKnockbackState from './States/PlayerKnockbackState.js';
 
+
+/**
+ * @Class Player
+ * Clase del objeto Player 
+ */
+
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, 'angel_sword_idle'); 
@@ -89,7 +95,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackDir = this.getAttackDirection();
         if (this.attackDir) 
         {
-            this.performAttack(this.attackDir);
+            this.performMeleeAttack(this.attackDir);
         }
 
         if (Phaser.Input.Keyboard.JustDown(this.keys.jump) || Phaser.Input.Keyboard.JustDown(this.keys.space)) 
@@ -103,6 +109,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     }
 
+    /**
+    * @param {int} damage daño que recibe el jugador
+    * @param {int} knockbackdirection direccion que empuja al jugador, 1 derecha y -1 izquierda   
+    */
     takeDamage(damage,knockbackdirection) {
 
         if (this.invulnerable) return;
@@ -118,7 +128,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
 
         this.health -= damage;
-        this.emit('removeHealth', this.health);
+        this.emit('updateHearts', this.health, true);
         console.log(damage + ' daño recibido. Vida: ', + this.health);
 
         this.scene.time.delayedCall(this.invulnerableTime, () => (this.invulnerable = false));
@@ -133,6 +143,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     // recoge el orbe si no lo tiene ya el player
+
+    /**
+     * 
+     * @param {Orb} orb orbe que recoge el jugador  
+     */
     collectOrb(orb) {
         if (!this.orbs.includes(orb)) {
             this.orbs.push(orb);
@@ -154,6 +169,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     //equipar orbe orb en el slot slotIndex
+
+    /**
+     * 
+     * @param {Int} slotIndex index de donde coloca el orbe, puede ser 0 o 1  
+     * @param {Orb} orb orbe que equipa
+     */
     equipOrb(slotIndex, orb) {
         if(!orb) return;
         if (slotIndex < 0 || slotIndex > 1) return;
@@ -181,6 +202,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
    }
 
    //cambiar orbe activo introduciendo manualmente el slot como parametro
+   /**
+    * 
+    * @param {int} slotIndex index del orbe que quieres activar, puede ser 0 o 1. 
+    */
    ActivateOrb(slotIndex) {
         let currentOrb = this.equippedOrbs[this.activeOrbIndex];
         let nextOrb = this.equippedOrbs[slotIndex];
@@ -224,7 +249,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     //realiza el ataque segun la direccion
-    performAttack(direction) {
+    /**
+     * 
+     * @param {string} direction direccion en la que ataca el jugador: left, right, up, down
+     */
+    performMeleeAttack(direction) {
         //comprueba si puede atacar
         if (this.isAttacking) return;
 
@@ -273,6 +302,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         //destruir el hitbox tras attackduration
         this.scene.time.delayedCall(this.attackDuration, () => hitbox.destroy());
+    }
+
+    performRangeAttack(direction){
+
     }
 
 }

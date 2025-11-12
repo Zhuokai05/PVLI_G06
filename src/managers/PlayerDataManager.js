@@ -4,7 +4,7 @@ export default class PlayerDataManager {
     maxHealth: 5,
     position: { x: 0, y: 0 },
     orbs: [],
-    equippedOrbs: [null, null], // solo nombres o IDs simples
+    equippedOrbs: [null, null], 
     activeOrbIndex: 0,
   };
 

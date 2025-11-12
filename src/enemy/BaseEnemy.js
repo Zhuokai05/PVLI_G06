@@ -20,8 +20,8 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     this.detectPlayerRangeY = 50; //rango en Y que empieza a detecta el jugador
     this.isAttacking = false;
     this.damage = 1; // el daño que hace
-    this.meleeAttackWidge = 60;
-    this.meleeAttackHeight = 60;
+    this.meleeAttackWidge = 60; //ancho del hitbox de ataque 
+    this.meleeAttackHeight = 60;// alto del hitbox de ataque
     this.meleeAttackDist = 40; //distancia de su ataque
     this.attackTime = 500; // tiempo que tarda el ataque, !!!debe de ser menor que attackCooldown!!!
     this.startAttackTime = 1000; //en cuanto tiempo empieza el ataque estando player delante
@@ -53,6 +53,12 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
   }
 
   //funcion que se llama al colisionar con el jugador
+
+  /**
+   * 
+   * @param {Player} player el jugador que colisiona
+   * @param {Enemy} enemy el enemigo que colisiona   
+   */
   CollisionWithPlayer(player, enemy) {
     console.log('Colision con enemigo');
 
