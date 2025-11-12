@@ -38,40 +38,7 @@ export default class UIManager {
       this.hearts.push(heart);
     }
   }
-
   
-  //quita el ultimo corazon de la lista de corazones 
-  /**
-   * 
-   * @param {int} currentHealth corazones que pinta en la pantalla 
-   */
-  /*
-  removeHearts(currentHealth) {
-
-    for (let i = 0; i < this.hearts.length; i++) {
-      let heart = this.hearts[i];
-
-      if (i < currentHealth) {
-        heart.setTexture('heartbreak', 0);
-      } 
-
-      else {
-        if (i === currentHealth) {
-          heart.setFrame(0);
-          heart.play('heartbreakAnimation', true);
-          heart.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-            heart.setTexture('heartbreak', 10);
-          });
-        } 
-        else {
-          heart.setTexture('heartbreak', 10);
-        }
-      }
-    }
-  }
-*/
-  
-
   //actualiza la lista de corazones 
   /**
    * 
