@@ -15,6 +15,10 @@ export default class BasicMeleeEnemyAttackState extends BaseEnemyAttackState {
         }
 
 
+    /**
+     * 
+     * @param {int} direction direccion que ataca el enemigo, 1 derecha, -1 izquierda  
+     */
     meleeAttack(direction) {
 
         //si no ha pasado su cooldown no ataca
