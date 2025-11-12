@@ -1,8 +1,8 @@
 import StateMachine from '../../stateMachine/StateMachine.js';
-import BossAngryFireBallState from './State/BossAngryFireBallState.js';
-import BossAngryPunchState from './State/BossAngryPunchState.js';
-import BossAngryPunchPlatformState from './State/BossAngryPunchPlatformState.js';
-import BossAngryCooldownState from './State/BossAngryCooldownState.js';
+import BossAngryFireBallState from './BossAngryState/BossAngryFireBallState.js';
+import BossAngryPunchState from './BossAngryState/BossAngryPunchState.js';
+import BossAngryPunchPlatformState from './BossAngryState/BossAngryPunchPlatformState.js';
+import BossAngryCooldownState from './BossAngryState/BossAngryCooldownState.js';
 
 export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {

@@ -1,8 +1,8 @@
 import StateMachine from '../../stateMachine/StateMachine.js';
-import BossSadIcicleState from './State/BossSadIcicleState.js';
-import BossSadRadialState from './State/BossSadRadialState.js';
-import BossSadWaterBallState from './State/BossSadWaterBallState.js';
-import BossSadCooldownState from './State/BossSadCooldownState.js';
+import BossSadIcicleState from './BossSadState/BossSadIcicleState.js';
+import BossSadRadialState from './BossSadState/BossSadRadialState.js';
+import BossSadWaterBallState from './BossSadState/BossSadWaterBallState.js';
+import BossSadCooldownState from './BossSadState/BossSadCooldownState.js';
 
 export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {
