@@ -201,17 +201,15 @@ En juego:
 
 -   Down-Arrow: ataque a melee hacia abajo
 
--   Left-Arrow: ataque a melee hacia izquierda
+-   Left-Arrow: ataque a melee / distancia hacia izquierda
 
--   RIght-Arrow: ataque a melee hacia derecha
+-   RIght-Arrow: ataque a melee / distancia hacia derecha
 
 -   Space / W: saltar
 
 -   Q: cambiar orbe activo
 
--   L: dash
-
--   K: ataque a distancia.
+-   C: dash
 
 -   ESC: menu de pausa
 
