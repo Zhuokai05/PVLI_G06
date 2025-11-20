@@ -6,12 +6,12 @@ export default class TristezaOrb extends Orb {
   }
 
   onActivate(player) {
-    player.speedMultiplier = 1.5;
+    player.canRangeAttack = true;
     player.orbTint = 0x9fc5e8;
     player.setTint(player.orbTint);
   }
 
   onDeactivate(player) {
-    player.speedMultiplier = 1.0;
+    player.canRangeAttack = false;
   }
 }

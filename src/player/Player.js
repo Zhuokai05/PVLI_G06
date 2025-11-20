@@ -35,7 +35,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.canDash = false;
         this.canShield = false;
-        this.canRangeAttack = true;
+        this.canRangeAttack = false;
 
 
         this.movementSpeed = 300;

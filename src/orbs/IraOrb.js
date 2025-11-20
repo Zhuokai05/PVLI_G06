@@ -6,12 +6,12 @@ export default class IraOrb extends BaseOrb {
   }
 
   onActivate(player) {
-    player.damageMultiplier = 2;
+    player.canDash = true;
     player.orbTint = 0xff9900;
     player.setTint(player.orbTint);
   }
 
   onDeactivate(player) {
-    player.damageMultiplier = 1;
+        player.canDash = false;
   }
 }
