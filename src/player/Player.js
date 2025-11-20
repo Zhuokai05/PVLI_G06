@@ -3,6 +3,7 @@ import PlayerIdleState from './States/PlayerIdleState.js';
 import PlayerMoveState from './States/PlayerMoveState.js';
 import PlayerJumpState from './States/PlayerJumpState.js';
 import PlayerDeathState from './States/PlayerDeathState.js';
+import PlayerDashState from './States/PlayerDashState.js';
 import PlayerKnockbackState from './States/PlayerKnockbackState.js';
 
 
@@ -19,6 +20,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.physics.add.existing(this);
 
         this.setCollideWorldBounds(true);
+
         this.setGravityY(1000);
 
         this.scene = scene;
@@ -41,6 +43,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.jumpBufferTimer = 0;
         this.speedReduceRatioAtJump = 0.8;
 
+        this.isDashing = false;
+        this.dashSpeed = 1300;
+        this.dashDuration = 200;
+        this.dashCooldown = 500;
+        this.dashCooldownTimer = 0;
+        
+
         this.meleeAttackDist = 100;
         this.meleeAttackWidge = 120;
         this.meleeAttackHeight = 70;
@@ -48,6 +57,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackDuration = 100; //cuanto dura el hitbox de su ataque
         this.isAttacking = false; //si esta atacando
 
+        this.invulnerable = false;
         this.invulnerableTime = 1000; //tiempo invulnerable despues de recibir daño
         this.knockbackTime = 200; // tiempo de su knockback
         this.knockbackDistance = 200; //distancia de su knockback
@@ -70,6 +80,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         .addState('jump', new PlayerJumpState())
         .addState('knockback', new PlayerKnockbackState())
         .addState('dead', new PlayerDeathState())
+        .addState('dash', new PlayerDashState())
         .setState('idle');
 
 
@@ -93,7 +104,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.step(time, delta);
 
         this.attackDir = this.getAttackDirection();
-        if (this.attackDir) 
+        if (this.attackDir && !this.isDashing) 
         {
             this.performMeleeAttack(this.attackDir);
         }
@@ -102,10 +113,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         {
             this.jumpBufferTimer = this.jumpBufferTime;
         }
-
         else {
             this.jumpBufferTimer -= delta;
         }
+
+        this.dashCooldownTimer -= delta;
 
     }
 

@@ -15,20 +15,27 @@ export default class PlayerMoveState extends BaseState {
 
           //si el jugador pulsa A
         if (player.keys.left.isDown) {
-            player.setVelocityX(-player.movementSpeed*player.speedMultiplier);
+            player.direction = -1;
             player.setFlipX(true);
         } 
           //si el jugador pulsa D
         else if (player.keys.right.isDown) {
-            player.setVelocityX(player.movementSpeed*player.speedMultiplier);
+            player.direction = 1;
             player.setFlipX(false);
         }
 
+        if (player.keys.dash.isDown && player.dashCooldownTimer <= 0 && !player.isDashing) {
+            player.stateMachine.setState('dash');
+            return;
+        }  
         //si el jugador pulsa salto
         if (player.jumpBufferTimer > 0 && player.isGrounded()) {
             player.stateMachine.setState('jump');
+            return;
         }
         
+        player.setVelocityX(player.direction * player.movementSpeed*player.speedMultiplier)
+
         /*
         //ataque del jugador
         if (player.attackDir && !player.isAttacking) {

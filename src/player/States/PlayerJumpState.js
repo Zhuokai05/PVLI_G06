@@ -16,14 +16,16 @@ export default class PlayerJumpState extends BaseState {
 
         //si el jugador ha pulsado A 
         if (player.keys.left.isDown) {
-            player.setVelocityX(-player.movementSpeed * player.speedMultiplier * player.speedReduceRatioAtJump);
             player.setFlipX(true);
+            player.direction = -1;
         }
          //si el jugador ha pulsado D 
         else if (player.keys.right.isDown) {
-            player.setVelocityX(player.movementSpeed * player.speedMultiplier * player.speedReduceRatioAtJump);
             player.setFlipX(false);
+            player.direction = 1;
         }
+
+        player.setVelocityX(player.direction * player.movementSpeed*player.speedMultiplier)
 
         //si esta en el suelo cambia de estado
         if (player.isGrounded()) {
@@ -33,11 +35,14 @@ export default class PlayerJumpState extends BaseState {
                 player.stateMachine.setState('idle');
         }
 
+        if (player.keys.dash.isDown && player.dashCooldownTimer <= 0 && !player.isDashing) {
+            player.stateMachine.setState('dash');
+        }
+
         if (player.canPogoJump && player.jumpBufferTimer >0){
             player.canPogoJump = false;
             player.setVelocityY(-player.pogoJumpSpeed);
-            player.play('jump', true);
-            
+            player.play('jump', true);            
         }
         /*
         //ataque del jugador
