@@ -152,7 +152,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         this.setTint(0xff0000);
-        this.scene.time.delayedCall(this.invulnerableTime*0.8, () => this.setTint(this.orbTint));
+        this.safeDelay(this.invulnerableTime*0.8, () => this.setTint(this.orbTint));
 
         this.invulnerable = true;
 
@@ -161,7 +161,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.emit('updateHearts', this.health, true);
         console.log(damage + ' daño recibido. Vida: ', + this.health);
 
-        this.scene.time.delayedCall(this.invulnerableTime, () => (this.invulnerable = false));
+        this.safeDelay(this.invulnerableTime, () => (this.invulnerable = false));
+        
 
         if (this.health <= 0) {
         this.die();
@@ -291,9 +292,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.isAttacking = true;
         //cooldown entre ataques
-        this.scene.time.delayedCall(this.attackCooldown, () => {
+        this.safeDelay(this.attackCooldown, () => {
             this.isAttacking = false;
         });
+        
 
         let offsetX = 0, offsetY = 0;
         let w = this.meleeAttackWidge;
@@ -323,15 +325,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (direction === 'down') {
                 this.canPogoJump = true;
 
-                this.scene.time.delayedCall(this.pogoJumpJudgeTime, () => {
+                this.safeDelay(this.pogoJumpJudgeTime, () => {
                     this.canPogoJump = false;
                 });
-            
             }
         });
 
         //destruir el hitbox tras attackduration
-        this.scene.time.delayedCall(this.attackDuration, () => hitbox.destroy());
+        this.safeDelay(this.attackDuration, () => hitbox.destroy());
+    }
+
+    safeDelay(time, callback) {
+        if (!this.scene || !this.scene.time) return;
+        this.scene.time.delayedCall(time, () => {
+            if (this.scene) callback();
+        });
     }
 
     performRangeAttack() {
@@ -340,7 +348,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     if (this.isAttacking) return;
 
     this.isAttacking = true;
-    this.scene.time.delayedCall(this.rangeAttackCooldown, () => this.isAttacking = false);
+
+    this.safeDelay(this.rangeAttackCooldown, () => this.isAttacking = false);
 
     // crear proyectil
     const projectile = this.scene.physics.add.sprite(this.x, this.y, 'range_projectile');
@@ -351,9 +360,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     projectile.setVelocityX(this.rangeAttackSpeed * this.direction);
 
     // destruir despues de su duracion
-    this.scene.time.delayedCall(this.rangeAttackDuration, () => {
+
+
+    this.safeDelay(this.rangeAttackDuration, () => {
         if (projectile.active) projectile.destroy();
     });
+
 
     //destruye al chocar una pared
     this.scene.physics.add.collider(projectile, this.scene.ground, () => {

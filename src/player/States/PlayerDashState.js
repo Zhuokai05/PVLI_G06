@@ -35,9 +35,9 @@ export default class PlayerDashState extends BaseState {
         player.body.onWorldBounds = true;
 
         //acabar el dash
-        player.scene.time.delayedCall(player.dashDuration, () => {
+        player.safeDelay(player.dashDuration, () => {
             player.isDashing = false;
-        }); 
+        });
 
         player.alpha = 0.5;
 
