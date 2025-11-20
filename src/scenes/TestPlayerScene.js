@@ -22,11 +22,11 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.physics.world.setBounds(-200, 0, 1400, 1000);
 
 
-        let ground = this.physics.add.staticGroup();
-        ground.create(0, 500, 'ground').setScale(2).refreshBody();
-        ground.create(500, 500, 'ground').setScale(2).refreshBody();
-        ground.create(500, 400, 'ground').setScale(2).refreshBody();
-        ground.create(1000, 500, 'ground').setScale(2).refreshBody();
+        this.ground = this.physics.add.staticGroup();
+        this.ground.create(0, 500, 'ground').setScale(2).refreshBody();
+        this.ground.create(500, 500, 'ground').setScale(2).refreshBody();
+        this.ground.create(500, 400, 'ground').setScale(2).refreshBody();
+        this.ground.create(1000, 500, 'ground').setScale(2).refreshBody();
         
         this.orbGroup = this.physics.add.group();
         const iraOrb = new IraOrb(this, 400, 300);
@@ -78,8 +78,8 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.enemies.add(new BasicMeleeEnemy(this, 900, 300, 'basicEnemyHappy'));
         this.enemies.add(new BasicMeleeEnemy(this, 1000, 300, 'basicEnemyFear'));
   
-        this.physics.add.collider(this.player, ground);
-        this.physics.add.collider(ground, this.enemies);
+        this.physics.add.collider(this.player, this.ground);
+        this.physics.add.collider(this.ground, this.enemies);
 
 
         this.physics.add.overlap(this.player, this.orbGroup, (player, orb) => {

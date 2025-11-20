@@ -33,9 +33,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.direction = 1; // 1 derecha, -1 izquierda
         this.grounded = false;
 
-        this.canDash = true;
+        this.canDash = false;
         this.canShield = false;
-        this.canRangeAttack = false;
+        this.canRangeAttack = true;
 
 
         this.movementSpeed = 300;
@@ -355,6 +355,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (projectile.active) projectile.destroy();
     });
 
+    //destruye al chocar una pared
     this.scene.physics.add.collider(projectile, this.scene.ground, () => {
         projectile.destroy();
     });
