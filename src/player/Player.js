@@ -29,10 +29,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.maxHealth = 5;
         this.dead = false;
         this.damage = 1;
+        this.rangeDamage = 1;
         this.direction = 1; // 1 derecha, -1 izquierda
-        this.hasDash = false;
-        this.hasShield = false;
         this.grounded = false;
+
+        this.canDash = true;
+        this.canShield = false;
+        this.canRangeAttack = false;
+
 
         this.movementSpeed = 300;
         this.jumpSpeed = 800;
@@ -48,7 +52,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.dashDuration = 200;
         this.dashCooldown = 500;
         this.dashCooldownTimer = 0;
-        
 
         this.meleeAttackDist = 100;
         this.meleeAttackWidge = 120;
@@ -56,6 +59,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackCooldown = 300; //el tiempo que debe de pasar tras un ataque para poder atacar otra vez 
         this.attackDuration = 100; //cuanto dura el hitbox de su ataque
         this.isAttacking = false; //si esta atacando
+
+        this.rangeAttackDuration = 3000;
+        this.rangeAttackSpeed = 800;
+        this.rangeAttackCooldown = 300;
 
         this.invulnerable = false;
         this.invulnerableTime = 1000; //tiempo invulnerable despues de recibir daño
@@ -104,7 +111,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.step(time, delta);
 
         this.attackDir = this.getAttackDirection();
-        if (this.attackDir && !this.isDashing) 
+
+        if (Phaser.Input.Keyboard.JustDown(this.keys.useOrb)) 
+        {
+            if (this.canDash && this.dashCooldownTimer <= 0 && !this.isDashing) {
+                this.stateMachine.setState('dash');
+            }
+            else if (this.canRangeAttack && this.dashCooldownTimer <= 0 && !this.isDashing) {
+                this.performRangeAttack();
+            }
+        }
+
+        else if (this.attackDir && !this.isDashing) 
         {
             this.performMeleeAttack(this.attackDir);
         }
@@ -316,8 +334,36 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.time.delayedCall(this.attackDuration, () => hitbox.destroy());
     }
 
-    performRangeAttack(direction){
+    performRangeAttack() {
 
-    }
+    if (!this.canRangeAttack) return;
+    if (this.isAttacking) return;
+
+    this.isAttacking = true;
+    this.scene.time.delayedCall(this.rangeAttackCooldown, () => this.isAttacking = false);
+
+    // crear proyectil
+    const projectile = this.scene.physics.add.sprite(this.x, this.y, 'range_projectile');
+    projectile.setDepth(4);
+    projectile.body.allowGravity = false;
+
+    // velocidad segun su direccion
+    projectile.setVelocityX(this.rangeAttackSpeed * this.direction);
+
+    // destruir despues de su duracion
+    this.scene.time.delayedCall(this.rangeAttackDuration, () => {
+        if (projectile.active) projectile.destroy();
+    });
+
+    this.scene.physics.add.collider(projectile, this.scene.ground, () => {
+        projectile.destroy();
+    });
+
+    // hace daño a enemigos
+    this.scene.physics.add.overlap(projectile, this.scene.enemies, (proj, enemy) => {
+        enemy.takeDamage(this.rangeDamage * this.damageMultiplier);
+        proj.destroy();
+    });
+}
 
 }

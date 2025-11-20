@@ -23,11 +23,7 @@ export default class PlayerMoveState extends BaseState {
             player.direction = 1;
             player.setFlipX(false);
         }
-
-        if (player.keys.dash.isDown && player.dashCooldownTimer <= 0 && !player.isDashing) {
-            player.stateMachine.setState('dash');
-            return;
-        }  
+ 
         //si el jugador pulsa salto
         if (player.jumpBufferTimer > 0 && player.isGrounded()) {
             player.stateMachine.setState('jump');

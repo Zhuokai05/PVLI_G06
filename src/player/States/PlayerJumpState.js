@@ -35,10 +35,6 @@ export default class PlayerJumpState extends BaseState {
                 player.stateMachine.setState('idle');
         }
 
-        if (player.keys.dash.isDown && player.dashCooldownTimer <= 0 && !player.isDashing) {
-            player.stateMachine.setState('dash');
-        }
-
         if (player.canPogoJump && player.jumpBufferTimer >0){
             player.canPogoJump = false;
             player.setVelocityY(-player.pogoJumpSpeed);

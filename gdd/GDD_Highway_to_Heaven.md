@@ -209,7 +209,7 @@ En juego:
 
 -   Q: cambiar orbe activo
 
--   C: dash
+-   C: usar habilidad del orbe activo
 
 -   ESC: menu de pausa
 

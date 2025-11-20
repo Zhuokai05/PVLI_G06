@@ -17,10 +17,6 @@ export default class PlayerIdleState extends BaseState {
             return;
         }
 
-        if (player.keys.dash.isDown && player.dashCooldownTimer <= 0 && !player.isDashing) {
-            player.stateMachine.setState('dash');
-            return;
-        }
         /*
         //ataque del jugador
         if (player.attackDir && !player.isAttacking) {
