@@ -37,6 +37,7 @@ class BossTestScene extends Phaser.Scene {
         
         // Crear boss
         //this.bossFear = new BossFear(this, 0, 0, this.player);
+        //this.enemies.add(this.bossFear);
 
         this.bossAngry = new BossAngry(this, this.cameras.main.width / 2, 400, this.player);
         this.physics.add.collider(this.bossAngry, ground);
@@ -52,10 +53,13 @@ class BossTestScene extends Phaser.Scene {
     update(time, delta) {
         this.player.update(time, delta);
         
-        // CAMBIO: Actualizar bossAngry en lugar de BossSad
         if (this.bossAngry && this.bossAngry.active) {
             this.bossAngry.update(time, delta);
         }
+
+        /*if (this.bossFear && this.bossFear.active) {
+            this.bossFear.update(time, delta);
+        }*/
     }
 }
 
