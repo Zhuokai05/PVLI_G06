@@ -3,7 +3,14 @@ import PlayerIdleState from './States/PlayerIdleState.js';
 import PlayerMoveState from './States/PlayerMoveState.js';
 import PlayerJumpState from './States/PlayerJumpState.js';
 import PlayerDeathState from './States/PlayerDeathState.js';
+import PlayerDashState from './States/PlayerDashState.js';
 import PlayerKnockbackState from './States/PlayerKnockbackState.js';
+
+
+/**
+ * @Class Player
+ * Clase del objeto Player 
+ */
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
@@ -13,6 +20,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.physics.add.existing(this);
 
         this.setCollideWorldBounds(true);
+
         this.setGravityY(1000);
 
         this.scene = scene;
@@ -21,10 +29,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.maxHealth = 5;
         this.dead = false;
         this.damage = 1;
+        this.rangeDamage = 1;
         this.direction = 1; // 1 derecha, -1 izquierda
-        this.hasDash = false;
-        this.hasShield = false;
         this.grounded = false;
+
+        this.canDash = false;
+        this.canShield = false;
+        this.canRangeAttack = false;
+
 
         this.movementSpeed = 300;
         this.jumpSpeed = 800;
@@ -35,6 +47,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.jumpBufferTimer = 0;
         this.speedReduceRatioAtJump = 0.8;
 
+        this.isDashing = false;
+        this.dashSpeed = 1300;
+        this.dashDuration = 200;
+        this.dashCooldown = 500;
+        this.dashCooldownTimer = 0;
+
         this.meleeAttackDist = 100;
         this.meleeAttackWidge = 120;
         this.meleeAttackHeight = 70;
@@ -42,6 +60,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackDuration = 100; //cuanto dura el hitbox de su ataque
         this.isAttacking = false; //si esta atacando
 
+        this.rangeAttackDuration = 3000;
+        this.rangeAttackSpeed = 800;
+        this.rangeAttackCooldown = 300;
+
+        this.invulnerable = false;
         this.invulnerableTime = 1000; //tiempo invulnerable despues de recibir daño
         this.knockbackTime = 200; // tiempo de su knockback
         this.knockbackDistance = 200; //distancia de su knockback
@@ -64,6 +87,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         .addState('jump', new PlayerJumpState())
         .addState('knockback', new PlayerKnockbackState())
         .addState('dead', new PlayerDeathState())
+        .addState('dash', new PlayerDashState())
         .setState('idle');
 
 
@@ -87,22 +111,38 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.step(time, delta);
 
         this.attackDir = this.getAttackDirection();
-        if (this.attackDir) 
+
+        if (Phaser.Input.Keyboard.JustDown(this.keys.useOrb)) 
         {
-            this.performAttack(this.attackDir);
+            if (this.canDash && this.dashCooldownTimer <= 0 && !this.isDashing) {
+                this.stateMachine.setState('dash');
+            }
+            else if (this.canRangeAttack && this.dashCooldownTimer <= 0 && !this.isDashing) {
+                this.performRangeAttack();
+            }
+        }
+
+        else if (this.attackDir && !this.isDashing) 
+        {
+            this.performMeleeAttack(this.attackDir);
         }
 
         if (Phaser.Input.Keyboard.JustDown(this.keys.jump) || Phaser.Input.Keyboard.JustDown(this.keys.space)) 
         {
             this.jumpBufferTimer = this.jumpBufferTime;
         }
-
         else {
             this.jumpBufferTimer -= delta;
         }
 
+        this.dashCooldownTimer -= delta;
+
     }
 
+    /**
+    * @param {int} damage daño que recibe el jugador
+    * @param {int} knockbackdirection direccion que empuja al jugador, 1 derecha y -1 izquierda   
+    */
     takeDamage(damage,knockbackdirection) {
 
         if (this.invulnerable) return;
@@ -112,16 +152,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         this.setTint(0xff0000);
-        this.scene.time.delayedCall(this.invulnerableTime*0.8, () => this.setTint(this.orbTint));
+        this.safeDelay(this.invulnerableTime*0.8, () => this.setTint(this.orbTint));
 
         this.invulnerable = true;
 
 
         this.health -= damage;
-        this.emit('removeHealth', this.health);
+        this.emit('updateHearts', this.health, true);
         console.log(damage + ' daño recibido. Vida: ', + this.health);
 
-        this.scene.time.delayedCall(this.invulnerableTime, () => (this.invulnerable = false));
+        this.safeDelay(this.invulnerableTime, () => (this.invulnerable = false));
+        
 
         if (this.health <= 0) {
         this.die();
@@ -133,6 +174,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     // recoge el orbe si no lo tiene ya el player
+
+    /**
+     * 
+     * @param {Orb} orb orbe que recoge el jugador  
+     */
     collectOrb(orb) {
         if (!this.orbs.includes(orb)) {
             this.orbs.push(orb);
@@ -154,6 +200,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     //equipar orbe orb en el slot slotIndex
+
+    /**
+     * 
+     * @param {Int} slotIndex index de donde coloca el orbe, puede ser 0 o 1  
+     * @param {Orb} orb orbe que equipa
+     */
     equipOrb(slotIndex, orb) {
         if(!orb) return;
         if (slotIndex < 0 || slotIndex > 1) return;
@@ -181,6 +233,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
    }
 
    //cambiar orbe activo introduciendo manualmente el slot como parametro
+   /**
+    * 
+    * @param {int} slotIndex index del orbe que quieres activar, puede ser 0 o 1. 
+    */
    ActivateOrb(slotIndex) {
         let currentOrb = this.equippedOrbs[this.activeOrbIndex];
         let nextOrb = this.equippedOrbs[slotIndex];
@@ -224,7 +280,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     //realiza el ataque segun la direccion
-    performAttack(direction) {
+    /**
+     * 
+     * @param {string} direction direccion en la que ataca el jugador: left, right, up, down
+     */
+    performMeleeAttack(direction) {
         //comprueba si puede atacar
         if (this.isAttacking) return;
 
@@ -232,9 +292,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.isAttacking = true;
         //cooldown entre ataques
-        this.scene.time.delayedCall(this.attackCooldown, () => {
+        this.safeDelay(this.attackCooldown, () => {
             this.isAttacking = false;
         });
+        
 
         let offsetX = 0, offsetY = 0;
         let w = this.meleeAttackWidge;
@@ -264,15 +325,58 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (direction === 'down') {
                 this.canPogoJump = true;
 
-                this.scene.time.delayedCall(this.pogoJumpJudgeTime, () => {
+                this.safeDelay(this.pogoJumpJudgeTime, () => {
                     this.canPogoJump = false;
                 });
-            
             }
         });
 
         //destruir el hitbox tras attackduration
-        this.scene.time.delayedCall(this.attackDuration, () => hitbox.destroy());
+        this.safeDelay(this.attackDuration, () => hitbox.destroy());
     }
+
+    safeDelay(time, callback) {
+        if (!this.scene || !this.scene.time) return;
+        this.scene.time.delayedCall(time, () => {
+            if (this.scene) callback();
+        });
+    }
+
+    performRangeAttack() {
+
+    if (!this.canRangeAttack) return;
+    if (this.isAttacking) return;
+
+    this.isAttacking = true;
+
+    this.safeDelay(this.rangeAttackCooldown, () => this.isAttacking = false);
+
+    // crear proyectil
+    const projectile = this.scene.physics.add.sprite(this.x, this.y, 'range_projectile');
+    projectile.setDepth(4);
+    projectile.body.allowGravity = false;
+
+    // velocidad segun su direccion
+    projectile.setVelocityX(this.rangeAttackSpeed * this.direction);
+
+    // destruir despues de su duracion
+
+
+    this.safeDelay(this.rangeAttackDuration, () => {
+        if (projectile.active) projectile.destroy();
+    });
+
+
+    //destruye al chocar una pared
+    this.scene.physics.add.collider(projectile, this.scene.ground, () => {
+        projectile.destroy();
+    });
+
+    // hace daño a enemigos
+    this.scene.physics.add.overlap(projectile, this.scene.enemies, (proj, enemy) => {
+        enemy.takeDamage(this.rangeDamage * this.damageMultiplier);
+        proj.destroy();
+    });
+}
 
 }

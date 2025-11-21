@@ -10,9 +10,11 @@ export default class PlayerIdleState extends BaseState {
 
         if (player.keys.left.isDown || player.keys.right.isDown) {
             player.stateMachine.setState('move');
+            return;
         } 
-        else if (player.jumpBufferTimer >0 && player.isGrounded()) {
+        if (player.jumpBufferTimer >0 && player.isGrounded()) {
             player.stateMachine.setState('jump');
+            return;
         }
 
         /*

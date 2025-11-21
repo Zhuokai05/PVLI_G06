@@ -37,9 +37,21 @@ export class PreloadScene extends Phaser.Scene
     {frameWidth: 25,frameHeight: 25});
 
     // Boss
-    this.load.image('ira', './assets/Bosses/ira.png');
+    this.load.image('ira_flap_1', './assets/Bosses/ira1.png');
+    this.load.image('ira_flap_2', './assets/Bosses/ira2.png');
+    this.load.image('ira_flap_3', './assets/Bosses/ira3.png');
+    this.load.image('ira_flap_4', './assets/Bosses/ira4.png');
     this.load.image('fire_ball', 'assets/Bosses/Fire_ball.png');
     this.load.image('punch', 'assets/Bosses/Angry_punch.png');
+
+    this.load.image('tristeza', './assets/Bosses/tristeza.png');
+    this.load.image('icicle', './assets/Bosses/Sad_ice.png');
+    this.load.image('water_ball', './assets/Bosses/Water_ball.png');
+
+    this.load.image('mascara', './assets/Bosses/Mascara.png');
+    this.load.image('garra', './assets/Bosses/Garra.png');
+    this.load.image('corazon', './assets/Bosses/Corazon.png');
+    this.load.image('vaso', './assets/Bosses/Vaso.png');
 
     // Menus
     this.load.image('defeat_background', './assets/Menu/Fondo_derrota.png');
@@ -65,6 +77,4 @@ export class PreloadScene extends Phaser.Scene
     this.scene.start('MainMenu');
     
   }
-  
-
 }

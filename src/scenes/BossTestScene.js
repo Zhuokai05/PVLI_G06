@@ -1,6 +1,7 @@
 import Player from '../player/Player.js';
 import InputManager from '../managers/InputManager.js';
-import Boss from '../enemy/Boss/BossAngry.js';
+import BossFear from '../enemy/Boss/BossFear.js';
+import BossAngry from '../enemy/Boss/BossAngry.js';
 import UiManager from '../ui/UiManager.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 
@@ -33,11 +34,14 @@ class BossTestScene extends Phaser.Scene {
 
         // Grupo de enemigos
         this.enemies = this.physics.add.group();
+        
+        // Crear boss
+        //this.bossFear = new BossFear(this, 0, 0, this.player);
+        //this.enemies.add(this.bossFear);
 
-        // Crear boss 
-        this.boss = new Boss(this, this.cameras.main.width / 2, 400, this.player);
-        this.physics.add.collider(this.boss, ground);
-        this.enemies.add(this.boss);
+        this.bossAngry = new BossAngry(this, this.cameras.main.width / 2, 400, this.player);
+        this.physics.add.collider(this.bossAngry, ground);
+        this.enemies.add(this.bossAngry);
 
         // Configurar tecla ESC para pausa
         this.input.keyboard.on('keydown-ESC', () => {
@@ -49,10 +53,13 @@ class BossTestScene extends Phaser.Scene {
     update(time, delta) {
         this.player.update(time, delta);
         
-        // Actualizar el boss si existe
-        if (this.boss && this.boss.active) {
-            this.boss.update(time, delta);
+        if (this.bossAngry && this.bossAngry.active) {
+            this.bossAngry.update(time, delta);
         }
+
+        /*if (this.bossFear && this.bossFear.active) {
+            this.bossFear.update(time, delta);
+        }*/
     }
 }
 

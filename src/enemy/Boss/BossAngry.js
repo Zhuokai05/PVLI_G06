@@ -1,12 +1,13 @@
 import StateMachine from '../../stateMachine/StateMachine.js';
-import BossAngryFireBallState from './State/BossAngryFireBallState.js';
-import BossAngryPunchState from './State/BossAngryPunchState.js';
-import BossAngryPunchPlatformState from './State/BossAngryPunchPlatformState.js';
-import BossAngryCooldownState from './State/BossAngryCooldownState.js';
+import BossAngryFireBallState from './BossAngryState/BossAngryFireBallState.js';
+import BossAngryPunchState from './BossAngryState/BossAngryPunchState.js';
+import BossAngryPunchPlatformState from './BossAngryState/BossAngryPunchPlatformState.js';
+import BossAngryCooldownState from './BossAngryState/BossAngryCooldownState.js';
 
 export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {
-        super(scene, x, y, 'ira');
+        // Cambiar la key inicial a uno de los frames
+        super(scene, x, y, 'ira_flap_1');
         this.scene = scene;
         this.player = player;
 
@@ -21,6 +22,9 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.body.setSize(spriteWidth / 35, spriteHeight / 35);
         this.body.setOffset(spriteWidth / 9.9, spriteHeight / 12);
         this.body.moves = false;
+
+        // Crear animaciones
+        this.createAnimations();
 
         // Stats
         this.phase = 1;
@@ -63,6 +67,39 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
         this.attackCooldown = this.startCooldown;
         this.notdead = true;
+
+        // Iniciar animación
+        this.play('bossira_idle');
+    }
+
+    createAnimations() {
+        // Animación idle con el ciclo específico: ira1 -> ira2 -> ira3 -> ira4 -> ira3 -> ira2 -> ira1 -> ira2...
+        this.scene.anims.create({
+            key: 'bossira_idle',
+            frames: [
+                { key: 'ira_flap_1' },
+                { key: 'ira_flap_2' },
+                { key: 'ira_flap_3' },
+                { key: 'ira_flap_4' },
+                { key: 'ira_flap_3' },
+                { key: 'ira_flap_2' }
+            ],
+            frameRate: 8,
+            repeat: -1
+        });
+
+        // Animación de ataque (opcional - puedes crear más según necesites)
+        this.scene.anims.create({
+            key: 'bossira_attack',
+            frames: [
+                { key: 'ira_flap_4' },
+                { key: 'ira_flap_3' },
+                { key: 'ira_flap_2' },
+                { key: 'ira_flap_1' }
+            ],
+            frameRate: 12,
+            repeat: 0
+        });
     }
 
     setupCollisions() {
@@ -111,17 +148,27 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
-        if (this.notdead) 
-            {
-              this.stateMachine.step(time, delta);
-            }
-       
+        if (this.notdead) {
+            this.stateMachine.step(time, delta);
+        }
     }
 
     takeDamage(damage) {
         this.health -= damage;
         this.setTint(0xff0000);
-        this.scene.time.delayedCall(200, () => this.clearTint());
+        
+        // Parpadeo durante el daño
+        this.scene.tweens.add({
+            targets: this,
+            alpha: 0.5,
+            duration: 100,
+            yoyo: true,
+            repeat: 2,
+            onComplete: () => {
+                this.clearTint();
+                this.setAlpha(1);
+            }
+        });
 
         if (this.health <= 0) this.nextPhase();
     }
@@ -132,12 +179,8 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
             this.phase = 2;
             this.health = this.maxHealth + 3;
 
-            // Anadir el estado de plataforma a los disponibles
+            // Añadir el estado de plataforma a los disponibles
             this.availableStates.push('punchPlatform');
-
-            // Reducir cooldowns en fase 2 para mas dificultad
-            //this.minCooldown = 1000;
-            //this.maxCooldown = 2500;
 
             // Efecto visual y pausa
             this.setActive(false);
@@ -157,6 +200,9 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
                     ease: 'Sine.easeInOut'
                 });
 
+                // Reanudar animación
+                this.play('bossira_idle');
+
                 // Iniciar cooldown antes del primer ataque
                 this.generateNewCooldown();
                 this.stateMachine.setState('cooldown');
@@ -164,16 +210,16 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         } else {
             this.notdead = false;
             this.setVisible(false);
-
             this.die();
         }
     }
 
     die() {
         console.log('Boss derrotado definitivamente');
-         this.scene.time.delayedCall(2000, () => {   this.scene.scene.stop(); 
-        this.scene.scene.launch('Win')
-           this.destroy();});
-     
+        this.scene.time.delayedCall(2000, () => {   
+            this.scene.scene.stop(); 
+            this.scene.scene.launch('Win');
+            this.destroy();
+        });
     }
 }
