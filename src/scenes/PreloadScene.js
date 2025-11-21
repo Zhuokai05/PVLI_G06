@@ -45,6 +45,11 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('icicle', './assets/Bosses/Sad_ice.png');
     this.load.image('water_ball', './assets/Bosses/Water_ball.png');
 
+    this.load.image('mascara', './assets/Bosses/Mascara.png');
+    this.load.image('garra', './assets/Bosses/Garra.png');
+    this.load.image('corazon', './assets/Bosses/Corazon.png');
+    this.load.image('vaso', './assets/Bosses/Vaso.png');
+
     // Menus
     this.load.image('defeat_background', './assets/Menu/Fondo_derrota.png');
     this.load.image('defeat_player', './assets/Menu/Player_derrota.png');
@@ -69,6 +74,4 @@ export class PreloadScene extends Phaser.Scene
     this.scene.start('MainMenu');
     
   }
-  
-
 }
