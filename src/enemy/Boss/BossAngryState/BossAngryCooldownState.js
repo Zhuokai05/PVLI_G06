@@ -5,6 +5,9 @@ export default class BossAngryCooldownState extends BaseState {
         this.boss = context;
         this.cooldownTime = 0;
         console.log(`Boss en cooldown: ${this.boss.attackCooldown}ms`);
+        
+        // Asegurar que la animación idle se esté reproduciendo durante el cooldown
+        this.boss.play('bossira_idle');
     }
 
     execute(context, time, delta) {

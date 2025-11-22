@@ -18,14 +18,14 @@ export default class PlayerJumpState extends BaseState {
         if (player.keys.left.isDown) {
             player.setFlipX(true);
             player.direction = -1;
+            player.setVelocityX(player.direction * player.movementSpeed*player.speedMultiplier)
         }
          //si el jugador ha pulsado D 
         else if (player.keys.right.isDown) {
             player.setFlipX(false);
             player.direction = 1;
+            player.setVelocityX(player.direction * player.movementSpeed*player.speedMultiplier)
         }
-
-        player.setVelocityX(player.direction * player.movementSpeed*player.speedMultiplier)
 
         //si esta en el suelo cambia de estado
         if (player.isGrounded()) {
