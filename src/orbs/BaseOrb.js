@@ -1,3 +1,5 @@
+import PlayerDataManager from '../managers/PlayerDataManager.js';
+
 export default class BaseOrb extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, texture, name, description) {
     super(scene, x, y, texture);
@@ -20,6 +22,19 @@ export default class BaseOrb extends Phaser.Physics.Arcade.Sprite {
   //cuando el jugador recoge este orbe
   collect(player) {
     player.collectOrb(this);
+
+    // registrar nombre en el PlayerDataManager para persistencia
+    if (this.name) {
+      const arr = PlayerDataManager.data.collectedOrbNames || [];
+      if (!arr.includes(this.name)) {
+        arr.push(this.name);
+        PlayerDataManager.data.collectedOrbNames = arr;
+      }
+      // también mantener en player.collectedOrbNames
+      player.collectedOrbNames = player.collectedOrbNames || [];
+      if (!player.collectedOrbNames.includes(this.name)) player.collectedOrbNames.push(this.name);
+    }
+
     this.destroy();
   }
 

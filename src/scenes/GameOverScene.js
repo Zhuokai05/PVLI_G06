@@ -1,33 +1,30 @@
-class GameOverScene extends Phaser.Scene 
-{
-    constructor() 
-    {
-        super('GameOver'); 
+class GameOverScene extends Phaser.Scene {
+    constructor() {
+        super('GameOver');
     }
 
-    create() 
-    {
+    create() {
         console.log('GameOverScene creada exitosamente');
         // Fondo de derrota
         this.background = this.add.image(
-            this.cameras.main.width / 2, 
-            this.cameras.main.height / 2, 
+            this.cameras.main.width / 2,
+            this.cameras.main.height / 2,
             'defeat_background'
         );
         this.background.setScale(5, 5);
 
         // Player muerto en el centro
         this.deadPlayer = this.add.image(
-            this.cameras.main.width / 2, 
-            this.cameras.main.height / 2, 
+            this.cameras.main.width / 2,
+            this.cameras.main.height / 2,
             'defeat_player'
         );
         this.deadPlayer.setScale(5);
 
-        // Botón para volver al menú principal
+        /* Botón para volver al menú principal
         var backButton = this.add.image(
-            this.cameras.main.width / 2, 
-            this.cameras.main.height / 1.25, 
+            this.cameras.main.width / 2,
+            this.cameras.main.height / 1.25,
             'jugar'
         );
         backButton.setScale(0.3);
@@ -47,12 +44,52 @@ class GameOverScene extends Phaser.Scene
         backButton.on('pointerout', () => {
             backButton.clearTint();
             backButton.setScale(0.3);
+        });*/
+
+        // Botón reintentar
+        var retryButton = this.add.image(
+            this.cameras.main.width / 2,
+            this.cameras.main.height / 1.6,
+            "jugar"
+        );
+        retryButton.setScale(0.3);
+        retryButton.setTint(0xff4444); // para distinguirlo
+        retryButton.setInteractive();
+
+        retryButton.on("pointerdown", () => {
+            this.respawnPlayer();
         });
+
+
+
     }
 
-    update(time, delta) 
-    {
-      
+    respawnPlayer() {
+        // volvemos al nivel donde murió (TestPlayerScene)
+        let level = this.scene.get("TestPlayerScene");
+
+        // restauramos la posición del checkpoint
+        let pos = level.respawnPoint;
+
+        // limpiamos escena GameOver
+        this.scene.stop();
+
+        // reactivamos la escena del nivel
+        level.scene.start();
+
+        // movemos el player a la pos del checkpoint
+        level.player.x = pos.x;
+        level.player.y = pos.y;
+
+        // restauramos datos guardados
+        PlayerDataManager.resetForRetry();
+        PlayerDataManager.applyToPlayer(level.player);
+        console.log("Jugador respawned en checkpoint", pos);
+    }
+
+
+    update(time, delta) {
+
     }
 }
 

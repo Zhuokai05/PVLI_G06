@@ -4,7 +4,10 @@ export default class PlayerDataManager {
     maxHealth: 5,
     position: { x: 0, y: 0 },
     orbs: [],
-    equippedOrbs: [null, null], 
+    // nombres de orbes recogidos (strings)
+    collectedOrbNames: [],
+    // nombres de orbes equipados en los slots (strings o null)
+    equippedOrbNames: [null, null],
     activeOrbIndex: 0,
   };
 
@@ -15,8 +18,11 @@ export default class PlayerDataManager {
     this.data.position = { x: player.x, y: player.y };
     this.data.orbs = player.orbs;
 
-    // guardar los orbes equipados
-    this.data.equippedOrbs = player.equippedOrbs;
+    // guardar lista de nombres de orbes recogidos si el player la tiene
+    this.data.collectedOrbNames = player.collectedOrbNames || this.data.collectedOrbNames;
+
+    // guardar nombres de orbes equipados (no objetos)
+    this.data.equippedOrbNames = player.equippedOrbNames || this.data.equippedOrbNames;
     this.data.activeOrbIndex = player.activeOrbIndex;
   }
 
@@ -25,11 +31,54 @@ export default class PlayerDataManager {
     player.health = this.data.health;
     player.maxHealth = this.data.maxHealth;
 
-    player.orbs = this.data.orbs;
-    player.equippedOrbs = this.data.equippedOrbs;
+    // conservar lista de orbes como nombres recogidos
+    player.collectedOrbNames = this.data.collectedOrbNames || [];
+
+    // aplicar orbes equipados por nombre: guardamos array de names en player
+    player.equippedOrbNames = this.data.equippedOrbNames || [null, null];
     player.activeOrbIndex = this.data.activeOrbIndex;
-    player.ActivateOrb(player.activeOrbIndex);
-    player.emit('updateHearts',this.data.health);
+
+    // Aplicar efectos de orbes equipados (sin crear sprites)
+    this._applyEquippedOrbEffects(player);
+
+    player.emit('updateHearts', this.data.health);
     player.emit('orbChanged');
+  }
+
+  static _applyEquippedOrbEffects(player) {
+    // reset relevant flags
+    player.canDash = false;
+    player.canRangeAttack = false;
+    player.orbTint = 0xffffff;
+
+    const applyByName = (name) => {
+      if (!name) return;
+      switch (name) {
+        case 'Orb Ira':
+          player.canDash = true;
+          player.orbTint = 0xff9900;
+          break;
+        case 'Orb Tristeza':
+          player.canRangeAttack = true;
+          player.orbTint = 0x9fc5e8;
+          break;
+        default:
+          break;
+      }
+    };
+
+    if (player.equippedOrbNames && player.equippedOrbNames.length) {
+      player.equippedOrbNames.forEach(name => applyByName(name));
+    }
+
+    // apply tint if any
+    player.setTint(player.orbTint);
+  }
+
+  // Resetea el estado guardado para un reintento (retry) desde Game Over.
+  // Actualmente solo resetea la vida al máximo, pero se puede ampliar
+  // para limpiar otros estados si fuera necesario.
+  static resetForRetry() {
+    this.data.health = this.data.maxHealth;
   }
 }

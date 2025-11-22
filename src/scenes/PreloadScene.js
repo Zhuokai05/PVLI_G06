@@ -16,6 +16,8 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('angelHealth', './assets/UI/AngelHeart.png');
     this.load.image('orbIra', './assets/UI/OrbeFuego.png');
     this.load.image('orbTristeza', './assets/UI/OrbeHielo.png');
+    this.load.image('checkpoint', './assets/Escena/AltarCheckpoint.png');
+
 
     // Angel espada normal
     this.load.image('angel_sword_idle', 'assets/Player/Angel_Espada_normal_1.png');
