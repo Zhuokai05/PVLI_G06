@@ -167,7 +167,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         }
 
         if (this.player.x > 1100) {
-            PlayerDataManager.saveFromPlayer(this.player);
+            PlayerDataManager.saveLifeFromPlayer(this.player);
             this.scene.stop();
             this.scene.launch('BossScene');
         }

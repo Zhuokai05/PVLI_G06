@@ -16,7 +16,7 @@ export default class PlayerDataManager {
   static saveFromPlayer(player) {
     this.data.health = player.health;
     this.data.maxHealth = player.maxHealth;
-    this.data.position = { x: 100, y: 100 };
+    this.data.position = { x: 100, y: 100 };      
     this.data.orbs = player.orbs;
     this.data.respawnPoint = player.respawnPoint;
     console.log("Guardando datos del jugador en PlayerDataManager:",
@@ -88,19 +88,10 @@ export default class PlayerDataManager {
     // apply tint if any
     player.setTint(player.orbTint);
   }
-
-  static createPlayer(x, y) {
-    this.player = new Player(this, 0, 0);
-    this.applyToPlayer(this.player);
-    if (!this.data.respawnPoint) {
-      this.data.respawnPoint = { x: x, y: y };
-    }else {
-      x = this.data.respawnPoint.x;
-      y = this.data.respawnPoint.y;
-    }
-    this.player.setX(x);
-    this.player.setY(y);
+  static saveLifeFromPlayer(player) {
+    this.data.health = player.health;
   }
+
 
   // Resetea el estado guardado para un reintento (retry) desde Game Over.
   // Actualmente solo resetea la vida al máximo, pero se puede ampliar

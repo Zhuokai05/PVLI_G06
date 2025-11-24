@@ -32,7 +32,9 @@ class BossTestScene extends Phaser.Scene {
             PlayerDataManager.data.respawnPoint.x, PlayerDataManager.data.respawnPoint.y);
 
         PlayerDataManager.applyToPlayer(this.player);
+
         this.uiManager = new UiManager(this, this.player);
+        this.uiManager.updateHearts(this.player.health);
 
 
         this.physics.add.collider(this.player, ground);
