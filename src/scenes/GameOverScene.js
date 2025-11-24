@@ -1,3 +1,5 @@
+import PlayerDataManager from '../managers/PlayerDataManager.js';
+
 class GameOverScene extends Phaser.Scene {
     constructor() {
         super('GameOver');
@@ -77,12 +79,8 @@ class GameOverScene extends Phaser.Scene {
         // reactivamos la escena del nivel
         level.scene.start();
 
-        // movemos el player a la pos del checkpoint
-        level.player.x = pos.x;
-        level.player.y = pos.y;
-
         // restauramos datos guardados
-        PlayerDataManager.resetForRetry();
+        //PlayerDataManager.resetForRetry();
         PlayerDataManager.applyToPlayer(level.player);
         console.log("Jugador respawned en checkpoint", pos);
     }

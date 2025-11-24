@@ -34,6 +34,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.rangeDamage = 1;
         this.direction = 1; // 1 derecha, -1 izquierda
         this.grounded = false;
+        this.respawnPoint = { x: 0, y: 0 };
 
         this.canDash = false;
         this.canShield = false;
@@ -277,6 +278,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (this.dead) return;
             console.log('Intentando cambiar a GameOver scene...');
             this.health = this.maxHealth;
+            this.respawnPoint = PlayerDataManager.data.respawnPoint;
             PlayerDataManager.saveFromPlayer(this);
             this.scene.scene.stop();
             this.scene.scene.launch('GameOver');

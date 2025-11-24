@@ -20,21 +20,26 @@ class BossTestScene extends Phaser.Scene {
 
         // Crear suelo
         const ground = this.physics.add.staticGroup();
-        ground.create(this.cameras.main.width/2, this.cameras.main.height, 'ground')
-              .setScale(4, 3)
-              .refreshBody();
+        ground.create(this.cameras.main.width / 2, this.cameras.main.height, 'ground')
+            .setScale(4, 3)
+            .refreshBody();
 
         // Crear jugador
-        this.player = new Player(this, 100, 400);
-        this.uiManager = new UiManager(this, this.player);
+        if (!PlayerDataManager.data.respawnPoint) {
+            PlayerDataManager.data.respawnPoint = { x: 100, y: 400 };
+        }
+        this.player = new Player(this,
+            PlayerDataManager.data.respawnPoint.x, PlayerDataManager.data.respawnPoint.y);
 
         PlayerDataManager.applyToPlayer(this.player);
+        this.uiManager = new UiManager(this, this.player);
+
 
         this.physics.add.collider(this.player, ground);
 
         // Grupo de enemigos
         this.enemies = this.physics.add.group();
-        
+
         // Crear boss
         //this.bossFear = new BossFear(this, 0, 0, this.player);
         //this.enemies.add(this.bossFear);
@@ -45,14 +50,14 @@ class BossTestScene extends Phaser.Scene {
 
         // Configurar tecla ESC para pausa
         this.input.keyboard.on('keydown-ESC', () => {
-            this.scene.pause('BossScene'); 
-            this.scene.launch('Pause' , { file: 'BossScene' });    
+            this.scene.pause('BossScene');
+            this.scene.launch('Pause', { file: 'BossScene' });
         });
     }
 
     update(time, delta) {
         this.player.update(time, delta);
-        
+
         if (this.bossAngry && this.bossAngry.active) {
             this.bossAngry.update(time, delta);
         }

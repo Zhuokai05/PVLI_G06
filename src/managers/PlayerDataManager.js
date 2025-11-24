@@ -9,14 +9,20 @@ export default class PlayerDataManager {
     // nombres de orbes equipados en los slots (strings o null)
     equippedOrbNames: [null, null],
     activeOrbIndex: 0,
+    respawnPoint: null,
   };
 
   // guardar datos del jugador
   static saveFromPlayer(player) {
     this.data.health = player.health;
     this.data.maxHealth = player.maxHealth;
-    this.data.position = { x: player.x, y: player.y };
+    this.data.position = { x: 100, y: 100 };
     this.data.orbs = player.orbs;
+    this.data.respawnPoint = player.respawnPoint;
+    console.log("Guardando datos del jugador en PlayerDataManager:",
+      this.data.health, this.data.maxHealth, this.data.position, this.data.collectedOrbNames,
+      this.data.equippedOrbNames, this.data.activeOrbIndex, this.data.respawnPoint);
+    console.log(player.respawnPoint);
 
     // guardar lista de nombres de orbes recogidos si el player la tiene
     this.data.collectedOrbNames = player.collectedOrbNames || this.data.collectedOrbNames;
@@ -30,6 +36,10 @@ export default class PlayerDataManager {
   static applyToPlayer(player) {
     player.health = this.data.health;
     player.maxHealth = this.data.maxHealth;
+    if (player.dead) {
+      player.setX = this.data.respawnPoint.x;
+      player.setY = this.data.respawnPoint.y;
+    }
 
     // conservar lista de orbes como nombres recogidos
     player.collectedOrbNames = this.data.collectedOrbNames || [];
@@ -43,6 +53,10 @@ export default class PlayerDataManager {
 
     player.emit('updateHearts', this.data.health);
     player.emit('orbChanged');
+    console.log("Aplicando a Jugador:",
+      this.data.health, this.data.maxHealth, this.data.position, this.data.collectedOrbNames,
+      this.data.equippedOrbNames, this.data.activeOrbIndex, this.data.respawnPoint);
+    console.log(player.respawnPoint);
   }
 
   static _applyEquippedOrbEffects(player) {
@@ -75,10 +89,23 @@ export default class PlayerDataManager {
     player.setTint(player.orbTint);
   }
 
+  static createPlayer(x, y) {
+    this.player = new Player(this, 0, 0);
+    this.applyToPlayer(this.player);
+    if (!this.data.respawnPoint) {
+      this.data.respawnPoint = { x: x, y: y };
+    }else {
+      x = this.data.respawnPoint.x;
+      y = this.data.respawnPoint.y;
+    }
+    this.player.setX(x);
+    this.player.setY(y);
+  }
+
   // Resetea el estado guardado para un reintento (retry) desde Game Over.
   // Actualmente solo resetea la vida al máximo, pero se puede ampliar
   // para limpiar otros estados si fuera necesario.
-  static resetForRetry() {
-    this.data.health = this.data.maxHealth;
-  }
+  /*static resetForRetry() {
+    player.health = this.data.maxHealth;
+  }*/
 }
