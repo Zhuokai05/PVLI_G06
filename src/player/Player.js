@@ -92,16 +92,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             .addState('dead', new PlayerDeathState())
             .addState('dash', new PlayerDashState())
             .setState('idle');
-        this.stateMachine = new StateMachine(this, 'player');
-        this.stateMachine
-            .addState('idle', new PlayerIdleState())
-            .addState('move', new PlayerMoveState())
-            .addState('jump', new PlayerJumpState())
-            .addState('knockback', new PlayerKnockbackState())
-            .addState('dead', new PlayerDeathState())
-            .setState('idle');
-
-
+  
         this.keys.changeOrb.on('down', () => {
             this.switchActiveOrb();
         });
@@ -402,7 +393,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.safeDelay(this.rangeAttackCooldown, () => this.isAttacking = false);
 
             // crear proyectil
-            const projectile = this.scene.physics.add.sprite(this.x, this.y, 'range_projectile');
+            let projectile = this.scene.physics.add.sprite(this.x, this.y, 'range_projectile');
             projectile.setDepth(4);
             projectile.body.allowGravity = false;
 
