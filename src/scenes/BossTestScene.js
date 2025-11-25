@@ -75,6 +75,7 @@ class BossTestScene extends Phaser.Scene {
         /*if (this.bossFear && this.bossFear.active) {
             this.bossFear.update(time, delta);
         }*/
+        }
     }
 }
 
