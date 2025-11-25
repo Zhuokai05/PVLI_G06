@@ -98,10 +98,10 @@ export default class BossFearHeartState extends BaseState {
         }
         
         // El corazón se queda pero sin animación y sin colisión
-        if (this.boss.heart) {
+        /*if (this.boss.heart) {
             this.boss.heart.body.debugShowBody = false;
             this.boss.heart.setTint(0x666666); // Gris para indicar inactivo
             this.boss.heart.body.enable = false; // Deshabilitar colisión
-        }
+        }*/
     }
 }

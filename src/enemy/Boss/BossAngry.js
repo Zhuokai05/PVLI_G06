@@ -88,7 +88,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
             repeat: -1
         });
 
-        // Animación de ataque (opcional - puedes crear más según necesites)
+        // Animación de ataque 
         this.scene.anims.create({
             key: 'bossira_attack',
             frames: [

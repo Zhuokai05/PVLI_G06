@@ -40,7 +40,7 @@ export default class BossFearCupGameState extends BaseState {
             cup.setImmovable(true);
             cup.setData('index', index);
             
-            // MÁS LENTO: Caída de los vasos (1200ms en lugar de 800ms)
+            // MÁS LENTO: Caída de los vasos 
             scene.tweens.add({
                 targets: cup,
                 y: targetY,

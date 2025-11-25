@@ -36,6 +36,8 @@ export default class BossFear extends Phaser.GameObjects.Container {
 
     takeDamage(damage) {
         this.health -= damage;
+        console.log(this.player)
+        console.log(this)
         console.log(`BossFear salud: ${this.health}/${this.maxHealth} (Fase ${this.phase})`);
 
         if (this.health <= 0) {
@@ -68,7 +70,7 @@ export default class BossFear extends Phaser.GameObjects.Container {
 
     getCupSpeed() {
         const healthPercentage = this.health / this.maxHealth;
-        // VELOCIDAD MÁS LENTA: de 1200ms a 600ms (en lugar de 800ms a 300ms)
+        // VELOCIDAD MÁS LENTA: de 1200ms a 600ms 
         return 1200 - (healthPercentage * 600);
     }
 }
