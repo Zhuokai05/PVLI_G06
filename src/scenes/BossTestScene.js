@@ -51,7 +51,7 @@ class BossTestScene extends Phaser.Scene {
         //this.physics.add.collider(this.bossAngry, ground);
         //this.enemies.add(this.bossAngry);
 
-        this.bossTutorial = new BossTutorial(this, this.cameras.main.width / 2, 400, this.player);
+        this.bossTutorial = new BossTutorial(this, this.cameras.main.width - 60, this.cameras.main.height - 150, this.player);
         this.physics.add.collider(this.bossTutorial, ground);
         this.enemies.add(this.bossTutorial);
 

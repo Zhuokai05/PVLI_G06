@@ -29,10 +29,10 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
         this.damage = 1;
 
         // Cooldown
-        this.startCooldown = 1200;
+        this.startCooldown = 3000;
         this.attackCooldown = this.startCooldown;
-        this.minCooldown = 800;
-        this.maxCooldown = 1400;
+        this.minCooldown = 3000;   
+        this.maxCooldown = 3000;  
 
         // Máquina de estados
         this.stateMachine = new StateMachine(this, 'bossTutorial');
@@ -55,8 +55,8 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
         // Flag para saber si golpeó al player durante un sweep
         this._hitPlayerThisSweep = false;
 
-        // Alive flag
-        this.aliveBoss = true;
+        // Alive flag - CAMBIADO: usar notdead como BossAngry
+        this.notdead = true;
 
         // Iniciar en cooldown para espaciar primera acción
         this.attackCooldown = this.startCooldown;
@@ -82,7 +82,7 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
     }
 
     generateNewCooldown() {
-        this.attackCooldown = Phaser.Math.Between(this.minCooldown, this.maxCooldown);
+        this.attackCooldown = 3000;
     }
 
     startRandomState() {
@@ -96,12 +96,16 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
-        if (!this.aliveBoss) return;
-        this.stateMachine.step(time, delta);
+        // CAMBIADO: usar notdead como BossAngry
+        if (this.notdead) {
+            this.stateMachine.step(time, delta);
+        }
     }
 
     takeDamage(damage) {
-        if (!this.aliveBoss) return;
+        // CAMBIADO: Verificar notdead como BossAngry
+        if (!this.notdead) return;
+        
         this.health -= damage;
         this.setTint(0xff0000);
         this.scene.tweens.add({
@@ -128,6 +132,10 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
             // añadir jumpAttack a disponibles
             this.availableStates.push('jumpAttack');
 
+            // Actualizar cooldowns para fase 2 también a 3 segundos
+            this.minCooldown = 3000;
+            this.maxCooldown = 3000;
+
             // Pequeña pausa/efecto
             this.scene.cameras.main.shake(600, 0.02);
             this.scene.time.delayedCall(1000, () => {
@@ -135,14 +143,18 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
                 this.stateMachine.setState('cooldown');
             });
         } else {
-            // Muere definitivamente
-            this.aliveBoss = false;
+            this.notdead = false;
             this.setVisible(false);
-            this.scene.time.delayedCall(1200, () => {
-                this.destroy();
-                // lanzar escena de Win si quieres (igual que BossAngry)
-                this.scene.scene.launch('Win');
-            });
+            this.die();
         }
+    }
+
+    die() {
+        console.log('Boss Tutorial derrotado definitivamente');
+        this.scene.time.delayedCall(2000, () => {   
+            // Lanzar escena Win antes de destruir
+            this.scene.scene.launch('Win');
+            this.destroy();
+        });
     }
 }

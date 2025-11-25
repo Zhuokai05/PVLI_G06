@@ -5,44 +5,36 @@ export default class BossTutorialJumpAttackState extends BaseState {
         this.boss = context;
         this.scene = this.boss.scene;
         this.stateTime = 0;
-        this.currentPhase = 'warning'; // warning -> lift -> fall -> finish
+        this.currentPhase = 'lift'; // MODIFICADO: lift -> fall -> warning -> finish
 
-        this.warningDuration = 900;
-        this.liftDuration = 400;
-        this.fallDuration = 600;
-        this.cooldownDuration = 300;
-
-        // Crear rectángulo vertical de advertencia en la posición actual del jugador
-        const cam = this.scene.cameras.main;
-        this.spawnX = Phaser.Math.Clamp(this.boss.player.x, 50, cam.width - 50);
-
-        this.warningRect = this.scene.add.rectangle(
-            this.spawnX,
-            cam.height / 2,
-            120,
-            cam.height,
-            0xff0000,
-            0.45
-        );
+        // Duraciones en ms 
+        this.liftDuration = 800;
+        this.fallDuration = 800;
+        this.warningDuration = 1400; // Aumentado para total de ~3 segundos
+        this.cooldownDuration = 1000;
 
         // Guardar la y "suelo" del boss para aterrizar
         this.groundY = this.boss.y;
+        
+        // Iniciar el levantamiento inmediatamente
+        this.startLift();
     }
 
     execute(context, time, delta) {
         this.stateTime += delta;
 
         switch (this.currentPhase) {
-            case 'warning':
-                if (this.stateTime >= this.warningDuration) {
-                    this.startLift();
-                }
-                break;
             case 'lift':
                 // waiting for lift tween to complete
                 break;
             case 'fall':
                 // waiting for fall tween to complete
+                break;
+            case 'warning':
+                if (this.stateTime >= this.warningDuration) {
+                    this.currentPhase = 'finish';
+                    this.stateTime = 0;
+                }
                 break;
             case 'finish':
                 if (this.stateTime >= this.cooldownDuration) {
@@ -55,8 +47,6 @@ export default class BossTutorialJumpAttackState extends BaseState {
     startLift() {
         this.currentPhase = 'lift';
         this.stateTime = 0;
-
-        if (this.warningRect && this.warningRect.active) this.warningRect.destroy();
 
         // Subir al cielo (fuera de cámara)
         const liftY = -200;
@@ -85,6 +75,16 @@ export default class BossTutorialJumpAttackState extends BaseState {
         // Alinear flip si hace falta
         this.boss.flipX = (targetX > this.boss.x);
 
+        // MODIFICACIÓN: Crear rectángulo de advertencia cuando está en el aire
+        this.warningRect = this.scene.add.rectangle(
+            targetX,
+            this.groundY,
+            120,
+            120,
+            0xff0000,
+            0.45
+        );
+
         // Tween para caer al target (simula salto y caída)
         this.scene.tweens.add({
             targets: this.boss,
@@ -93,6 +93,11 @@ export default class BossTutorialJumpAttackState extends BaseState {
             duration: this.fallDuration,
             ease: 'Quad.easeIn',
             onComplete: () => {
+                // Destruir el rectángulo de advertencia al aterrizar
+                if (this.warningRect && this.warningRect.active) {
+                    this.warningRect.destroy();
+                }
+
                 // Al aterrizar, si está tocando al player, inflige daño (collision manejada por overlap)
                 // Forzamos una comprobación inmediata
                 if (this.scene.physics.overlap(this.boss, this.boss.player)) {
@@ -101,8 +106,8 @@ export default class BossTutorialJumpAttackState extends BaseState {
                     this.boss.onHitPlayer(this.boss, this.boss.player);
                 }
 
-                // Ir al finish
-                this.currentPhase = 'finish';
+                // Ir al warning (que ahora es después del aterrizaje)
+                this.currentPhase = 'warning';
                 this.stateTime = 0;
             }
         });

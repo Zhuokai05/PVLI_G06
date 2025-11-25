@@ -7,19 +7,27 @@ export default class BossTutorialSideAttackState extends BaseState {
         this.stateTime = 0;
         this.currentPhase = 'warning'; // warning -> attack -> finish
 
-        // Duraciones en ms
-        this.warningDuration = 900;
-        this.attackDuration = 700; // duración del sweep tween
-        this.cooldownDuration = 300;
+        // Duraciones en ms 
+        this.warningDuration = 1000;
+        this.attackDuration = 1000; // duración del sweep tween
+        this.cooldownDuration = 1000; // Aumentado para total de ~3segundos
 
         // Reseteo flag
         this.boss._hitPlayerThisSweep = false;
 
-        // Decidir dirección: si está más cerca de la izquierda, ir a la derecha, etc. O azar
-        this.direction = Phaser.Math.Between(0,1) === 0 ? 'right' : 'left';
+        // MODIFICACIÓN: La dirección siempre es del lado en el que está hacia el otro extremo
+        const cam = this.scene.cameras.main;
+        const leftX = 50;
+        const rightX = cam.width - 50;
+        
+        // Determinar dirección basada en la posición actual
+        const bossCenterX = this.boss.x;
+        const camCenterX = cam.width / 2;
+        
+        // Si está en la izquierda, va a la derecha, y viceversa
+        this.direction = (bossCenterX < camCenterX) ? 'right' : 'left';
 
         // Crear rectángulo de advertencia horizontal (barrido)
-        const cam = this.scene.cameras.main;
         const warningHeight = 120;
         this.warningRect = this.scene.add.rectangle(
             cam.width / 2,
