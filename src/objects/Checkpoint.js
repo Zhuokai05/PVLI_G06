@@ -78,7 +78,7 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
         player.emit("updateHearts", player.health);
 
         // guardar respawn en la escena
-        player.scene.respawnPoint = { x: this.x, y: this.y };
+        player.respawnPoint = { x: this.x, y: this.y - 50};
 
         // guardar datos globales
         PlayerDataManager.saveFromPlayer(player);

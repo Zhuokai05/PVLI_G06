@@ -1,6 +1,7 @@
 import Player from '../player/Player.js';
 import InputManager from '../managers/InputManager.js';
 import BasicMeleeEnemy from '../enemy/BasicMeleeEnemy.js';
+import RangedEnemy from '../enemy/RangedEnemy.js';
 import UiManager from '../ui/UiManager.js';
 import TristezaOrb from '../orbs/TristezaOrb.js';
 import IraOrb from '../orbs/IraOrb.js';
@@ -30,7 +31,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.ground.create(500, 500, 'ground').setScale(2).refreshBody();
         this.ground.create(500, 400, 'ground').setScale(2).refreshBody();
         this.ground.create(1000, 500, 'ground').setScale(2).refreshBody();
-        
+
 
         let ground = this.physics.add.staticGroup();
         ground.create(0, 500, 'ground').setScale(2).refreshBody();
@@ -39,7 +40,6 @@ export default class TestPlayerScene extends Phaser.Scene {
         ground.create(1000, 500, 'ground').setScale(2).refreshBody();
 
         this.orbGroup = this.physics.add.group();
-        // Only spawn orbs that haven't been collected yet
         const collected = PlayerDataManager.data.collectedOrbNames || [];
         if (!collected.includes('Orb Ira')) {
             const iraOrb = new IraOrb(this, 400, 300);
@@ -50,11 +50,15 @@ export default class TestPlayerScene extends Phaser.Scene {
             this.orbGroup.add(tristezaOrb);
         }
 
-        this.player = new Player(this, 100, 100);
-        // Respawn inicial si no hay checkpoint
-        this.respawnPoint = { x: 100, y: 100 };
+        // Creacion del jugador en el punto de respawn guardado
+        if (!PlayerDataManager.data.respawnPoint) {
+            PlayerDataManager.data.respawnPoint = { x: 100, y: 100 };
+        }
+        this.player = new Player(this,
+            PlayerDataManager.data.respawnPoint.x, PlayerDataManager.data.respawnPoint.y);
 
-        // Crear un checkpoint en el nivel (interacción con E en vez de trigger)
+        PlayerDataManager.applyToPlayer(this.player);
+        // Crear un checkpoint en el nivel
         this.checkpoint = new Checkpoint(this, 500, 340);
         // overlap solo para detectar proximidad; la activación ocurre al pulsar E
         this.physics.add.overlap(this.player, this.checkpoint, (player, cp) => {
@@ -62,11 +66,11 @@ export default class TestPlayerScene extends Phaser.Scene {
             if (cp.prompt) cp.prompt.setVisible(true);
         });
 
-        if (this.respawnPoint) {
+        /*if (this.respawnPoint) {
             this.player.x = this.respawnPoint.x;
             this.player.y = this.respawnPoint.y;
             PlayerDataManager.applyToPlayer(this.player);
-        }
+        }*/
 
 
         this.uiManager = new UiManager(this, this.player);
@@ -111,8 +115,8 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.enemies.add(new BasicMeleeEnemy(this, 600, 300, 'basicEnemySad'));
         this.enemies.add(new BasicMeleeEnemy(this, 900, 300, 'basicEnemyHappy'));
         this.enemies.add(new BasicMeleeEnemy(this, 1000, 300, 'basicEnemyFear'));
+        this.enemies.add(new RangedEnemy(this, 700, 250, 'rangedEnemy'));
 
-  
         this.physics.add.collider(this.player, this.ground);
         this.physics.add.collider(this.ground, this.enemies);
 
@@ -139,7 +143,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             // ocultar prompt si estaba visible
             if (this.checkpoint && this.checkpoint.prompt) this.checkpoint.prompt.setVisible(false);
         });
-
+        this.events.emit("create");
     }
 
     update(time, delta) {
@@ -164,10 +168,12 @@ export default class TestPlayerScene extends Phaser.Scene {
         }
 
         if (this.player.x > 1100) {
-            PlayerDataManager.saveFromPlayer(this.player);
+            PlayerDataManager.saveLifeFromPlayer(this.player);
             this.scene.stop();
             this.scene.launch('BossScene');
         }
+
+        this.events.emit("create");
 
     }
 }

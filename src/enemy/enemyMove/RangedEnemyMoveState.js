@@ -1,7 +1,7 @@
 import BaseEnemyMoveState from './BaseEnemyMoveState.js';
 
-export default class BasicMeleeEnemyMoveState extends BaseEnemyMoveState {
-  enter(enemy){
+export default class RangedEnemyMoveState extends BaseEnemyMoveState {
+enter(enemy){
     super.enter(enemy)
   }
   
