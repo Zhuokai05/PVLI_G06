@@ -37,6 +37,8 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
       this
     );
 
+    this.setDepth(4);
+
   }
 
   update(time, delta) {
