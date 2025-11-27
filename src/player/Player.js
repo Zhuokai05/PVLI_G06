@@ -30,7 +30,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.health = 5;
         this.maxHealth = 5;
         this.dead = false;
-        this.damage = 1;
+        this.damage = 10;
         this.rangeDamage = 1;
         this.direction = 1; // 1 derecha, -1 izquierda
         this.grounded = false;
