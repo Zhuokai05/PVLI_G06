@@ -6,12 +6,11 @@ export default class RangedEnemyAttackState extends BaseEnemyAttackState {
     enter (enemy){
         super.enter(enemy);
         this.shootProjectile(enemy);
-        console.log("shot")
 
     }
 
     execute(enemy, time, delta) {
-        super.execute(enemy, time, delta); 
+        super.execute(enemy, time, delta); //Cambia de estado si no esta atacando
     }
 
 
@@ -28,8 +27,5 @@ export default class RangedEnemyAttackState extends BaseEnemyAttackState {
             enemy.scene.player,
         );
 
-    }
-    exit (enemy){
-        super.exit(enemy);
     }
 }

@@ -1,6 +1,6 @@
 import BaseEnemy from './BaseEnemy.js';
 import RangedEnemyAttackState from './enemyAttack/RangedEnemyAttackState.js';
-import RangedEnemyMoveState from './enemyMove/RangedEnemyMoveState.js';
+import RangedEnemyMoveState from './enemyMove/BaseEnemyMoveState.js';
 
 export default class RangedEnemy extends BaseEnemy {
     constructor(scene, x, y, sprite) {
