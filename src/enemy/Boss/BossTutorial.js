@@ -152,6 +152,7 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
     die() {
         console.log('Boss Tutorial derrotado definitivamente');
         this.scene.time.delayedCall(2000, () => {   
+            this.scene.scene.stop(); 
             // Lanzar escena Win antes de destruir
             this.scene.scene.launch('Win');
             this.destroy();
