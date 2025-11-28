@@ -18,7 +18,6 @@ export default class BaseEnemyMoveState extends BaseState {
 
 
     //persigue al jugador si esta en rango
-    console.log(distance)
     if (!this.closeEnemy(enemy,direction) && enemy.canSeePlayer() && distance >= enemy.attackRange) {
       enemy.setVelocityX(direction * enemy.speed);
       enemy.setFlipX(direction < 0);
