@@ -112,12 +112,11 @@ export default class TestPlayerScene extends Phaser.Scene {
 
 
         this.enemies = this.physics.add.group();
-        this.enemies.add(new BasicMeleeEnemy(this, 200, 300, 'basicEnemyAngry'));
         this.enemies.add(new BasicMeleeEnemy(this, 600, 300, 'basicEnemySad'));
         this.enemies.add(new BasicMeleeEnemy(this, 900, 300, 'basicEnemyHappy'));
         this.enemies.add(new BasicMeleeEnemy(this, 1000, 300, 'basicEnemyFear'));
-        this.enemies.add(new RangedEnemy(this, 700, 250, 'rangedEnemy'));
-        this.enemies.add(new MineEnemy(this, 300, 300, 'mineEnemy'))
+       // this.enemies.add(new RangedEnemy(this, 700, 250, 'rangedEnemy'));
+        this.enemies.add(new MineEnemy(this, 200, 300, 'mineEnemy'))
 
         this.physics.add.collider(this.player, this.ground);
         this.physics.add.collider(this.ground, this.enemies);

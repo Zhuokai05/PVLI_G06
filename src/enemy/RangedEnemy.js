@@ -8,6 +8,8 @@ export default class RangedEnemy extends BaseEnemy {
 
         this.attackRange = 900; //rango ataque del enemigo a distancia
         this.attackCooldown = 2000; // cooldown entre ataques
+        this.attackDuration = 1000; // lo que tarda en atacar
+
 
         this.detectPlayerRangeX = 1000; //rango en X que empieza a detecta el jugador
         this.detectPlayerRangeY = 200; //rango en Y que empieza a detecta el jugador
