@@ -6,12 +6,12 @@ export default class IraOrb extends BaseOrb {
   }
 
   onActivate(player) {
-    player.canDash = true;
-    player.orbTint = 0xff9900;
-    player.setTint(player.orbTint);
+    this.player.canDash = true;
+    this.player.orbTint = 0xff9900;
+    this.player.setTint(player.orbTint);
   }
 
-  onDeactivate(player) {
-        player.canDash = false;
+  onDesactivate(player) {
+    this.player.canDash = false;
   }
 }

@@ -34,12 +34,17 @@ export default class PlayerDataManager {
   }
 
   // lee los datos guardados y lo aplica al nuevo jugador
-  static applyDataToPlayer(player) {
+  static applyDataToPlayer(player,scene) {
     player.health = this.data.health;
     player.maxHealth = this.data.maxHealth;
     if (player.dead) {
       player.setX = this.data.respawnPoint.x;
       player.setY = this.data.respawnPoint.y;
+    }
+
+
+    for (let orb of this.data.collectedOrbs){
+      orb.setPlayer(player);
     }
 
     // carga los orbes recogidos de player

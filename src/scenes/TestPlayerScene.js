@@ -18,11 +18,6 @@ export default class TestPlayerScene extends Phaser.Scene {
     create() {
         this.inputManager = new InputManager(this);
 
-        this.orbRegistry = [
-            { name: 'Orb Ira' },
-            { name: 'Orb Tristeza' },
-        ];
-
         this.physics.world.setBounds(-200, 0, 1400, 1000);
 
         this.ground = this.physics.add.staticGroup();
@@ -134,6 +129,7 @@ export default class TestPlayerScene extends Phaser.Scene {
     }
 
     update(time, delta) {
+
         this.player.update(time, delta);
 
         this.enemies.getChildren().forEach(enemy => {

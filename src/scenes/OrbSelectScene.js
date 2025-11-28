@@ -6,83 +6,173 @@ class OrbSelectScene extends Phaser.Scene {
     }
 
     create(data) {
-        console.log('OrbSelect creada, datos:', data);
+        const fromScene = data.fromScene;
 
-        const from = data && data.fromScene ? data.fromScene : null;
-        // fondo semi-transparente
-        this.bg = this.add.rectangle(this.cameras.main.width/2, this.cameras.main.height/2, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.6).setDepth(50);
+        // creamos fondo y panel
+        this.createBackground();
+        this.createPanel();
 
-        // panel
-        const panelW = 400, panelH = 300;
-        const panelX = this.cameras.main.width/2 - panelW/2;
-        const panelY = this.cameras.main.height/2 - panelH/2;
-        this.panel = this.add.rectangle(this.cameras.main.width/2, this.cameras.main.height/2, panelW, panelH, 0x222222).setDepth(51).setStrokeStyle(2, 0xffffff);
+        this.player = data.tPlayer;
+        this.collectedOrbs =  this.player.orbs || [];
+        this.equipped =  this.player.equippedOrbs || [null, null];
+        this.drawTitle();
+        this.drawOrbList();
+        this.drawSlots();
+        this.drawCloseButton(fromScene);
+    }
 
-        this.title = this.add.text(this.cameras.main.width/2, panelY + 20, 'Seleccionar Orbe', { font: '20px Arial', fill: '#fff' }).setOrigin(0.5).setDepth(52);
+    createBackground() {
+        this.add.rectangle(
+            this.cameras.main.centerX,
+            this.cameras.main.centerY,
+            this.cameras.main.width,
+            this.cameras.main.height,
+            0x000000,
+            0.6
+        ).setDepth(5);
+    }
 
-        // mostrar orbes recogidos y permitir equipar/ desequipar
-        this.levelScene = from ? this.scene.get(from) : null;
+    createPanel() {
+        const w = 400, h = 320;
+        this.panel = this.add.rectangle(
+            this.cameras.main.centerX,
+            this.cameras.main.centerY,
+            w, h,
+            0x222222
+        )
+        .setStrokeStyle(2, 0xffffff)
+        .setDepth(6);
 
-        const collected = PlayerDataManager.data.collectedOrbNames || [];
-        this.equipped = PlayerDataManager.data.equippedOrbNames || [null, null];
+        this.panelTop = this.panel.y - h / 2;
+    }
 
-        const startY = panelY + 60;
-        this.itemTexts = [];
-        collected.forEach((orbName, idx) => {
-            const y = startY + idx * 36;
-            const t = this.add.text(this.cameras.main.width/2 - 80, y, orbName, { font: '16px Arial', fill: '#fff' }).setOrigin(0, 0.5).setDepth(52);
-            const status = this.add.text(this.cameras.main.width/2 + 80, y, this._isEquipped(orbName) ? 'Equipped' : 'Equip', { font: '14px Arial', fill: '#fff', backgroundColor: '#444' }).setOrigin(0.5).setDepth(52);
-            status.setInteractive({ useHandCursor: true });
-            status.on('pointerdown', () => {
-                this._toggleEquip(orbName);
-                status.setText(this._isEquipped(orbName) ? 'Equipped' : 'Equip');
+    drawTitle() {
+        this.add.text(
+            this.cameras.main.centerX,
+            this.panelTop + 25,
+            "Seleccionar Orbe",
+            { font: "20px Arial", fill: "#fff" }
+        )
+        .setOrigin(0.5)
+        .setDepth(7);
+    }
+
+    drawOrbList() {
+        this.orbButtons = [];
+        let y = this.panelTop + 70;
+
+        for (let orb of this.collectedOrbs) {
+            const nameText = this.add.text(
+                this.cameras.main.centerX - 120, y,
+                orb.name,
+                { font: "16px Arial", fill: "#fff" }
+            )
+            .setOrigin(0, 0.5)
+            .setDepth(7);
+
+            const actionText = this.add.text(
+                this.cameras.main.centerX + 120, y,
+                (orb?.equipped) ? "Desequipar" : "Equip",
+                { font: "14px Arial", fill: "#fff", backgroundColor: "#444" }
+            )
+
+            .setOrigin(1, 0.5)
+            .setDepth(7)
+            .setInteractive({ useHandCursor: true });
+
+            actionText.on("pointerdown", () => {
+                this.toggleEquip(orb);
+                this.refreshUI();
             });
-            this.itemTexts.push({ nameText: t, actionText: status });
-        });
 
-        // mostrar slots equipados
+            this.orbButtons.push({ nameText, actionText,orb });
+            y += 36;
+        }
+    }
+
+    drawSlots() {
+        const slotY = this.panelTop + 230;
         this.slotTexts = [];
-        for (let i = 0; i < 2; i++) {
-            const sx = this.cameras.main.width/2 - 80 + i*160;
-            const sy = panelY + panelH - 70;
-            const s = this.add.text(sx, sy, `Slot ${i+1}: ${this.equipped[i] || 'Empty'}`, { font: '14px Arial', fill: '#fff', backgroundColor: '#222' }).setOrigin(0,0.5).setDepth(52);
-            this.slotTexts.push(s);
-        }
 
-        // botón cerrar / volver
-        const close = this.add.text(this.cameras.main.width/2, panelY + panelH - 30, 'Cerrar', { font: '16px Arial', fill: '#fff', backgroundColor: '#444' }).setOrigin(0.5).setDepth(52);
-        close.setInteractive({ useHandCursor: true });
-        close.on('pointerdown', () => {
-            // al cerrar, reanudar la escena que estaba pausada
-            //if (from) this.scene.resume(from);
-            let level = this.scene.get("TestPlayerScene");
-            if (level) level.scene.resume();
-            // guardar equipamientos seleccionados
-            PlayerDataManager.data.equippedOrbNames = this.equipped;
+        for (let i = 0; i < 2; i++) {
+            const text = this.add.text(
+                this.cameras.main.centerX - 120 + i * 150,
+                slotY,
+                `Slot ${i+1}: ${this.equipped[i]?.name ?? "Empty"}`,
+                { font: "14px Arial", fill: "#fff", backgroundColor: "#222" }
+            )
+            .setOrigin(0, 0.5)
+            .setDepth(7);
+
+            this.slotTexts.push(text);
+        }
+    }
+
+    drawCloseButton(fromScene) {
+        const y = this.panel.y + this.panel.height / 2 - 35;
+
+        const btn = this.add.text(
+            this.cameras.main.centerX, y,
+            "Cerrar",
+            { font: "16px Arial", fill: "#fff", backgroundColor: "#444" }
+        )
+        .setOrigin(0.5)
+        .setDepth(7)
+        .setInteractive({ useHandCursor: true });
+
+        btn.on("pointerdown", () => {
+
+            // Reanudar escena original
+            this.scene.resume(fromScene);
+
             this.scene.stop();
+            
+            PlayerDataManager.saveDataFromPlayer(this.player);
         });
     }
 
-    _isEquipped(name) {
-        return this.equipped && this.equipped.includes(name);
+    toggleEquip(orb) {
+
+        const i = this.equipped.indexOf(orb);
+
+        //si esta equipado el orbe
+        if (i !== -1) {
+            this.player.desEquipOrb(i);
+            return;
+        }
+
+        const empty = this.equipped.indexOf(null);
+
+        //si no esta equipado el orbe y hay hueco libre
+        if (empty !== -1)
+        {
+            this.player.equipOrb(empty,orb)
+        }
+
+        //si no esta equipado el orbe y hay hueco libre, lo dejamos en el 0
+        else
+        {
+            this.player.desEquipOrb(0);
+            this.player.equipOrb(0,orb)
+        }
     }
 
-    _toggleEquip(name) {
-        if (!this.equipped) this.equipped = [null, null];
-        const idx = this.equipped.indexOf(name);
-        if (idx !== -1) {
-            this.equipped[idx] = null;
-        } else {
-            // equip in first empty slot
-            const empty = this.equipped.indexOf(null);
-            if (empty !== -1) this.equipped[empty] = name;
-            else this.equipped[0] = name; // override first if none empty
+    refreshUI() {
+
+        // actualizar el texto de los botones
+        let index = 0;
+        for (let { nameText, actionText,orb} of this.orbButtons) {
+            actionText.setText(
+               orb?.equipped ? "Desequipar" : "Equip"
+            );
+            index++; 
         }
-        // update slot texts
-        if (this.slotTexts) {
-            for (let i = 0; i < this.slotTexts.length; i++) {
-                this.slotTexts[i].setText(`Slot ${i+1}: ${this.equipped[i] || 'Empty'}`);
-            }
+
+        // acturalizar el texto de los slots
+        for (let i = 0; i < 2; i++) {
+            this.slotTexts[i].setText(
+                `Slot ${i+1}: ${this.equipped[i]?.name ?? "Empty"}`
+            );
         }
     }
 }

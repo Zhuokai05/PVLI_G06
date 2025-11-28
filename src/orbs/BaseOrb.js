@@ -7,7 +7,9 @@ export default class BaseOrb extends Phaser.Physics.Arcade.Sprite {
     this.scene = scene;
     this.name = name;
     this.description = description;
+    this.equipped = false;
 
+    this.player = this.scene.player;
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
@@ -24,6 +26,9 @@ export default class BaseOrb extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  setPlayer(player){
+    this.player = player;
+  }
   //cuando el jugador recoge este orbe
   collect(player) {
 
@@ -32,11 +37,15 @@ export default class BaseOrb extends Phaser.Physics.Arcade.Sprite {
   }
 
   //funcion que se llama cuando el jugador equipa el orbe
-  onEquip(player) {}
+  onEquip() {
+    this.equipped = true;
+  }
     //funcion que se llama cuando el jugador desequipa el orbe
-  onUnequip(player) {}
+  onDesequip() {
+    this.equipped = false;
+  }
     //funcion que se llama cuando el jugador activa el orbe
-  onActivate(player) {}
+  onActivate() {}
     //funcion que se llama cuando el jugador desactiva el orbe
-  onDeactivate(player) {}
+  onDesactivate() {}
 }

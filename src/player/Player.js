@@ -217,8 +217,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             }
 
             if (this.equippedOrbs[slotIndex]) {
-                this.equippedOrbs[slotIndex].onUnequip(this);
-                this.equippedOrbs[slotIndex].onDeactivate(this);
+                this.equippedOrbs[slotIndex].onDesequip(this);
+                this.equippedOrbs[slotIndex].onDesactivate(this);
             }
 
             this.equippedOrbs[slotIndex] = orb;
@@ -227,6 +227,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.emit('orbChanged');
         }
 
+        desEquipOrb(slotIndex){
+            if ((this.equippedOrbs[slotIndex] === null)) return;
+            if (slotIndex < 0 || slotIndex > 1) return;
+            
+            this.equippedOrbs[slotIndex].onDesequip(this);
+            this.equippedOrbs[slotIndex].onDesactivate(this);
+
+            this.equippedOrbs[slotIndex] = null;
+
+            this.switchActiveOrb()
+            console.log('orbe desquipado en slot ' + slotIndex );
+            this.emit('orbChanged');
+        }
 
         //cambiar orbe activo al siguiente slot
         switchActiveOrb() {
@@ -244,7 +257,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             let nextOrb = this.equippedOrbs[slotIndex];
 
             if (nextOrb) {
-                if (currentOrb) currentOrb.onDeactivate(this);
+                if (currentOrb) currentOrb.onDesactivate(this);
                 nextOrb.onActivate(this);
                 this.activeOrbIndex = slotIndex;
                 console.log('orbe activo: ' + nextOrb.name + ' efecto: ' + nextOrb.description);

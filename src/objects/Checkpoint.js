@@ -39,17 +39,21 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
 
         // evento global de tecla E — intentará abrir el menú si el jugador está cerca
         this._keydownHandler = (event) => {
+
             // event.key debería ser 'e' o 'E'
+
             if ((event.key === 'e' || event.key === 'E') && this.playerNearby) {
                 // activa checkpoint y abre menú de orbes
-                const player = this.scene.player;
+                let player = this.scene.player;
                 if (player) this.activate(player);
-                // pausar la escena actual y lanzar el menú de selección
-                const fromKey = this.scene.sys.config.key || null;
-                // asegurarnos de pausar la escena origen por su key (no pausa global)
-                if (fromKey) this.scene.scene.pause(fromKey);
-                else this.scene.scene.pause();
-                this.scene.scene.launch('OrbSelect', { fromScene: fromKey });
+  
+                let fromKey = this.scene.scene.key || null;
+
+                console.log(fromKey)
+
+                // pausar la escena origen por su key y se lo pasamos a la escena orbselect
+                this.scene.scene.pause(fromKey);
+                this.scene.scene.launch('OrbSelect', { fromScene: fromKey, tPlayer: player });
             }
         };
 

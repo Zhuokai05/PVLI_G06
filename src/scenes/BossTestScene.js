@@ -14,11 +14,6 @@ class BossTestScene extends Phaser.Scene {
     create() {
         this.inputManager = new InputManager(this);
 
-        this.orbRegistry = [
-            { name: 'Orb Ira' },
-            { name: 'Orb Tristeza' },
-        ];
-
         // Crear suelo
         const ground = this.physics.add.staticGroup();
         ground.create(this.cameras.main.width / 2, this.cameras.main.height, 'ground')
