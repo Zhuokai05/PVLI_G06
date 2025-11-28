@@ -81,7 +81,7 @@ class GameOverScene extends Phaser.Scene {
 
         // restauramos datos guardados
         //PlayerDataManager.resetForRetry();
-        PlayerDataManager.applyToPlayer(level.player);
+        PlayerDataManager.applyDataToPlayer(level.player);
         console.log("Jugador respawned en checkpoint", pos);
     }
 

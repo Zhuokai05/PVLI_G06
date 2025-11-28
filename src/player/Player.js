@@ -253,24 +253,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
 
-        //funcion que se llama cuando el jugador muere
-        /*die() {
-            if (this.dead) return;
-            console.log('Intentando cambiar a GameOver scene...');
-            this.dead = true;
-            console.log('jugador muerto');
-            PlayerDataManager.saveFromPlayer(this);
-            this.setVelocity(0, 0);
-            this.stateMachine.setState('dead');
-            this.scene.scene.pause();
-            this.scene.scene.launch('GameOver');
-        }*/
+    
         die() {
             if (this.dead) return;
             console.log('Intentando cambiar a GameOver scene...');
             this.health = this.maxHealth;
-            this.respawnPoint = PlayerDataManager.data.respawnPoint;
-            PlayerDataManager.saveFromPlayer(this);
             this.scene.scene.stop();
             this.scene.scene.launch('GameOver');
             this.dead = true;
@@ -278,27 +265,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocity(0, 0);
             this.stateMachine.setState('dead');
         }
-        /*die() {
-         if (this.dead) return;
-     
-         console.log('Intentando cambiar a GameOver scene...');
-         this.dead = true;
-     
-         // Guardar datos ANTES de destruir la escena
-         PlayerDataManager.saveFromPlayer(this);
-     
-         // Cancelar movimiento
-         this.setVelocity(0, 0);
-         this.stateMachine.setState('dead');
-     
-         // Cerrar la escena del jugador
-         this.scene.scene.stop(); 
-     
-         // Ir a GameOver de forma limpia
-         this.scene.scene.start('GameOver');
-     
-         }*/
-
+       
 
         //comprueba si el jugador esta en el suelo
         isGrounded() {

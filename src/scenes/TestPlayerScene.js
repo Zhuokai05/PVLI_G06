@@ -25,8 +25,6 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.physics.world.setBounds(-200, 0, 1400, 1000);
 
-
-
         this.ground = this.physics.add.staticGroup();
         this.ground.create(0, 500, 'ground').setScale(2).refreshBody();
         this.ground.create(500, 500, 'ground').setScale(2).refreshBody();
@@ -40,25 +38,12 @@ export default class TestPlayerScene extends Phaser.Scene {
         ground.create(500, 400, 'ground').setScale(2).refreshBody();
         ground.create(1000, 500, 'ground').setScale(2).refreshBody();
 
-        this.orbGroup = this.physics.add.group();
-        const collected = PlayerDataManager.data.collectedOrbNames || [];
-        if (!collected.includes('Orb Ira')) {
-            const iraOrb = new IraOrb(this, 400, 300);
-            this.orbGroup.add(iraOrb);
-        }
-        if (!collected.includes('Orb Tristeza')) {
-            const tristezaOrb = new TristezaOrb(this, 800, 300);
-            this.orbGroup.add(tristezaOrb);
-        }
 
-        // Creacion del jugador en el punto de respawn guardado
-        if (!PlayerDataManager.data.respawnPoint) {
-            PlayerDataManager.data.respawnPoint = { x: 100, y: 100 };
-        }
-        this.player = new Player(this,
-            PlayerDataManager.data.respawnPoint.x, PlayerDataManager.data.respawnPoint.y);
 
-        PlayerDataManager.applyToPlayer(this.player);
+        // Creacion del jugador 
+        this.player = new Player(this,PlayerDataManager.data.respawnPoint.x, PlayerDataManager.data.respawnPoint.y);
+        PlayerDataManager.applyDataToPlayer(this.player);
+
         // Crear un checkpoint en el nivel
         this.checkpoint = new Checkpoint(this, 500, 340);
         // overlap solo para detectar proximidad; la activación ocurre al pulsar E
@@ -67,11 +52,12 @@ export default class TestPlayerScene extends Phaser.Scene {
             if (cp.prompt) cp.prompt.setVisible(true);
         });
 
-        /*if (this.respawnPoint) {
-            this.player.x = this.respawnPoint.x;
-            this.player.y = this.respawnPoint.y;
-            PlayerDataManager.applyToPlayer(this.player);
-        }*/
+
+        this.orbGroup = this.physics.add.group();
+
+        this.orbGroup.add(new IraOrb(this, 400, 300));
+        this.orbGroup.add(new TristezaOrb(this, 800, 300));
+    
 
 
         this.uiManager = new UiManager(this, this.player);
@@ -140,7 +126,7 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         // cuando la escena se reanuda desde el menú de orbes, aplicar equipamientos
         this.events.on('resume', () => {
-            if (this.player) PlayerDataManager.applyToPlayer(this.player);
+            if (this.player) PlayerDataManager.applyDataToPlayer(this.player);
             // ocultar prompt si estaba visible
             if (this.checkpoint && this.checkpoint.prompt) this.checkpoint.prompt.setVisible(false);
         });
@@ -148,7 +134,6 @@ export default class TestPlayerScene extends Phaser.Scene {
     }
 
     update(time, delta) {
-
         this.player.update(time, delta);
 
         this.enemies.getChildren().forEach(enemy => {
@@ -169,7 +154,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         }
 
         if (this.player.x > 1100) {
-            PlayerDataManager.saveLifeFromPlayer(this.player);
+            PlayerDataManager.saveDataFromPlayer(this.player);
             this.scene.stop();
             this.scene.launch('BossScene');
         }

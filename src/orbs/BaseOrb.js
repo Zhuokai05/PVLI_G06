@@ -16,25 +16,18 @@ export default class BaseOrb extends Phaser.Physics.Arcade.Sprite {
     this.body.moves = false;
     this.setScale(0.3);
     this.setInteractive();
-    
+  
+    for (let i = 0; i < PlayerDataManager.data.collectedOrbs.length; i++) {
+        if (PlayerDataManager.data.collectedOrbs[i].name === this.name) {
+            this.destroy();
+        }
+    }
   }
 
   //cuando el jugador recoge este orbe
   collect(player) {
+
     player.collectOrb(this);
-
-    // registrar nombre en el PlayerDataManager para persistencia
-    if (this.name) {
-      const arr = PlayerDataManager.data.collectedOrbNames || [];
-      if (!arr.includes(this.name)) {
-        arr.push(this.name);
-        PlayerDataManager.data.collectedOrbNames = arr;
-      }
-      // también mantener en player.collectedOrbNames
-      player.collectedOrbNames = player.collectedOrbNames || [];
-      if (!player.collectedOrbNames.includes(this.name)) player.collectedOrbNames.push(this.name);
-    }
-
     this.destroy();
   }
 

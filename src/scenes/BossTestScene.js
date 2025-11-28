@@ -26,13 +26,9 @@ class BossTestScene extends Phaser.Scene {
             .refreshBody();
 
         // Crear jugador
-        if (!PlayerDataManager.data.respawnPoint) {
-            PlayerDataManager.data.respawnPoint = { x: 100, y: 400 };
-        }
-        this.player = new Player(this,
-            PlayerDataManager.data.respawnPoint.x, PlayerDataManager.data.respawnPoint.y);
+        this.player = new Player(this, 100, 400);
 
-        PlayerDataManager.applyToPlayer(this.player);
+        PlayerDataManager.applyDataToPlayer(this.player);
 
         this.uiManager = new UiManager(this, this.player);
         this.uiManager.updateHearts(this.player.health);
