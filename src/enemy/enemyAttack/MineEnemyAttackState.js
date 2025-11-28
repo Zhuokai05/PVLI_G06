@@ -19,16 +19,16 @@ export default class MineEnemyAttackState extends BaseEnemyAttackState {
         let h = this.enemy.meleeAttackHeight;
 
         //creamos hitbox rectangular como rango de ataque
-        let hitbox = this.enemy.scene.add.circle(this.enemy.x, this.enemy.y, w,h, 0xff0000, 0.5);
-        this.enemy.scene.physics.add.existing(hitbox);
+        this.hitbox = this.enemy.scene.add.circle(this.enemy.x, this.enemy.y, w,h, 0xff0000, 0.5);
+        this.enemy.scene.physics.add.existing(this.hitbox);
 
-        hitbox.body.allowGravity = false;
+        this.hitbox.body.allowGravity = false;
 
         //destruir hitbox tras attackduration
         this.enemy.scene.time.delayedCall(this.enemy.attackDuration, () => 
             {
                 let damaged = false;
-                this.enemy.scene.physics.add.overlap(hitbox, this.enemy.player, (hb, player) => {
+                this.enemy.scene.physics.add.overlap(this.hitbox, this.enemy.player, (hb, player) => {
 
                     //no aplicar daño otra vez si ya esta dañado
                     if (damaged) return; 
@@ -42,6 +42,7 @@ export default class MineEnemyAttackState extends BaseEnemyAttackState {
     }
 
     exit(enemy){
+        this.hitbox.destroy();
         enemy.health = 0;
         enemy.die();
     }
