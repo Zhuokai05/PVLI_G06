@@ -119,6 +119,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
 
         this.cameras.main.startFollow(this.player);
+      
         this.cameras.main.setBounds(-200, 0, 1400, 600);
 
         // cuando la escena se reanuda desde el menú de orbes, aplicar equipamientos

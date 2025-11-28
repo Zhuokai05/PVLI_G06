@@ -68,7 +68,7 @@ export class PreloadScene extends Phaser.Scene
             frameHeight: 32
         });
 
-   this.load.tilemapTiledJSON("mappy","./assets/Maps/map.json");
+   this.load.tilemapTiledJSON("mappy","./assets/Maps/mapa3.json");
 
     // Efecto de sonidos
     this.load.audio('jump_sound', './assets/Efecto_sonido/jump.mp3');

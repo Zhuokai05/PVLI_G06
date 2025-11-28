@@ -33,9 +33,9 @@ class MainMenuScene extends Phaser.Scene
     const map = this.make.tilemap({ key: 'mappy' });
     const tileset = map.addTilesetImage('Ira', 'tiles');
     let layer = map.createLayer('mapa', tileset,0,0);
-    layer.setCollision(1,2,3,4,5,6,7,8,9,10,11,12);
+    layer.setCollisionByProperty({colision : true});
    
-        this.player = new Player(this, 300, 200);
+        this.player = new Player(this, 800, 800);
         this.uiManager = new UiManager(this, this.player);
     
             this.anims.create({
@@ -76,6 +76,7 @@ class MainMenuScene extends Phaser.Scene
         this.physics.add.collider(this.player, layer);
 
         this.cameras.main.startFollow(this.player);
+          this.cameras.main.setFollowOffset(0, 200); 
         this.cameras.main.setBounds(-200, 0, 140000, 100000);
 
 
