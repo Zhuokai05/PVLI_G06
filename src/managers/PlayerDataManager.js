@@ -34,7 +34,7 @@ export default class PlayerDataManager {
   }
 
   // lee los datos guardados y lo aplica al nuevo jugador
-  static applyDataToPlayer(player,scene) {
+  static applyDataToPlayer(player) {
     player.health = this.data.health;
     player.maxHealth = this.data.maxHealth;
     if (player.dead) {
