@@ -76,6 +76,14 @@ class OrbSelectScene extends Phaser.Scene {
             .setOrigin(0, 0.5)
             .setDepth(7);
 
+            let descriptionText = this.add.text(
+                this.cameras.main.centerX-  120, y + 20,
+                orb.description,
+                { font: "14px Arial", fill: "#fff"}
+            )
+            .setOrigin(0, 0.5)
+            .setDepth(7);
+
             let actionText = this.add.text(
                 this.cameras.main.centerX + 120, y,
                 (orb?.equipped) ? "Desequipar" : "Equip",
@@ -91,7 +99,7 @@ class OrbSelectScene extends Phaser.Scene {
                 this.refreshUI();
             });
 
-            this.orbButtons.push({ nameText, actionText,orb });
+            this.orbButtons.push({ nameText,descriptionText, actionText,orb });
             y += 36;
         }
     }
@@ -171,7 +179,7 @@ class OrbSelectScene extends Phaser.Scene {
     refreshUI() {
 
         // actualizar el texto de los botones
-        for (let { nameText, actionText,orb} of this.orbButtons) {
+        for (let { nameText,descriptionText, actionText,orb} of this.orbButtons) {
             actionText.setText(
                orb?.equipped ? "Desequipar" : "Equip"
             );
