@@ -209,6 +209,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
          * @param {Orb} orb orbe que equipa
          */
         equipOrb(slotIndex, orb) {
+            
             if (!orb) return;
             if (slotIndex < 0 || slotIndex > 1) return;
 

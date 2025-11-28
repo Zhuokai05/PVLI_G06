@@ -12,6 +12,6 @@ export default class TristezaOrb extends Orb {
   }
 
   onDesactivate(player) {
-    this.player.speedMultiplier = 1.5;
+    this.player.speedMultiplier = 1.0;
   }
 }
