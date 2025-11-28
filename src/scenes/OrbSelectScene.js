@@ -37,7 +37,7 @@ class OrbSelectScene extends Phaser.Scene {
 
     //pintamos un panel rectangular
     createPanel() {
-        const w = 400, h = 320;
+        let w = 400, h = 320;
         this.panel = this.add.rectangle(
             this.cameras.main.centerX,
             this.cameras.main.centerY,
@@ -68,7 +68,7 @@ class OrbSelectScene extends Phaser.Scene {
         let y = this.panelTop + 70;
 
         for (let orb of this.collectedOrbs) {
-            const nameText = this.add.text(
+            let nameText = this.add.text(
                 this.cameras.main.centerX - 120, y,
                 orb.name,
                 { font: "16px Arial", fill: "#fff" }
@@ -76,7 +76,7 @@ class OrbSelectScene extends Phaser.Scene {
             .setOrigin(0, 0.5)
             .setDepth(7);
 
-            const actionText = this.add.text(
+            let actionText = this.add.text(
                 this.cameras.main.centerX + 120, y,
                 (orb?.equipped) ? "Desequipar" : "Equip",
                 { font: "14px Arial", fill: "#fff", backgroundColor: "#444" }
@@ -98,11 +98,11 @@ class OrbSelectScene extends Phaser.Scene {
 
     //slots de orbes equipados
     drawSlots() {
-        const slotY = this.panelTop + 230;
+        let slotY = this.panelTop + 230;
         this.slotTexts = [];
 
         for (let i = 0; i < 2; i++) {
-            const text = this.add.text(
+            let text = this.add.text(
                 this.cameras.main.centerX - 120 + i * 150,
                 slotY,
                 `Slot ${i+1}: ${this.equipped[i]?.name ?? "Empty"}`,
@@ -117,9 +117,9 @@ class OrbSelectScene extends Phaser.Scene {
 
     //boton para salir del menu
     drawCloseButton(fromScene) {
-        const y = this.panel.y + this.panel.height / 2 - 35;
+        let y = this.panel.y + this.panel.height / 2 - 35;
 
-        const btn = this.add.text(
+        let btn = this.add.text(
             this.cameras.main.centerX, y,
             "Cerrar",
             { font: "16px Arial", fill: "#fff", backgroundColor: "#444" }
@@ -142,7 +142,7 @@ class OrbSelectScene extends Phaser.Scene {
     //metodo para activar o desactivar un orbe
     toggleEquip(orb) {
 
-        const i = this.equipped.indexOf(orb);
+        let i = this.equipped.indexOf(orb);
 
         //si esta equipado el orbe
         if (i !== -1) {
@@ -150,7 +150,7 @@ class OrbSelectScene extends Phaser.Scene {
             return;
         }
 
-        const empty = this.equipped.indexOf(null);
+        let empty = this.equipped.indexOf(null);
 
         //si no esta equipado el orbe y hay hueco libre
         if (empty !== -1)
