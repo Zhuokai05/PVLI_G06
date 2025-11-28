@@ -26,9 +26,11 @@ export default class BaseOrb extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  //como al cambiar de escena se crea un nuevo player, podemos el dueño del orbe a ese player
   setPlayer(player){
     this.player = player;
   }
+
   //cuando el jugador recoge este orbe
   collect(player) {
 

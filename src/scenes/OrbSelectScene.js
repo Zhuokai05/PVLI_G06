@@ -12,15 +12,18 @@ class OrbSelectScene extends Phaser.Scene {
         this.createBackground();
         this.createPanel();
 
-        this.player = data.tPlayer;
-        this.collectedOrbs =  this.player.orbs || [];
+        this.player = data.tPlayer; //cogemos el player que nos ha pasado la escena anterior
+        this.collectedOrbs =  this.player.orbs || []; 
         this.equipped =  this.player.equippedOrbs || [null, null];
+        
+        //pintamos todo el ui
         this.drawTitle();
         this.drawOrbList();
         this.drawSlots();
         this.drawCloseButton(fromScene);
     }
 
+    //pintamos un fondo rectangular
     createBackground() {
         this.add.rectangle(
             this.cameras.main.centerX,
@@ -32,6 +35,7 @@ class OrbSelectScene extends Phaser.Scene {
         ).setDepth(5);
     }
 
+    //pintamos un panel rectangular
     createPanel() {
         const w = 400, h = 320;
         this.panel = this.add.rectangle(
@@ -46,6 +50,7 @@ class OrbSelectScene extends Phaser.Scene {
         this.panelTop = this.panel.y - h / 2;
     }
 
+    //titulo del menu de seleccion de orbes
     drawTitle() {
         this.add.text(
             this.cameras.main.centerX,
@@ -57,6 +62,7 @@ class OrbSelectScene extends Phaser.Scene {
         .setDepth(7);
     }
 
+    //lista de orbes coleccionados
     drawOrbList() {
         this.orbButtons = [];
         let y = this.panelTop + 70;
@@ -90,6 +96,7 @@ class OrbSelectScene extends Phaser.Scene {
         }
     }
 
+    //slots de orbes equipados
     drawSlots() {
         const slotY = this.panelTop + 230;
         this.slotTexts = [];
@@ -108,6 +115,7 @@ class OrbSelectScene extends Phaser.Scene {
         }
     }
 
+    //boton para salir del menu
     drawCloseButton(fromScene) {
         const y = this.panel.y + this.panel.height / 2 - 35;
 
@@ -131,6 +139,7 @@ class OrbSelectScene extends Phaser.Scene {
         });
     }
 
+    //metodo para activar o desactivar un orbe
     toggleEquip(orb) {
 
         const i = this.equipped.indexOf(orb);
@@ -157,6 +166,7 @@ class OrbSelectScene extends Phaser.Scene {
         }
     }
 
+    //actualizar ui tras haber hecho cambios
     refreshUI() {
 
         // actualizar el texto de los botones

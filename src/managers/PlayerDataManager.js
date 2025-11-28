@@ -43,6 +43,7 @@ export default class PlayerDataManager {
     }
 
 
+    //como al cambiar de escena se crea un nuevo player, hay que poner el player del orbe como el nuevo player
     for (let orb of this.data.collectedOrbs){
       orb.setPlayer(player);
     }
