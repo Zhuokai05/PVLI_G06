@@ -7,6 +7,7 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
+    this.collisionDamage = 1; // daño que hace al jugador al colisionar con el
     this.scene = scene;
     this.player = scene.player;
     this.speed = 50; //velocidad
@@ -19,10 +20,9 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     this.detectPlayerRangeX = 500; //rango en X que empieza a detecta el jugador
     this.detectPlayerRangeY = 50; //rango en Y que empieza a detecta el jugador
     this.isAttacking = false;
+    
     this.damage = 1; // el daño que hace
-    this.meleeAttackWidge = 60;
-    this.meleeAttackHeight = 60;
-    this.meleeAttackDist = 40; //distancia de su ataque
+
     this.attackTime = 500; // tiempo que tarda el ataque, !!!debe de ser menor que attackCooldown!!!
     this.startAttackTime = 1000; //en cuanto tiempo empieza el ataque estando player delante
     this.attackDuration = 100; //cuanto dura el hitbox de ataque
@@ -37,6 +37,8 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
       null,
       this
     );
+
+    this.setDepth(4);
 
   }
 
@@ -53,48 +55,29 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
   }
 
   //funcion que se llama al colisionar con el jugador
+
+  /**
+   * 
+   * @param {Player} player el jugador que colisiona
+   * @param {Enemy} enemy el enemigo que colisiona   
+   */
   CollisionWithPlayer(player, enemy) {
     console.log('Colision con enemigo');
 
     //si hace knockback le aplicamos knockback 
     if (this.applyKnockbackToPlayer){
       let knockbackDirection = player.x < enemy.x ? 1 : -1;
-      this.player.takeDamage(1,knockbackDirection);
+      this.player.takeDamage(this.collisionDamage,knockbackDirection);
     }
+    
     else 
     {
-      this.player.takeDamage(1);
+      this.player.takeDamage(this.collisionDamage);
     }
   }
-  
- 
-
-  /*
-  separateFromOthers(enemies) {
-
-    const margin = 2;      
-
-    enemies.forEach(other => {
-
-      if (other === this || !other.active || other.dead) return;
-
-      const dx = this.x - other.x;
-      const dist = Math.abs(dx);
-
-      if (dist < this.distanceBtwEnemies - margin) {
-
-        //solo mueve a uno
-        if (this.x > other.x) {
-          this.x += (this.distanceBtwEnemies - dist);
-        }
-
-      }
-      
-    });
-    
-  }*/
 
   takeDamage(amount) {
+    if (this.inmune) return;
     this.health -= amount;
     console.log(`Enemy HP: ${this.health}`);
 

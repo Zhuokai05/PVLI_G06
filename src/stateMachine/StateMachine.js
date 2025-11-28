@@ -35,7 +35,6 @@ export default class StateMachine {
             this.currentState.enter(this.context,data);
         }
 
-        console.log(`State of ${this.id}: ${name}`);
     }
 
     step(time, delta) {

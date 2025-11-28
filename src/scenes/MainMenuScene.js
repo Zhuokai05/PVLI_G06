@@ -13,7 +13,7 @@ class MainMenuScene extends Phaser.Scene
 
     create() 
     {
-       /*this.background = this.add.image(this.cameras.main.width /2 ,this.cameras.main.height / 2,'background');
+      /* this.background = this.add.image(this.cameras.main.width /2 ,this.cameras.main.height / 2,'background');
        this.background.setScale(1, 0.75);
        this.name = this.add.image(this.cameras.main.width /2 ,this.cameras.main.height / 4,'name');
        this.name.setScale(0.5, 0.45);
@@ -24,10 +24,11 @@ class MainMenuScene extends Phaser.Scene
         play.on('pointerdown', () => {
             this.scene.stop();
             this.scene.start('TestPlayerScene');
-            
+            //this.scene.start('BossScene');
         });*/
-        
-         this.inputManager = new InputManager(this);
+
+            /*const mapData = this.cache.text.get('map');*/
+        this.inputManager = new InputManager(this);
         this.physics.world.setBounds(-200, 0, 140000, 100000);
     const map = this.make.tilemap({ key: 'mappy' });
     const tileset = map.addTilesetImage('Ira', 'tiles');
@@ -43,6 +44,7 @@ class MainMenuScene extends Phaser.Scene
                 frameRate: 1,
                 repeat: -1
             });
+
      
             this.anims.create({
     
@@ -75,6 +77,9 @@ class MainMenuScene extends Phaser.Scene
 
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setBounds(-200, 0, 140000, 100000);
+
+
+
 
     }
 

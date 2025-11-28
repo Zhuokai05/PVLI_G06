@@ -5,22 +5,24 @@ export default class BasicMeleeEnemyAttackState extends BaseEnemyAttackState {
     enter (enemy){
         super.enter(enemy);
         let direction = enemy.player.x > enemy.x ? 1 : -1;
-        this.hasAttacked = false;
         this.meleeAttack(direction);
 
     }
 
     execute(enemy, time, delta) {
-        super.execute(enemy, time, delta); 
-        }
+        super.execute(enemy, time, delta); //Cambia de estado si no esta atacando
+    }
 
 
+    /**
+     * 
+     * @param {int} direction direccion que ataca el enemigo, 1 derecha, -1 izquierda  
+     */
     meleeAttack(direction) {
 
         //si no ha pasado su cooldown no ataca
-        if (this.hasAttacked) return;
+        if (this.isAttacking) return;
 
-        this.hasAttacked = true;
         console.log('enemy attack')
 
         //terminar el ataque despues de attackcooldown
@@ -47,16 +49,12 @@ export default class BasicMeleeEnemyAttackState extends BaseEnemyAttackState {
             //no aplicar daño otra vez si ya esta dañado
             if (damaged) return; 
             damaged = true;
-            player.takeDamage(this.enemy.damage);
+            let knockbackDirection = player.x < this.enemy.x ? -1 : 1;
+            player.takeDamage(this.enemy.damage,knockbackDirection);
 
         });
 
         //destruir hitbox tras attackduration
         this.enemy.scene.time.delayedCall(this.enemy.attackDuration, () => hitbox.destroy());
-    }
-
-    exit (enemy){
-        super.exit(enemy);
-        this.hasAttacked = false;
     }
 }

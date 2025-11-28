@@ -13,6 +13,5 @@ export default class BaseEnemyAttackState extends BaseState {
     if (!enemy.isAttacking) {
       enemy.stateMachine.setState('move');
     }
-}
-
+  }
 }
