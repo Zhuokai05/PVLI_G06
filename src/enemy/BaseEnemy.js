@@ -7,6 +7,7 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
+    this.collisionDamage = 1; // daño que hace al jugador al colisionar con el
     this.scene = scene;
     this.player = scene.player;
     this.speed = 50; //velocidad
@@ -66,15 +67,17 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     //si hace knockback le aplicamos knockback 
     if (this.applyKnockbackToPlayer){
       let knockbackDirection = player.x < enemy.x ? 1 : -1;
-      this.player.takeDamage(1,knockbackDirection);
+      this.player.takeDamage(this.collisionDamage,knockbackDirection);
     }
+    
     else 
     {
-      this.player.takeDamage(1);
+      this.player.takeDamage(this.collisionDamage);
     }
   }
 
   takeDamage(amount) {
+    if (this.inmune) return;
     this.health -= amount;
     console.log(`Enemy HP: ${this.health}`);
 

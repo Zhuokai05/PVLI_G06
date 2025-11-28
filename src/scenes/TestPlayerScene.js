@@ -2,6 +2,7 @@ import Player from '../player/Player.js';
 import InputManager from '../managers/InputManager.js';
 import BasicMeleeEnemy from '../enemy/BasicMeleeEnemy.js';
 import RangedEnemy from '../enemy/RangedEnemy.js';
+import Trap from '../enemy/BaseTrap.js';
 import MineEnemy from '../enemy/MineMeleeEnemy.js';
 import UiManager from '../ui/UiManager.js';
 import TristezaOrb from '../orbs/TristezaOrb.js';
@@ -98,6 +99,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.enemies.add(new BasicMeleeEnemy(this, 1000, 300, 'basicEnemyFear'));
        // this.enemies.add(new RangedEnemy(this, 700, 250, 'rangedEnemy'));
         this.enemies.add(new MineEnemy(this, 200, 300, 'mineEnemy'))
+        this.enemies.add(new Trap(this,200,300,'TRAP'))
 
         this.physics.add.collider(this.player, this.ground);
         this.physics.add.collider(this.ground, this.enemies);
