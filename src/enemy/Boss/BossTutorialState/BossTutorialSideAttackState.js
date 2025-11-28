@@ -15,6 +15,9 @@ export default class BossTutorialSideAttackState extends BaseState {
         // Reseteo flag
         this.boss._hitPlayerThisSweep = false;
 
+        // GUARDAR LA POSICIÓN Y INICIAL para mantenerla fija
+        this.initialY = this.boss.y;
+
         // MODIFICACIÓN: La dirección siempre es del lado en el que está hacia el otro extremo
         const cam = this.scene.cameras.main;
         const leftX = 50;
@@ -27,11 +30,11 @@ export default class BossTutorialSideAttackState extends BaseState {
         // Si está en la izquierda, va a la derecha, y viceversa
         this.direction = (bossCenterX < camCenterX) ? 'right' : 'left';
 
-        // Crear rectángulo de advertencia horizontal (barrido)
+        // Crear rectángulo de advertencia horizontal (barrido) - USAR initialY
         const warningHeight = 120;
         this.warningRect = this.scene.add.rectangle(
             cam.width / 2,
-            this.boss.y,
+            this.initialY, // Usar la Y inicial guardada
             cam.width,
             warningHeight,
             0xff0000,
@@ -52,7 +55,10 @@ export default class BossTutorialSideAttackState extends BaseState {
                 }
                 break;
             case 'attack':
-                // El movimiento lo maneja el tween; solo esperar
+                // FORZAR POSICIÓN Y FIJA durante el ataque
+                if (this.boss.body) {
+                    this.boss.y = this.initialY;
+                }
                 break;
             case 'finish':
                 if (this.stateTime >= this.cooldownDuration) {
@@ -76,9 +82,9 @@ export default class BossTutorialSideAttackState extends BaseState {
         const fromX = (this.direction === 'right') ? leftX : rightX;
         const toX = (this.direction === 'right') ? rightX : leftX;
 
-        // Colocar boss en el extremo inicial
+        // Colocar boss en el extremo inicial - MANTENER Y INICIAL
         this.boss.x = fromX;
-        this.boss.y = this.boss.y; // mantener Y
+        this.boss.y = this.initialY; // Usar la Y inicial guardada
 
         // Orientar sprite: por defecto textura orientada a la izquierda
         // Si se mueve a la derecha: flipX = true
@@ -87,12 +93,17 @@ export default class BossTutorialSideAttackState extends BaseState {
         // Permitir movimiento físico para detectar overlap continuo
         if (this.boss.body) this.boss.body.moves = true;
 
-        // Tween para mover de extremo a extremo
+        // Tween para mover SOLO en el eje X
         this.tween = this.scene.tweens.add({
             targets: this.boss,
             x: toX,
+            y: this.initialY, // FORZAR Y constante en el tween
             ease: 'Sine.easeInOut',
             duration: this.attackDuration,
+            onUpdate: () => {
+                // Garantizar que Y no cambie durante el tween
+                this.boss.y = this.initialY;
+            },
             onComplete: () => {
                 // Al completar el barrido, si no golpeó al player, auto-daño
                 if (!this.boss._hitPlayerThisSweep) {
