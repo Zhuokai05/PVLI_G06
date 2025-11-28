@@ -19,6 +19,7 @@ export default class BaseOrb extends Phaser.Physics.Arcade.Sprite {
     this.setScale(0.3);
     this.setInteractive();
   
+    //se destruye de la escena si el jugador ya tiene ese orbe
     for (let i = 0; i < PlayerDataManager.data.collectedOrbs.length; i++) {
         if (PlayerDataManager.data.collectedOrbs[i].name === this.name) {
             this.destroy();

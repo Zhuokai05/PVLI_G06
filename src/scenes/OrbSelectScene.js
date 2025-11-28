@@ -76,6 +76,14 @@ class OrbSelectScene extends Phaser.Scene {
             .setOrigin(0, 0.5)
             .setDepth(7);
 
+            let descriptionText = this.add.text(
+                this.cameras.main.centerX-  120, y + 20,
+                orb.description,
+                { font: "14px Arial", fill: "#fff"}
+            )
+            .setOrigin(0, 0.5)
+            .setDepth(7);
+
             let actionText = this.add.text(
                 this.cameras.main.centerX + 120, y,
                 (orb?.equipped) ? "Desequipar" : "Equip",
@@ -91,7 +99,7 @@ class OrbSelectScene extends Phaser.Scene {
                 this.refreshUI();
             });
 
-            this.orbButtons.push({ nameText, actionText,orb });
+            this.orbButtons.push({ nameText,descriptionText, actionText,orb });
             y += 36;
         }
     }
@@ -158,24 +166,27 @@ class OrbSelectScene extends Phaser.Scene {
             this.player.equipOrb(empty,orb)
         }
 
+        
         //si no esta equipado el orbe y hay hueco libre, lo dejamos en el 0
-        else
-        {
-            this.player.desEquipOrb(0);
-            this.player.equipOrb(0,orb)
-        }
+        // else
+        // {
+        //     this.player.desEquipOrb(0);
+        //     this.player.equipOrb(0,orb)
+        // }
     }
 
     //actualizar ui tras haber hecho cambios
     refreshUI() {
 
         // actualizar el texto de los botones
-        let index = 0;
-        for (let { nameText, actionText,orb} of this.orbButtons) {
+        for (let { nameText,descriptionText, actionText,orb} of this.orbButtons) {
             actionText.setText(
                orb?.equipped ? "Desequipar" : "Equip"
             );
-            index++; 
+            actionText.setColor("#FFF")
+            if (!orb?.equipped && this.noSlot()){
+                actionText.setColor("#FF0000")
+            }
         }
 
         // acturalizar el texto de los slots
@@ -184,6 +195,16 @@ class OrbSelectScene extends Phaser.Scene {
                 `Slot ${i+1}: ${this.equipped[i]?.name ?? "Empty"}`
             );
         }
+    }
+
+    noSlot(){
+        let count = 0;
+        for(let orb of this.equipped){
+            if (orb !== null){
+                count++;
+            }
+        }
+        return count == this.equipped.length? true : false;
     }
 }
 
