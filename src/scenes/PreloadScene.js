@@ -14,6 +14,7 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('basicEnemyHappy', './assets/Enemigos_basicos/Sun.png');
     this.load.image('basicEnemyFear', './assets/Enemigos_basicos/Ghost.png');
     this.load.image('angelHealth', './assets/UI/AngelHeart.png');
+    this.load.image('orbSlot', './assets/UI/OrbSlot.png');
     this.load.image('orbIra', './assets/UI/OrbeFuego.png');
     this.load.image('orbTristeza', './assets/UI/OrbeHielo.png');
     this.load.image('checkpoint', './assets/Escena/AltarCheckpoint.png');
