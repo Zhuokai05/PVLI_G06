@@ -5,6 +5,10 @@ export default class BaseEnemyAttackState extends BaseState {
     this.enemy = enemy;
     enemy.isAttacking = true;
     
+      //terminar el ataque despues de attackcooldown
+      this.enemy.scene.time.delayedCall(this.enemy.attackDuration, () => {
+        this.enemy.isAttacking = false;
+      });
   }
 
   execute(enemy, time, delta) {

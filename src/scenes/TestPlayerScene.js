@@ -2,11 +2,14 @@ import Player from '../player/Player.js';
 import InputManager from '../managers/InputManager.js';
 import BasicMeleeEnemy from '../enemy/BasicMeleeEnemy.js';
 import RangedEnemy from '../enemy/RangedEnemy.js';
+import FlyingRangedEnemy from '../enemy/FlyingRangedEnemy.js';
 import Trap from '../enemy/BaseTrap.js';
 import MineEnemy from '../enemy/MineMeleeEnemy.js';
 import UiManager from '../ui/UiManager.js';
-import TristezaOrb from '../orbs/TristezaOrb.js';
-import IraOrb from '../orbs/IraOrb.js';
+import MoveSpeedOrb from '../orbs/MoveSpeedOrb.js';
+import DamageOrb from '../orbs/DamageOrb.js';
+import DashOrb from '../orbs/DashOrb.js';
+import RangedOrb from '../orbs/RangedOrb.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 import Checkpoint from '../objects/Checkpoint.js';
 
@@ -51,8 +54,10 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.orbGroup = this.physics.add.group();
 
-        this.orbGroup.add(new IraOrb(this, 400, 300));
-        this.orbGroup.add(new TristezaOrb(this, 800, 300));
+        this.orbGroup.add(new DamageOrb(this, 400, 300));
+         this.orbGroup.add(new DashOrb(this, 500, 300));
+          this.orbGroup.add(new RangedOrb(this, 600, 300));
+        this.orbGroup.add(new MoveSpeedOrb(this, 800, 300));
     
 
 
@@ -100,6 +105,7 @@ export default class TestPlayerScene extends Phaser.Scene {
        // this.enemies.add(new RangedEnemy(this, 700, 250, 'rangedEnemy'));
         this.enemies.add(new MineEnemy(this, 200, 300, 'mineEnemy'))
         this.enemies.add(new Trap(this,200,300,'TRAP'))
+        this.enemies.add(new FlyingRangedEnemy(this,200,150,'TRAP'))
 
         this.physics.add.collider(this.player, this.ground);
         this.physics.add.collider(this.ground, this.enemies);

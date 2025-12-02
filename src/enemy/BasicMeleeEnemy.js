@@ -8,7 +8,6 @@ export default class MeleeEnemy extends BaseEnemy {
 
     this.speed = 70;
     this.attackRange = 80;
-    this.attackCooldown = 1000;
 
     this.meleeAttackWidge = 60; //ancho del hitbox de ataque 
     this.meleeAttackHeight = 60;// alto del hitbox de ataque

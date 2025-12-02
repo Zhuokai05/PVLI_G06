@@ -4,8 +4,13 @@ export default class BasicMeleeEnemyAttackState extends BaseEnemyAttackState {
   
     enter (enemy){
         super.enter(enemy);
+        this.hasAttacked = false;
         let direction = enemy.player.x > enemy.x ? 1 : -1;
-        this.meleeAttack(direction);
+        
+        if(!this.hasAttacked){
+            this.meleeAttack(direction);
+            this.hasAttacked = true; 
+        }  
 
     }
 
@@ -19,17 +24,6 @@ export default class BasicMeleeEnemyAttackState extends BaseEnemyAttackState {
      * @param {int} direction direccion que ataca el enemigo, 1 derecha, -1 izquierda  
      */
     meleeAttack(direction) {
-
-        //si no ha pasado su cooldown no ataca
-        if (this.isAttacking) return;
-
-        console.log('enemy attack')
-
-        //terminar el ataque despues de attackcooldown
-        this.enemy.scene.time.delayedCall(this.enemy.attackTime, () => {
-            this.enemy.isAttacking = false;
-        });
-
 
         let w = this.enemy.meleeAttackWidge;
         let h = this.enemy.meleeAttackHeight;

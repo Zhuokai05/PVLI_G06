@@ -11,6 +11,7 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     this.scene = scene;
     this.player = scene.player;
     this.speed = 50; //velocidad
+    this.verticalSpeed = 0; //velocidad en Y
     this.attackRange = 80; //rango de ataque
     this.health = 3; //vida
     this.distanceBtwEnemies = 20; //distancia minima que existe entre los enemigos
