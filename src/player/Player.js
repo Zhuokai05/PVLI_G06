@@ -39,7 +39,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.canDash = false;
         this.canShield = false;
         this.canRangeAttack = false;
+        this.canShield = false;
 
+        this.hasShield = false;
+        this.shieldCooldown = 5000;
+        this.shieldCooldownTimer = 0;
 
         this.movementSpeed = 300;
         this.jumpSpeed = 800;
@@ -48,17 +52,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.pogoJumpSpeed = 600; //velocidad de pogo jump 
         this.jumpBufferTime = 200; //tiempo de margen de salto
         this.jumpBufferTimer = 0;
-        this.speedReduceRatioAtJump = 0.8;
+        this.speedReduceRatioAtJump = 0.8; //la velocidad que reduce el juagdor durante su salto
 
         this.isDashing = false;
-        this.dashSpeed = 1300;
-        this.dashDuration = 200;
-        this.dashCooldown = 500;
+        this.dashSpeed = 1300; //velocidad del dash
+        this.dashDuration = 200; //tiempo que dura el dash
+        this.dashCooldown = 500; //tiempo que hay que esperar el jugador entre dashes
         this.dashCooldownTimer = 0;
 
-        this.meleeAttackDist = 100;
+        this.meleeAttackDist = 100; //distancia entre el jugador y su hitbox de ataque
         this.meleeAttackWidge = 120;
-        this.meleeAttackHeight = 70;
+        this.meleeAttackHeight = 70;    
         this.attackCooldown = 300; //el tiempo que debe de pasar tras un ataque para poder atacar otra vez 
         this.attackDuration = 100; //cuanto dura el hitbox de su ataque
         this.isAttacking = false; //si esta atacando
@@ -117,8 +121,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (this.canDash && this.dashCooldownTimer <= 0 && !this.isDashing) {
                 this.stateMachine.setState('dash');
             }
-            else if (this.canRangeAttack && this.dashCooldownTimer <= 0 && !this.isDashing) {
+            else if (this.canRangeAttack && this.rangeAttackCooldown <= 0 && !this.isAttacking) {
                 this.performRangeAttack();
+            }
+            else if (this.canShield && !this.hasShield){
+                if(this.shieldCooldownTimer <= 0){
+                    this.hasShield = true;
+                    console.log("escudo activado")
+                }
+                else {
+                   
+                }
             }
         }
 
@@ -136,6 +149,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // reducir timers independientes de si atacamos o no
         this.dashCooldownTimer -= delta;
+        this.shieldCooldownTimer -= delta;
     }
 
     /**
@@ -146,6 +160,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
             if (this.invulnerable) return;
 
+
             if (this.damageSound) {
                 this.damageSound.play();
             }
@@ -153,17 +168,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.setTint(0xff0000);
             this.safeDelay(this.invulnerableTime * 0.8, () => this.setTint(this.orbTint));
 
-            this.scene.time.delayedCall(this.invulnerableTime * 0.8, () => this.setTint(this.orbTint));
-
-
             this.invulnerable = true;
-
+            this.safeDelay(this.invulnerableTime, () => (this.invulnerable = false));
+            
+            if(this.hasShield && damage === 1){ // si tiene escudo, bloquea los daños no mortales
+                this.shieldCooldownTimer = this.shieldCooldown;
+                this.hasShield = false;
+                console.log("daño bloqueado")
+                return;
+            }
 
             this.health -= damage;
             this.emit('updateHearts', this.health, true);
             console.log(damage + ' daño recibido. Vida: ', + this.health);
 
-            this.safeDelay(this.invulnerableTime, () => (this.invulnerable = false));
+            
 
 
             if (this.health <= 0) {
@@ -368,6 +387,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         performRangeAttack() {
             if (!this.canRangeAttack) return;
             if (this.isAttacking) return;
+
 
             this.isAttacking = true;
 

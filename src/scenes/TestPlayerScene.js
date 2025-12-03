@@ -10,6 +10,7 @@ import MoveSpeedOrb from '../orbs/MoveSpeedOrb.js';
 import DamageOrb from '../orbs/DamageOrb.js';
 import DashOrb from '../orbs/DashOrb.js';
 import RangedOrb from '../orbs/RangedOrb.js';
+import ShieldOrb from '../orbs/ShieldOrb.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 import Checkpoint from '../objects/Checkpoint.js';
 
@@ -55,9 +56,12 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.orbGroup = this.physics.add.group();
 
         this.orbGroup.add(new DamageOrb(this, 400, 300));
-         this.orbGroup.add(new DashOrb(this, 500, 300));
-          this.orbGroup.add(new RangedOrb(this, 600, 300));
+        this.orbGroup.add(new DashOrb(this, 500, 300));
+        this.orbGroup.add(new RangedOrb(this, 600, 300));
         this.orbGroup.add(new MoveSpeedOrb(this, 800, 300));
+        this.orbGroup.add(new ShieldOrb(this, 900, 300));
+       
+        
     
 
 
