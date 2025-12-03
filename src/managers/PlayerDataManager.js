@@ -37,9 +37,10 @@ export default class PlayerDataManager {
   static applyDataToPlayer(player) {
     player.health = this.data.health;
     player.maxHealth = this.data.maxHealth;
+    
     if (player.dead) {
-      player.setX = this.data.respawnPoint.x;
-      player.setY = this.data.respawnPoint.y;
+      player.x= this.data.respawnPoint.x;
+      player.y = this.data.respawnPoint.y;
     }
 
 

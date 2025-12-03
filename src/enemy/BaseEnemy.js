@@ -99,5 +99,8 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
      this.destroy();
     });
   }
+  playMoveAnimation(){
+    
+  }
 
 }

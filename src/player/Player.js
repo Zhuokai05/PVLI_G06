@@ -125,7 +125,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (this.canDash && this.dashCooldownTimer <= 0 && !this.isDashing) {
                 this.stateMachine.setState('dash');
             }
-            else if (this.canRangeAttack && this.rangeAttackCooldown <= 0 && !this.isAttacking) {
+            else if (this.canRangeAttack && this.rangeAttackCooldownTimer <= 0 && !this.isAttacking) {
                 this.performRangeAttack();
             }
             else if (this.canShield && !this.hasShield && this.shieldCooldownTimer <= 0){

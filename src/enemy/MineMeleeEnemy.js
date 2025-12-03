@@ -2,7 +2,7 @@ import BaseEnemy from './BaseEnemy.js';
 import GroundEnemyMoveState from './enemyMove/GroundEnemyMoveState.js';
 import MineEnemyAttackState from './enemyAttack/MineEnemyAttackState.js';
 
-export default class MeleeEnemy extends BaseEnemy {
+export default class MineEnemy extends BaseEnemy {
   constructor(scene, x, y, sprite) {
     super(scene, x, y, sprite);
 
@@ -24,7 +24,11 @@ export default class MeleeEnemy extends BaseEnemy {
    CollisionWithPlayer(player, enemy) {
     //lo dejamos vacio para que no dañe al jugador en colision, ya que puede hacer doble daño con la de explosion
   }
-  
+
+  playMoveAnimation(){
+    this.play('Fire_Mine_Move', true);
+    console.log("Playmove")
+  }
 }
 
 

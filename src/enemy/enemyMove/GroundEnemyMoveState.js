@@ -3,6 +3,7 @@ import BaseState from '../../stateMachine/BaseState.js';
 export default class GroundEnemyMoveState extends BaseState {
   enter(enemy) {
     this.startAttackTimer = 0;
+    enemy.playMoveAnimation();
   }
 
   execute(enemy, time, delta) {
@@ -39,6 +40,10 @@ export default class GroundEnemyMoveState extends BaseState {
         this.startAttackTimer = 0;
       }
     }
+
+     else {
+        enemy.setVelocityX(0);
+      }
 
     //lanza el ataque
     if (this.startAttackTimer > enemy.startAttackTime){
