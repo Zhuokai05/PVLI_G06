@@ -1,6 +1,6 @@
 export default class RangedEnemyProjectile extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, enemy,target) {
-        super(scene, x, y, 'RangedEnemyProjectile');
+    constructor(scene, x, y, enemy,sprite,target) {
+        super(scene, x, y, sprite);
 
         this.enemy = enemy;
         this.scene = scene;

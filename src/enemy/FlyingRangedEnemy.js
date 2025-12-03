@@ -1,5 +1,5 @@
 import FlyingEnemyMoveState from './enemyMove/FlyingEnemyMoveState.js';
-import FlyingEnemyMeleeAttackState from './enemyAttack/RangedEnemyAttackState.js';
+import RangedEnemyAttackState from './enemyAttack/RangedEnemyAttackState.js';
 import BaseEnemy from './BaseEnemy.js';
 
 export default class FlyingRangedEnemy extends BaseEnemy {
@@ -22,7 +22,7 @@ export default class FlyingRangedEnemy extends BaseEnemy {
 
         this.stateMachine
             .addState('move', new FlyingEnemyMoveState())
-            .addState('attack', new FlyingEnemyMeleeAttackState())
+            .addState('attack', new RangedEnemyAttackState())
             .setState('move');
     }
 

@@ -22,6 +22,12 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('checkpoint', './assets/Escena/AltarCheckpoint.png');
 
     this.load.image('rangedEnemy', './assets/Enemigos_ranged/RangedEnemyPlaceHolder.png');
+    
+    this.load.spritesheet('Phoenix', './assets/Enemigos_ranged/Phoenix_Sheet.png',
+    {frameWidth: 64,frameHeight: 64});
+    
+    this.load.spritesheet('Fire_Mine', './assets/Enemigos_mina/Fire_mina_sheet.png',
+    {frameWidth: 32,frameHeight: 32});
 
     // Angel espada normal
     this.load.image('angel_sword_idle', 'assets/Player/Angel_Espada_normal_1.png');

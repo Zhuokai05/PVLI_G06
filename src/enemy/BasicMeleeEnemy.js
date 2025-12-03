@@ -1,6 +1,6 @@
 import BaseEnemy from './BaseEnemy.js';
-import BasicMeleeEnemyMoveState from './enemyMove/BaseEnemyMoveState.js';
-import BasicMeleeEnemyAttackState from './enemyAttack/BasicMeleeEnemyAttackState.js';
+import GroundEnemyMoveState from './enemyMove/GroundEnemyMoveState.js';
+import MeleeEnemyAttackState from './enemyAttack/MeleeEnemyAttackState.js';
 
 export default class MeleeEnemy extends BaseEnemy {
   constructor(scene, x, y, sprite) {
@@ -14,8 +14,8 @@ export default class MeleeEnemy extends BaseEnemy {
     this.meleeAttackDist = 40; //distancia de su ataque
 
     this.stateMachine
-      .addState('move', new BasicMeleeEnemyMoveState())
-      .addState('attack', new BasicMeleeEnemyAttackState())
+      .addState('move', new GroundEnemyMoveState())
+      .addState('attack', new MeleeEnemyAttackState())
       .setState('move');
   }
 }

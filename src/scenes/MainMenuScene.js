@@ -19,6 +19,7 @@ import MapDoor from '../managers/MapDoor.js';
 import FinalBossDoor from '../managers/FinalBossDoor.js';
 
 
+import UiManager from '../managers/UiManager.js'
 class MainMenuScene extends Phaser.Scene 
 {
     constructor() 

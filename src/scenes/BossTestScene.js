@@ -3,7 +3,7 @@ import InputManager from '../managers/InputManager.js';
 import BossFear from '../enemy/Boss/BossFear.js';
 import BossAngry from '../enemy/Boss/BossAngry.js';
 import BossTutorial from '../enemy/Boss/BossTutorial.js';
-import UiManager from '../ui/UiManager.js';
+import UiManager from '../managers/UiManager.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 
 class BossTestScene extends Phaser.Scene {

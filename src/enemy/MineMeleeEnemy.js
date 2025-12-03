@@ -1,8 +1,8 @@
 import BaseEnemy from './BaseEnemy.js';
-import MineEnemyMoveState from './enemyMove/BaseEnemyMoveState.js';
+import GroundEnemyMoveState from './enemyMove/GroundEnemyMoveState.js';
 import MineEnemyAttackState from './enemyAttack/MineEnemyAttackState.js';
 
-export default class MeleeEnemy extends BaseEnemy {
+export default class MineEnemy extends BaseEnemy {
   constructor(scene, x, y, sprite) {
     super(scene, x, y, sprite);
 
@@ -16,7 +16,7 @@ export default class MeleeEnemy extends BaseEnemy {
     this.startAttackTime = 0; //no se puede cancelar su ataque por lo que no hay que cargarlo
 
     this.stateMachine
-      .addState('move', new MineEnemyMoveState())
+      .addState('move', new GroundEnemyMoveState())
       .addState('attack', new MineEnemyAttackState())
       .setState('move');
   }
@@ -24,7 +24,11 @@ export default class MeleeEnemy extends BaseEnemy {
    CollisionWithPlayer(player, enemy) {
     //lo dejamos vacio para que no dañe al jugador en colision, ya que puede hacer doble daño con la de explosion
   }
-  
+
+  playMoveAnimation(){
+    this.play('Fire_Mine_Move', true);
+    console.log("Playmove")
+  }
 }
 
 
