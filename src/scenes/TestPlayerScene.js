@@ -5,7 +5,7 @@ import RangedEnemy from '../enemy/RangedEnemy.js';
 import FlyingRangedEnemy from '../enemy/FlyingRangedEnemy.js';
 import Trap from '../enemy/BaseTrap.js';
 import MineEnemy from '../enemy/MineMeleeEnemy.js';
-import UiManager from '../ui/UiManager.js';
+import UiManager from '../managers/UiManager.js';
 import MoveSpeedOrb from '../orbs/MoveSpeedOrb.js';
 import DamageOrb from '../orbs/DamageOrb.js';
 import DashOrb from '../orbs/DashOrb.js';

@@ -1,7 +1,7 @@
 import MapManager from "../managers/MapManager.js";
 import Player from '../player/Player.js';
 import InputManager from '../managers/InputManager.js';
-import UiManager from '../ui/UiManager.js'
+import UiManager from '../managers/UiManager.js'
 class MainMenuScene extends Phaser.Scene 
 {
     constructor() 
