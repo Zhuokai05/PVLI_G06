@@ -8,10 +8,12 @@ import PlayerKnockbackState from './States/PlayerKnockbackState.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 
 
+
 /**
  * @Class Player
  * Clase del objeto Player 
  */
+
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
@@ -21,32 +23,33 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
 
-        this.setCollideWorldBounds(true);
+        this.setCollideWorldBounds(true); //poder chocar con los bordes del mundo
 
         this.setGravityY(1000);
 
         this.scene = scene;
 
-        this.health = 5;
-        this.maxHealth = 5;
+        this.health = 5; //vida actual
+        this.maxHealth = 5; //vida maxima
         this.dead = false;
-        this.damage = 10;
-        this.rangeDamage = 1;
+        this.damage = 10; //daño que causa su ataque cuerpo a cuerpo
+        this.rangeDamage = 1; //daño que cause su ataque a distancia
         this.direction = 1; // 1 derecha, -1 izquierda
         this.grounded = false;
-        this.respawnPoint = { x: 0, y: 0 };
+        this.respawnPoint = { x: 0, y: 0 }; //punto de respawn
 
+        //booleanas segun el orbe que esta activado
         this.canDash = false;
         this.canShield = false;
         this.canRangeAttack = false;
         this.canShield = false;
 
-        this.hasShield = false;
-        this.shieldCooldown = 5000;
+        this.hasShield = false; //si esta activado su escudo
+        this.shieldCooldown = 5000; //cooldown de su escudo
         this.shieldCooldownTimer = 0;
 
-        this.movementSpeed = 300;
-        this.jumpSpeed = 800;
+        this.movementSpeed = 300; //velocidad de movimiento
+        this.jumpSpeed = 800; //velocidad de salto
         this.canPogoJump = false;
         this.pogoJumpJudgeTime = 100; //tiempo que puedes hacer pogo jump tras atacar hacia abajo y dar a un enemigo
         this.pogoJumpSpeed = 600; //velocidad de pogo jump 
@@ -67,9 +70,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackDuration = 100; //cuanto dura el hitbox de su ataque
         this.isAttacking = false; //si esta atacando
 
-        this.rangeAttackDuration = 3000;
-        this.rangeAttackSpeed = 800;
-        this.rangeAttackCooldown = 300;
+        this.rangeAttackDuration = 3000; //en cuanto tiempo se destruye el projectile invocado
+        this.rangeAttackSpeed = 800; //la velocidad del projectile que lanza
+        this.rangeAttackCooldown = 300; //el cooldown de su ataque a distancia
 
         this.invulnerable = false;
         this.invulnerableTime = 1000; //tiempo invulnerable despues de recibir daño
@@ -80,8 +83,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.equippedOrbs = [null, null]; // orbes 2 equipados
         this.activeOrbIndex = 0;        // indice del orbe activo (0 o 1)
         this.damageMultiplier = 1.0;    // modificador de daño 
-        this.speedMultiplier = 1.0;
-        this.orbTint = 0xffffff;
+        this.speedMultiplier = 1.0;     //modificador de velocidad
+        this.orbTint = 0xffffff;     //color original del jugador
 
         this.setDepth(5);
 
@@ -117,6 +120,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.step(time, delta);
 
         this.attackDir = this.getAttackDirection();
+
         if (Phaser.Input.Keyboard.JustDown(this.keys.useOrb)) {
             if (this.canDash && this.dashCooldownTimer <= 0 && !this.isDashing) {
                 this.stateMachine.setState('dash');
@@ -202,12 +206,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             }
 
 
-            for (let i = 0; i < this.equippedOrbs.length; i++) {
-                if (!this.equippedOrbs[i]) {
+            for (let i = 0; i < this.equippedOrbs.length; i++) { //si hay algun slot libre, se autoequipa el orbe recogido
+                if (!this.equippedOrbs[i]) { 
                     this.equipOrb(i, orb)
                     console.log('orbe equipado automaticamente en slot: ' + i);
 
-                    if (this.activeOrbIndex === i) {
+                    if (this.activeOrbIndex === i) { //se autoactiva el primer orbe que recoges
                         this.ActivateOrb(i)
                     }
                     return;
