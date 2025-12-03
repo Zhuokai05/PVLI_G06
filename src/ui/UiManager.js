@@ -6,24 +6,26 @@ export default class UIManager {
     this.hearts = [];
     this.heartSpacing = 60;  //espacio entre corazones
     this.heartX = 40;
-    this.heartY = 40;       
+    this.heartY = 40;
     this.maxHearts = player.maxHealth;
 
     this.orbs = [];
     this.orbSpacing = 60;  //espacio entre orbes 
-    this.orbX = 40;
-    this.orbY = 100;       
+    this.orbX = 45;
+    this.orbY = 110;
     this.maxOrbs = player.equippedOrbs.length;
 
     this.createHearts();
+    this.createOrbSlots();
     this.createOrbs();
+
 
     player.on('updateHearts', this.updateHearts, this);
 
     player.on('orbChanged', this.updateOrbs, this);
   }
 
-  
+
 
   //crea la lista de corazones
   createHearts() {
@@ -38,7 +40,7 @@ export default class UIManager {
       this.hearts.push(heart);
     }
   }
-  
+
   //actualiza la lista de corazones 
   /**
    * 
@@ -46,24 +48,24 @@ export default class UIManager {
    * @param {bool} removeHealthAnimation si reproduce la animacion de quitar corazon 
    */
 
-  updateHearts(currentHealth,removeHealthAnimation = false) {
+  updateHearts(currentHealth, removeHealthAnimation = false) {
 
     for (let i = 0; i < this.hearts.length; i++) {
       let heart = this.hearts[i];
 
       if (i < currentHealth) {
         heart.setTexture('heartbreak', 0);
-      } 
+      }
       else if (i === currentHealth && removeHealthAnimation) {
         heart.setFrame(0);
         heart.play('heartbreakAnimation', true);
         heart.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
           heart.setTexture('heartbreak', 10);
         });
-      } 
+      }
 
       else {
-        heart.setTexture('heartbreak', 10);    
+        heart.setTexture('heartbreak', 10);
       }
     }
   }
@@ -74,15 +76,23 @@ export default class UIManager {
 
     for (let i = 0; i < this.maxOrbs; i++) {
       const x = this.orbX + i * this.orbSpacing;
-      const orb = this.scene.add.image(x, this.orbY, '') 
+      const orb = this.scene.add.image(x, this.orbY, '')
         .setScrollFactor(0)
-        .setScale(0.3)
+        .setScale(0.25)
         .setAlpha(1);
 
       this.orbs.push(orb);
     }
 
     this.updateOrbs();
+  }
+  createOrbSlots() {
+    for (let i = 0; i < this.maxOrbs; i++) {
+      const x = this.orbX + i * this.orbSpacing;
+      this.scene.add.image(x, this.orbY, 'orbSlot')
+        .setScrollFactor(0)
+        .setScale(0.25);
+    }
   }
 
   //actualiza la lista de orbes
@@ -95,7 +105,7 @@ export default class UIManager {
 
         // oscurecer el orbe no activo
         if (i === this.player.activeOrbIndex) {
-          orb.setAlpha(1); 
+          orb.setAlpha(1);
         } else {
           orb.setAlpha(0.5);
         }

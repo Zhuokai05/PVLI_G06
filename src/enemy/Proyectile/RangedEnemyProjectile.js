@@ -19,7 +19,6 @@ export default class RangedEnemyProjectile extends Phaser.Physics.Arcade.Sprite 
             () => {
                 let knockbackDirection =  this.target.x < enemy.x ? -1 : 1;
                 enemy.player.takeDamage(enemy.damage,knockbackDirection);
-                enemy.isAttacking = false; 
                 this.destroy();
             }
         );
@@ -38,17 +37,13 @@ export default class RangedEnemyProjectile extends Phaser.Physics.Arcade.Sprite 
 
         this.setVelocity(dx * this.speed, dy * this.speed);
         console.log("proyectile created")
-
- 
     }
 
     preUpdate(time, delta) {
         super.preUpdate(time, delta);
 
-        if (!this.target || !this.target.active) { // si no encuentra el jugador no hace nada
-            this.enemy.isAttacking = false; 
+        if (!this.target || !this.target.active) { // si no encuentra el jugador no hace nada 
             this.destroy();
-            return;
         }
 
         // se destruye si sale fuera de la camara
@@ -57,10 +52,7 @@ export default class RangedEnemyProjectile extends Phaser.Physics.Arcade.Sprite 
             this.x > cam.worldView.x + cam.worldView.width + 100 ||
             this.y < cam.worldView.y - 100 ||
             this.y > cam.worldView.y + cam.worldView.height + 100) {
-            this.enemy.isAttacking = false; 
-            console.log("proyectile destroyed");
             this.destroy();
-
         }
     }
 }

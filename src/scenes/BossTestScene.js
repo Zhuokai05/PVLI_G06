@@ -35,16 +35,17 @@ class BossTestScene extends Phaser.Scene {
         this.enemies = this.physics.add.group();
 
         // Crear boss
-        //this.bossFear = new BossFear(this, 0, 0, this.player);
-        //this.enemies.add(this.bossFear);
+        this.bossFear = new BossFear(this, this.cameras.main.width / 2, 400, this.player);
+        this.physics.add.collider(this.bossFear, ground);
+        this.enemies.add(this.bossFear);
 
         //this.bossAngry = new BossAngry(this, this.cameras.main.width / 2, 400, this.player);
         //this.physics.add.collider(this.bossAngry, ground);
         //this.enemies.add(this.bossAngry);
 
-        this.bossTutorial = new BossTutorial(this, this.cameras.main.width - 60, this.cameras.main.height - 150, this.player);
-        this.physics.add.collider(this.bossTutorial, ground);
-        this.enemies.add(this.bossTutorial);
+        //this.bossTutorial = new BossTutorial(this, this.cameras.main.width - 60, this.cameras.main.height - 150, this.player);
+        //this.physics.add.collider(this.bossTutorial, ground);
+        //this.enemies.add(this.bossTutorial);
 
         // Configurar tecla ESC para pausa
         this.input.keyboard.on('keydown-ESC', () => {
@@ -56,17 +57,17 @@ class BossTestScene extends Phaser.Scene {
     update(time, delta) {
         this.player.update(time, delta);
         
-        if (this.bossTutorial && this.bossTutorial.active) {
+        /*if (this.bossTutorial && this.bossTutorial.active) {
             this.bossTutorial.update(time, delta);
-        }
+        }*/
 
         /*if (this.bossAngry && this.bossAngry.active) {
             this.bossAngry.update(time, delta);
         }*/
 
-        /*if (this.bossFear && this.bossFear.active) {
+        if (this.bossFear && this.bossFear.active) {
             this.bossFear.update(time, delta);
-        }*/
+        }
     }
 }
 

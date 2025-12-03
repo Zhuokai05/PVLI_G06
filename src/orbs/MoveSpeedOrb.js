@@ -1,8 +1,8 @@
 import Orb from './BaseOrb.js';
 
-export default class TristezaOrb extends Orb {
+export default class MoveSpeedOrb extends Orb {
  constructor(scene, x, y) {
-    super(scene, x, y, 'orbTristeza', 'Orb Tristeza', '(Efecto: Aumenta la velocidad un 50%)');
+    super(scene, x, y, 'orbMoveSpeed', 'Orb MoveSpeed', '(Efecto: Aumenta la velocidad un 50%)');
   }
 
   onActivate(player) {
@@ -12,6 +12,6 @@ export default class TristezaOrb extends Orb {
   }
 
   onDesactivate(player) {
-    this.player.speedMultiplier = 1.5;
+    this.player.speedMultiplier = 1.0;
   }
 }

@@ -5,8 +5,13 @@ export default class RangedEnemyAttackState extends BaseEnemyAttackState {
 
     enter (enemy){
         super.enter(enemy);
-        this.shootProjectile(enemy);
+        this.hasAttacked = false;
 
+        if(!this.hasAttacked){
+            this.shootProjectile(enemy);
+            this.hasAttacked = true; 
+        }  
+        enemy.body.allowGravity = false; 
     }
 
     execute(enemy, time, delta) {
