@@ -1,6 +1,6 @@
 import BaseState from '../../stateMachine/BaseState.js';
 
-export default class BaseEnemyMoveState extends BaseState {
+export default class GroundEnemyMoveState extends BaseState {
   enter(enemy) {
     this.startAttackTimer = 0;
   }
@@ -17,23 +17,27 @@ export default class BaseEnemyMoveState extends BaseState {
     }
 
 
-    //persigue al jugador si esta en rango
-    if (!this.closeEnemy(enemy,direction) && enemy.canSeePlayer() && distance >= enemy.attackRange) {
-      enemy.setVelocityX(direction * enemy.speed);
-      enemy.setFlipX(direction < 0);
-    }
+    if(enemy.canSeePlayer()){
 
-    else {
-      enemy.setVelocityX(0);
-    }
-    //si el jugador esta en rango empieza a cargar el ataque
-    if (distance < enemy.attackRange && enemy.canSeePlayer()) {
-      this.startAttackTimer += delta;
-    }
+      //persigue al jugador si esta en rango
+      if (!this.closeEnemy(enemy,direction) && distance >= enemy.attackRange) {
+        enemy.setVelocityX(direction * enemy.speed);
+        enemy.setFlipX(direction < 0);
+      }
 
-    //si el jugador sale de rango deja de cargar
-    else {
-      this.startAttackTimer = 0;
+      else {
+        enemy.setVelocityX(0);
+      }
+
+      //si el jugador esta en rango empieza a cargar el ataque
+      if (distance < enemy.attackRange) {
+        this.startAttackTimer += delta;
+      }
+
+      //si el jugador sale de rango deja de cargar
+      else {
+        this.startAttackTimer = 0;
+      }
     }
 
     //lanza el ataque

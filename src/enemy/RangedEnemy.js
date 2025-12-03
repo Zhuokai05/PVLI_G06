@@ -1,15 +1,13 @@
 import BaseEnemy from './BaseEnemy.js';
 import RangedEnemyAttackState from './enemyAttack/RangedEnemyAttackState.js';
-import RangedEnemyMoveState from './enemyMove/BaseEnemyMoveState.js';
+import GroundEnemyMoveState from './enemyMove/GroundEnemyMoveState.js';
 
 export default class RangedEnemy extends BaseEnemy {
     constructor(scene, x, y, sprite) {
         super(scene, x, y, sprite);
 
         this.attackRange = 900; //rango ataque del enemigo a distancia
-        this.attackCooldown = 2000; // cooldown entre ataques
-        this.attackDuration = 1000; // lo que tarda en atacar
-
+        this.attackTime = 1000; // lo que tarda en atacar
 
         this.detectPlayerRangeX = 1000; //rango en X que empieza a detecta el jugador
         this.detectPlayerRangeY = 200; //rango en Y que empieza a detecta el jugador

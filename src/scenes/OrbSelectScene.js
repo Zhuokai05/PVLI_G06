@@ -90,9 +90,15 @@ class OrbSelectScene extends Phaser.Scene {
                 { font: "14px Arial", fill: "#fff", backgroundColor: "#444" }
             )
 
+            
             .setOrigin(1, 0.5)
             .setDepth(7)
             .setInteractive({ useHandCursor: true });
+
+            actionText.setColor("#FFF")
+            if (!orb?.equipped && this.noSlot()){
+                actionText.setColor("#FF0000")
+            }
 
             actionText.on("pointerdown", () => {
                 this.toggleEquip(orb);

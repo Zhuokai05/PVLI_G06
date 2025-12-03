@@ -27,6 +27,7 @@ export default class MineEnemyAttackState extends BaseEnemyAttackState {
         //destruir hitbox tras attackduration
         this.enemy.scene.time.delayedCall(this.enemy.attackDuration, () => 
             {
+                if(!this.enemy.active) return;
                 let damaged = false;
                 this.enemy.scene.physics.add.overlap(this.hitbox, this.enemy.player, (hb, player) => {
 
