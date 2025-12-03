@@ -35,12 +35,10 @@ export default class PlayerDataManager {
 
   // lee los datos guardados y lo aplica al nuevo jugador
   static applyDataToPlayer(player) {
+    console.log("hola");
     player.health = this.data.health;
     player.maxHealth = this.data.maxHealth;
-    if (player.dead) {
-      player.setX = this.data.respawnPoint.x;
-      player.setY = this.data.respawnPoint.y;
-    }
+    
 
 
     //como al cambiar de escena se crea un nuevo player, hay que poner el player del orbe como el nuevo player

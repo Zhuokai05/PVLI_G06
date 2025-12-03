@@ -4,7 +4,8 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         // Usamos la imagen 'checkpoint' (AltarCheckpoint.png) precargada
         super(scene, x, y, "checkpoint");
-
+this.x = x;
+this.y = y; 
         // Mostrar sprite como altar: origen en la base para que "pise" el suelo
         this.setOrigin(0.5, 1);
         // Ajusta escala si hace falta (cambiar a gusto)
@@ -58,6 +59,7 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
         };
 
         this.scene.input.keyboard.on('keydown', this._keydownHandler);
+        console.log(x,y);
     }
 
     activate(player) {
@@ -86,5 +88,6 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
 
         // guardar datos globales
         PlayerDataManager.saveDataFromPlayer(player);
+        console.log(this.x, this.y);
     }
 }

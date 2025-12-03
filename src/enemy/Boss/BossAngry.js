@@ -216,10 +216,12 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         console.log('Boss derrotado definitivamente');
+        
         this.scene.time.delayedCall(2000, () => {   
             this.scene.scene.stop(); 
             this.scene.scene.launch('Win');
             this.destroy();
         });
     }
+
 }
