@@ -29,18 +29,21 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 8264,
-                "y": 248
+                "y": 240
             }
         },
         "iraboss.json#Ira": {
             "scaleInDock": 1
         },
         "map.json": {
-            "scale": 0.125,
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 3196,
-                "y": 1932
+                "x": 774,
+                "y": 1186.6666666666665
             }
         },
         "map.json#Ira": {
@@ -52,18 +55,18 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 8536,
-                "y": 3576
+                "y": 3568
             }
         },
         "map2.json#Ira": {
             "scaleInDock": 1
         },
         "mapa3.json": {
-            "scale": 0.125,
+            "scale": 0.015625,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": -676,
-                "y": 1164
+                "x": 30368,
+                "y": -21056
             }
         },
         "mapa3.json#Ira": {
@@ -81,17 +84,17 @@
     "openFiles": [
         "iraboss.json",
         "map2.json",
-        "map.json",
-        "mapa3.json"
+        "mapa3.json",
+        "map.json"
     ],
     "project": "mapa1.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "Ira.tsx",
         "iraboss.json",
         "map2.json",
         "mapa3.json",
-        "map.json",
-        "Ira.tsx"
+        "map.json"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFormat": "tsx"
