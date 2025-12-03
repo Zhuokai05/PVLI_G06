@@ -124,14 +124,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             else if (this.canRangeAttack && this.rangeAttackCooldown <= 0 && !this.isAttacking) {
                 this.performRangeAttack();
             }
-            else if (this.canShield && !this.hasShield){
-                if(this.shieldCooldownTimer <= 0){
-                    this.hasShield = true;
-                    console.log("escudo activado")
-                }
-                else {
-                   
-                }
+            else if (this.canShield && !this.hasShield && this.shieldCooldownTimer <= 0){
+                this.hasShield = true;
+                console.log("escudo activado")
             }
         }
 
