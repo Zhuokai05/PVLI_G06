@@ -5,14 +5,12 @@ import RangedEnemy from '../enemy/RangedEnemy.js';
 import Trap from '../enemy/BaseTrap.js';
 import MineEnemy from '../enemy/MineMeleeEnemy.js';
 import UiManager from '../ui/UiManager.js';
-import TristezaOrb from '../orbs/TristezaOrb.js';
-import IraOrb from '../orbs/IraOrb.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 import BossDoor from '../managers/BossDoor.js';
 import SadnessBossDoor from '../managers/SadnessBossDoor.js';
 import Checkpoint from '../objects/Checkpoint.js';
 import Button from '../managers/Botton.js';
-import BattleDoor from '../managers/BattleDoor.js';
+
 class MainMenuScene extends Phaser.Scene 
 {
     constructor() 
@@ -62,7 +60,6 @@ let redButton = new Button(this, 1000, 900, 'basicEnemyHappy', Iraboss1, 'rojo')
 let blueButton = new Button(this, 850, 900, 'basicEnemyFear', Iraboss1, 'azul');
 let greenButton = new Button(this, 900, 900, 'basicEnemySad', Iraboss1, 'verde');
 
-this.battleDoor = new BattleDoor(  this,1000,900,'basicEnemySad',  50,20);
 
     this.enemies = this.physics.add.group();
     obsj.objects.forEach((objeto) => 
