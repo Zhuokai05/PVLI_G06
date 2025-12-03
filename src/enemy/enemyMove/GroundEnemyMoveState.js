@@ -1,6 +1,6 @@
 import BaseState from '../../stateMachine/BaseState.js';
 
-export default class BaseEnemyMoveState extends BaseState {
+export default class GroundEnemyMoveState extends BaseState {
   enter(enemy) {
     this.startAttackTimer = 0;
   }

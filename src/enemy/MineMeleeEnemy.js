@@ -1,5 +1,5 @@
 import BaseEnemy from './BaseEnemy.js';
-import MineEnemyMoveState from './enemyMove/BaseEnemyMoveState.js';
+import GroundEnemyMoveState from './enemyMove/GroundEnemyMoveState.js';
 import MineEnemyAttackState from './enemyAttack/MineEnemyAttackState.js';
 
 export default class MeleeEnemy extends BaseEnemy {
@@ -16,7 +16,7 @@ export default class MeleeEnemy extends BaseEnemy {
     this.startAttackTime = 0; //no se puede cancelar su ataque por lo que no hay que cargarlo
 
     this.stateMachine
-      .addState('move', new MineEnemyMoveState())
+      .addState('move', new GroundEnemyMoveState())
       .addState('attack', new MineEnemyAttackState())
       .setState('move');
   }

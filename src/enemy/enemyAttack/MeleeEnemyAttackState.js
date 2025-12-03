@@ -1,6 +1,6 @@
 import BaseEnemyAttackState from './BaseEnemyAttackState.js';
 
-export default class BasicMeleeEnemyAttackState extends BaseEnemyAttackState {
+export default class MeleeEnemyAttackState extends BaseEnemyAttackState {
   
     enter (enemy){
         super.enter(enemy);
