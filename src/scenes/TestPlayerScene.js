@@ -153,8 +153,16 @@ export default class TestPlayerScene extends Phaser.Scene {
             }
         })
 
-         this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move','Tristeza_FlyingEnemy_Attack'));
-         this.enemies.add(new MineEnemy(this, 1200, 1350, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack'));
+       
+        this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move','Ira_FlyingEnemy_Attack'));
+        this.enemies.add(new MineEnemy(this, 1200, 1350, 'Ira_MineEnemy',0 ,'Ira_MineEnemy_Move','Ira_MineEnemy_Attack'));
+
+
+        
+        //Tristeza
+        // this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move','Tristeza_FlyingEnemy_Attack'));
+        // this.enemies.add(new MineEnemy(this, 1200, 1350, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack'));
+        
         //puertas conectadas
         if (this.irabossdoor && this.irabossdoorcontrary) {
             this.irabossdoor.setContrary(this.irabossdoorcontrary);

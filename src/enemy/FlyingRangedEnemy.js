@@ -9,6 +9,11 @@ export default class FlyingRangedEnemy extends BaseEnemy {
         this.setScale(2);
         this.body.allowGravity = false; 
 
+        /* reducimos el collider a la mitad, ya que hay un proble con el spritesheet donde las celdas son de 64 
+        pero el sprite solo esta en el medio, con un gran margen vacio */
+        this.body.setSize(this.width / 2, this.height / 2);
+        this.body.setOffset(this.width / 4, this.height / 4);
+
         this.speed = 120;
         this.verticalSpeed = 60;
         this.attackDuration = 600;
