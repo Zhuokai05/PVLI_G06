@@ -30,6 +30,9 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
 
     this.stateMachine = new StateMachine(this, 'enemy');
 
+    this.maxVelocityX = 1000; //velocidad maxima en X
+    this.maxVelocityY = 1000;//velocidad maxima en Y
+
     //colision contra el player
     this.playerOverlap = scene.physics.add.overlap(
       this,
@@ -40,6 +43,8 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     );
 
     this.setDepth(4);
+
+    this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY); //velocidad maxima
 
   }
 

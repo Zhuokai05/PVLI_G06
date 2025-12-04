@@ -38,6 +38,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.grounded = false;
         this.respawnPoint = { x: 0, y: 0 }; //punto de respawn
 
+        this.maxVelocityX = 1000; //velocidad maxima en X
+        this.maxVelocityY = 1000;//velocidad maxima en Y
         //booleanas segun el orbe que esta activado
         this.canDash = false;
         this.canShield = false;
@@ -114,6 +116,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             volume: 0.5,
             loop: false
         });
+
+        this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);   //velocidad maxima
     }
 
     update(time, delta) {
