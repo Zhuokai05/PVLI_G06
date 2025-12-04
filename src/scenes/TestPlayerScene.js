@@ -153,6 +153,8 @@ export default class TestPlayerScene extends Phaser.Scene {
             }
         })
 
+         this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move','Tristeza_FlyingEnemy_Attack'));
+         this.enemies.add(new MineEnemy(this, 1200, 1350, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack'));
         //puertas conectadas
         if (this.irabossdoor && this.irabossdoorcontrary) {
             this.irabossdoor.setContrary(this.irabossdoorcontrary);
@@ -282,6 +284,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             repeat: 0
         });
 
+        //enemigos voladores
         this.anims.create({
             key: 'Ira_FlyingEnemy_Move',
             frames: this.anims.generateFrameNumbers('Ira_FlyingEnemy', { start: 16, end: 19 }),
@@ -297,6 +300,21 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
 
         this.anims.create({
+            key: 'Tristeza_FlyingEnemy_Move',
+            frames: this.anims.generateFrameNumbers('Tristeza_FlyingEnemy', { start: 16, end: 19 }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'Tristeza_FlyingEnemy_Attack',
+            frames: this.anims.generateFrameNumbers('Tristeza_FlyingEnemy', { start: 48, end: 51 }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        //enemigos mina
+        this.anims.create({
             key: 'Ira_MineEnemy_Move',
             frames: this.anims.generateFrameNumbers('Ira_MineEnemy', { start: 0, end: 7 }),
             frameRate: 12,
@@ -309,7 +327,22 @@ export default class TestPlayerScene extends Phaser.Scene {
             frameRate: 12,
             repeat: -1
         });
+
+        this.anims.create({
+            key: 'Tristeza_MineEnemy_Move',
+            frames: this.anims.generateFrameNumbers('Tristeza_MineEnemy', { start: 0, end: 7 }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'Tristeza_MineEnemy_Attack',
+            frames: this.anims.generateFrameNumbers('Tristeza_MineEnemy', { start: 16, end: 23 }),
+            frameRate: 12,
+            repeat: -1
+        });
     }
+
     update(time, delta) {
 
         this.player.update(time, delta);

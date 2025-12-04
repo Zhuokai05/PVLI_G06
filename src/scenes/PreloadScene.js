@@ -22,9 +22,13 @@ export class PreloadScene extends Phaser.Scene
     //enemigos voladores
     this.load.spritesheet('Ira_FlyingEnemy', './assets/sprites/Enemigos/Enemigos_voladores/Ira_FlyingEnemy.png',
     {frameWidth: 64,frameHeight: 64});
+    this.load.spritesheet('Tristeza_FlyingEnemy', './assets/sprites/Enemigos/Enemigos_voladores/Tristeza_FlyingEnemy.png',
+    {frameWidth: 64,frameHeight: 64});
     
     //enemigos mina
     this.load.spritesheet('Ira_MineEnemy', './assets/sprites/Enemigos/Enemigos_mina/Ira_MineEnemy.png',
+    {frameWidth: 32,frameHeight: 32});
+    this.load.spritesheet('Tristeza_MineEnemy', './assets/sprites/Enemigos/Enemigos_mina/Tristeza_MineEnemy.png',
     {frameWidth: 32,frameHeight: 32});
 
     //Ui

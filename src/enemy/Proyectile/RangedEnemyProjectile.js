@@ -1,6 +1,6 @@
 export default class RangedEnemyProjectile extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, enemy,sprite,target) {
-        super(scene, x, y, sprite);
+    constructor(scene, x, y, enemy,sprite,frame,target) {
+        super(scene, x, y, sprite,frame);
 
         this.enemy = enemy;
         this.scene = scene;
@@ -35,7 +35,12 @@ export default class RangedEnemyProjectile extends Phaser.Physics.Arcade.Sprite 
         dx /= len;
         dy /= len;
 
+
         this.setVelocity(dx * this.speed, dy * this.speed);
+
+        
+        //lo rotamos segun la direccion que va
+        this.rotation = Math.atan2(dy, dx) + Math.PI / 2;
         console.log("proyectile created")
     }
 

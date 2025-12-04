@@ -6,7 +6,7 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, texture,frame);
     scene.add.existing(this);
     scene.physics.add.existing(this);
-
+    this.texture = texture;
     this.moveAnimationKey = moveAnimationKey;
     this.attackAnimationKey = attackAnimationKey;
 
