@@ -1,25 +1,4 @@
-import Player from '../player/Player.js';
-import InputManager from '../managers/InputManager.js';
-import BasicMeleeEnemy from '../enemy/BasicMeleeEnemy.js';
-import RangedEnemy from '../enemy/RangedEnemy.js';
-import FlyingRangedEnemy from '../enemy/FlyingRangedEnemy.js';
-import Trap from '../enemy/BaseTrap.js';
-import MineEnemy from '../enemy/MineMeleeEnemy.js';
-import UiManager from '../ui/UiManager.js';
-import MoveSpeedOrb from '../orbs/MoveSpeedOrb.js';
-import DamageOrb from '../orbs/DamageOrb.js';
-import DashOrb from '../orbs/DashOrb.js';
-import RangedOrb from '../orbs/RangedOrb.js';
-import PlayerDataManager from '../managers/PlayerDataManager.js';
-import Checkpoint from '../objects/Checkpoint.js';
-import DoorBoss from '../managers/BossDoor.js';
-import SadnessBossDoor from '../managers/SadnessBossDoor.js';
-import Button from '../managers/Botton.js';
-import MapDoor from '../managers/MapDoor.js';
-import FinalBossDoor from '../managers/FinalBossDoor.js';
 
-
-import UiManager from '../managers/UiManager.js'
 class MainMenuScene extends Phaser.Scene 
 {
     constructor() 

@@ -39,11 +39,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 0.75,
-            "selectedLayer": 0,
+            "scale": 0.0625,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 774,
-                "y": 1186.6666666666665
+                "x": -664,
+                "y": 2736
             }
         },
         "map.json#Ira": {
@@ -66,7 +66,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 30368,
-                "y": -21056
+                "y": -3200
             }
         },
         "mapa3.json#Ira": {
