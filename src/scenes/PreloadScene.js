@@ -6,7 +6,7 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('ground', './assets/Escena/Plataforma_Ira.png');
     this.load.image('background', './assets/Menu/logo.png');
     this.load.image('win', './assets/Menu/win.png');
-      this.load.image('victoria', './assets/Menu/victory.png');
+    this.load.image('victoria', './assets/Menu/victory.png');
     this.load.image('jugar', './assets/Menu/jugar.png');
     this.load.image('name', './assets/Menu/name.png');
     this.load.image('basicEnemyAngry', './assets/Enemigos_basicos/Fire.png');
