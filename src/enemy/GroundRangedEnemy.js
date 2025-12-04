@@ -13,7 +13,7 @@ export default class RangedEnemy extends BaseEnemy {
         this.detectPlayerRangeY = 200; //rango en Y que empieza a detecta el jugador
 
         this.stateMachine
-            .addState('move', new RangedEnemyMoveState())
+            .addState('move', new GroundEnemyMoveState())
             .addState('attack', new RangedEnemyAttackState())
             .setState('move');
     }

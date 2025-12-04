@@ -1,14 +1,11 @@
-import StateMachine from '../stateMachine/StateMachine.js';
+import StateMachine from '../../stateMachine/StateMachine.js';
 
 export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
 
-  constructor(scene, x, y, texture = 'enemy', moveAnimationKey, attackAnimationKey) {
+  constructor(scene, x, y, texture = 'enemy') {
     super(scene, x, y, texture);
     scene.add.existing(this);
     scene.physics.add.existing(this);
-
-    this.moveAnimationKey = moveAnimationKey;
-    this.attackAnimationKey = attackAnimationKey;
 
     this.collisionDamage = 1; // daño que hace al jugador al colisionar con el
     this.scene = scene;
@@ -108,10 +105,8 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     });
   }
   playMoveAnimation(){
-    if(this.moveAnimationKey) this.play(moveAnimationKey, true);
+    
   }
+  
 
-  playAttackAnimation(){
-    if(this.attackAnimationKey) this.play(attackAnimationKey, true);
-  }
 }

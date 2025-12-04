@@ -1,7 +1,7 @@
 import Player from '../player/Player.js';
 import InputManager from '../managers/InputManager.js';
-import BasicMeleeEnemy from '../enemy/BasicMeleeEnemy.js';
-import RangedEnemy from '../enemy/RangedEnemy.js';
+import BasicMeleeEnemy from '../enemy/GroundMeleeEnemy.js';
+import RangedEnemy from '../enemy/GroundRangedEnemy.js';
 import FlyingRangedEnemy from '../enemy/FlyingRangedEnemy.js';
 import Trap from '../enemy/BaseTrap.js';
 import MineEnemy from '../enemy/MineMeleeEnemy.js';
@@ -45,6 +45,8 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
         this.orbGroup = this.physics.add.group();
         this.enemies = this.physics.add.group();
+
+        this.createAnimations();
 
         obsj.objects.forEach((objeto) => 
         {
@@ -181,43 +183,6 @@ export default class TestPlayerScene extends Phaser.Scene {
         
         //ui        
         this.uiManager = new UiManager(this, this.player);
-     
- 
-        //animaciones
-        this.anims.create({
-            key: 'idle',
-            frames: [{ key: 'angel_sword_idle' }],
-            frameRate: 1,
-            repeat: -1
-        });
-
-
-        this.anims.create({
-
-            key: 'walk',
-            frames: [
-            { key: 'angel_sword_walk_1' },
-            { key: 'angel_sword_walk_2' },
-            { key: 'angel_sword_walk_3' }
-            ],
-            frameRate: 6, 
-            repeat: -1
-        });
-
-        this.anims.create({
-
-            key: 'jump',
-            frames: [{ key: 'angel_sword_jump' }],
-            frameRate: 1, 
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'heartbreakAnimation',
-            frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 10 }),
-            frameRate: 12,
-            repeat: 0
-        });
 
  
         // Colliders y camaras
@@ -229,7 +194,7 @@ export default class TestPlayerScene extends Phaser.Scene {
  
  
  
-            //Overlaps
+        //Overlaps
         this.physics.add.overlap(this.player, this.orbGroup, (player, orb) => {
             orb.collect(player);
         });       
@@ -278,6 +243,51 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
     }
 
+    createAnimations(){
+        
+        //animaciones
+        this.anims.create({
+            key: 'idle',
+            frames: [{ key: 'angel_sword_idle' }],
+            frameRate: 1,
+            repeat: -1
+        });
+
+
+        this.anims.create({
+
+            key: 'walk',
+            frames: [
+            { key: 'angel_sword_walk_1' },
+            { key: 'angel_sword_walk_2' },
+            { key: 'angel_sword_walk_3' }
+            ],
+            frameRate: 6, 
+            repeat: -1
+        });
+
+        this.anims.create({
+
+            key: 'jump',
+            frames: [{ key: 'angel_sword_jump' }],
+            frameRate: 1, 
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'heartbreakAnimation',
+            frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 10 }),
+            frameRate: 12,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'heartbreakAnimation',
+            frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 10 }),
+            frameRate: 12,
+            repeat: 0
+        });
+    }
     update(time, delta) {
 
         this.player.update(time, delta);

@@ -4,6 +4,7 @@ import BaseState from '../../stateMachine/BaseState.js';
 export default class FlyingEnemyMoveState extends BaseState {
     enter(enemy) {
         this.startAttackTimer = 0;
+        enemy.playMoveAnimation();
     }
 
     execute(enemy, time, delta) {
