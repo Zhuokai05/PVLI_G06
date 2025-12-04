@@ -2,8 +2,8 @@ import StateMachine from '../stateMachine/StateMachine.js';
 
 export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
 
-  constructor(scene, x, y, texture = 'enemy', moveAnimationKey, attackAnimationKey) {
-    super(scene, x, y, texture);
+  constructor(scene, x, y, texture = 'enemy',frame = 0, moveAnimationKey, attackAnimationKey) {
+    super(scene, x, y, texture,frame);
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
@@ -108,10 +108,10 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     });
   }
   playMoveAnimation(){
-    if(this.moveAnimationKey) this.play(moveAnimationKey, true);
+    if(this.moveAnimationKey) this.play(this.moveAnimationKey, true);
   }
 
   playAttackAnimation(){
-    if(this.attackAnimationKey) this.play(attackAnimationKey, true);
+    if(this.attackAnimationKey) this.play(this.attackAnimationKey, true);
   }
 }

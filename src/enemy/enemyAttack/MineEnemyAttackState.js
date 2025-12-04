@@ -2,47 +2,33 @@ import BaseEnemyAttackState from './BaseEnemyAttackState.js';
 
 export default class MineEnemyAttackState extends BaseEnemyAttackState {
   
-    enter (enemy){
+    enter(enemy){
         super.enter(enemy);
-        this.Explode();
-
+        this.Explode(enemy);
     }
 
     execute(enemy, time, delta) {
-        super.execute(enemy, time, delta); //Cambia de estado si no esta atacando
+        super.execute(enemy, time, delta);
     }
 
-    //explota el enemigo y hace un daño en area
-    Explode() {
+    Explode(enemy) {
 
-        let w = this.enemy.meleeAttackWidge;
-        let h = this.enemy.meleeAttackHeight;
+        // hitbox del area de ataque
+        this.hitbox = enemy.scene.add.rectangle(enemy.x, enemy.y, enemy.meleeAttackWidge,enemy.meleeAttackHeight, 0xff0000, 0.4);
 
-        //creamos hitbox rectangular como rango de ataque
-        this.hitbox = this.enemy.scene.add.circle(this.enemy.x, this.enemy.y, w,h, 0xff0000, 0.5);
-        this.enemy.scene.physics.add.existing(this.hitbox);
-
+        enemy.scene.physics.add.existing(this.hitbox);
         this.hitbox.body.allowGravity = false;
 
-        //destruir hitbox tras attackduration
-        this.enemy.scene.time.delayedCall(this.enemy.attackDuration, () => 
-            {
-                if(!this.enemy.active) return;
-                let damaged = false;
-                this.enemy.scene.physics.add.overlap(this.hitbox, this.enemy.player, (hb, player) => {
-
-                    //no aplicar daño otra vez si ya esta dañado
-                    if (damaged) return; 
-                    damaged = true;
-                    let knockbackDirection = player.x < this.enemy.x ? -1 : 1;
-                    player.takeDamage(this.enemy.damage,knockbackDirection);
-                    this.enemy.isAttacking = false;
-                });
-            }
-        );
     }
 
     exit(enemy){
+        //cuando termina el ataque, mira si esta el jugador dentro y le hace daño
+        enemy.scene.physics.overlap(this.hitbox, enemy.player, (hb, player) => {
+            let knockbackDirection = player.x < enemy.x ? -1 : 1;
+            player.takeDamage(enemy.damage, knockbackDirection);
+        });
+
+        //destruye el hitbox y muere tras explotar
         this.hitbox.destroy();
         enemy.health = 0;
         enemy.die();

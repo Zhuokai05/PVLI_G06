@@ -2,7 +2,7 @@ import BaseState from '../../stateMachine/BaseState.js';
 
 export default class PlayerMoveState extends BaseState {
     enter(player) {
-        player.play('walk', true);
+        player.play('Player_walk', true);
     }
 
     execute(player) {

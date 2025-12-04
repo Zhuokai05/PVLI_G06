@@ -31,14 +31,14 @@ export default class MeleeEnemyAttackState extends BaseEnemyAttackState {
         let offsetX = direction * this.enemy.meleeAttackDist;
 
         //creamos hitbox rectangular como rango de ataque
-        let hitbox = this.enemy.scene.add.rectangle(this.enemy.x + offsetX, this.enemy.y, h, w, 0xff0000, 0.5);
-        this.enemy.scene.physics.add.existing(hitbox);
+        this.hitbox = this.enemy.scene.add.rectangle(this.enemy.x + offsetX, this.enemy.y, h, w, 0xff0000, 0.5);
+        this.enemy.scene.physics.add.existing(this.hitbox);
 
-        hitbox.body.allowGravity = false;
+        this.hitbox.body.allowGravity = false;
 
         let damaged = false;
 
-        this.enemy.scene.physics.add.overlap(hitbox, this.enemy.player, (hb, player) => {
+        this.enemy.scene.physics.add.overlap(this.hitbox, this.enemy.player, (hb, player) => {
 
             //no aplicar daño otra vez si ya esta dañado
             if (damaged) return; 
@@ -48,7 +48,10 @@ export default class MeleeEnemyAttackState extends BaseEnemyAttackState {
 
         });
 
-        //destruir hitbox tras attackduration
-        this.enemy.scene.time.delayedCall(this.enemy.attackDuration, () => hitbox.destroy());
+    }
+
+    exit(enemy){
+        //destruir hitbox 
+        this.hitbox.destroy();
     }
 }

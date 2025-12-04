@@ -58,7 +58,7 @@ export default class UIManager {
       }
       else if (i === currentHealth && removeHealthAnimation) {
         heart.setFrame(0);
-        heart.play('heartbreakAnimation', true);
+        heart.play('UI_heartbreakAnimation', true);
         heart.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
           heart.setTexture('heartbreak', 10);
         });

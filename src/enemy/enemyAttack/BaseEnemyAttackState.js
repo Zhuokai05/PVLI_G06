@@ -3,7 +3,7 @@ import BaseState from '../../stateMachine/BaseState.js';
 export default class BaseEnemyAttackState extends BaseState {
   enter(enemy) {
     this.enemy = enemy;
-    enemy.isAttacking = true;ç
+    enemy.isAttacking = true;
     enemy.playAttackAnimation();
     
       //terminar el ataque despues de attackcooldown

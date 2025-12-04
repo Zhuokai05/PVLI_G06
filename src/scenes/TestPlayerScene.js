@@ -85,11 +85,11 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
 
                 case "flying":
-                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move','Ira_FlyingEnemy_Attack'));
                     break;
 
                 case "mini":
-                    this.enemies.add(new MineEnemy(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.enemies.add(new MineEnemy(this, objeto.x, objeto.y, 'Ira_MineEnemy',0 ,'Ira_MineEnemy_Move','Ira_MineEnemy_Attack'));
                     break;
 
                 case "trap":
@@ -152,6 +152,7 @@ export default class TestPlayerScene extends Phaser.Scene {
     
             }
         })
+
         //puertas conectadas
         if (this.irabossdoor && this.irabossdoorcontrary) {
             this.irabossdoor.setContrary(this.irabossdoorcontrary);
@@ -247,7 +248,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         
         //animaciones
         this.anims.create({
-            key: 'idle',
+            key: 'Player_idle',
             frames: [{ key: 'angel_sword_idle' }],
             frameRate: 1,
             repeat: -1
@@ -256,7 +257,7 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.anims.create({
 
-            key: 'walk',
+            key: 'Player_walk',
             frames: [
             { key: 'angel_sword_walk_1' },
             { key: 'angel_sword_walk_2' },
@@ -268,24 +269,45 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.anims.create({
 
-            key: 'jump',
+            key: 'Player_jump',
             frames: [{ key: 'angel_sword_jump' }],
             frameRate: 1, 
             repeat: -1
         });
 
         this.anims.create({
-            key: 'heartbreakAnimation',
+            key: 'UI_heartbreakAnimation',
             frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 10 }),
             frameRate: 12,
             repeat: 0
         });
 
         this.anims.create({
-            key: 'heartbreakAnimation',
-            frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 10 }),
+            key: 'Ira_FlyingEnemy_Move',
+            frames: this.anims.generateFrameNumbers('Ira_FlyingEnemy', { start: 16, end: 19 }),
             frameRate: 12,
-            repeat: 0
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'Ira_FlyingEnemy_Attack',
+            frames: this.anims.generateFrameNumbers('Ira_FlyingEnemy', { start: 48, end: 51 }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'Ira_MineEnemy_Move',
+            frames: this.anims.generateFrameNumbers('Ira_MineEnemy', { start: 0, end: 7 }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+         this.anims.create({
+            key: 'Ira_MineEnemy_Attack',
+            frames: this.anims.generateFrameNumbers('Ira_MineEnemy', { start: 16, end: 23 }),
+            frameRate: 12,
+            repeat: -1
         });
     }
     update(time, delta) {

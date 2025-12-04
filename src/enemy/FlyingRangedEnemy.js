@@ -3,9 +3,10 @@ import RangedEnemyAttackState from './enemyAttack/RangedEnemyAttackState.js';
 import BaseEnemy from './BaseEnemy.js';
 
 export default class FlyingRangedEnemy extends BaseEnemy {
-    constructor(scene, x, y, texture) {
-        super(scene, x, y, texture);
+    constructor(scene, x, y, texture = 'enemy',frame = 0, moveAnimationKey, attackAnimationKey) {
+        super(scene, x, y, texture,frame, moveAnimationKey, attackAnimationKey);
 
+        this.setScale(2);
         this.body.allowGravity = false; 
 
         this.speed = 120;

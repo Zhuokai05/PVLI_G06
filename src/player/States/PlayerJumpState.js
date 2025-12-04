@@ -9,7 +9,7 @@ export default class PlayerJumpState extends BaseState {
         }
 
         player.setVelocityY(-player.jumpSpeed);
-        player.play('jump', true);
+        player.play('Player_jump', true);
     }
 
     execute(player) {
