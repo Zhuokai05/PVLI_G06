@@ -329,6 +329,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             repeat: -1
         });
 
+        // UI
         this.anims.create({
             key: 'UI_heartbreakAnimation',
             frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 10 }),
@@ -355,6 +356,13 @@ export default class TestPlayerScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('checkpoint', { start: 32, end: 38 }),
             frameRate: 8,
             repeat: -1
+        });
+
+        this.anims.create({
+            key: 'melee_anim',
+            frames: this.anims.generateFrameNumbers('melee', { start: 0, end: 4 }),
+            frameRate: 30,
+            repeat: 0
         });
 
         //enemigos voladores
