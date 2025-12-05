@@ -87,6 +87,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.activeOrbIndex = 0;        // indice del orbe activo (0 o 1)
         this.damageMultiplier = 1.0;    // modificador de daño 
         this.speedMultiplier = 1.0;     //modificador de velocidad
+        this.attackRangeMultiplier = 1.0;    //modificador rango de ataque melee
         this.orbTint = 0xffffff;     //color original del jugador
 
         this.setDepth(5);
@@ -120,10 +121,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         //aura del escudo cuando tiene el escudo activado
         this.shieldAura = this.scene.add.image(this.x, this.y, 'playerShieldAura')
-            .setDepth(this.depth - 1)           // detras del jugador
-            .setAlpha(0.5)                      // semitransparente
+            .setDepth(this.depth +1 )           // delante del jugador
+            .setAlpha(0.8)                      // semitransparente
             .setVisible(false)                  // oculto por defecto
-            .setScale(0.8); 
+            .setScale(1.2); 
             
         this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);   //velocidad maxima
     }
@@ -356,8 +357,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
 
             let offsetX = 0, offsetY = 0;
-            let w = this.meleeAttackWidge;
-            let h = this.meleeAttackHeight;
+            let w = this.meleeAttackWidge ;
+            let h = this.meleeAttackHeight * this.attackRangeMultiplier;
 
             //calculamos el offset del hitbox segun la direccion
             switch (direction) {

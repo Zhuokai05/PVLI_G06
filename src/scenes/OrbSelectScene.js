@@ -240,7 +240,7 @@ export class OrbSelectScene extends Phaser.Scene {
     selectOrb(orb) {
         this.selectedOrb = orb;
         this.updateRightPanel();
-        this.refreshOrbGridHighlights();
+        this.refreshOrbGridColors();
     }
 
     // actualizar el panel derecho

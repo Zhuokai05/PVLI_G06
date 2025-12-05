@@ -10,6 +10,7 @@ import MoveSpeedOrb from '../orbs/MoveSpeedOrb.js';
 import DamageOrb from '../orbs/DamageOrb.js';
 import DashOrb from '../orbs/DashOrb.js';
 import RangedOrb from '../orbs/RangedOrb.js';
+import AttackRangeOrb from '../orbs/AttackRangeOrb.js';
 import BasePlatform from '../objects/Platform.js';
 import IcePlatform from '../objects/IcePlatform.js';
 import ShieldOrb from '../orbs/ShieldOrb.js';
@@ -20,7 +21,6 @@ import SadnessBossDoor from '../objects/SadnessBossDoor.js';
 import Button from '../objects/Botton.js';
 import MapDoor from '../objects/MapDoor.js';
 import FinalBossDoor from '../objects/FinalBossDoor.js';
-import AttackRangeOrb from '../orbs/AttackRangeOrb.js';
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
@@ -205,9 +205,9 @@ export default class TestPlayerScene extends Phaser.Scene {
          this.orbGroup.add(new DashOrb(this, 1300, 1350));
          this.orbGroup.add(new DamageOrb(this, 1300, 1350));
          this.orbGroup.add(new RangedOrb(this, 1300, 1350));
-         this.orbGroup.add(new ShieldOrb(this, 1400, 1350));
-         this.orbGroup.add(new AttackRangeOrb(this, 1400, 1350));
-
+        this.orbGroup.add(new ShieldOrb(this, 1500, 1350));
+        this.orbGroup.add(new AttackRangeOrb(this, 1400, 1350));
+        
         //puertas conectadas
         if (this.irabossdoor && this.irabossdoorcontrary) {
             this.irabossdoor.setContrary(this.irabossdoorcontrary);
