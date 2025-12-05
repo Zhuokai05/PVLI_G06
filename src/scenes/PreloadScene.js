@@ -121,6 +121,7 @@ export class PreloadScene extends Phaser.Scene
         });
    this.load.image('iceplatform', './assets/sprites/Escena/iceplatform.png');
     this.load.image('puertaira', './assets/sprites/Escena/PuertaIra.png');
+    this.load.image('puertatriste', './assets/sprites/Escena/Puertatristeza.png');
    this.load.image('platform', './assets/sprites/Escena/platform.png');
    this.load.tilemapTiledJSON("mappy","./assets/Maps/map.json");
    //this.load.iamge('trap', '');

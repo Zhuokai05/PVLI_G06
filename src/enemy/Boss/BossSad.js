@@ -69,6 +69,9 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
         this.attackCooldown = this.startCooldown;
         this.notdead = true;
+
+
+        
     }
 
     setupCollisions() {
@@ -202,6 +205,19 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     die() {
         PlayerDataManager.killBoss('sadness');
 
+  this.Bossdoors.getChildren().forEach(door => {
+            if (door.abrirPuerta) {
+                door.abrirPuerta();
+            }
+        });
+       
+        this.floors.getChildren().forEach(floor => {
+            if (floor.abrirPuerta) {
+                floor.abrirPuerta();
+            }
+        });
+       
+
         /*console.log('BossSad derrotado definitivamente');
         this.scene.time.delayedCall(2000, () => {
             this.scene.scene.stop();
@@ -209,5 +225,20 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
             this.destroy();*/
         this.scene.events.emit('bossDefeated');
 
+    }
+    getDoors(iceDoors, iceFloors)  
+    { 
+        this.Bossdoors = iceDoors;
+        this.floors = iceFloors;
+    }
+    setLife() {
+        this.setVisible(true);
+        this.setActive(true);
+        this.isActivated = true; // Activar el boss
+        this.setupCollisions();
+
+        // Iniciar cooldown antes del primer ataque
+        this.generateNewCooldown();
+        this.stateMachine.setState('cooldown');
     }
 }

@@ -31,7 +31,11 @@ export default class InvisibleTrigger extends Phaser.Physics.Arcade.Sprite {
 
         if (this.primer) 
             {
-                this.boss.setLife();
+                if (this.boss) 
+                    {
+                          this.boss.setLife();
+                    }
+                
        this.doors.getChildren().forEach(door => {          
     door.cambiarAbrir();         
 });

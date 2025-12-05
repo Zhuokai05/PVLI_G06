@@ -155,10 +155,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.irafloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
                 case "icedoor":
-                    this.icefloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.icebossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
                     case "irabossdoor":
-                    this.irabossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.irafloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
                 case "icebossdoor":
                     this.icebossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
@@ -173,13 +173,13 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.irabossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertaira') ;
                     break;
                 case "sadnessbossdoor":
-                    this.tristebossdoor = new SadnessBossDoor(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    this.tristebossdoor = new SadnessBossDoor(this, objeto.x, objeto.y, 'puertatriste') ;
                     break;
                 case "sadnessbossdoorcontrary":
-                    this.tristebossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    this.tristebossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste') ;
                     break;
                 case "sadnessbossdoorexit":
-                    this.tristebossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    this.tristebossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste') ;
                     break;
     
                 //buttons
@@ -187,10 +187,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.redButton = new Button(this, objeto.x, objeto.y, 'basicEnemyHappy','rojo') ;
                     break;
                 case "greenbutton":
-                    this.greenButton = new Button(this, objeto.x, objeto.y, 'basicEnemyHappy','verde') ;
+                    this.greenButton = new Button(this, objeto.x, objeto.y, 'basicEnemyAngry','verde') ;
                     break;
                 case "bluebutton":
-                    this.blueButton = new Button(this, objeto.x, objeto.y, 'basicEnemyHappy','azul') ;
+                    this.blueButton = new Button(this, objeto.x, objeto.y, 'basicEnemyFear','azul') ;
                     break;
 
                 //triggers
@@ -238,18 +238,19 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
                 case "tristeboss":
                     this.tristeboss = new BossSad(this, objeto.x, objeto.y, this.player) ;
-                    this.enemies.add(this.iraboss);
+                    this.enemies.add(this.tristeboss);
                     break;
                 case "miedoboss":
                     this.miedoboss = new BossFear(this, objeto.x, objeto.y, this.player) ;
-                    this.enemies.add(this.iraboss);
+                    this.enemies.add(this.miedoboss);
                     break;
                 case "tutoboss":
                     this.tutoboss = new BossTutorial(this, objeto.x, objeto.y, this.player) ;
-                    this.enemies.add(this.iraboss);
+                    this.enemies.add(this.tutoboss);
                     break;
                 case "finalboss":
-                    this.finalboss = new FinalBoss(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    this.finalboss = new FinalBoss(this, objeto.x, objeto.y, this.player);
+                    this.enemies.add(this.finalboss);
                     break;
                 case "room":
                 this.Bossrooms.add(new BossRoom(this,objeto.x,objeto.y,objeto.width, objeto.height));
@@ -316,8 +317,9 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.tristebossdoor) this.doors.add(this.tristebossdoor);
         if (this.tristebossdoorcontrary) this.doors.add(this.tristebossdoorcontrary);
         if (this.tristebossdoorexit) this.doors.add(this.tristebossdoorexit);
-        
-
+        if (this.blueButton && this.tristebossdoor) this.blueButton.setDoor(this.tristebossdoor);
+        if (this.redButton && this.tristebossdoor) this.redButton.setDoor(this.tristebossdoor);
+        if (this.greenButton && this.tristebossdoor) this.greenButton.setDoor(this.tristebossdoor);
     //bossdoors y triggers
       
 this.irafloordoors.getChildren().forEach(door => {          
@@ -334,9 +336,10 @@ this.irafloordoors.getChildren().forEach(door => {
           door.abrirPuerta();         
       });
        if (this.icetrigger ) this.icetrigger.getDoors(this.icebossdoors);
-           
+     if (this.icetrigger  && this.tristeboss) this.icetrigger.getBoss(this.tristeboss);
 
      if (this.iraboss)  this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
+     if (this.tristeboss)  this.tristeboss.getDoors(this.icebossdoors, this.icefloordoors);
         
 
     //mapdoors
@@ -349,6 +352,8 @@ this.irafloordoors.getChildren().forEach(door => {
         this.physics.add.collider(this.player, layer);
         this.physics.add.collider(this.player, this.irabossdoors);
         this.physics.add.collider(this.player, this.irafloordoors);
+        this.physics.add.collider(this.player, this.icebossdoors);
+        this.physics.add.collider(this.player, this.icefloordoors);
         this.physics.add.collider(this.player, this.icePlatforms);
         this.physics.add.collider(this.player, this.iraPlatforms);
         this.physics.add.collider(layer, this.enemies);
@@ -376,7 +381,9 @@ this.irafloordoors.getChildren().forEach(door => {
             this.iratrigger.llamar();
         });
        
-        
+         this.physics.add.overlap(this.player, this.icetrigger, () => {
+            this.icetrigger.llamar();
+        });
         this.physics.add.overlap(this.player, this.blueButton, () => {
             if (Phaser.Input.Keyboard.JustDown(this.keyE)) this.blueButton.press();
         });
