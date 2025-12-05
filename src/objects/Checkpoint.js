@@ -2,92 +2,117 @@ import PlayerDataManager from "../managers/PlayerDataManager.js";
 
 export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-        // Usamos la imagen 'checkpoint' (AltarCheckpoint.png) precargada
-        super(scene, x, y, "checkpoint");
-this.x = x;
-this.y = y; 
-        // Mostrar sprite como altar: origen en la base para que "pise" el suelo
+        super(scene, x, y, 'checkpoint'); 
+        
+        this.x = x;
+        this.y = y; 
+
         this.setOrigin(0.5, 1);
-        // Ajusta escala si hace falta (cambiar a gusto)
-        this.setScale(1);
+        this.setScale(5);
         this.setDepth(3);
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        // Hacemos el body inmóvil y sin gravedad para que actúe como trigger
         this.setImmovable(true);
         this.body.allowGravity = false;
 
-        // Ajustar el tamaño del cuerpo de colisión para que coincida con la base del altar
-        if (this.body.setSize) {
-            // width, height
-            this.body.setSize(Math.floor(this.width * 0.6), Math.floor(this.height * 0.25));
-            // centrar el body en la parte inferior
-            this.body.setOffset(Math.floor((this.width - this.body.width) / 2), Math.floor(this.height - this.body.height));
-        }
+        // --- AJUSTE DEL CUERPO FÍSICO ---
+        const width = this.width; 
+        const height = this.height;
+        const bodyW = Math.floor(width * 0.6);
+        const bodyH = Math.floor(height * 0.25);
+        this.body.setSize(bodyW, bodyH);
+        this.body.setOffset(
+            (width - bodyW) / 2, 
+            height - bodyH
+        );
 
+        // --- ESTADOS Y ANIMACIONES ---
         this.activated = false;
         this.playerNearby = false;
 
-        // prompt para indicar tecla de interacción (invisible por defecto)
-        this.prompt = this.scene.add.text(this.x, this.y - this.height - 10, 'Presiona E', {
+        const savedRespawn = PlayerDataManager.data.respawnPoint;
+        const isCurrentRespawn = (Math.abs(savedRespawn.x - this.x) < 10 && Math.abs(savedRespawn.y - (this.y - 50)) < 10);
+
+        if (isCurrentRespawn) {
+            this.activated = true;
+            this.play('cp_idle_on', true);
+        } else {
+            this.activated = false;
+            this.play('cp_idle_off', true);
+        }
+
+        // --- EVENTOS ---
+        this.scene.events.on('checkpoint_activated', (activeCheckpoint) => {
+            if (activeCheckpoint !== this) {
+                this.deactivate();
+            }
+        });
+
+        this.on('destroy', () => {
+            this.scene.events.off('checkpoint_activated');
+        });
+
+        // --- ZONA DE ACTIVACIÓN ---
+        this.prompt = this.scene.add.text(this.x, this.y - this.displayHeight, 'Presiona E', {
             font: '16px Arial',
             fill: '#ffffff',
             backgroundColor: 'rgba(0,0,0,0.5)',
-            padding: { x: 6, y: 4 }
+            padding: { x: 0, y: 4 }
         }).setOrigin(0.5).setDepth(10).setVisible(false);
 
-        // evento global de tecla E — intentará abrir el menú si el jugador está cerca
+        // --- INPUT ---
         this._keydownHandler = (event) => {
-
-            // event.key debería ser 'e' o 'E'
-
             if ((event.key === 'e' || event.key === 'E') && this.playerNearby) {
-                // activa checkpoint y abre menú de orbes
                 let player = this.scene.player;
                 if (player) this.activate(player);
-  
+                
                 let fromKey = this.scene.scene.key || null;
-
-                console.log(fromKey)
-
-                // pausar la escena origen por su key y se lo pasamos a la escena orbselect
                 this.scene.scene.pause(fromKey);
                 this.scene.scene.launch('OrbSelect', { fromScene: fromKey, tPlayer: player });
             }
         };
 
         this.scene.input.keyboard.on('keydown', this._keydownHandler);
-        console.log(x,y);
     }
 
     activate(player) {
         if (this.activated) return;
 
         this.activated = true;
-        // efecto visual de activación: tint y pequeño pulso
-        this.setTint(0x00ff00);
+        this.scene.events.emit('checkpoint_activated', this);
+
+        this.play('cp_transition');
+        this.once('animationcomplete', (anim) => {
+            if (anim.key === 'cp_transition') {
+                this.play('cp_idle_on');
+            }
+        });
+
         this.scene.tweens.add({
             targets: this,
-            scaleX: this.scaleX * 1.08,
-            scaleY: this.scaleY * 1.08,
+            scaleX: 5.5,
+            scaleY: 5.5,
             yoyo: true,
             duration: 200,
             ease: 'Power1',
+            onComplete: () => { this.setScale(5); }
         });
 
         console.log("CHECKPOINT ACTIVADO en:", this.x, this.y);
 
-        // recuperar vida
         player.health = player.maxHealth;
         player.emit("updateHearts", player.health);
-
-        // guardar respawn en la escena
+        
         PlayerDataManager.data.respawnPoint = { x: this.x, y: this.y - 50};
-
-        // guardar datos globales
         PlayerDataManager.saveDataFromPlayer(player);
-        console.log(this.x, this.y);
+    }
+
+    deactivate() {
+        if (!this.activated) return;
+        this.activated = false;
+        this.play('cp_idle_off');
+        this.clearTint();
     }
 }
