@@ -27,6 +27,8 @@ import BossTutorial from '../enemy/Boss/BossTutorial.js';
 import FinalBoss from '../enemy/Boss/BossFinal.js';
 import InvisibleTrigger from '../objects/Trigger.js';
 import BossRoom from '../objects/BossRoom.js';
+import FloorIsLava from '../objects/FloorIsLava.js';
+
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
         super('TestPlayerScene');
@@ -252,6 +254,8 @@ export default class TestPlayerScene extends Phaser.Scene {
 
             }
         })
+        const distanciaSegura = 800;
+        this.lava = new FloorIsLava(this, this.player.y + distanciaSegura, 15, this.player);
 
     //    //ira
     //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',

@@ -46,7 +46,10 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('orbDash', './assets/sprites/UI/Orbes/orbVoid.png');
     this.load.image('orbShield', './assets/sprites/UI/Orbes/orbShield.png');
     this.load.image('orbAttackRange', './assets/sprites/UI/Orbes/orbAttackRange.png');
-    this.load.spritesheet('checkpoint', './assets/Escena/checkpointSheet.png', {
+
+    //Objetos de la escena
+    this.load.image('lava_tex', './assets/sprites/Escena/Plataforma_Ira.png');
+    this.load.spritesheet('checkpoint', './assets/sprites/Escena/checkpointSheet.png', {
             frameWidth: 32,
             frameHeight: 40
         });
