@@ -28,6 +28,7 @@ import FinalBoss from '../enemy/Boss/BossFinal.js';
 import InvisibleTrigger from '../objects/Trigger.js';
 import BossRoom from '../objects/BossRoom.js';
 import FloorIsLava from '../objects/FloorIsLava.js';
+import CheatManager from '../managers/CheatManager.js';
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
@@ -38,13 +39,13 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.inputManager = new InputManager(this);
         this.physics.world.setBounds(-200, 0, 140000, 100000);
-        
+
         const map = this.make.tilemap({ key: 'mappy' });
         const tileset = map.addTilesetImage('Ira', 'tiles');
-        let layer = map.createLayer('mapa', tileset,0,0);
-        layer.setCollisionByProperty({colision : true});
+        let layer = map.createLayer('mapa', tileset, 0, 0);
+        layer.setCollisionByProperty({ colision: true });
         let obsj = map.getObjectLayer('objetos');
-         this.Bossrooms = this.physics.add.group({
+        this.Bossrooms = this.physics.add.group({
             allowGravity: false,
             immovable: true
         });
@@ -52,24 +53,24 @@ export default class TestPlayerScene extends Phaser.Scene {
             allowGravity: false,
             immovable: true
         });
-         this.icefloordoors = this.physics.add.group({
+        this.icefloordoors = this.physics.add.group({
             allowGravity: false,
             immovable: true
         });
-         this.icebossdoors = this.physics.add.group({
+        this.icebossdoors = this.physics.add.group({
             allowGravity: false,
             immovable: true
         });
-         this.irabossdoors = this.physics.add.group({
+        this.irabossdoors = this.physics.add.group({
             allowGravity: false,
             immovable: true
         });
 
-          this.iraPlatforms = this.physics.add.group({
+        this.iraPlatforms = this.physics.add.group({
             allowGravity: false,
             immovable: true
         });
-         this.icePlatforms = this.physics.add.group({
+        this.icePlatforms = this.physics.add.group({
             allowGravity: false,
             immovable: true
         });
@@ -79,7 +80,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             allowGravity: false,
             immovable: true
         });
-        
+
         this.checkpoints = this.physics.add.group({
             allowGravity: false,
             immovable: true
@@ -89,67 +90,64 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.createAnimations();
 
-        obsj.objects.forEach((objeto) => 
-        {
+        obsj.objects.forEach((objeto) => {
             switch (objeto.name) {
- 
-                 //player
+
+                //player
                 case "player":
-                    if (PlayerDataManager.data.respawnPoint.x == 0 && PlayerDataManager.data.respawnPoint.y == 0 ) 
-                    {
-                    this.player = new Player(this, objeto.x, objeto.y);
+                    if (PlayerDataManager.data.respawnPoint.x == 0 && PlayerDataManager.data.respawnPoint.y == 0) {
+                        this.player = new Player(this, objeto.x, objeto.y);
                     }
-                    else 
-                    {
-                    this.player = new Player(this,PlayerDataManager.data.respawnPoint.x, PlayerDataManager.data.respawnPoint.y )
+                    else {
+                        this.player = new Player(this, PlayerDataManager.data.respawnPoint.x, PlayerDataManager.data.respawnPoint.y)
                     }
-                    if (this.player)PlayerDataManager.applyDataToPlayer(this.player);
+                    if (this.player) PlayerDataManager.applyDataToPlayer(this.player);
                     break;
-                
+
                 //Enemigos
-    
+
                 case "ira":
                     this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry'));
                     break;
                 case "tristeza":
                     this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad'));
                     break;
-        
+
                 case "alegria":
-                    this.enemies.add(new BasicMeleeEnemy(this,objeto.x, objeto.y, 'basicEnemyHappy'));
+                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyHappy'));
                     break;
-    
+
                 case "miedo":
                     this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
 
                 case "iraranged":
-                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Ira_RangedEnemy',0,'Ira_RangedEnemy_Move','Ira_RangedEnemy_Attack','Ira_RangedEnemy_Death','Ira_FlyingEnemy',83));
+                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Ira_RangedEnemy', 0, 'Ira_RangedEnemy_Move', 'Ira_RangedEnemy_Attack', 'Ira_RangedEnemy_Death', 'Ira_FlyingEnemy', 83));
                     break;
-                      case "tristeranged":
-                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Tristeza_RangedEnemy',0,'Tristeza_RangedEnemy_Move','Tristeza_RangedEnemy_Attack','Tristeza_RangedEnemy_Death','Tristeza_RangedEnemy',83));
+                case "tristeranged":
+                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Tristeza_RangedEnemy', 0, 'Tristeza_RangedEnemy_Move', 'Tristeza_RangedEnemy_Attack', 'Tristeza_RangedEnemy_Death', 'Tristeza_RangedEnemy', 83));
                     break;
 
                 case "iraflying":
-                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move','Ira_FlyingEnemy_Attack','Ira_FlyingEnemy_Death','Ira_FlyingEnemy',83));
+                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Ira_FlyingEnemy', 0, 'Ira_FlyingEnemy_Move', 'Ira_FlyingEnemy_Attack', 'Ira_FlyingEnemy_Death', 'Ira_FlyingEnemy', 83));
                     break;
                 case "tristeflying":
-                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move','Tristeza_FlyingEnemy_Attack','Tristeza_FlyingEnemy_Death','Tristeza_FlyingEnemy',83));
+                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Tristeza_FlyingEnemy', 0, 'Tristeza_FlyingEnemy_Move', 'Tristeza_FlyingEnemy_Attack', 'Tristeza_FlyingEnemy_Death', 'Tristeza_FlyingEnemy', 83));
                     break;
 
 
                 case "iramine":
-                    this.enemies.add(new MineEnemy(this, objeto.x, objeto.y, 'Ira_MineEnemy',0 ,'Ira_MineEnemy_Move','Ira_MineEnemy_Attack'));
+                    this.enemies.add(new MineEnemy(this, objeto.x, objeto.y, 'Ira_MineEnemy', 0, 'Ira_MineEnemy_Move', 'Ira_MineEnemy_Attack'));
                     break;
                 case "tristemine":
-                    this.enemies.add(new MineEnemy(this, objeto.x, objeto.y, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack'));
+                    this.enemies.add(new MineEnemy(this, objeto.x, objeto.y, 'Tristeza_MineEnemy', 0, 'Tristeza_MineEnemy_Move', 'Tristeza_MineEnemy_Attack'));
                     break;
 
                 case "trap":
                     this.enemies.add(new Trap(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
-    
-    
+
+
                 //puertas
                 case "iradoor":
                     this.irafloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
@@ -157,50 +155,50 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "icedoor":
                     this.icebossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
-                    case "irabossdoor":
+                case "irabossdoor":
                     this.irabossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
                 case "icebossdoor":
                     this.icefloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
                 case "bossdoor":
-                    this.irabossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertaira') ;
+                    this.irabossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertaira');
                     break;
                 case "bossdoorcontrary":
-                    this.irabossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertaira') ;
+                    this.irabossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertaira');
                     break;
                 case "bossdoorexit":
-                    this.irabossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertaira') ;
+                    this.irabossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertaira');
                     break;
                 case "sadnessbossdoor":
-                    this.tristebossdoor = new SadnessBossDoor(this, objeto.x, objeto.y, 'puertatriste') ;
+                    this.tristebossdoor = new SadnessBossDoor(this, objeto.x, objeto.y, 'puertatriste');
                     break;
                 case "sadnessbossdoorcontrary":
-                    this.tristebossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste') ;
+                    this.tristebossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste');
                     break;
                 case "sadnessbossdoorexit":
-                    this.tristebossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste') ;
+                    this.tristebossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste');
                     break;
-    
+
                 //buttons
                 case "redbutton":
-                    this.redButton = new Button(this, objeto.x, objeto.y, 'basicEnemyHappy','rojo') ;
+                    this.redButton = new Button(this, objeto.x, objeto.y, 'basicEnemyHappy', 'rojo');
                     break;
                 case "greenbutton":
-                    this.greenButton = new Button(this, objeto.x, objeto.y, 'basicEnemyAngry','verde') ;
+                    this.greenButton = new Button(this, objeto.x, objeto.y, 'basicEnemyAngry', 'verde');
                     break;
                 case "bluebutton":
-                    this.blueButton = new Button(this, objeto.x, objeto.y, 'basicEnemyFear','azul') ;
+                    this.blueButton = new Button(this, objeto.x, objeto.y, 'basicEnemyFear', 'azul');
                     break;
 
                 //triggers
 
                 case "iratrigger":
-                    this.iratrigger = new InvisibleTrigger(this, objeto.x, objeto.y) ;
-                   
+                    this.iratrigger = new InvisibleTrigger(this, objeto.x, objeto.y);
+
                     break;
                 case "icetrigger":
-                    this.icetrigger = new InvisibleTrigger(this, objeto.x, objeto.y) ;
+                    this.icetrigger = new InvisibleTrigger(this, objeto.x, objeto.y);
                     break;
                 //orbes 
                 case "speedorb":
@@ -221,31 +219,31 @@ export default class TestPlayerScene extends Phaser.Scene {
                 //checkPoint
                 case "checkpoint":
                     this.checkpoints.add(new Checkpoint(this, objeto.x, objeto.y));
-                    this.checkpoints.add(new Checkpoint(this, objeto.x +100, objeto.y));
+                    this.checkpoints.add(new Checkpoint(this, objeto.x + 100, objeto.y));
                     break;
 
                 //platforms 
                 case "platform":
-                    this.iraPlatforms.add(new BasePlatform(this, objeto.x, objeto.y,'platform'));
+                    this.iraPlatforms.add(new BasePlatform(this, objeto.x, objeto.y, 'platform'));
                     break;
                 case "iceplatform":
                     this.icePlatforms.add(new IcePlatform(this, objeto.x, objeto.y, 'iceplatform'));
                     break;
-               //bosses 
+                //bosses 
                 case "iraboss":
-                    this.iraboss = new BossAngry(this, objeto.x, objeto.y, this.player) ;
+                    this.iraboss = new BossAngry(this, objeto.x, objeto.y, this.player);
                     this.enemies.add(this.iraboss);
                     break;
                 case "tristeboss":
-                    this.tristeboss = new BossSad(this, objeto.x, objeto.y, this.player) ;
+                    this.tristeboss = new BossSad(this, objeto.x, objeto.y, this.player);
                     this.enemies.add(this.tristeboss);
                     break;
                 case "miedoboss":
-                    this.miedoboss = new BossFear(this, objeto.x, objeto.y, this.player) ;
+                    this.miedoboss = new BossFear(this, objeto.x, objeto.y, this.player);
                     this.enemies.add(this.miedoboss);
                     break;
                 case "tutoboss":
-                    this.tutoboss = new BossTutorial(this, objeto.x, objeto.y, this.player) ;
+                    this.tutoboss = new BossTutorial(this, objeto.x, objeto.y, this.player);
                     this.enemies.add(this.tutoboss);
                     break;
                 case "finalboss":
@@ -253,31 +251,32 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.enemies.add(this.finalboss);
                     break;
                 case "room":
-                this.Bossrooms.add(new BossRoom(this,objeto.x,objeto.y,objeto.width, objeto.height));
+                    this.Bossrooms.add(new BossRoom(this, objeto.x, objeto.y, objeto.width, objeto.height));
                     break;
-               
+
 
             }
         })
 
+        this.cheatManager = new CheatManager(this, this.player);
         this.checkpoints.add(new Checkpoint(this, 1200, 1550));
         const distanciaSegura = 800;
         // this.lava = new FloorIsLava(this, this.player.y + distanciaSegura, 15, this.player);
 
-    //    //ira
-    //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',
-    //         'Ira_FlyingEnemy_Attack','Ira_FlyingEnemy_Death','Ira_FlyingEnemy',83));
+        //    //ira
+        //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',
+        //         'Ira_FlyingEnemy_Attack','Ira_FlyingEnemy_Death','Ira_FlyingEnemy',83));
 
-    //     this.enemies.add(new MineEnemy(this, 1200, 1350, 'Ira_MineEnemy',0 ,'Ira_MineEnemy_Move','Ira_MineEnemy_Attack','Ira_MineEnemy_Death'));
+        //     this.enemies.add(new MineEnemy(this, 1200, 1350, 'Ira_MineEnemy',0 ,'Ira_MineEnemy_Move','Ira_MineEnemy_Attack','Ira_MineEnemy_Death'));
 
-    //     this.enemies.add(new RangedEnemy(this, 1500, 1350, 'Ira_RangedEnemy',0 ,'Ira_RangedEnemy_Move','Ira_RangedEnemy_Attack','Ira_RangedEnemy_Death','Ira_FlyingEnemy',83));
+        //     this.enemies.add(new RangedEnemy(this, 1500, 1350, 'Ira_RangedEnemy',0 ,'Ira_RangedEnemy_Move','Ira_RangedEnemy_Attack','Ira_RangedEnemy_Death','Ira_FlyingEnemy',83));
 
-    //     //Tristeza
-    //     this.enemies.add(new FlyingRangedEnemy(this, 1900, 1400, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move'
-    //      ,'Tristeza_FlyingEnemy_Attack','Tristeza_FlyingEnemy_Death','Tristeza_FlyingEnemy',83));
-    //     this.enemies.add(new MineEnemy(this, 2100, 1350, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack','Tristeza_MineEnemy_Death'));
-    //     this.enemies.add(new RangedEnemy(this, 2300, 1350, 'Tristeza_RangedEnemy',0 ,'Tristeza_RangedEnemy_Move','Tristeza_RangedEnemy_Attack','Tristeza_RangedEnemy_Death','Tristeza_FlyingEnemy',83));
-        
+        //     //Tristeza
+        //     this.enemies.add(new FlyingRangedEnemy(this, 1900, 1400, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move'
+        //      ,'Tristeza_FlyingEnemy_Attack','Tristeza_FlyingEnemy_Death','Tristeza_FlyingEnemy',83));
+        //     this.enemies.add(new MineEnemy(this, 2100, 1350, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack','Tristeza_MineEnemy_Death'));
+        //     this.enemies.add(new RangedEnemy(this, 2300, 1350, 'Tristeza_RangedEnemy',0 ,'Tristeza_RangedEnemy_Move','Tristeza_RangedEnemy_Attack','Tristeza_RangedEnemy_Death','Tristeza_FlyingEnemy',83));
+
 
         /*this.orbGroup.add(new MoveSpeedOrb(this, 1300, 1350));
          this.orbGroup.add(new DashOrb(this, 1300, 1350));
@@ -289,65 +288,65 @@ export default class TestPlayerScene extends Phaser.Scene {
          this.orbGroup.add(new RangedOrb(this, 1300, 1350));
         this.orbGroup.add(new ShieldOrb(this, 1500, 1350));
         this.orbGroup.add(new AttackRangeOrb(this, 1400, 1350));*/
-        
+
         //puertas conectadas
         if (this.irabossdoor && this.irabossdoorcontrary) {
             this.irabossdoor.setContrary(this.irabossdoorcontrary);
             this.irabossdoorcontrary.setContrary(this.irabossdoor);
         }
-        
+
         if (this.irabossdoorexit && this.irabossdoor) {
             this.irabossdoorexit.setContrary(this.irabossdoor);
         }
-        
+
         if (this.irabossdoor) this.doors.add(this.irabossdoor);
         if (this.irabossdoorcontrary) this.doors.add(this.irabossdoorcontrary);
         if (this.irabossdoorexit) this.doors.add(this.irabossdoorexit);
-        
-        
+
+
         if (this.tristebossdoor && this.tristebossdoorcontrary) {
             this.tristebossdoor.setContrary(this.tristebossdoorcontrary);
             this.tristebossdoorcontrary.setContrary(this.tristebossdoor);
         }
-        
+
         if (this.tristebossdoorexit && this.tristebossdoor) {
             this.tristebossdoorexit.setContrary(this.tristebossdoor);
         }
-        
+
         if (this.tristebossdoor) this.doors.add(this.tristebossdoor);
         if (this.tristebossdoorcontrary) this.doors.add(this.tristebossdoorcontrary);
         if (this.tristebossdoorexit) this.doors.add(this.tristebossdoorexit);
         if (this.blueButton && this.tristebossdoor) this.blueButton.setDoor(this.tristebossdoor);
         if (this.redButton && this.tristebossdoor) this.redButton.setDoor(this.tristebossdoor);
         if (this.greenButton && this.tristebossdoor) this.greenButton.setDoor(this.tristebossdoor);
-    //bossdoors y triggers
-      
-this.irafloordoors.getChildren().forEach(door => {          
-          door.cerrarPuerta();         
-      });
-    this.irabossdoors.getChildren().forEach(door => {          
-          door.abrirPuerta();         
-      });
-       if (this.iratrigger ) this.iratrigger.getDoors(this.irabossdoors);
-        if (this.iratrigger  && this.iraboss) this.iratrigger.getBoss(this.iraboss);
+        //bossdoors y triggers
+
+        this.irafloordoors.getChildren().forEach(door => {
+            door.cerrarPuerta();
+        });
+        this.irabossdoors.getChildren().forEach(door => {
+            door.abrirPuerta();
+        });
+        if (this.iratrigger) this.iratrigger.getDoors(this.irabossdoors);
+        if (this.iratrigger && this.iraboss) this.iratrigger.getBoss(this.iraboss);
 
 
-       this.icebossdoors.getChildren().forEach(door => {          
-          door.abrirPuerta();         
-      });
-       if (this.icetrigger ) this.icetrigger.getDoors(this.icebossdoors);
-     if (this.icetrigger  && this.tristeboss) this.icetrigger.getBoss(this.tristeboss);
+        this.icebossdoors.getChildren().forEach(door => {
+            door.abrirPuerta();
+        });
+        if (this.icetrigger) this.icetrigger.getDoors(this.icebossdoors);
+        if (this.icetrigger && this.tristeboss) this.icetrigger.getBoss(this.tristeboss);
 
-     if (this.iraboss)  this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
-     if (this.tristeboss)  this.tristeboss.getDoors(this.icebossdoors, this.icefloordoors);
-        
+        if (this.iraboss) this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
+        if (this.tristeboss) this.tristeboss.getDoors(this.icebossdoors, this.icefloordoors);
 
-    //mapdoors
-        
+
+        //mapdoors
+
         //ui        
         this.uiManager = new UiManager(this, this.player);
 
- 
+
         // Colliders y camaras
         this.physics.add.collider(this.player, layer);
         this.physics.add.collider(this.player, this.irabossdoors);
@@ -358,36 +357,36 @@ this.irafloordoors.getChildren().forEach(door => {
         this.physics.add.collider(this.player, this.iraPlatforms);
         this.physics.add.collider(layer, this.enemies);
         this.cameras.main.startFollow(this.player);
-        this.cameras.main.setFollowOffset(0, 200); 
+        this.cameras.main.setFollowOffset(0, 200);
         this.cameras.main.setBounds(-200, 0, 140000, 100000);
- 
- 
- 
+
+
+
         //Overlaps
         this.physics.add.overlap(this.player, this.orbGroup, (player, orb) => {
             orb.collect(player);
-        });       
- 
-        this.physics.add.overlap(this.player, this.doors, (player, door) => {
-            this.currentDoor = door; 
         });
- 
+
+        this.physics.add.overlap(this.player, this.doors, (player, door) => {
+            this.currentDoor = door;
+        });
+
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
- 
+
         this.physics.add.overlap(this.player, this.redButton, () => {
             if (Phaser.Input.Keyboard.JustDown(this.keyE)) this.redButton.press();
         });
         this.physics.add.overlap(this.player, this.iratrigger, () => {
             this.iratrigger.llamar();
         });
-       
-         this.physics.add.overlap(this.player, this.icetrigger, () => {
+
+        this.physics.add.overlap(this.player, this.icetrigger, () => {
             this.icetrigger.llamar();
         });
         this.physics.add.overlap(this.player, this.blueButton, () => {
             if (Phaser.Input.Keyboard.JustDown(this.keyE)) this.blueButton.press();
         });
-        
+
         this.physics.add.overlap(this.player, this.greenButton, () => {
             if (Phaser.Input.Keyboard.JustDown(this.keyE)) this.greenButton.press();
         });
@@ -395,30 +394,30 @@ this.irafloordoors.getChildren().forEach(door => {
             cp.playerNearby = true;
             if (cp.prompt) cp.prompt.setVisible(true);
         });
-      
+
         //event
         this.events.on('resume', () => {
             if (this.player) PlayerDataManager.applyDataToPlayer(this.player);
-           
+
             // ocultar prompt si estaba visible
             if (this.checkpoints) {
                 this.checkpoints.getChildren().forEach(cp => {
                     if (cp.prompt) cp.prompt.setVisible(false);
                 });
             }
- 
+
         });
- 
- 
- //pause
+
+
+        //pause
         this.input.keyboard.on('keydown-ESC', () => {
             this.scene.pause('TestPlayerScene');
             this.scene.launch('Pause', { file: 'TestPlayerScene' });
         });
     }
 
-    createAnimations(){
-        
+    createAnimations() {
+
         //animaciones
         this.anims.create({
             key: 'Player_idle',
@@ -432,11 +431,11 @@ this.irafloordoors.getChildren().forEach(door => {
 
             key: 'Player_walk',
             frames: [
-            { key: 'angel_sword_walk_1' },
-            { key: 'angel_sword_walk_2' },
-            { key: 'angel_sword_walk_3' }
+                { key: 'angel_sword_walk_1' },
+                { key: 'angel_sword_walk_2' },
+                { key: 'angel_sword_walk_3' }
             ],
-            frameRate: 6, 
+            frameRate: 6,
             repeat: -1
         });
 
@@ -444,7 +443,7 @@ this.irafloordoors.getChildren().forEach(door => {
 
             key: 'Player_jump',
             frames: [{ key: 'angel_sword_jump' }],
-            frameRate: 1, 
+            frameRate: 1,
             repeat: -1
         });
 
@@ -551,14 +550,14 @@ this.irafloordoors.getChildren().forEach(door => {
             repeat: -1
         });
 
-          this.anims.create({
+        this.anims.create({
             key: 'Ira_RangedEnemy_Death',
             frames: this.anims.generateFrameNumbers('Ira_RangedEnemy', { start: 103, end: 110 }),
             frameRate: 12,
             repeat: 0
         });
 
-         this.anims.create({
+        this.anims.create({
             key: 'Tristeza_RangedEnemy_Move',
             frames: this.anims.generateFrameNumbers('Tristeza_RangedEnemy', { start: 17, end: 24 }),
             frameRate: 12,
@@ -572,7 +571,7 @@ this.irafloordoors.getChildren().forEach(door => {
             repeat: -1
         });
 
-          this.anims.create({
+        this.anims.create({
             key: 'Tristeza_RangedEnemy_Death',
             frames: this.anims.generateFrameNumbers('Tristeza_RangedEnemy', { start: 103, end: 110 }),
             frameRate: 12,
@@ -588,7 +587,7 @@ this.irafloordoors.getChildren().forEach(door => {
             repeat: -1
         });
 
-         this.anims.create({
+        this.anims.create({
             key: 'Ira_MineEnemy_Attack',
             frames: this.anims.generateFrameNumbers('Ira_MineEnemy', { start: 16, end: 23 }),
             frameRate: 12,
@@ -628,12 +627,12 @@ this.irafloordoors.getChildren().forEach(door => {
     update(time, delta) {
 
         this.player.update(time, delta);
-        
+
         this.enemies.getChildren().forEach(enemy => {
             enemy.update(time, delta);
         });
 
-           if (this.tutoboss && this.tutoboss.active) {
+        if (this.tutoboss && this.tutoboss.active) {
             this.tutoboss.update(time, delta);
         }
 
@@ -644,35 +643,35 @@ this.irafloordoors.getChildren().forEach(door => {
         if (this.miedoboss && this.miedoboss.active) {
             this.miedoboss.update(time, delta);
         }
-         if (this.tristeboss && this.tristeboss.active) {
+        if (this.tristeboss && this.tristeboss.active) {
             this.tristeboss.update(time, delta);
         }
         if (this.finalboss && this.finalboss.active) {
             this.finalboss.update(time, delta);
         }
-            
-let doorUnderPlayer = null;
 
-this.doors.getChildren().forEach(door => {
-    if (this.physics.overlap(this.player, door)) {
-        doorUnderPlayer = door;
-    }
-});
+        let doorUnderPlayer = null;
 
-
-this.currentDoor = doorUnderPlayer;
+        this.doors.getChildren().forEach(door => {
+            if (this.physics.overlap(this.player, door)) {
+                doorUnderPlayer = door;
+            }
+        });
 
 
-if (this.currentDoor && Phaser.Input.Keyboard.JustDown(this.keyE)) {
-    this.currentDoor.abrirPuerta();
-}
+        this.currentDoor = doorUnderPlayer;
+
+
+        if (this.currentDoor && Phaser.Input.Keyboard.JustDown(this.keyE)) {
+            this.currentDoor.abrirPuerta();
+        }
 
 
         this.checkpoints.getChildren().forEach(cp => {
 
             if (this.physics.overlap(this.player, cp)) {
 
-           
+
                 if (!cp.playerNearby) {
                     cp.playerNearby = true;
                     if (cp.prompt) cp.prompt.setVisible(true);
@@ -690,29 +689,33 @@ if (this.currentDoor && Phaser.Input.Keyboard.JustDown(this.keyE)) {
         });
 
 
-         this.Bossrooms.getChildren().forEach(bossRoom => {
-       const inside = this.physics.overlap(this.player, bossRoom);
-        if (inside && !bossRoom.playerInside) {
-        bossRoom.playerInside = true;
-        this.handleBossRoom(bossRoom);
-        } else if (!inside && bossRoom.playerInside) {
-        bossRoom.playerInside = false;
-        this.cameras.main.startFollow(this.player);
-        this.cameras.main.setBounds(-200, 0, 140000, 100000);
-        }
+        this.Bossrooms.getChildren().forEach(bossRoom => {
+            const inside = this.physics.overlap(this.player, bossRoom);
+            if (inside && !bossRoom.playerInside) {
+                bossRoom.playerInside = true;
+                this.handleBossRoom(bossRoom);
+            } else if (!inside && bossRoom.playerInside) {
+                bossRoom.playerInside = false;
+                this.cameras.main.startFollow(this.player);
+                this.cameras.main.setBounds(-200, 0, 140000, 100000);
+            }
         });
+
+        if (this.cheatManager) {
+            this.cheatManager.update();
+        }
     }
     handleBossRoom(bossRoom) {
-    this.cameras.main.stopFollow();
+        this.cameras.main.stopFollow();
 
-    this.cameras.main.setBounds(
-        bossRoom.x - bossRoom.width / 2, 
-        bossRoom.y - bossRoom.height / 2, 
-        bossRoom.width, 
-        bossRoom.height
-    );
+        this.cameras.main.setBounds(
+            bossRoom.x - bossRoom.width / 2,
+            bossRoom.y - bossRoom.height / 2,
+            bossRoom.width,
+            bossRoom.height
+        );
 
-    this.cameras.main.centerOn(bossRoom.x, bossRoom.y);
+        this.cameras.main.centerOn(bossRoom.x, bossRoom.y);
 
-}
+    }
 }

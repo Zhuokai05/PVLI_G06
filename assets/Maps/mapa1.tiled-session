@@ -66,14 +66,25 @@
             "scaleInDock": 1
         },
         "mapa3.json": {
-            "scale": 0.015625,
+            "scale": 0.0625,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 35168,
-                "y": 16000
+                "x": -1432,
+                "y": -120
             }
         },
         "mapa3.json#Ira": {
+            "scaleInDock": 1
+        },
+        "mappy.json": {
+            "scale": 0.06689453125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 5120,
+                "y": 3998.832116788321
+            }
+        },
+        "mappy.json#ira": {
             "scaleInDock": 1
         }
     },
@@ -91,6 +102,7 @@
     "project": "mapa1.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "mappy.json",
         "map.json",
         "iraboss.json",
         "map2.json",
