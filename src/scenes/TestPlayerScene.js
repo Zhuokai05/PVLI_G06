@@ -153,22 +153,31 @@ export default class TestPlayerScene extends Phaser.Scene {
             }
         })
 
-       //ira
-        this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',
-            'Ira_FlyingEnemy_Attack','Ira_FlyingEnemy_Death','Ira_FlyingEnemy',83));
+    //    //ira
+    //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',
+    //         'Ira_FlyingEnemy_Attack','Ira_FlyingEnemy_Death','Ira_FlyingEnemy',83));
 
-        this.enemies.add(new MineEnemy(this, 1200, 1350, 'Ira_MineEnemy',0 ,'Ira_MineEnemy_Move','Ira_MineEnemy_Attack','Ira_MineEnemy_Death'));
+    //     this.enemies.add(new MineEnemy(this, 1200, 1350, 'Ira_MineEnemy',0 ,'Ira_MineEnemy_Move','Ira_MineEnemy_Attack','Ira_MineEnemy_Death'));
 
-        this.enemies.add(new RangedEnemy(this, 1500, 1350, 'Ira_RangedEnemy',0 ,'Ira_RangedEnemy_Move','Ira_RangedEnemy_Attack','Ira_RangedEnemy_Death','Ira_FlyingEnemy',83));
+    //     this.enemies.add(new RangedEnemy(this, 1500, 1350, 'Ira_RangedEnemy',0 ,'Ira_RangedEnemy_Move','Ira_RangedEnemy_Attack','Ira_RangedEnemy_Death','Ira_FlyingEnemy',83));
 
 
         
-        //Tristeza
-        this.enemies.add(new FlyingRangedEnemy(this, 1900, 1400, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move'
-         ,'Tristeza_FlyingEnemy_Attack','Tristeza_FlyingEnemy_Death','Tristeza_FlyingEnemy',83));
-        this.enemies.add(new MineEnemy(this, 2100, 1350, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack','Tristeza_MineEnemy_Death'));
-        this.enemies.add(new RangedEnemy(this, 2300, 1350, 'Tristeza_RangedEnemy',0 ,'Tristeza_RangedEnemy_Move','Tristeza_RangedEnemy_Attack','Tristeza_RangedEnemy_Death','Tristeza_FlyingEnemy',83));
+    //     //Tristeza
+    //     this.enemies.add(new FlyingRangedEnemy(this, 1900, 1400, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move'
+    //      ,'Tristeza_FlyingEnemy_Attack','Tristeza_FlyingEnemy_Death','Tristeza_FlyingEnemy',83));
+    //     this.enemies.add(new MineEnemy(this, 2100, 1350, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack','Tristeza_MineEnemy_Death'));
+    //     this.enemies.add(new RangedEnemy(this, 2300, 1350, 'Tristeza_RangedEnemy',0 ,'Tristeza_RangedEnemy_Move','Tristeza_RangedEnemy_Attack','Tristeza_RangedEnemy_Death','Tristeza_FlyingEnemy',83));
         
+
+    //    this.orbGroup.add(new MoveSpeedOrb(this, 1300, 1350));
+    //     this.orbGroup.add(new DashOrb(this, 1300, 1350));
+    //     this.orbGroup.add(new DamageOrb(this, 1300, 1350));
+    //     this.orbGroup.add(new RangedOrb(this, 1300, 1350));
+    //     this.orbGroup.add(new MoveSpeedOrb(this, 1300, 1350));
+    //     this.orbGroup.add(new DashOrb(this, 1300, 1350));
+    //     this.orbGroup.add(new DamageOrb(this, 1300, 1350));
+    //     this.orbGroup.add(new RangedOrb(this, 1300, 1350));
         //puertas conectadas
         if (this.irabossdoor && this.irabossdoorcontrary) {
             this.irabossdoor.setContrary(this.irabossdoorcontrary);
