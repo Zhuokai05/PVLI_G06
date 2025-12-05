@@ -60,7 +60,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.speedReduceRatioAtJump = 0.8; //la velocidad que reduce el juagdor durante su salto
 
         this.isDashing = false;
-        this.dashSpeed = 1300; //velocidad del dash
+        this.dashSpeed = 800; //velocidad del dash
         this.dashDuration = 200; //tiempo que dura el dash
         this.dashCooldown = 500; //tiempo que hay que esperar el jugador entre dashes
         this.dashCooldownTimer = 0;
