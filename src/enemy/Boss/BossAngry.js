@@ -61,8 +61,20 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         // Estado especial para cooldown
         this.stateMachine.addState('cooldown', new BossAngryCooldownState());
         
-        // Iniciar con cooldown inicial
-        this.stateMachine.setState('cooldown');
+        // Estado inicial: inactivo
+        this.stateMachine.addState('inactive', {
+            enter: () => {
+                // No hacer nada mientras está inactivo
+                console.log('Boss inactivo');
+            },
+            step: () => {
+                // No ejecutar lógica de estado
+            },
+            exit: () => {}
+        });
+        
+        // Iniciar en estado inactivo
+        this.stateMachine.setState('inactive');
 
         this.attackCooldown = this.startCooldown;
         this.notdead = true;
@@ -73,6 +85,9 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
         this.setVisible(false);
         this.setActive(false);
+
+        // Flag para controlar si está activado
+        this.isActivated = false;
     }
 
     createAnimations() {
@@ -123,11 +138,17 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     }
 
     startRandomState() {
+        if (!this.isActivated) return; // No iniciar ataques si no está activado
         const randomState = Phaser.Math.RND.pick(this.availableStates);
         this.stateMachine.setState(randomState);
     }
 
     selectNextState() {
+        if (!this.isActivated) {
+            // Si no está activado, volver al estado inactivo
+            this.stateMachine.setState('inactive');
+            return;
+        }
         // En lugar de cambiar inmediatamente el ataque, entrar en cooldown
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
@@ -157,6 +178,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(damage) {
+        if (!this.isActivated) return; // No recibir daño si no está activado
         this.health -= damage;
         this.setTint(0xff0000);
         
@@ -234,6 +256,11 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     {
         this.setVisible(true);
         this.setActive(true);
+        this.isActivated = true; // Activar el boss
         this.setupCollisions();
+        
+        // Iniciar cooldown antes del primer ataque
+        this.generateNewCooldown();
+        this.stateMachine.setState('cooldown');
     }
 }
