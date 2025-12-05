@@ -36,22 +36,11 @@
             "scaleInDock": 1
         },
         "map.json": {
-<<<<<<< Updated upstream
             "scale": 0.0625,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 11688,
                 "y": 5024
-=======
-            "expandedObjectLayers": [
-                2
-            ],
-            "scale": 0.125,
-            "selectedLayer": 1,
-            "viewCenter": {
-                "x": 5172,
-                "y": 5520
->>>>>>> Stashed changes
             }
         },
         "map.json#Ira": {
@@ -74,7 +63,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 30368,
-                "y": 6528
+                "y": -3200
             }
         },
         "mapa3.json#Ira": {
