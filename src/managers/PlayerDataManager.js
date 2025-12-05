@@ -35,7 +35,6 @@ export default class PlayerDataManager {
 
   // lee los datos guardados y lo aplica al nuevo jugador
   static applyDataToPlayer(player) {
-    console.log("hola");
     player.health = this.data.health;
     player.maxHealth = this.data.maxHealth;
     

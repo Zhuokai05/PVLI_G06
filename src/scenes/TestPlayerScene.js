@@ -80,8 +80,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                     {
                     this.player = new Player(this,PlayerDataManager.data.respawnPoint.x, PlayerDataManager.data.respawnPoint.y )
                     }
-                    
-                    PlayerDataManager.applyDataToPlayer(this.player);
+                    if (this.player)PlayerDataManager.applyDataToPlayer(this.player);
                     break;
                 
                 //Enemigos
@@ -528,8 +527,5 @@ export default class TestPlayerScene extends Phaser.Scene {
 
             }
         });
-    
-        this.events.emit("create");
-
     }
 }
