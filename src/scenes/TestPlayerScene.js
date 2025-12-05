@@ -255,6 +255,8 @@ export default class TestPlayerScene extends Phaser.Scene {
 
             }
         })
+
+        this.checkpoints.add(new Checkpoint(this, 1200, 1550));
         const distanciaSegura = 800;
         // this.lava = new FloorIsLava(this, this.player.y + distanciaSegura, 15, this.player);
 

@@ -87,6 +87,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.activeOrbIndex = 0;        // indice del orbe activo (0 o 1)
         this.damageMultiplier = 1.0;    // modificador de daño 
         this.speedMultiplier = 1.0;     //modificador de velocidad
+        this.bloodStealAmount = 0;
         this.attackRangeMultiplier = 1.0;    //modificador rango de ataque melee
         this.orbTint = 0xffffff;     //color original del jugador
 
