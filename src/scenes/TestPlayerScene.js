@@ -315,7 +315,9 @@ export default class TestPlayerScene extends Phaser.Scene {
 
     //bossdoors y triggers
       
-
+this.irafloordoors.getChildren().forEach(door => {          
+          door.cerrarPuerta();         
+      });
     this.irabossdoors.getChildren().forEach(door => {          
           door.abrirPuerta();         
       });
@@ -328,6 +330,8 @@ export default class TestPlayerScene extends Phaser.Scene {
       });
        if (this.icetrigger ) this.icetrigger.getDoors(this.icebossdoors);
            
+
+     if (this.iraboss)  this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
         
 
     //mapdoors
@@ -339,6 +343,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         // Colliders y camaras
         this.physics.add.collider(this.player, layer);
         this.physics.add.collider(this.player, this.irabossdoors);
+        this.physics.add.collider(this.player, this.irafloordoors);
         this.physics.add.collider(this.player, this.icePlatforms);
         this.physics.add.collider(this.player, this.iraPlatforms);
         this.physics.add.collider(layer, this.enemies);
