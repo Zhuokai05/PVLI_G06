@@ -118,6 +118,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             loop: false
         });
 
+        //aura del escudo cuando tiene el escudo activado
+        this.shieldAura = this.scene.add.image(this.x, this.y, 'playerShieldAura')
+            .setDepth(this.depth - 1)           // detras del jugador
+            .setAlpha(0.5)                      // semitransparente
+            .setVisible(false)                  // oculto por defecto
+            .setScale(0.8); 
+            
         this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);   //velocidad maxima
     }
 
@@ -134,6 +141,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 this.performRangeAttack();
             }
             else if (this.canShield && !this.hasShield && this.shieldCooldownTimer <= 0){
+                this.shieldAura.setVisible(true);
                 this.hasShield = true;
                 console.log("escudo activado")
             }
@@ -155,6 +163,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.dashCooldownTimer -= delta;
         this.shieldCooldownTimer -= delta;
         this.rangeAttackCooldownTimer -= delta;
+        
+        //movemos al sprite de escudo
+        if (this.shieldAura) {
+            this.shieldAura.x = this.x;
+            this.shieldAura.y = this.y;
+        }
     }
 
     /**
@@ -179,6 +193,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if(this.hasShield && damage === 1){ // si tiene escudo, bloquea los daños no mortales
                 this.shieldCooldownTimer = this.shieldCooldown;
                 this.hasShield = false;
+                if (this.shieldAura) this.shieldAura.setVisible(false);
                 console.log("daño bloqueado")
                 return;
             }
@@ -294,6 +309,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     
         die() {
             if (this.dead) return;
+            if (this.shieldAura) this.shieldAura.setVisible(false);
             console.log('Intentando cambiar a GameOver scene...');
             this.health = this.maxHealth;
             this.scene.scene.stop();

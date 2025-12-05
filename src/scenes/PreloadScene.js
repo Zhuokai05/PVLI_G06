@@ -72,6 +72,7 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('plume', 'assets/sprites/Player/Pluma.png');
     this.load.spritesheet('melee', 'assets/sprites/Player/Melee.png',
     {frameWidth: 64,frameHeight: 64});
+    this.load.image('playerShieldAura', 'assets/sprites/Player/PlayerShieldAura.png');
 
     // UI
     //this.load.image('angelHealth', './assets/UI/Ghost.png');
