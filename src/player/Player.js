@@ -373,14 +373,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 }
             });
 
-            // Destruir bolas de agua del boss si están en el rango del ataque
-            this.scene.physics.overlap(hitbox, this.scene.bossSad.waterBalls, (hitbox, waterBall) => {
-                if (waterBall.isDestructibleByPlayer) {
-                    this.scene.bossSad.destroyWaterBall(waterBall);
-                }
-            });
-
-
             // SPRITE DE ATAQUE MELEE
             let meleeSprite = this.scene.add.sprite(this.x + offsetX, this.y + offsetY, 'melee');
             meleeSprite.setDepth(10);
