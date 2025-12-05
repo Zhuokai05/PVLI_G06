@@ -30,7 +30,6 @@ export default class MineEnemyAttackState extends BaseEnemyAttackState {
 
         //destruye el hitbox y muere tras explotar
         this.hitbox.destroy();
-        enemy.health = 0;
         enemy.die();
     }
 }

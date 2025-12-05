@@ -29,7 +29,7 @@ export default class RangedEnemyAttackState extends BaseEnemyAttackState {
             enemy.x,
             enemy.y,
             enemy,
-            enemy.texture,83,
+            enemy.projectileTexture,enemy.projectileTextureFrame,
             enemy.scene.player,
         );
 

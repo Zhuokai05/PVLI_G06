@@ -3,8 +3,8 @@ import GroundEnemyMoveState from './enemyMove/GroundEnemyMoveState.js';
 import MeleeEnemyAttackState from './enemyAttack/MeleeEnemyAttackState.js';
 
 export default class MeleeEnemy extends BaseEnemy {
-  constructor(scene, x, y, texture = 'enemy',frame = 0, moveAnimationKey, attackAnimationKey) {
-    super(scene, x, y, texture,frame, moveAnimationKey, attackAnimationKey);
+  constructor(scene, x, y, texture = 'enemy',frame = 0, moveAnimationKey, attackAnimationKey,deathAnimationKey) {
+    super(scene, x, y, texture,frame, moveAnimationKey, attackAnimationKey,deathAnimationKey);
 
     this.speed = 70;
     this.attackRange = 80;

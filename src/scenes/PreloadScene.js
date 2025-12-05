@@ -17,8 +17,15 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('basicEnemyFear', './assets/sprites/Enemigos/Enemigos_basicos/Ghost.png');
 
     //enemigos rango
-    this.load.image('rangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/RangedEnemyPlaceHolder.png');
+    // this.load.image('rangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/RangedEnemyPlaceHolder.png');
 
+    this.load.spritesheet('Ira_RangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/Ira_RangedEnemy.png',
+    {frameWidth: 160,frameHeight: 128});
+    this.load.spritesheet('Tristeza_RangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/Tristeza_RangedEnemy.png',
+    {frameWidth: 160,frameHeight: 128});
+
+
+    
     //enemigos voladores
     this.load.spritesheet('Ira_FlyingEnemy', './assets/sprites/Enemigos/Enemigos_voladores/Ira_FlyingEnemy.png',
     {frameWidth: 64,frameHeight: 64});

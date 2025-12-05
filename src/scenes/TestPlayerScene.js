@@ -153,15 +153,21 @@ export default class TestPlayerScene extends Phaser.Scene {
             }
         })
 
-       
-        this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move','Ira_FlyingEnemy_Attack'));
-        this.enemies.add(new MineEnemy(this, 1200, 1350, 'Ira_MineEnemy',0 ,'Ira_MineEnemy_Move','Ira_MineEnemy_Attack'));
+       //ira
+        this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',
+            'Ira_FlyingEnemy_Attack','Ira_FlyingEnemy_Death','Ira_FlyingEnemy',83));
+
+        this.enemies.add(new MineEnemy(this, 1200, 1350, 'Ira_MineEnemy',0 ,'Ira_MineEnemy_Move','Ira_MineEnemy_Attack','Ira_MineEnemy_Death'));
+
+        this.enemies.add(new RangedEnemy(this, 1500, 1350, 'Ira_RangedEnemy',0 ,'Ira_RangedEnemy_Move','Ira_RangedEnemy_Attack','Ira_RangedEnemy_Death','Ira_FlyingEnemy',83));
 
 
         
         //Tristeza
-        // this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move','Tristeza_FlyingEnemy_Attack'));
-        // this.enemies.add(new MineEnemy(this, 1200, 1350, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack'));
+        this.enemies.add(new FlyingRangedEnemy(this, 1900, 1400, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move'
+         ,'Tristeza_FlyingEnemy_Attack','Tristeza_FlyingEnemy_Death','Tristeza_FlyingEnemy',83));
+        this.enemies.add(new MineEnemy(this, 2100, 1350, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack','Tristeza_MineEnemy_Death'));
+        this.enemies.add(new RangedEnemy(this, 2300, 1350, 'Tristeza_RangedEnemy',0 ,'Tristeza_RangedEnemy_Move','Tristeza_RangedEnemy_Attack','Tristeza_RangedEnemy_Death','Tristeza_FlyingEnemy',83));
         
         //puertas conectadas
         if (this.irabossdoor && this.irabossdoorcontrary) {
@@ -308,6 +314,12 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
 
         this.anims.create({
+            key: 'Ira_FlyingEnemy_Death',
+            frames: this.anims.generateFrameNumbers('Ira_FlyingEnemy', { start: 64, end: 72 }),
+            frameRate: 12,
+            repeat: 0
+        });
+        this.anims.create({
             key: 'Tristeza_FlyingEnemy_Move',
             frames: this.anims.generateFrameNumbers('Tristeza_FlyingEnemy', { start: 16, end: 19 }),
             frameRate: 12,
@@ -320,6 +332,58 @@ export default class TestPlayerScene extends Phaser.Scene {
             frameRate: 12,
             repeat: -1
         });
+
+        this.anims.create({
+            key: 'Tristeza_FlyingEnemy_Death',
+            frames: this.anims.generateFrameNumbers('Tristeza_FlyingEnemy', { start: 64, end: 72 }),
+            frameRate: 12,
+            repeat: 0
+        });
+
+        //enemigos rango
+
+        this.anims.create({
+            key: 'Ira_RangedEnemy_Move',
+            frames: this.anims.generateFrameNumbers('Ira_RangedEnemy', { start: 17, end: 24 }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'Ira_RangedEnemy_Attack',
+            frames: this.anims.generateFrameNumbers('Ira_RangedEnemy', { start: 38, end: 45 }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+          this.anims.create({
+            key: 'Ira_RangedEnemy_Death',
+            frames: this.anims.generateFrameNumbers('Ira_RangedEnemy', { start: 103, end: 110 }),
+            frameRate: 12,
+            repeat: 0
+        });
+
+         this.anims.create({
+            key: 'Tristeza_RangedEnemy_Move',
+            frames: this.anims.generateFrameNumbers('Tristeza_RangedEnemy', { start: 17, end: 24 }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'Tristeza_RangedEnemy_Attack',
+            frames: this.anims.generateFrameNumbers('Tristeza_RangedEnemy', { start: 38, end: 45 }),
+            frameRate: 12,
+            repeat: -1
+        });
+
+          this.anims.create({
+            key: 'Tristeza_RangedEnemy_Death',
+            frames: this.anims.generateFrameNumbers('Tristeza_RangedEnemy', { start: 103, end: 110 }),
+            frameRate: 12,
+            repeat: 0
+        });
+
 
         //enemigos mina
         this.anims.create({
@@ -337,6 +401,13 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
 
         this.anims.create({
+            key: 'Ira_MineEnemy_Death',
+            frames: this.anims.generateFrameNumbers('Ira_MineEnemy', { start: 32, end: 39 }),
+            frameRate: 12,
+            repeat: 0
+        });
+
+        this.anims.create({
             key: 'Tristeza_MineEnemy_Move',
             frames: this.anims.generateFrameNumbers('Tristeza_MineEnemy', { start: 0, end: 7 }),
             frameRate: 12,
@@ -349,6 +420,14 @@ export default class TestPlayerScene extends Phaser.Scene {
             frameRate: 12,
             repeat: -1
         });
+
+        this.anims.create({
+            key: 'Tristeza_MineEnemy_Death',
+            frames: this.anims.generateFrameNumbers('Tristeza_MineEnemy', { start: 32, end: 39 }),
+            frameRate: 12,
+            repeat: 0
+        });
+
     }
 
     update(time, delta) {

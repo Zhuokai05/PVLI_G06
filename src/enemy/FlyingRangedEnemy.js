@@ -3,17 +3,18 @@ import RangedEnemyAttackState from './enemyAttack/RangedEnemyAttackState.js';
 import BaseEnemy from './BaseEnemy.js';
 
 export default class FlyingRangedEnemy extends BaseEnemy {
-    constructor(scene, x, y, texture = 'enemy',frame = 0, moveAnimationKey, attackAnimationKey) {
-        super(scene, x, y, texture,frame, moveAnimationKey, attackAnimationKey);
+    constructor(scene, x, y, texture = 'enemy',frame = 0, moveAnimationKey, attackAnimationKey,deathAnimationKey,projectileTexture,projectileTextureFrame) {
+        super(scene, x, y, texture,frame, moveAnimationKey, attackAnimationKey,deathAnimationKey,projectileTexture,projectileTextureFrame);
 
         this.setScale(2);
         this.body.allowGravity = false; 
 
         /* reducimos el collider a la mitad, ya que hay un proble con el spritesheet donde las celdas son de 64 
         pero el sprite solo esta en el medio, con un gran margen vacio */
-        this.body.setSize(this.width / 2, this.height / 2);
-        this.body.setOffset(this.width / 4, this.height / 4);
-
+        this.colliderWidthDivisor = 2;
+        this.colliderHeightDivisor = 2;
+        this.DivideCollider( this.colliderWidthDivisor, this.colliderHeightDivisor);
+        
         this.speed = 120;
         this.verticalSpeed = 60;
         this.attackDuration = 600;

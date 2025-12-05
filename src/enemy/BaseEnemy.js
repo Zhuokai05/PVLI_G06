@@ -2,13 +2,24 @@ import StateMachine from '../stateMachine/StateMachine.js';
 
 export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
 
-  constructor(scene, x, y, texture = 'enemy',frame = 0, moveAnimationKey, attackAnimationKey) {
+  constructor(scene, x, y, texture = 'enemy',frame = 0, 
+    moveAnimationKey, attackAnimationKey,deathAnimationKey,projectileTexture,projectileTextureFrame)
+  {
+
     super(scene, x, y, texture,frame);
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    this.texture = texture;
+
     this.moveAnimationKey = moveAnimationKey;
     this.attackAnimationKey = attackAnimationKey;
+    this.deathAnimationKey = deathAnimationKey;
+    this.projectileTexture = projectileTexture;
+    this.projectileTextureFrame = projectileTextureFrame;
+
+    
+    //en casos de que el sprite tenga mucho borde, osea collider muy grande, le reducimos el collider
+    this.colliderWidthDivider = 1;
+    this.colliderHeightDivider = 1;
 
     this.collisionDamage = 1; // daño que hace al jugador al colisionar con el
     this.scene = scene;
@@ -27,9 +38,8 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     
     this.damage = 1; // el daño que hace
 
-    this.attackTime = 500; // tiempo que tarda el ataque, !!!debe de ser menor que attackCooldown!!!
     this.startAttackTime = 1000; //en cuanto tiempo empieza el ataque estando player delante
-    this.attackDuration = 100; //cuanto dura el hitbox de ataque
+    this.attackDuration = 100; //cuanto dura el ataque
 
     this.stateMachine = new StateMachine(this, 'enemy');
 
@@ -63,6 +73,12 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     return distX < this.detectPlayerRangeX && distY < this.detectPlayerRangeY;
   }
 
+
+  //en casos de que el sprite tenga mucho borde, osea collider muy grande, le reducimos el collider
+  DivideCollider(colliderWidthDivisor,colliderHeightDivisor){
+    this.body.setSize(this.width / colliderWidthDivisor, this.height / colliderHeightDivisor);
+    this.body.setOffset((this.width-this.width/colliderWidthDivisor)/2, (this.height-this.height/colliderHeightDivisor)/ 2);
+  }
   //funcion que se llama al colisionar con el jugador
 
   /**
@@ -95,23 +111,38 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  //muerte del enemigo
   die() {
     if (this.dead) return; 
     this.dead = true;
     
-    this.setVelocity(0);
-    this.setActive(false);
-    this.setVisible(false);
+    this.body.allowGravity = true; 
+    this.setVelocityX(0);
 
-    this.scene.time.delayedCall(100, () => {
-     this.destroy();
-    });
+    //si tiene animacion de muerte, se espera acabar la animacion y de destruye
+    if(this.deathAnimationKey){
+      this.play(this.deathAnimationKey, true);
+      this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        this.setActive(false);
+        this.setVisible(false);
+        this.destroy();
+      });
+    } 
+    
+    else {
+      this.scene.time.delayedCall(100, () => {
+        this.destroy();
+      });
+    }
   }
+
   playMoveAnimation(){
+    if(this.dead) return;
     if(this.moveAnimationKey) this.play(this.moveAnimationKey, true);
   }
 
   playAttackAnimation(){
+    if(this.dead) return;
     if(this.attackAnimationKey) this.play(this.attackAnimationKey, true);
   }
 }

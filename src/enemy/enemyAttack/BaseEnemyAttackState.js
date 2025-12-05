@@ -4,7 +4,7 @@ export default class BaseEnemyAttackState extends BaseState {
   enter(enemy) {
     this.enemy = enemy;
     enemy.isAttacking = true;
-    enemy.playAttackAnimation();
+    if(!enemy.dead) enemy.playAttackAnimation();
     
       //terminar el ataque despues de attackcooldown
       this.enemy.scene.time.delayedCall(this.enemy.attackDuration, () => {
