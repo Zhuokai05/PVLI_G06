@@ -58,6 +58,9 @@ export default class BossSadWaterBallState extends BaseState {
         // Propiedades de seguimiento
         this.waterBall.following = true;
         this.waterBall.speed = this.boss.waterBallSpeed;
+
+        // Marcar como destructible por el jugador
+        this.waterBall.isDestructibleByPlayer = true;
     }
 
     followPlayer() {
