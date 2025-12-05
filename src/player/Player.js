@@ -74,7 +74,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.rangeAttackDuration = 3000; //en cuanto tiempo se destruye el projectile invocado
         this.rangeAttackSpeed = 800; //la velocidad del projectile que lanza
-        this.rangeAttackCooldown = 300; //el cooldown de su ataque a distancia
+        this.rangeAttackCooldownTimer = 0;
+        this.rangeAttackCooldown = 500; //el cooldown de su ataque a distancia
 
         this.invulnerable = false;
         this.invulnerableTime = 1000; //tiempo invulnerable despues de recibir daño
@@ -153,6 +154,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // reducir timers independientes de si atacamos o no
         this.dashCooldownTimer -= delta;
         this.shieldCooldownTimer -= delta;
+        this.rangeAttackCooldownTimer -= delta;
     }
 
     /**
@@ -391,7 +393,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.canRangeAttack) return;
             if (this.isAttacking) return;
 
-
+            this.rangeAttackCooldownTimer = this.rangeAttackCooldown;
             this.isAttacking = true;
 
             this.safeDelay(this.rangeAttackCooldown, () => this.isAttacking = false);
