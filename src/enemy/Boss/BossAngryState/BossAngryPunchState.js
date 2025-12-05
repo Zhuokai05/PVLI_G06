@@ -33,7 +33,7 @@ export default class BossAngryPunchState extends BaseState {
         this.warningRect = scene.add.rectangle(
             this.boss.x,   
             this.spawnY,            
-            cam.width,          
+            cam.width + 150,          
             warningHeight,       
             0xff0000,
             0.5

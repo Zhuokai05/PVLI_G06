@@ -119,6 +119,7 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     this.body.allowGravity = true; 
     this.setVelocityX(0);
 
+    if(this.player)this.player.health +=this.player.bloodStealAmount;
     //si tiene animacion de muerte, se espera acabar la animacion y de destruye
     if(this.deathAnimationKey){
       this.play(this.deathAnimationKey, true);

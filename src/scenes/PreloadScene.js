@@ -85,6 +85,10 @@ export class PreloadScene extends Phaser.Scene
     //this.load.image('angelHealth', './assets/UI/Ghost.png');
     this.load.spritesheet('heartbreak', './assets/sprites/UI/heartbreak.png',
     {frameWidth: 25,frameHeight: 25});
+    this.load.image('boss_tracker_base', './assets/sprites/UI/BossTracker/BossesSlots.png');
+    this.load.image('piece_anger', './assets/sprites/UI/BossTracker/AngerPiece.png');
+    this.load.image('piece_sadness', './assets/sprites/UI/BossTracker/SadnessPiece.png');
+    this.load.image('piece_fear', './assets/sprites/UI/BossTracker/FearPiece.png');
 
     // Boss
     this.load.image('ira_flap_1', './assets/sprites/Bosses/ira1.png');

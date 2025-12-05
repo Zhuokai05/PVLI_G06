@@ -9,24 +9,30 @@ export default class PlayerDataManager {
     // nombres de orbes equipados en los slots (strings o null)
     equippedOrbs: [null, null],
     activeOrbIndex: 0,
-    respawnPoint: { x: 0, y: 0 }
+    respawnPoint: { x: 0, y: 0 },
+    bossStatus: {
+      tutorial: false,
+      sadness: false, // Ejemplo: Boss Tristeza
+      anger: false,   // Ejemplo: Boss Ira
+      fear: false     // Ejemplo: Boss Miedo
+    }
   };
 
   // guardar datos del jugador
   static saveDataFromPlayer(player) {
 
     this.data.health = player.health;
-    this.data.maxHealth = player.maxHealth;    
+    this.data.maxHealth = player.maxHealth;
     this.data.orbs = player.orbs;
 
     // guardar la copia de orbes recogidos 
-    this.data.collectedOrbs =[...player.orbs];
+    this.data.collectedOrbs = [...player.orbs];
 
     // guardar la copia de orbes equipados 
     this.data.equippedOrbs = [...player.equippedOrbs];
     this.data.activeOrbIndex = player.activeOrbIndex;
 
-    
+
     console.log("Guardando datos del jugador en PlayerDataManager:",
       this.data.health, this.data.maxHealth, this.data.collectedOrbs,
       this.data.equippedOrbs, this.data.activeOrbIndex, this.data.respawnPoint);
@@ -37,11 +43,11 @@ export default class PlayerDataManager {
   static applyDataToPlayer(player) {
     player.health = this.data.health;
     player.maxHealth = this.data.maxHealth;
-    
+
 
 
     //como al cambiar de escena se crea un nuevo player, hay que poner el player del orbe como el nuevo player
-    for (let orb of this.data.collectedOrbs){
+    for (let orb of this.data.collectedOrbs) {
       orb.setPlayer(player);
     }
 
@@ -63,6 +69,13 @@ export default class PlayerDataManager {
       this.data.health, this.data.maxHealth, this.data.collectedOrbs,
       this.data.equippedOrbs, this.data.activeOrbIndex, this.data.respawnPoint);
     console.log(player.respawnPoint);
+  }
+
+  static killBoss(bossName) {
+      if (this.data.bossStatus.hasOwnProperty(bossName)) {
+          this.data.bossStatus[bossName] = true;
+          console.log(`Boss ${bossName} derrotado. Progreso guardado.`);
+      }
   }
 
 }

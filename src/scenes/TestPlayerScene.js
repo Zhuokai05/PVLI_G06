@@ -237,13 +237,16 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.enemies.add(this.iraboss);
                     break;
                 case "tristeboss":
-                    this.tristeboss = new BossSad(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    this.tristeboss = new BossSad(this, objeto.x, objeto.y, this.player) ;
+                    this.enemies.add(this.iraboss);
                     break;
                 case "miedoboss":
-                    this.miedoboss = new BossFear(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    this.miedoboss = new BossFear(this, objeto.x, objeto.y, this.player) ;
+                    this.enemies.add(this.iraboss);
                     break;
                 case "tutoboss":
-                    this.tutoboss = new BossTutorial(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    this.tutoboss = new BossTutorial(this, objeto.x, objeto.y, this.player) ;
+                    this.enemies.add(this.iraboss);
                     break;
                 case "finalboss":
                     this.finalboss = new FinalBoss(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
@@ -255,6 +258,8 @@ export default class TestPlayerScene extends Phaser.Scene {
 
             }
         })
+
+        this.checkpoints.add(new Checkpoint(this, 1200, 1550));
         const distanciaSegura = 800;
         // this.lava = new FloorIsLava(this, this.player.y + distanciaSegura, 15, this.player);
 

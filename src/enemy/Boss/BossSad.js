@@ -3,6 +3,7 @@ import BossSadIcicleState from './BossSadState/BossSadIcicleState.js';
 import BossSadRadialState from './BossSadState/BossSadRadialState.js';
 import BossSadWaterBallState from './BossSadState/BossSadWaterBallState.js';
 import BossSadCooldownState from './BossSadState/BossSadCooldownState.js';
+import Player from '../../player/Player.js';
 
 export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {
@@ -18,8 +19,8 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
         // Posicionar en el extremo derecho de la cámara
         const cam = scene.cameras.main;
-        this.setX(cam.width - 100); 
-        this.setY(cam.height / 2); 
+        this.setX(cam.width - 100);
+        this.setY(cam.height / 2);
 
         const spriteWidth = this.displayWidth;
         const spriteHeight = this.displayHeight;
@@ -48,7 +49,7 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
         // Máquina de estados
         this.stateMachine = new StateMachine(this, 'boss');
-        
+
         // Registrar todos los estados
         this.stateMachine.addState('icicle', new BossSadIcicleState());
         this.stateMachine.addState('radial', new BossSadRadialState());
@@ -56,10 +57,10 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
         // Estados disponibles por fase - FASE 1: solo radial y waterball
         this.availableStates = ['radial', 'waterball'];
-        
+
         // Estado especial para cooldown
         this.stateMachine.addState('cooldown', new BossSadCooldownState());
-        
+
         // Iniciar con cooldown inicial
         this.stateMachine.setState('cooldown');
 
@@ -166,7 +167,7 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
                 // Volver a posicionar en el extremo derecho después del respawn
                 const cam = this.scene.cameras.main;
                 this.setX(cam.width - 100);
-                this.setY(cam.height / 2); 
+                this.setY(cam.height / 2);
 
                 const spriteWidth = this.displayWidth;
                 const spriteHeight = this.displayHeight;
@@ -199,11 +200,14 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
 
     die() {
-        console.log('BossSad derrotado definitivamente');
+        PlayerDataManager.killBoss('sadness');
+
+        /*console.log('BossSad derrotado definitivamente');
         this.scene.time.delayedCall(2000, () => {
             this.scene.scene.stop();
             this.scene.scene.launch('Win');
-            this.destroy();
-        });
+            this.destroy();*/
+        this.scene.events.emit('bossDefeated');
+
     }
 }
