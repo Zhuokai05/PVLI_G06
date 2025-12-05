@@ -24,7 +24,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.body.setOffset(spriteWidth / 9.9, spriteHeight / 12);
         this.body.moves = false;
 
-        this.distanceToFloor = 370;
+        this.distanceToFloor = 250;
         // Crear animaciones
         this.createAnimations();
 

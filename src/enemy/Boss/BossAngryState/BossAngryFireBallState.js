@@ -9,7 +9,7 @@ export default class BossAngryFireBallState extends BaseState {
         this.timeSinceLastSpawn = 0;
         this.attackDuration = 6000;
         this.cooldownDuration = 500;
-        this.spawnInterval = 300;
+        this.spawnInterval = 500;
         this.columnSpread = 100;
         this.numColumns = 8;    
         
@@ -76,7 +76,7 @@ export default class BossAngryFireBallState extends BaseState {
         scene.events.on('update', () => {
             if (!fireball.active) return;
 
-            if (fireball.y > this.boss.y + this.distanceToFloor + 150) {
+            if (fireball.y > this.boss.y + this.boss.distanceToFloor + 150) {
                 fireball.destroy();
             }
         });
