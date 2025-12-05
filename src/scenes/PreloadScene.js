@@ -67,6 +67,9 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('angel_walk_2', 'assets/sprites/Player/Angel_Inicial_2.png');
     this.load.image('angel_walk_3', 'assets/sprites/Player/Angel_Inicial_3.png');
     this.load.image('angel_jump', 'assets/sprites/Player/Angel_Inicial_Salto.png');
+    
+    // Objetos angel
+    this.load.image('plume', 'assets/sprites/Player/Pluma.png');
 
     // UI
     //this.load.image('angelHealth', './assets/UI/Ghost.png');

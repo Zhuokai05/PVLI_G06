@@ -399,12 +399,23 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.safeDelay(this.rangeAttackCooldown, () => this.isAttacking = false);
 
             // crear proyectil
-            let projectile = this.scene.physics.add.sprite(this.x, this.y, 'range_projectile');
+            let projectile = this.scene.physics.add.sprite(this.x, this.y, 'plume');
             projectile.setDepth(4);
             projectile.body.allowGravity = false;
 
-            // velocidad segun su direccion
-            projectile.setVelocityX(this.rangeAttackSpeed * this.direction);
+            // Determinar la dirección del proyectil basada en la dirección del jugador
+            let direction = this.direction; // 1 para derecha, -1 para izquierda
+    
+            // Velocidad según la dirección del jugador
+            projectile.setVelocityX(this.rangeAttackSpeed * direction);
+    
+            // Rotar el sprite si está disparando a la izquierda
+            if (direction === -1) {
+                projectile.setFlipX(true);
+            } else {
+                projectile.setFlipX(false);
+            }
+
 
             // destruir despues de su duracion
             this.safeDelay(this.rangeAttackDuration, () => {
