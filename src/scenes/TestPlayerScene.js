@@ -180,7 +180,6 @@ export default class TestPlayerScene extends Phaser.Scene {
             }
         })
 
-
         //puertas conectadas
         if (this.irabossdoor && this.irabossdoorcontrary) {
             this.irabossdoor.setContrary(this.irabossdoorcontrary);
