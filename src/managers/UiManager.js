@@ -1,3 +1,5 @@
+import PlayerDataManager from "./PlayerDataManager.js";
+
 export default class UIManager {
   constructor(scene, player) {
     this.scene = scene;
@@ -15,14 +17,21 @@ export default class UIManager {
     this.orbY = 110;
     this.maxOrbs = player.equippedOrbs.length;
 
+    this.bossTrackerX = 950; 
+    this.bossTrackerY = 60;   
+    this.bossPieces = {};     
+
     this.createHearts();
     this.createOrbSlots();
     this.createOrbs();
+    this.createBossTracker();
 
 
     player.on('updateHearts', this.updateHearts, this);
 
     player.on('orbChanged', this.updateOrbs, this);
+
+    this.scene.events.on('bossDefeated', this.updateBossTracker, this);
   }
 
 
@@ -114,6 +123,43 @@ export default class UIManager {
         orb.setAlpha(0.5);
       }
     }
+  }
+// Crea el rastreador de jefes en la UI
+  createBossTracker() {
+      this.trackerBase = this.scene.add.image(this.bossTrackerX, this.bossTrackerY, 'boss_tracker_base')
+          .setScrollFactor(0) 
+          .setDepth(10); 
+          this.trackerBase.setScale(3);    
+
+      this.bossPieces['anger'] = this.scene.add.image(this.bossTrackerX, this.bossTrackerY, 'piece_anger')
+          .setScrollFactor(0)
+          .setDepth(11) 
+          .setVisible(false); 
+          this.bossPieces['anger'].setScale(3);
+
+
+      this.bossPieces['sadness'] = this.scene.add.image(this.bossTrackerX, this.bossTrackerY, 'piece_sadness')
+          .setScrollFactor(0)
+          .setDepth(11)
+          .setVisible(false);
+          this.bossPieces['sadness'].setScale(3);
+
+
+      this.bossPieces['fear'] = this.scene.add.image(this.bossTrackerX, this.bossTrackerY, 'piece_fear')
+          .setScrollFactor(0)
+          .setDepth(11)
+          .setVisible(false);
+          this.bossPieces['fear'].setScale(3);
+
+      this.updateBossTracker();
+  }
+
+  updateBossTracker() {
+      const status = PlayerDataManager.data.bossStatus;
+
+      if (this.bossPieces['anger'])   this.bossPieces['anger'].setVisible(status.anger);
+      if (this.bossPieces['sadness']) this.bossPieces['sadness'].setVisible(status.sadness);
+      if (this.bossPieces['fear'])    this.bossPieces['fear'].setVisible(status.fear);
   }
 
 }
