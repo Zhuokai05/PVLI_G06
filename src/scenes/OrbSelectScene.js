@@ -218,7 +218,14 @@ export class OrbSelectScene extends Phaser.Scene {
             )
             .setScale(1)
             .setDepth(6)
-            .setScale(0.3);
+            .setScale(0.3)
+            .setInteractive({ useHandCursor: true });
+            slotBg.on("pointerdown", () => {
+                let orb = this.equipped[i];
+                if (orb) {
+                    this.selectOrb(orb);
+                }
+            });
 
             this.slotSprites.push(slotBg);
 
@@ -230,7 +237,15 @@ export class OrbSelectScene extends Phaser.Scene {
             )
             .setScale(0.3)
             .setVisible(false)
-            .setDepth(7);
+            .setDepth(7)
+            .setInteractive({ useHandCursor: true }); 
+
+            orbIcon.on("pointerdown", () => {
+                let orb = this.equipped[i];
+                if (orb) {
+                    this.selectOrb(orb);
+                }
+            });
 
             this.slotOrbSprites.push(orbIcon);
         }
