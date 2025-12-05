@@ -119,6 +119,7 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('puertaira', './assets/sprites/Escena/PuertaIra.png');
    this.load.image('platform', './assets/sprites/Escena/platform.png');
    this.load.tilemapTiledJSON("mappy","./assets/Maps/map.json");
+   //this.load.iamge('trap', '');
 
     // Efecto de sonidos
     this.load.audio('jump_sound', './assets/Sounds/Player/jump.mp3');

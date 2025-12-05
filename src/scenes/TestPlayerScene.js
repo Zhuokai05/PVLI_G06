@@ -273,7 +273,7 @@ export default class TestPlayerScene extends Phaser.Scene {
     //     this.enemies.add(new RangedEnemy(this, 2300, 1350, 'Tristeza_RangedEnemy',0 ,'Tristeza_RangedEnemy_Move','Tristeza_RangedEnemy_Attack','Tristeza_RangedEnemy_Death','Tristeza_FlyingEnemy',83));
         
 
-        this.orbGroup.add(new MoveSpeedOrb(this, 1300, 1350));
+        /*this.orbGroup.add(new MoveSpeedOrb(this, 1300, 1350));
          this.orbGroup.add(new DashOrb(this, 1300, 1350));
          this.orbGroup.add(new DamageOrb(this, 1300, 1350));
          this.orbGroup.add(new RangedOrb(this, 1300, 1350));
@@ -282,7 +282,7 @@ export default class TestPlayerScene extends Phaser.Scene {
          this.orbGroup.add(new DamageOrb(this, 1300, 1350));
          this.orbGroup.add(new RangedOrb(this, 1300, 1350));
         this.orbGroup.add(new ShieldOrb(this, 1500, 1350));
-        this.orbGroup.add(new AttackRangeOrb(this, 1400, 1350));
+        this.orbGroup.add(new AttackRangeOrb(this, 1400, 1350));*/
         
         //puertas conectadas
         if (this.irabossdoor && this.irabossdoorcontrary) {
