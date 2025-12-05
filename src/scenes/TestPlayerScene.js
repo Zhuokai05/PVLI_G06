@@ -261,7 +261,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.cheatManager = new CheatManager(this, this.player);
         this.checkpoints.add(new Checkpoint(this, 1200, 1550));
         const distanciaSegura = 800;
-        // this.lava = new FloorIsLava(this, this.player.y + distanciaSegura, 15, this.player);
+        this.lava = new FloorIsLava(this, this.player.y + distanciaSegura, 25, this.player);
 
         //    //ira
         //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',
@@ -363,6 +363,19 @@ export default class TestPlayerScene extends Phaser.Scene {
 
 
         //Overlaps
+        //Evento de activación de la lava
+        //------------------------------
+        const triggerZone = this.add.zone(1500, 1300, 100, 200);
+        this.physics.add.existing(triggerZone);
+        triggerZone.body.setAllowGravity(false);
+        triggerZone.body.setImmovable(true);
+
+        this.physics.add.overlap(this.player, triggerZone, () => {
+            this.lava.startLava();
+            triggerZone.destroy();
+            this.cameras.main.shake(500, 0.01);
+        });
+        //------------------------------
         this.physics.add.overlap(this.player, this.orbGroup, (player, orb) => {
             orb.collect(player);
         });

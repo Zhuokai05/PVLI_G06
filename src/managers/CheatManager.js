@@ -10,8 +10,8 @@ export default class CheatManager {
         this.locations = [
             { name: "Spawn Inicial", x: 950, y: 900 },
             { name: "Boss Ira", x: 6000, y: 4500 },
-            { name: "Boss Tristeza", x: 2500, y: 1400 },
-            { name: "Final del Nivel", x: 10000, y: 500 }
+            { name: "Boss Tristeza", x: 950, y: 900 },
+            { name: "Final del Nivel", x: 950, y: 900 }
         ];
 
         // Input (SHIFT + T)

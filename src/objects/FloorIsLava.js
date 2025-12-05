@@ -13,10 +13,10 @@ export default class FloorIsLava extends Phaser.GameObjects.TileSprite {
 
 
         this.setOrigin(0.5, 0);
-        this.setDepth(100); 
+        this.setDepth(100);
 
         this.setScrollFactor(1);
-        
+
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
@@ -29,19 +29,27 @@ export default class FloorIsLava extends Phaser.GameObjects.TileSprite {
                 this.playerRef.die();
             });
         }
+        this.isRising = false;
+        this.setVisible(false);
     }
-
+    
+    // Actualizar la posición de la lava
     preUpdate(time, delta) {
-        this.y -= this.riseSpeed * (delta / 1000);
-
         const cam = this.scene.cameras.main;
         this.x = cam.midPoint.x;
+        //Si no está activada, no hacer nada
+        if (!this.isRising) return;
 
+        // Subir la lava
+        this.y -= this.riseSpeed * (delta / 1000);
         this.tilePositionX = cam.scrollX;
+        this.tilePositionX += time * 0.05;
+        this.tilePositionY -= 0.5;
+    }
 
-
-        this.tilePositionX += time * 0.05; 
-
-        this.tilePositionY -= 0.5; 
+    // Iniciar la subida de la lava
+    startLava() {
+        this.isRising = true;
+        this.setVisible(true);
     }
 }
