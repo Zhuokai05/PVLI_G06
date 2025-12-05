@@ -8,6 +8,7 @@ export default class MapDoor extends Door
 
         this.setVisible(true);
         this.setActive(true);
+        this.abrir = true;
     }
 
     cambiarAbrir()
@@ -24,12 +25,14 @@ export default class MapDoor extends Door
     abrirPuerta()
     {
         this.disableBody(true, true);  
+        this.setVisible(false);
         console.log("MapDoor abierta y desactivada");
     }
 
     cerrarPuerta()
     {
         this.enableBody(false, this.x, this.y, true, true);
+        this.setVisible(true);
         console.log("MapDoor cerrada y reactivada");
     }
 }

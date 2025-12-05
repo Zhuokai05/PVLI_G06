@@ -14,6 +14,9 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "#Ira": {
+            "scaleInDock": 1
+        },
         "C:/assets/Maps/Ira.tsx": {
             "scaleInDock": 1
         },
@@ -29,7 +32,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 5128,
-                "y": 3992
+                "y": 3984
             }
         },
         "iraboss.json#Ira": {
@@ -39,23 +42,24 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 0.125,
+            "scale": 0.33,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 5172,
-                "y": 5520
+                "x": 19243.939393939392,
+                "y": 1148.4848484848485
             }
         },
         "map.json#Ira": {
             "dynamicWrapping": false,
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "map2.json": {
             "scale": 0.0625,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 5128,
-                "y": 3992
+                "y": 3984
             }
         },
         "map2.json#Ira": {
@@ -65,8 +69,8 @@
             "scale": 0.015625,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 30368,
-                "y": 6528
+                "x": 35168,
+                "y": 16000
             }
         },
         "mapa3.json#Ira": {
@@ -90,10 +94,10 @@
     "project": "mapa1.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "mapa3.json",
         "Ira.tsx",
         "iraboss.json",
         "map2.json",
-        "mapa3.json",
         "map.json"
     ],
     "tileset.embedInMap": true,

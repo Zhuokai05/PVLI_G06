@@ -2,6 +2,7 @@ import Player from '../player/Player.js';
 import InputManager from '../managers/InputManager.js';
 import BossFear from '../enemy/Boss/BossFear.js';
 import BossAngry from '../enemy/Boss/BossAngry.js';
+import BossSad from '../enemy/Boss/BossSad.js';
 import BossTutorial from '../enemy/Boss/BossTutorial.js';
 import FinalBoss from '../enemy/Boss/BossFinal.js';
 import UiManager from '../managers/UiManager.js';
@@ -36,13 +37,17 @@ class BossTestScene extends Phaser.Scene {
         this.enemies = this.physics.add.group();
 
         // Crear boss
-        this.bossFear = new FinalBoss(this, this.cameras.main.width / 2, 400, this.player);
-        this.physics.add.collider(this.bossFear, ground);
-        this.enemies.add(this.bossFear);
+        //this.bossFear = new FinalBoss(this, this.cameras.main.width / 2, 400, this.player);
+        //this.physics.add.collider(this.bossFear, ground);
+        //this.enemies.add(this.bossFear);
 
         //this.bossAngry = new BossAngry(this, this.cameras.main.width / 2, 400, this.player);
         //this.physics.add.collider(this.bossAngry, ground);
         //this.enemies.add(this.bossAngry);
+
+        this.bossSad = new BossSad(this, this.cameras.main.width - 50, 400, this.player);
+        this.physics.add.collider(this.bossSad, ground);
+        this.enemies.add(this.bossSad);
 
         //this.bossTutorial = new BossTutorial(this, this.cameras.main.width - 60, this.cameras.main.height - 150, this.player);
         //this.physics.add.collider(this.bossTutorial, ground);
@@ -50,7 +55,7 @@ class BossTestScene extends Phaser.Scene {
 
         // Configurar tecla ESC para pausa
         this.input.keyboard.on('keydown-ESC', () => {
-            this.scene.pause('BossScene');
+            this.scene.pause('BossTestScene');
             this.scene.launch('Pause', { file: 'BossScene' });
         });
     }
@@ -66,8 +71,12 @@ class BossTestScene extends Phaser.Scene {
             this.bossAngry.update(time, delta);
         }*/
 
-        if (this.bossFear && this.bossFear.active) {
+        /*if (this.bossFear && this.bossFear.active) {
             this.bossFear.update(time, delta);
+        }*/
+
+        if (this.bossSad && this.bossSad.active) {
+            this.bossSad.update(time, delta);
         }
     }
 }

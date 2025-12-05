@@ -70,6 +70,10 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
         // Iniciar animación
         this.play('bossira_idle');
+
+
+        this.setVisible(false);
+        this.setActive(false);
     }
 
     createAnimations() {
@@ -216,12 +220,20 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         console.log('Boss derrotado definitivamente');
-        
+        this.Bossdoors.abrirPuerta();
         this.scene.time.delayedCall(2000, () => {   
             this.scene.scene.stop(); 
             this.scene.scene.launch('Win');
             this.destroy();
         });
     }
-
+    getDoors(iraDoors)  
+    {
+        this.Bossdoors = iraDoors;
+    }
+    setLife()
+    {
+        this.setVisible(true);
+        this.setActive(true);
+    }
 }
