@@ -66,8 +66,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.dashCooldownTimer = 0;
 
         this.meleeAttackDist = 100; //distancia entre el jugador y su hitbox de ataque
-        // this.meleeAttackWidge = 120;
-        // this.meleeAttackHeight = 70;    
+        this.meleeAttackWidge = 120;
+        this.meleeAttackHeight = 70;    
         this.attackCooldown = 300; //el tiempo que debe de pasar tras un ataque para poder atacar otra vez 
         this.attackDuration = 200; //cuanto dura el hitbox de su ataque
         this.isAttacking = false; //si esta atacando
@@ -357,7 +357,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
 
             let offsetX = 0, offsetY = 0;
-            let w = this.meleeAttackWidge ;
+            let w = this.meleeAttackWidge;
             let h = this.meleeAttackHeight * this.attackRangeMultiplier;
 
             //calculamos el offset del hitbox segun la direccion

@@ -6,7 +6,7 @@ export default class AttackRangeOrb extends Orb {
   }
 
   onActivate(player) {
-    this.player.attackRangeMultiplier = 2;
+    this.player.attackRangeMultiplier = 1.5;
     this.player.orbTint = 0xffde21;
     this.player.setTint(player.orbTint);
   }
