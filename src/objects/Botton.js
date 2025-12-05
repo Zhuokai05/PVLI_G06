@@ -5,7 +5,9 @@ export default class Button extends Phaser.Physics.Arcade.Sprite {
 
         this.scene = scene;
         this.color = color;
-        this.door = null; 
+
+        this.door = null;
+        this.show = null;   // <-- Nuevo
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -19,7 +21,15 @@ export default class Button extends Phaser.Physics.Arcade.Sprite {
         this.door = door;
     }
 
+    setShow(show) {
+        this.show = show;
+    }
+
     press() {
+        if (this.show) {
+            this.show.cambio();
+        }
+
         if (!this.door) {
             console.warn("Button: No tiene puerta asignada.");
             return;
@@ -28,17 +38,14 @@ export default class Button extends Phaser.Physics.Arcade.Sprite {
         switch (this.color) {
             case 'rojo':
                 this.door.activarRojo();
-                console.log("Rojo");
                 break;
 
             case 'azul':
                 this.door.activarAzul();
-                console.log("Azul");
                 break;
 
             case 'verde':
                 this.door.activarVerde();
-                console.log("Verde");
                 break;
         }
     }

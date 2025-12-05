@@ -26,7 +26,7 @@ import BossAngry from '../enemy/Boss/BossAngry.js';
 import BossTutorial from '../enemy/Boss/BossTutorial.js';
 import FinalBoss from '../enemy/Boss/BossFinal.js';
 import InvisibleTrigger from '../objects/Trigger.js';
-
+import BossRoom from '../objects/BossRoom.js';
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
         super('TestPlayerScene');
@@ -42,7 +42,10 @@ export default class TestPlayerScene extends Phaser.Scene {
         let layer = map.createLayer('mapa', tileset,0,0);
         layer.setCollisionByProperty({colision : true});
         let obsj = map.getObjectLayer('objetos');
-
+         this.Bossrooms = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+        });
         this.irafloordoors = this.physics.add.group({
             allowGravity: false,
             immovable: true
@@ -242,6 +245,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "finalboss":
                     this.finalboss = new FinalBoss(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
                     break;
+                case "room":
+                this.Bossrooms.add(new BossRoom(this,objeto.x,objeto.y,objeto.width, objeto.height));
+                    break;
+               
 
             }
         })
@@ -366,8 +373,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             cp.playerNearby = true;
             if (cp.prompt) cp.prompt.setVisible(true);
         });
- 
- 
+      
         //event
         this.events.on('resume', () => {
             if (this.player) PlayerDataManager.applyDataToPlayer(this.player);
@@ -660,5 +666,31 @@ if (this.currentDoor && Phaser.Input.Keyboard.JustDown(this.keyE)) {
 
             }
         });
+
+
+         this.Bossrooms.getChildren().forEach(bossRoom => {
+       const inside = this.physics.overlap(this.player, bossRoom);
+        if (inside && !bossRoom.playerInside) {
+        bossRoom.playerInside = true;
+        this.handleBossRoom(bossRoom);
+        } else if (!inside && bossRoom.playerInside) {
+        bossRoom.playerInside = false;
+        this.cameras.main.startFollow(this.player);
+        this.cameras.main.setBounds(-200, 0, 140000, 100000);
+        }
+        });
     }
+    handleBossRoom(bossRoom) {
+    this.cameras.main.stopFollow();
+
+    this.cameras.main.setBounds(
+        bossRoom.x - bossRoom.width / 2, 
+        bossRoom.y - bossRoom.height / 2, 
+        bossRoom.width, 
+        bossRoom.height
+    );
+
+    this.cameras.main.centerOn(bossRoom.x, bossRoom.y);
+
+}
 }
