@@ -37,6 +37,14 @@ export class OrbSelectScene extends Phaser.Scene {
 
         //al abrir el panel salen los slots actualizados
         this.refreshSlots(); 
+
+        
+        this.input.keyboard.on('keydown-ESC', () => {
+            this.scene.resume(this.fromScene); //carga la escena de la que venimos
+            this.scene.stop();
+            PlayerDataManager.saveDataFromPlayer(this.player); //guarda en el player los cambios aplicados  
+        });
+
     }
 
     //fondo transparente
@@ -218,7 +226,14 @@ export class OrbSelectScene extends Phaser.Scene {
             )
             .setScale(1)
             .setDepth(6)
-            .setScale(0.3);
+            .setScale(0.3)
+            .setInteractive({ useHandCursor: true });
+            slotBg.on("pointerdown", () => {
+                let orb = this.equipped[i];
+                if (orb) {
+                    this.selectOrb(orb);
+                }
+            });
 
             this.slotSprites.push(slotBg);
 
@@ -230,7 +245,15 @@ export class OrbSelectScene extends Phaser.Scene {
             )
             .setScale(0.3)
             .setVisible(false)
-            .setDepth(7);
+            .setDepth(7)
+            .setInteractive({ useHandCursor: true }); 
+
+            orbIcon.on("pointerdown", () => { 
+                let orb = this.equipped[i];
+                if (orb) {
+                    this.selectOrb(orb);
+                }
+            });
 
             this.slotOrbSprites.push(orbIcon);
         }
@@ -240,7 +263,7 @@ export class OrbSelectScene extends Phaser.Scene {
     selectOrb(orb) {
         this.selectedOrb = orb;
         this.updateRightPanel();
-        this.refreshOrbGridHighlights();
+        this.refreshOrbGridColors();
     }
 
     // actualizar el panel derecho

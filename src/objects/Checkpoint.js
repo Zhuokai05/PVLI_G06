@@ -55,7 +55,7 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
         });
 
         // --- ZONA DE ACTIVACIÓN ---
-        this.prompt = this.scene.add.text(this.x, this.y - this.displayHeight, 'Presiona E', {
+        this.prompt = this.scene.add.text(this.x, this.y - this.displayHeight,this.activated?'Presiona E para inventario de orbes':'Presiona E para activar checkpoint', {
             font: '16px Arial',
             fill: '#ffffff',
             backgroundColor: 'rgba(0,0,0,0.5)',
@@ -66,11 +66,14 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
         this._keydownHandler = (event) => {
             if ((event.key === 'e' || event.key === 'E') && this.playerNearby) {
                 let player = this.scene.player;
-                if (player) this.activate(player);
-                
-                let fromKey = this.scene.scene.key || null;
-                this.scene.scene.pause(fromKey);
-                this.scene.scene.launch('OrbSelect', { fromScene: fromKey, tPlayer: player });
+                if(this.activated){
+                    let fromKey = this.scene.scene.key || null;
+                    this.scene.scene.pause(fromKey);
+                    this.scene.scene.launch('OrbSelect', { fromScene: fromKey, tPlayer: player });
+                }
+                else {
+                    if (player) this.activate(player);
+                }
             }
         };
 
@@ -79,12 +82,18 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
 
     activate(player) {
         if (this.activated) return;
+       
+        if (this.prompt) {
+            this.prompt.setText("Presiona E para inventario de orbes");
+        }
 
         this.activated = true;
-        this.scene.events.emit('checkpoint_activated', this);
-
         this.play('cp_transition');
-        this.once('animationcomplete', (anim) => {
+      
+        this.once('animationcomplete', (anim) => {    
+
+            this.scene.events.emit('checkpoint_activated', this);
+            
             if (anim.key === 'cp_transition') {
                 this.play('cp_idle_on');
             }
@@ -111,6 +120,11 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
 
     deactivate() {
         if (!this.activated) return;
+
+        if (this.prompt) {
+            this.prompt.setText("Presiona E para activar checkpoint");
+        }
+        
         this.activated = false;
         this.play('cp_idle_off');
         this.clearTint();

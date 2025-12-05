@@ -10,6 +10,7 @@ import MoveSpeedOrb from '../orbs/MoveSpeedOrb.js';
 import DamageOrb from '../orbs/DamageOrb.js';
 import DashOrb from '../orbs/DashOrb.js';
 import RangedOrb from '../orbs/RangedOrb.js';
+import AttackRangeOrb from '../orbs/AttackRangeOrb.js';
 import BasePlatform from '../objects/Platform.js';
 import IcePlatform from '../objects/IcePlatform.js';
 import ShieldOrb from '../orbs/ShieldOrb.js';
@@ -268,6 +269,9 @@ export default class TestPlayerScene extends Phaser.Scene {
          this.orbGroup.add(new DashOrb(this, 1300, 1350));
          this.orbGroup.add(new DamageOrb(this, 1300, 1350));
          this.orbGroup.add(new RangedOrb(this, 1300, 1350));
+        this.orbGroup.add(new ShieldOrb(this, 1500, 1350));
+        this.orbGroup.add(new AttackRangeOrb(this, 1400, 1350));
+        
         //puertas conectadas
         if (this.irabossdoor && this.irabossdoorcontrary) {
             this.irabossdoor.setContrary(this.irabossdoorcontrary);
@@ -416,6 +420,21 @@ export default class TestPlayerScene extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'melee_anim',
+            frames: this.anims.generateFrameNumbers('melee', { start: 0, end: 4 }),
+            frameRate: 30,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'melee_ampliado_anim',
+            frames: this.anims.generateFrameNumbers('melee_Ampliado', { start: 0, end: 4 }),
+            frameRate: 30,
+            repeat: 0
+        });
+
+
         // UI
         this.anims.create({
             key: 'UI_heartbreakAnimation',
@@ -445,12 +464,6 @@ export default class TestPlayerScene extends Phaser.Scene {
             repeat: -1
         });
 
-        this.anims.create({
-            key: 'melee_anim',
-            frames: this.anims.generateFrameNumbers('melee', { start: 0, end: 4 }),
-            frameRate: 30,
-            repeat: 0
-        });
 
         //enemigos voladores
         this.anims.create({

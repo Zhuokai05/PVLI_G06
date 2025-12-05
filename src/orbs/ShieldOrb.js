@@ -7,7 +7,7 @@ export default class ShieldOrb extends Orb {
 
   onActivate(player) {
     this.player.canShield = true;
-    this.player.orbTint = 0x008f39;
+    this.player.orbTint = 0xE0FFFF;
     this.player.setTint(player.orbTint);
   }
 

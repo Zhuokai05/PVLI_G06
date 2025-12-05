@@ -44,6 +44,8 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('orbMoveSpeed', './assets/sprites/UI/Orbes/OrbeHielo.png');
     this.load.image('orbRanged', './assets/sprites/UI/Orbes/orbWings.png');
     this.load.image('orbDash', './assets/sprites/UI/Orbes/orbVoid.png');
+    this.load.image('orbShield', './assets/sprites/UI/Orbes/orbShield.png');
+    this.load.image('orbAttackRange', './assets/sprites/UI/Orbes/orbAttackRange.png');
     this.load.spritesheet('checkpoint', './assets/Escena/checkpointSheet.png', {
             frameWidth: 32,
             frameHeight: 40
@@ -72,6 +74,9 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('plume', 'assets/sprites/Player/Pluma.png');
     this.load.spritesheet('melee', 'assets/sprites/Player/Melee.png',
     {frameWidth: 64,frameHeight: 64});
+        this.load.spritesheet('melee_Ampliado', 'assets/sprites/Player/Melee_Ancho.png',
+    {frameWidth: 128,frameHeight: 64});
+    this.load.image('playerShieldAura', 'assets/sprites/Player/PlayerShieldAura.png');
 
     // UI
     //this.load.image('angelHealth', './assets/UI/Ghost.png');

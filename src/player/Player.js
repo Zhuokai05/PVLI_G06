@@ -60,7 +60,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.speedReduceRatioAtJump = 0.8; //la velocidad que reduce el juagdor durante su salto
 
         this.isDashing = false;
-        this.dashSpeed = 1300; //velocidad del dash
+        this.dashSpeed = 800; //velocidad del dash
         this.dashDuration = 200; //tiempo que dura el dash
         this.dashCooldown = 500; //tiempo que hay que esperar el jugador entre dashes
         this.dashCooldownTimer = 0;
@@ -87,6 +87,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.activeOrbIndex = 0;        // indice del orbe activo (0 o 1)
         this.damageMultiplier = 1.0;    // modificador de daño 
         this.speedMultiplier = 1.0;     //modificador de velocidad
+        this.attackRangeMultiplier = 1.0;    //modificador rango de ataque melee
         this.orbTint = 0xffffff;     //color original del jugador
 
         this.setDepth(5);
@@ -118,6 +119,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             loop: false
         });
 
+        //aura del escudo cuando tiene el escudo activado
+        this.shieldAura = this.scene.add.image(this.x, this.y, 'playerShieldAura')
+            .setDepth(this.depth +1 )           // delante del jugador
+            .setAlpha(0.8)                      // semitransparente
+            .setVisible(false)                  // oculto por defecto
+            .setScale(1.2); 
+            
         this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);   //velocidad maxima
     }
 
@@ -134,6 +142,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 this.performRangeAttack();
             }
             else if (this.canShield && !this.hasShield && this.shieldCooldownTimer <= 0){
+                this.shieldAura.setVisible(true);
                 this.hasShield = true;
                 console.log("escudo activado")
             }
@@ -155,6 +164,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.dashCooldownTimer -= delta;
         this.shieldCooldownTimer -= delta;
         this.rangeAttackCooldownTimer -= delta;
+        
+        //movemos al sprite de escudo
+        if (this.shieldAura) {
+            this.shieldAura.x = this.x;
+            this.shieldAura.y = this.y;
+        }
     }
 
     /**
@@ -179,6 +194,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if(this.hasShield && damage === 1){ // si tiene escudo, bloquea los daños no mortales
                 this.shieldCooldownTimer = this.shieldCooldown;
                 this.hasShield = false;
+                if (this.shieldAura) this.shieldAura.setVisible(false);
                 console.log("daño bloqueado")
                 return;
             }
@@ -294,6 +310,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     
         die() {
             if (this.dead) return;
+            if (this.shieldAura) this.shieldAura.setVisible(false);
             console.log('Intentando cambiar a GameOver scene...');
             this.health = this.maxHealth;
             this.scene.scene.stop();
@@ -341,7 +358,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
             let offsetX = 0, offsetY = 0;
             let w = this.meleeAttackWidge;
-            let h = this.meleeAttackHeight;
+            let h = this.meleeAttackHeight * this.attackRangeMultiplier;
 
             //calculamos el offset del hitbox segun la direccion
             switch (direction) {
@@ -373,20 +390,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 }
             });
 
-            // Destruir bolas de agua del boss si están en el rango del ataque
-            this.scene.physics.overlap(hitbox, this.scene.bossSad.waterBalls, (hitbox, waterBall) => {
-                if (waterBall.isDestructibleByPlayer) {
-                    this.scene.bossSad.destroyWaterBall(waterBall);
-                }
-            });
-
-
             // SPRITE DE ATAQUE MELEE
-            let meleeSprite = this.scene.add.sprite(this.x + offsetX, this.y + offsetY, 'melee');
-            meleeSprite.setDepth(10);
-
-            meleeSprite.play({ key: 'melee_anim', repeat: 0 });
-
+            let meleeSprite ;
+            if(this.attackRangeMultiplier!=1) {
+                meleeSprite = this.scene.add.sprite(this.x + offsetX, this.y + offsetY, 'melee_Ampliado');
+                meleeSprite.setDepth(10);
+                meleeSprite.play({ key: 'melee_ampliado_anim', repeat: 0 });
+            }
+            else{
+                meleeSprite = this.scene.add.sprite(this.x + offsetX, this.y + offsetY, 'melee');
+                meleeSprite.setDepth(10);
+                meleeSprite.play({ key: 'melee_anim', repeat: 0 });
+            }
             // Ajustar rotación / flip
             switch (direction) {
                 case 'right':
@@ -409,6 +424,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                     meleeSprite.setAngle(90);
                 break;
             }
+          
 
             // Destruir hitbox y sprite después de la duración del ataque
             this.safeDelay(this.attackDuration, () => {
