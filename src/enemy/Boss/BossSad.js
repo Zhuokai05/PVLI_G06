@@ -18,9 +18,7 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
         this.setImmovable(true);
 
         // Posicionar en el extremo derecho de la cámara
-        const cam = scene.cameras.main;
-        this.setX(cam.width - 100);
-        this.setY(cam.height / 2);
+     
 
         const spriteWidth = this.displayWidth;
         const spriteHeight = this.displayHeight;
@@ -70,8 +68,9 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
         this.attackCooldown = this.startCooldown;
         this.notdead = true;
 
-
-        
+ this.setVisible(false);
+        this.setActive(false);
+        this.isActivated = false;
     }
 
     setupCollisions() {
@@ -99,11 +98,17 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     }
 
     startRandomState() {
+        if (!this.isActivated) return;
         const randomState = Phaser.Math.RND.pick(this.availableStates);
         this.stateMachine.setState(randomState);
     }
 
     selectNextState() {
+        if (!this.isActivated) {
+            // Si no está activado, volver al estado inactivo
+            this.stateMachine.setState('inactive');
+            return;
+        }
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
     }
@@ -140,6 +145,7 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(damage) {
+          if (!this.isActivated) return;
         this.health -= damage;
         this.setTint(0x0000ff);
         this.scene.time.delayedCall(200, () => this.clearTint());
