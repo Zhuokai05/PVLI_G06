@@ -82,14 +82,16 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
 
     activate(player) {
         if (this.activated) return;
+       
+        if (this.prompt) {
+            this.prompt.setText("Presiona E para inventario de orbes");
+        }
 
+        this.activated = true;
         this.play('cp_transition');
+      
         this.once('animationcomplete', (anim) => {    
-            if (this.prompt) {
-                this.prompt.setText("Presiona E para inventario de orbes");
-            }
 
-            this.activated = true;
             this.scene.events.emit('checkpoint_activated', this);
             
             if (anim.key === 'cp_transition') {
