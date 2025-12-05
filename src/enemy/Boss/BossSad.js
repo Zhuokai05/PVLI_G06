@@ -194,15 +194,6 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     destroyWaterBall(waterBall) {
         if (waterBall && waterBall.active) {
             waterBall.destroy();
-
-            const explosion = this.scene.add.circle(
-                waterBall.x, 
-                waterBall.y, 
-                20, 
-                0x00ffff, 
-                0.5
-            );
-            this.scene.time.delayedCall(200, () => explosion.destroy());
         }
     }
 
