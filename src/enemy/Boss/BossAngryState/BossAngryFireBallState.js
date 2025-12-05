@@ -60,7 +60,7 @@ export default class BossAngryFireBallState extends BaseState {
 
         const colX = Phaser.Math.RND.pick(this.columns);
 
-        let fireball = fireballs.create(colX, this.boss.y - 150, 'fire_ball');
+        let fireball = fireballs.create(colX, this.boss.y - 350, 'fire_ball');
 
         fireball.setScale(1.4);
         fireball.body.allowGravity = false;
