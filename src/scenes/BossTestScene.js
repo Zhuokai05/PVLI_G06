@@ -3,6 +3,7 @@ import InputManager from '../managers/InputManager.js';
 import BossFear from '../enemy/Boss/BossFear.js';
 import BossAngry from '../enemy/Boss/BossAngry.js';
 import BossTutorial from '../enemy/Boss/BossTutorial.js';
+import FinalBoss from '../enemy/Boss/BossFinal.js';
 import UiManager from '../managers/UiManager.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 
@@ -35,7 +36,7 @@ class BossTestScene extends Phaser.Scene {
         this.enemies = this.physics.add.group();
 
         // Crear boss
-        this.bossFear = new BossFear(this, this.cameras.main.width / 2, 400, this.player);
+        this.bossFear = new FinalBoss(this, this.cameras.main.width / 2, 400, this.player);
         this.physics.add.collider(this.bossFear, ground);
         this.enemies.add(this.bossFear);
 
