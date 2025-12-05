@@ -16,6 +16,7 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
         this.visible = true;
     }
 
+    
     accion() {
         if (!this.active) return; 
 
