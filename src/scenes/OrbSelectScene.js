@@ -37,6 +37,14 @@ export class OrbSelectScene extends Phaser.Scene {
 
         //al abrir el panel salen los slots actualizados
         this.refreshSlots(); 
+
+        
+        this.input.keyboard.on('keydown-ESC', () => {
+            this.scene.resume(this.fromScene); //carga la escena de la que venimos
+            this.scene.stop();
+            PlayerDataManager.saveDataFromPlayer(this.player); //guarda en el player los cambios aplicados  
+        });
+
     }
 
     //fondo transparente
@@ -240,7 +248,7 @@ export class OrbSelectScene extends Phaser.Scene {
             .setDepth(7)
             .setInteractive({ useHandCursor: true }); 
 
-            orbIcon.on("pointerdown", () => {
+            orbIcon.on("pointerdown", () => { 
                 let orb = this.equipped[i];
                 if (orb) {
                     this.selectOrb(orb);

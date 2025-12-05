@@ -55,7 +55,7 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
         });
 
         // --- ZONA DE ACTIVACIÓN ---
-        this.prompt = this.scene.add.text(this.x, this.y - this.displayHeight, 'Presiona E', {
+        this.prompt = this.scene.add.text(this.x, this.y - this.displayHeight, 'Presiona E para guardar', {
             font: '16px Arial',
             fill: '#ffffff',
             backgroundColor: 'rgba(0,0,0,0.5)',
@@ -67,10 +67,7 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
             if ((event.key === 'e' || event.key === 'E') && this.playerNearby) {
                 let player = this.scene.player;
                 if (player) this.activate(player);
-                
-                let fromKey = this.scene.scene.key || null;
-                this.scene.scene.pause(fromKey);
-                this.scene.scene.launch('OrbSelect', { fromScene: fromKey, tPlayer: player });
+            
             }
         };
 
@@ -85,6 +82,11 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
 
         this.play('cp_transition');
         this.once('animationcomplete', (anim) => {
+
+            let fromKey = this.scene.scene.key || null;
+            this.scene.scene.pause(fromKey);
+            this.scene.scene.launch('OrbSelect', { fromScene: fromKey, tPlayer: player });
+
             if (anim.key === 'cp_transition') {
                 this.play('cp_idle_on');
             }
