@@ -124,17 +124,17 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
 
                 case "iraranged":
-                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Ira_RangedEnemy'));
+                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Ira_RangedEnemy',0,'Ira_RangedEnemy_Move','Ira_RangedEnemy_Attack','Ira_RangedEnemy_Death','Ira_FlyingEnemy',83));
                     break;
                       case "tristeranged":
-                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Tristeza_RangedEnemy'));
+                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Tristeza_RangedEnemy',0,'Tristeza_RangedEnemy_Move','Tristeza_RangedEnemy_Attack','Tristeza_RangedEnemy_Death','Tristeza_RangedEnemy',83));
                     break;
 
                 case "iraflying":
-                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move','Ira_FlyingEnemy_Attack'));
+                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move','Ira_FlyingEnemy_Attack','Ira_FlyingEnemy_Death','Ira_FlyingEnemy',83));
                     break;
                 case "tristeflying":
-                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move','Tristeza_FlyingEnemy_Attack'));
+                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move','Tristeza_FlyingEnemy_Attack','Tristeza_FlyingEnemy_Death','Tristeza_FlyingEnemy',83));
                     break;
 
 
@@ -256,7 +256,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             }
         })
         const distanciaSegura = 800;
-        this.lava = new FloorIsLava(this, this.player.y + distanciaSegura, 15, this.player);
+        // this.lava = new FloorIsLava(this, this.player.y + distanciaSegura, 15, this.player);
 
     //    //ira
     //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',
