@@ -10,10 +10,16 @@ import MoveSpeedOrb from '../orbs/MoveSpeedOrb.js';
 import DamageOrb from '../orbs/DamageOrb.js';
 import DashOrb from '../orbs/DashOrb.js';
 import RangedOrb from '../orbs/RangedOrb.js';
+import BasePlatform from '../objects/Platform.js';
+import IcePlatform from '../objects/IcePlatform.js';
 import ShieldOrb from '../orbs/ShieldOrb.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 import Checkpoint from '../objects/Checkpoint.js';
-
+import DoorBoss from '../objects/BossDoor.js';
+import SadnessBossDoor from '../objects/SadnessBossDoor.js';
+import Button from '../objects/Botton.js';
+import MapDoor from '../objects/MapDoor.js';
+import FinalBossDoor from '../objects/FinalBossDoor.js';
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
@@ -34,6 +40,17 @@ export default class TestPlayerScene extends Phaser.Scene {
             allowGravity: false,
             immovable: true
         });
+
+          this.iraPlatforms = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+        });
+         this.icePlatforms = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+        });
+
+
         this.doors = this.physics.add.group({
             allowGravity: false,
             immovable: true
@@ -144,10 +161,20 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "rangeorb":
                     this.orbGroup.add(new RangedOrb(this, objeto.x, objeto.y));
                     break;
-    
+                case "rangeorb":
+                    this.orbGroup.add(new ShieldOrb(this, objeto.x, objeto.y));
+                    break;
                 //checkPoint
                 case "checkpoint":
                     this.checkpoints.add(new Checkpoint(this, objeto.x, objeto.y));
+                    break;
+
+                //platforms 
+                case "platform":
+                    this.iraPlatforms.add(new BasePlatform(this, objeto.x, objeto.y,'platform'));
+                    break;
+                case "iceplatform":
+                    this.icePlatforms.add(new IcePlatform(this, objeto.x, objeto.y, 'iceplatform'));
                     break;
     
             }
@@ -213,6 +240,8 @@ export default class TestPlayerScene extends Phaser.Scene {
  
         // Colliders y camaras
         this.physics.add.collider(this.player, layer);
+        this.physics.add.collider(this.player, this.icePlatforms);
+          this.physics.add.collider(this.player, this.iraPlatforms);
         this.physics.add.collider(layer, this.enemies);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setFollowOffset(0, 200); 

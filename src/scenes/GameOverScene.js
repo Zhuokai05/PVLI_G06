@@ -68,7 +68,7 @@ class GameOverScene extends Phaser.Scene {
 
     respawnPlayer() {
         // volvemos al nivel donde murió (TestPlayerScene)
-        let level = this.scene.get("TestPlayerScene");
+        let level = this.scene.get("Loading");
 
         // restauramos la posición del checkpoint
         let pos = level.respawnPoint;

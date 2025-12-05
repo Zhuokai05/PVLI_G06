@@ -92,13 +92,15 @@ export class PreloadScene extends Phaser.Scene
     // Menus
     this.load.image('defeat_background', './assets/sprites/Menu/Fondo_derrota.png');
     this.load.image('defeat_player', './assets/sprites/Menu/Player_derrota.png');
+    this.load.image('loading', './assets/sprites/Menu/carga.png');
 
     // Tiles
     this.load.spritesheet('tiles', './assets/sprites/Escena/tiles.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-
+   this.load.image('iceplatform', './assets/sprites/Escena/iceplatform.png');
+   this.load.image('platform', './assets/sprites/Escena/platform.png');
    this.load.tilemapTiledJSON("mappy","./assets/Maps/map.json");
 
     // Efecto de sonidos
