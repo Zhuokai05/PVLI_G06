@@ -9,10 +9,12 @@ export default class BossAngryPunchState extends BaseState {
         this.attackDuration = 500;
         this.cooldownDuration = 500;
 
-        this.fixedSpawnY = 625;
+        this.fixedSpawnY = this.boss.y + this.boss.distanceToFloor;
         
         // Iniciar fase de advertencia
         this.startWarningPhase();
+
+        console.log("puño horizontal")
     }
 
     startWarningPhase() {
@@ -26,10 +28,10 @@ export default class BossAngryPunchState extends BaseState {
         // Rectangulo horizontal de advertencia
         const warningHeight = 120;
         this.spawnY = this.fixedSpawnY;
-        this.spawnX = this.attackDirection === 'left' ? 0 : cam.width;
+        this.spawnX = this.attackDirection === 'left' ? this.boss.x - cam.width/2 : this.boss.x + cam.width/2;
 
         this.warningRect = scene.add.rectangle(
-            cam.width / 2,   
+            this.boss.x,   
             this.spawnY,            
             cam.width,          
             warningHeight,       
@@ -74,14 +76,15 @@ export default class BossAngryPunchState extends BaseState {
     spawnPunch() {
         const { scene, punches } = this.boss;
         const Xspeed = this.boss.punchXSpeed;
+        const cam = scene.cameras.main;
         let punch;
 
         if (this.attackDirection === 'left') {
-            punch = punches.create(0, this.fixedSpawnY, 'punch');
+            punch = punches.create(this.boss.x -cam.width/2, this.fixedSpawnY, 'punch');
             punch.setVelocityX(Xspeed);
             punch.setAngle(-90);
         } else {
-            punch = punches.create(scene.cameras.main.width, this.fixedSpawnY, 'punch');
+            punch = punches.create(this.boss.x + cam.width/2, this.fixedSpawnY, 'punch');
             punch.setVelocityX(-Xspeed);
             punch.setAngle(90);
         }
@@ -95,11 +98,12 @@ export default class BossAngryPunchState extends BaseState {
     }
 
     cleanupPunch(punch) {
+        
         const scene = this.boss.scene;
         scene.events.on('update', () => {
             if (!punch.active) return;
             const cam = scene.cameras.main;
-            if (punch.x < -200 || punch.x > cam.width + 200 || punch.y > cam.height + 200) {
+            if (punch.x < this.boss.x -200 -cam.width/2 || punch.x > this.boss.x +200 +cam.width/2 || punch.y > this.boss.y + 600) {
                 punch.destroy();
             }
         });

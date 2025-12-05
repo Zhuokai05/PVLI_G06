@@ -10,7 +10,8 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, 'ira_flap_1');
         this.scene = scene;
         this.player = player;
-
+        this.x = x;
+        this.y = y;
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.setScale(4.3);
@@ -23,6 +24,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.body.setOffset(spriteWidth / 9.9, spriteHeight / 12);
         this.body.moves = false;
 
+        this.distanceToFloor = 370;
         // Crear animaciones
         this.createAnimations();
 
@@ -61,9 +63,6 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         
         // Iniciar con cooldown inicial
         this.stateMachine.setState('cooldown');
-
-        // Colisiones
-        this.setupCollisions();
 
         this.attackCooldown = this.startCooldown;
         this.notdead = true;
@@ -235,5 +234,6 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     {
         this.setVisible(true);
         this.setActive(true);
+        this.setupCollisions();
     }
 }

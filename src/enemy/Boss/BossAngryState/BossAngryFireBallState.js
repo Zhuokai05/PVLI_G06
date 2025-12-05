@@ -5,17 +5,29 @@ export default class BossAngryFireBallState extends BaseState {
         this.boss = context;
         this.stateTime = 0;
         this.currentPhase = 'attack'; // attack -> cooldown
-        this.attackDuration = 1000;
-        this.cooldownDuration = 500;
         
-        this.spawnFireballs(3);
+        this.timeSinceLastSpawn = 0;
+        this.attackDuration = 6000;
+        this.cooldownDuration = 500;
+        this.spawnInterval = 300;
+        this.columnSpread = 100;
+        this.numColumns = 8;    
+        
+        this.columns = this.generateColumns();
+
+        console.log("lanza bolas")
     }
 
     execute(context, time, delta) {
         this.stateTime += delta;
-
+        this.timeSinceLastSpawn += delta;
+        
         switch (this.currentPhase) {
             case 'attack':
+                if (this.timeSinceLastSpawn >= this.spawnInterval) {
+                    this.spawnColumnFireballs();
+                    this.timeSinceLastSpawn = 0;
+                }
                 if (this.stateTime >= this.attackDuration) {
                     this.startCooldownPhase();
                 }
@@ -29,29 +41,42 @@ export default class BossAngryFireBallState extends BaseState {
         }
     }
 
-    spawnFireballs(count) {
-        const { scene, fireballs } = this.boss;
-        const camWidth = scene.cameras.main.width;
+    generateColumns() {
+        const columns = [];
+        const half = Math.floor(this.numColumns / 2);
 
-        for (let i = 0; i < count; i++) {
-            const x = Phaser.Math.Between(100, camWidth - 100);
-            const fireball = fireballs.create(x, 0, 'fire_ball');
-
-            fireball.setScale(1.5);
-            fireball.setVelocityY(this.boss.fireballSpeed);
-            fireball.body.allowGravity = false;
-            fireball.setCollideWorldBounds(false);
-
-            this.cleanupFireball(fireball);
+        for (let i = 0; i < this.numColumns; i++) {
+            let offset = (i - half) * this.columnSpread;
+            let x = this.boss.x + offset;
+            columns.push(x);
         }
+
+        return columns;
     }
 
-    cleanupFireball(fireball) {
+    spawnColumnFireballs() {
         const scene = this.boss.scene;
+        let fireballs = this.boss.fireballs;
+
+        const colX = Phaser.Math.RND.pick(this.columns);
+
+        let fireball = fireballs.create(colX, this.boss.y - 150, 'fire_ball');
+
+        fireball.setScale(1.4);
+        fireball.body.allowGravity = false;
+        fireball.setVelocityY(this.boss.fireballSpeed);
+        fireball.setCollideWorldBounds(false);
+
+        this.autoCleanup(fireball);
+    }
+
+     autoCleanup(fireball) {
+        const scene = this.boss.scene;
+
         scene.events.on('update', () => {
             if (!fireball.active) return;
-            const cam = scene.cameras.main;
-            if (fireball.x < -200 || fireball.x > cam.width + 200 || fireball.y > cam.height + 200) {
+
+            if (fireball.y > this.boss.y + this.distanceToFloor + 150) {
                 fireball.destroy();
             }
         });

@@ -10,6 +10,7 @@ export default class BossAngryPunchPlatformState extends BaseState {
         this.cooldownDuration = 500;
         
         this.startWarningPhase();
+             console.log("puño vertical")
     }
 
     startWarningPhase() {
@@ -23,7 +24,7 @@ export default class BossAngryPunchPlatformState extends BaseState {
         
         this.warningRect = scene.add.rectangle(
             this.spawnX,
-            cam.height / 2,
+            this.boss.y + this.boss.distanceToFloor,
             warningWidth,
             cam.height,
             0xff0000,
@@ -67,7 +68,7 @@ export default class BossAngryPunchPlatformState extends BaseState {
         const { scene, punches } = this.boss;
         const Yspeed = this.boss.punchYSpeed;
         
-        const punch = punches.create(this.spawnX, 0, 'punch');
+        const punch = punches.create(this.spawnX, this.boss.y -200, 'punch');
         punch.setVelocityY(Yspeed);
         punch.setScale(2.5);
         punch.body.allowGravity = false;
@@ -81,7 +82,7 @@ export default class BossAngryPunchPlatformState extends BaseState {
         scene.events.on('update', () => {
             if (!punch.active) return;
             const cam = scene.cameras.main;
-            if (punch.y > cam.height + 200) {
+            if (punch.y > this.boss.y + this.boss.distanceToFloor + 150) {
                 punch.destroy();
             }
         });
