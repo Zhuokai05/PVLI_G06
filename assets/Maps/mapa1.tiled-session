@@ -90,11 +90,11 @@
     "project": "mapa1.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "Ira.tsx",
         "iraboss.json",
         "map2.json",
         "mapa3.json",
-        "map.json",
-        "Ira.tsx"
+        "map.json"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFormat": "tsx"
