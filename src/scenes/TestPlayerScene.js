@@ -102,6 +102,9 @@ export default class TestPlayerScene extends Phaser.Scene {
                 
                 //Enemigos
     
+                case "ira":
+                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry'));
+                    break;
                 case "tristeza":
                     this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad'));
                     break;
@@ -114,16 +117,26 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
 
-                case "ranged":
-                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                case "iraranged":
+                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Ira_RangedEnemy'));
+                    break;
+                      case "tristeranged":
+                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Tristeza_RangedEnemy'));
                     break;
 
-                case "flying":
+                case "iraflying":
                     this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move','Ira_FlyingEnemy_Attack'));
                     break;
+                case "tristeflying":
+                    this.enemies.add(new FlyingRangedEnemy(this, objeto.x, objeto.y, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move','Tristeza_FlyingEnemy_Attack'));
+                    break;
 
-                case "mini":
+
+                case "iramine":
                     this.enemies.add(new MineEnemy(this, objeto.x, objeto.y, 'Ira_MineEnemy',0 ,'Ira_MineEnemy_Move','Ira_MineEnemy_Attack'));
+                    break;
+                case "tristemine":
+                    this.enemies.add(new MineEnemy(this, objeto.x, objeto.y, 'Tristeza_MineEnemy',0 ,'Tristeza_MineEnemy_Move','Tristeza_MineEnemy_Attack'));
                     break;
 
                 case "trap":
