@@ -234,6 +234,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                //bosses 
                 case "iraboss":
                     this.iraboss = new BossAngry(this, objeto.x, objeto.y, this.player) ;
+                    this.enemies.add(this.iraboss);
                     break;
                 case "tristeboss":
                     this.tristeboss = new BossSad(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
