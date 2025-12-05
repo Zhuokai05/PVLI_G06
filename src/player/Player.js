@@ -69,7 +69,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.meleeAttackWidge = 120;
         this.meleeAttackHeight = 70;    
         this.attackCooldown = 300; //el tiempo que debe de pasar tras un ataque para poder atacar otra vez 
-        this.attackDuration = 100; //cuanto dura el hitbox de su ataque
+        this.attackDuration = 200; //cuanto dura el hitbox de su ataque
         this.isAttacking = false; //si esta atacando
 
         this.rangeAttackDuration = 3000; //en cuanto tiempo se destruye el projectile invocado
@@ -373,8 +373,48 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 }
             });
 
-            //destruir el hitbox tras attackduration
-            this.safeDelay(this.attackDuration, () => hitbox.destroy());
+            // Destruir bolas de agua del boss si están en el rango del ataque
+            this.scene.physics.overlap(hitbox, this.scene.bossSad.waterBalls, (hitbox, waterBall) => {
+                if (waterBall.isDestructibleByPlayer) {
+                    this.scene.bossSad.destroyWaterBall(waterBall);
+                }
+            });
+
+
+            // SPRITE DE ATAQUE MELEE
+            let meleeSprite = this.scene.add.sprite(this.x + offsetX, this.y + offsetY, 'melee');
+            meleeSprite.setDepth(10);
+
+            meleeSprite.play({ key: 'melee_anim', repeat: 0 });
+
+            // Ajustar rotación / flip
+            switch (direction) {
+                case 'right':
+                    meleeSprite.setFlipX(false);
+                    meleeSprite.setAngle(0);
+                break;
+
+                case 'left':
+                    meleeSprite.setFlipX(true);
+                    meleeSprite.setAngle(0);
+                break;
+
+                case 'up':
+                    meleeSprite.setFlipX(false);
+                    meleeSprite.setAngle(-90);
+                break;
+
+                case 'down':
+                    meleeSprite.setFlipX(false);
+                    meleeSprite.setAngle(90);
+                break;
+            }
+
+            // Destruir hitbox y sprite después de la duración del ataque
+            this.safeDelay(this.attackDuration, () => {
+                hitbox.destroy();
+                meleeSprite.destroy();
+            });
         }
 
 
