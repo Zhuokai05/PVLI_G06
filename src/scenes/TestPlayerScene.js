@@ -27,26 +27,6 @@ export default class TestPlayerScene extends Phaser.Scene {
     }
 
     create() {
-         this.anims.create({
-            key: 'cp_idle_off',
-            frames: this.anims.generateFrameNumbers('checkpoint', { start: 0, end: 7 }),
-            frameRate: 8,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'cp_transition',
-            frames: this.anims.generateFrameNumbers('checkpoint', { start: 10, end: 31 }),
-            frameRate: 12,
-            repeat: 0
-        });
-
-        this.anims.create({
-            key: 'cp_idle_on',
-            frames: this.anims.generateFrameNumbers('checkpoint', { start: 32, end: 38 }),
-            frameRate: 8,
-            repeat: -1
-        });
 
         this.inputManager = new InputManager(this);
         this.physics.world.setBounds(-200, 0, 140000, 100000);
@@ -354,6 +334,27 @@ export default class TestPlayerScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 10 }),
             frameRate: 12,
             repeat: 0
+        });
+
+        this.anims.create({
+            key: 'cp_idle_off',
+            frames: this.anims.generateFrameNumbers('checkpoint', { start: 0, end: 7 }),
+            frameRate: 8,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'cp_transition',
+            frames: this.anims.generateFrameNumbers('checkpoint', { start: 10, end: 31 }),
+            frameRate: 12,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'cp_idle_on',
+            frames: this.anims.generateFrameNumbers('checkpoint', { start: 32, end: 38 }),
+            frameRate: 8,
+            repeat: -1
         });
 
         //enemigos voladores
