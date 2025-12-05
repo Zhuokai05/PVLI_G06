@@ -407,6 +407,21 @@ export default class TestPlayerScene extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'melee_anim',
+            frames: this.anims.generateFrameNumbers('melee', { start: 0, end: 4 }),
+            frameRate: 30,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'melee_ampliado_anim',
+            frames: this.anims.generateFrameNumbers('melee_Ampliado', { start: 0, end: 4 }),
+            frameRate: 30,
+            repeat: 0
+        });
+
+
         // UI
         this.anims.create({
             key: 'UI_heartbreakAnimation',
@@ -436,12 +451,6 @@ export default class TestPlayerScene extends Phaser.Scene {
             repeat: -1
         });
 
-        this.anims.create({
-            key: 'melee_anim',
-            frames: this.anims.generateFrameNumbers('melee', { start: 0, end: 4 }),
-            frameRate: 30,
-            repeat: 0
-        });
 
         //enemigos voladores
         this.anims.create({

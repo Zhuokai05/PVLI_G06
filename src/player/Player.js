@@ -66,8 +66,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.dashCooldownTimer = 0;
 
         this.meleeAttackDist = 100; //distancia entre el jugador y su hitbox de ataque
-        this.meleeAttackWidge = 120;
-        this.meleeAttackHeight = 70;    
+        // this.meleeAttackWidge = 120;
+        // this.meleeAttackHeight = 70;    
         this.attackCooldown = 300; //el tiempo que debe de pasar tras un ataque para poder atacar otra vez 
         this.attackDuration = 200; //cuanto dura el hitbox de su ataque
         this.isAttacking = false; //si esta atacando
@@ -391,11 +391,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             });
 
             // SPRITE DE ATAQUE MELEE
-            let meleeSprite = this.scene.add.sprite(this.x + offsetX, this.y + offsetY, 'melee');
-            meleeSprite.setDepth(10);
-
-            meleeSprite.play({ key: 'melee_anim', repeat: 0 });
-
+            let meleeSprite ;
+            if(this.attackRangeMultiplier!=1) {
+                meleeSprite = this.scene.add.sprite(this.x + offsetX, this.y + offsetY, 'melee_Ampliado');
+                meleeSprite.setDepth(10);
+                meleeSprite.play({ key: 'melee_ampliado_anim', repeat: 0 });
+            }
+            else{
+                meleeSprite = this.scene.add.sprite(this.x + offsetX, this.y + offsetY, 'melee');
+                meleeSprite.setDepth(10);
+                meleeSprite.play({ key: 'melee_anim', repeat: 0 });
+            }
             // Ajustar rotación / flip
             switch (direction) {
                 case 'right':
@@ -418,6 +424,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                     meleeSprite.setAngle(90);
                 break;
             }
+          
 
             // Destruir hitbox y sprite después de la duración del ataque
             this.safeDelay(this.attackDuration, () => {
