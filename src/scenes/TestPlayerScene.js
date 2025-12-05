@@ -188,8 +188,6 @@ export default class TestPlayerScene extends Phaser.Scene {
 
     //     this.enemies.add(new RangedEnemy(this, 1500, 1350, 'Ira_RangedEnemy',0 ,'Ira_RangedEnemy_Move','Ira_RangedEnemy_Attack','Ira_RangedEnemy_Death','Ira_FlyingEnemy',83));
 
-
-        
     //     //Tristeza
     //     this.enemies.add(new FlyingRangedEnemy(this, 1900, 1400, 'Tristeza_FlyingEnemy',0,'Tristeza_FlyingEnemy_Move'
     //      ,'Tristeza_FlyingEnemy_Attack','Tristeza_FlyingEnemy_Death','Tristeza_FlyingEnemy',83));
