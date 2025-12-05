@@ -19,7 +19,12 @@ import DoorBoss from '../objects/BossDoor.js';
 import SadnessBossDoor from '../objects/SadnessBossDoor.js';
 import Button from '../objects/Botton.js';
 import MapDoor from '../objects/MapDoor.js';
-import FinalBossDoor from '../objects/FinalBossDoor.js';
+import BossSad from '../enemy/Boss/BossSad.js';
+import BossFear from '../enemy/Boss/BossFear.js';
+import BossAngry from '../enemy/Boss/BossAngry.js';
+import BossTutorial from '../enemy/Boss/BossTutorial.js';
+import FinalBoss from '../enemy/Boss/BossFinal.js';
+import InvisibleTrigger from '../objects/Trigger.js';
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
@@ -37,7 +42,19 @@ export default class TestPlayerScene extends Phaser.Scene {
         layer.setCollisionByProperty({colision : true});
         let obsj = map.getObjectLayer('objetos');
 
-        this.floordoors = this.physics.add.group({
+        this.irafloordoors = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+        });
+         this.icefloordoors = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+        });
+         this.icebossdoors = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+        });
+         this.irabossdoors = this.physics.add.group({
             allowGravity: false,
             immovable: true
         });
@@ -115,17 +132,26 @@ export default class TestPlayerScene extends Phaser.Scene {
     
     
                 //puertas
-                case "door":
-                    this.floordoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                case "iradoor":
+                    this.irafloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    break;
+                case "icedoor":
+                    this.icefloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    break;
+                    case "irabossdoor":
+                    this.irabossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    break;
+                case "icebossdoor":
+                    this.icebossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
                 case "bossdoor":
-                    this.irabossdoor = new DoorBoss(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    this.irabossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertaira') ;
                     break;
                 case "bossdoorcontrary":
-                    this.irabossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    this.irabossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertaira') ;
                     break;
                 case "bossdoorexit":
-                    this.irabossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    this.irabossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertaira') ;
                     break;
                 case "sadnessbossdoor":
                     this.tristebossdoor = new SadnessBossDoor(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
@@ -147,7 +173,16 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "bluebutton":
                     this.blueButton = new Button(this, objeto.x, objeto.y, 'basicEnemyHappy','azul') ;
                     break;
-    
+
+                //triggers
+
+                case "iratrigger":
+                    this.iratrigger = new InvisibleTrigger(this, objeto.x, objeto.y) ;
+                   
+                    break;
+                case "icetrigger":
+                    this.icetrigger = new InvisibleTrigger(this, objeto.x, objeto.y) ;
+                    break;
                 //orbes 
                 case "speedorb":
                     this.orbGroup.add(new MoveSpeedOrb(this, objeto.x, objeto.y));
@@ -177,7 +212,23 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "iceplatform":
                     this.icePlatforms.add(new IcePlatform(this, objeto.x, objeto.y, 'iceplatform'));
                     break;
-    
+               //bosses 
+                case "iraboss":
+                    this.iraboss = new BossAngry(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    break;
+                case "tristeboss":
+                    this.tristeboss = new BossSad(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    break;
+                case "miedoboss":
+                    this.miedoboss = new BossFear(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    break;
+                case "tutoboss":
+                    this.tutoboss = new BossTutorial(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    break;
+                case "finalboss":
+                    this.finalboss = new FinalBoss(this, objeto.x, objeto.y, 'basicEnemyHappy') ;
+                    break;
+
             }
         })
 
@@ -232,6 +283,25 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.tristebossdoorcontrary) this.doors.add(this.tristebossdoorcontrary);
         if (this.tristebossdoorexit) this.doors.add(this.tristebossdoorexit);
         
+
+    //bossdoors y triggers
+      
+
+    this.irabossdoors.getChildren().forEach(door => {          
+          door.abrirPuerta();         
+      });
+       if (this.iratrigger ) this.iratrigger.getDoors(this.irabossdoors);
+        if (this.iratrigger  && this.iraboss) this.iratrigger.getBoss(this.iraboss);
+
+
+       this.icebossdoors.getChildren().forEach(door => {          
+          door.abrirPuerta();         
+      });
+       if (this.icetrigger ) this.icetrigger.getDoors(this.icebossdoors);
+           
+        
+
+    //mapdoors
         
         //ui        
         this.uiManager = new UiManager(this, this.player);
@@ -239,8 +309,9 @@ export default class TestPlayerScene extends Phaser.Scene {
  
         // Colliders y camaras
         this.physics.add.collider(this.player, layer);
+        this.physics.add.collider(this.player, this.irabossdoors);
         this.physics.add.collider(this.player, this.icePlatforms);
-          this.physics.add.collider(this.player, this.iraPlatforms);
+        this.physics.add.collider(this.player, this.iraPlatforms);
         this.physics.add.collider(layer, this.enemies);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setFollowOffset(0, 200); 
@@ -262,6 +333,10 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.redButton, () => {
             if (Phaser.Input.Keyboard.JustDown(this.keyE)) this.redButton.press();
         });
+        this.physics.add.overlap(this.player, this.iratrigger, () => {
+            this.iratrigger.llamar();
+        });
+       
         
         this.physics.add.overlap(this.player, this.blueButton, () => {
             if (Phaser.Input.Keyboard.JustDown(this.keyE)) this.blueButton.press();
@@ -503,23 +578,47 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.enemies.getChildren().forEach(enemy => {
             enemy.update(time, delta);
         });
-            
-        if (this.currentDoor) {
-            if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-                this.currentDoor.abrirPuerta();
-            }
-        } else {
-            // Si no hay overlap, limpiar para evitar teleports fantasmas
-            this.currentDoor = null;
+
+           if (this.tutoboss && this.tutoboss.active) {
+            this.tutoboss.update(time, delta);
         }
 
+        if (this.iraboss && this.iraboss.active) {
+            this.iraboss.update(time, delta);
+        }
 
-        // CHECKPOINTS: manejar varios a la vez
+        if (this.miedoboss && this.miedoboss.active) {
+            this.miedoboss.update(time, delta);
+        }
+         if (this.tristeboss && this.tristeboss.active) {
+            this.tristeboss.update(time, delta);
+        }
+        if (this.finalboss && this.finalboss.active) {
+            this.finalboss.update(time, delta);
+        }
+            
+let doorUnderPlayer = null;
+
+this.doors.getChildren().forEach(door => {
+    if (this.physics.overlap(this.player, door)) {
+        doorUnderPlayer = door;
+    }
+});
+
+
+this.currentDoor = doorUnderPlayer;
+
+
+if (this.currentDoor && Phaser.Input.Keyboard.JustDown(this.keyE)) {
+    this.currentDoor.abrirPuerta();
+}
+
+
         this.checkpoints.getChildren().forEach(cp => {
 
             if (this.physics.overlap(this.player, cp)) {
 
-                // El jugador está cerca del checkpoint
+           
                 if (!cp.playerNearby) {
                     cp.playerNearby = true;
                     if (cp.prompt) cp.prompt.setVisible(true);
@@ -527,7 +626,7 @@ export default class TestPlayerScene extends Phaser.Scene {
 
             } else {
 
-                // El jugador se ha alejado del checkpoint
+
                 if (cp.playerNearby) {
                     cp.playerNearby = false;
                     if (cp.prompt) cp.prompt.setVisible(false);
