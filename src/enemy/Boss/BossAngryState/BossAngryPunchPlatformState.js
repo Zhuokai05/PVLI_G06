@@ -68,7 +68,7 @@ export default class BossAngryPunchPlatformState extends BaseState {
         const { scene, punches } = this.boss;
         const Yspeed = this.boss.punchYSpeed;
         
-        const punch = punches.create(this.spawnX, this.boss.y -200, 'punch');
+        const punch = punches.create(this.spawnX, this.boss.y - 300, 'punch');
         punch.setVelocityY(Yspeed);
         punch.setScale(2.5);
         punch.body.allowGravity = false;
