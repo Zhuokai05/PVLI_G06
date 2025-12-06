@@ -5,7 +5,7 @@ export default class Button extends Phaser.Physics.Arcade.Sprite {
 
         this.scene = scene;
         this.color = color;
-
+        this.pressedText = 'closedbutton';
         this.door = null;
         this.show = null;   // <-- Nuevo
 
@@ -35,6 +35,8 @@ export default class Button extends Phaser.Physics.Arcade.Sprite {
             return;
         }
 
+        this.setTexture(this.pressedText);
+        
         switch (this.color) {
             case 'rojo':
                 this.door.activarRojo();

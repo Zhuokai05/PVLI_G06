@@ -120,12 +120,27 @@ export class PreloadScene extends Phaser.Scene
             frameHeight: 32
         });
    this.load.image('iceplatform', './assets/sprites/Escena/iceplatform.png');
-    this.load.image('puertaira', './assets/sprites/Escena/PuertaIra.png');
-    this.load.image('puertatriste', './assets/sprites/Escena/Puertatristeza.png');
+   this.load.image('puertaira', './assets/sprites/Escena/PuertaIra.png');
+   this.load.image('puertatriste', './assets/sprites/Escena/Puertatristeza.png');
+   this.load.image('puertamiedo', './assets/sprites/Escena/Puertamiedo.png');
    this.load.image('platform', './assets/sprites/Escena/platform.png');
-   this.load.tilemapTiledJSON("mappy","./assets/Maps/map.json");
-   //this.load.iamge('trap', '');
 
+   //buttons
+   this.load.image('rbutton', './assets/sprites/Escena/rbutton1.png');
+   this.load.image('bbutton', './assets/sprites/Escena/bbutton1.png');
+   this.load.image('gbutton', './assets/sprites/Escena/ybutton1.png');
+   this.load.image('closedbutton', './assets/sprites/Escena/Closedbutton1.png');
+   //shows   
+  this.load.image('bshowA', './assets/sprites/Escena/Boton_Apagado_1.png');
+  this.load.image('rshowA', './assets/sprites/Escena/Boton_Apagado_2.png');
+  this.load.image('gshowA', './assets/sprites/Escena/Boton_Apagado_3.png');
+  this.load.image('bshowE', './assets/sprites/Escena/Boton_Encendido_1.png');
+  this.load.image('rshowE', './assets/sprites/Escena/Boton_Encendido_2.png');
+  this.load.image('gshowE', './assets/sprites/Escena/Boton_Encendido_3.png');
+
+
+
+ this.load.tilemapTiledJSON("mappy","./assets/Maps/map.json");
     // Efecto de sonidos
     this.load.audio('jump_sound', './assets/Sounds/Player/jump.mp3');
     this.load.audio('damage_sound', './assets/Sounds/Player/take_damage.mp3');
