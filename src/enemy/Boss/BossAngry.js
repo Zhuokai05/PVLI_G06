@@ -8,7 +8,7 @@ import PlayerDataManager from '../../managers/PlayerDataManager.js';
 export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {
         // Cambiar la key inicial a uno de los frames
-        super(scene, x, y, 'ira_flap_1');
+        super(scene, x, y, 'IraSheet', 0);
         this.scene = scene;
         this.player = player;
         this.x = x;
@@ -22,7 +22,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         const spriteWidth = this.displayWidth;
         const spriteHeight = this.displayHeight;
         this.body.setSize(spriteWidth / 35, spriteHeight / 35);
-        this.body.setOffset(spriteWidth / 9.9, spriteHeight / 12);
+        this.body.setOffset(spriteWidth / 9.9, spriteHeight / 10.5);
         this.body.moves = false;
 
         this.distanceToFloor = 250;
@@ -92,30 +92,19 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     }
 
     createAnimations() {
-        // Animación idle con el ciclo específico: ira1 -> ira2 -> ira3 -> ira4 -> ira3 -> ira2 -> ira1 -> ira2...
+        // Animación IDLE
         this.scene.anims.create({
             key: 'bossira_idle',
-            frames: [
-                { key: 'ira_flap_1' },
-                { key: 'ira_flap_2' },
-                { key: 'ira_flap_3' },
-                { key: 'ira_flap_4' },
-                { key: 'ira_flap_3' },
-                { key: 'ira_flap_2' }
-            ],
+            // Usamos la key que cargaste en el preload ('IraSheet')
+            frames: this.scene.anims.generateFrameNumbers('IraSheet', { start: 0, end: 5 }),
             frameRate: 8,
             repeat: -1
         });
 
-        // Animación de ataque 
+        // Animación ATAQUE (Ejemplo con frames específicos salteados)
         this.scene.anims.create({
             key: 'bossira_attack',
-            frames: [
-                { key: 'ira_flap_4' },
-                { key: 'ira_flap_3' },
-                { key: 'ira_flap_2' },
-                { key: 'ira_flap_1' }
-            ],
+            frames: this.scene.anims.generateFrameNumbers('IraSheet', { frames: [3, 4, 5, 0] }),
             frameRate: 12,
             repeat: 0
         });
@@ -242,20 +231,20 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         console.log('Boss derrotado definitivamente');
-       this.Bossdoors.getChildren().forEach(door => {
+        this.Bossdoors.getChildren().forEach(door => {
             if (door.abrirPuerta) {
                 door.abrirPuerta();
             }
         });
-       
+
         this.floors.getChildren().forEach(floor => {
             if (floor.abrirPuerta) {
                 floor.abrirPuerta();
             }
         });
-       
-    
-   
+
+
+
         PlayerDataManager.killBoss('anger');
 
         /*console.log('BossSad derrotado definitivamente');
@@ -266,8 +255,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.emit('bossDefeated');
 
     }
-   getDoors(iraDoors, iraFloors)  
-    { 
+    getDoors(iraDoors, iraFloors) {
         this.Bossdoors = iraDoors;
         this.floors = iraFloors;
     }

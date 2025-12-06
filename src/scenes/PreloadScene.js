@@ -1,7 +1,5 @@
-export class PreloadScene extends Phaser.Scene 
-{
-  preload() 
-  {
+export class PreloadScene extends Phaser.Scene {
+  preload() {
     //imagenes  y sprites
     this.load.image('ground', './assets/sprites/Escena/Plataforma_Ira.png');
     this.load.image('background', './assets/sprites/Menu/logo.png');
@@ -20,23 +18,23 @@ export class PreloadScene extends Phaser.Scene
     // this.load.image('rangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/RangedEnemyPlaceHolder.png');
 
     this.load.spritesheet('Ira_RangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/Ira_RangedEnemy.png',
-    {frameWidth: 160,frameHeight: 128});
+      { frameWidth: 160, frameHeight: 128 });
     this.load.spritesheet('Tristeza_RangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/Tristeza_RangedEnemy.png',
-    {frameWidth: 160,frameHeight: 128});
+      { frameWidth: 160, frameHeight: 128 });
 
 
-    
+
     //enemigos voladores
     this.load.spritesheet('Ira_FlyingEnemy', './assets/sprites/Enemigos/Enemigos_voladores/Ira_FlyingEnemy.png',
-    {frameWidth: 64,frameHeight: 64});
+      { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('Tristeza_FlyingEnemy', './assets/sprites/Enemigos/Enemigos_voladores/Tristeza_FlyingEnemy.png',
-    {frameWidth: 64,frameHeight: 64});
-    
+      { frameWidth: 64, frameHeight: 64 });
+
     //enemigos mina
     this.load.spritesheet('Ira_MineEnemy', './assets/sprites/Enemigos/Enemigos_mina/Ira_MineEnemy.png',
-    {frameWidth: 32,frameHeight: 32});
+      { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('Tristeza_MineEnemy', './assets/sprites/Enemigos/Enemigos_mina/Tristeza_MineEnemy.png',
-    {frameWidth: 32,frameHeight: 32});
+      { frameWidth: 32, frameHeight: 32 });
 
     //Ui
     this.load.image('orbSlot', './assets/sprites/UI/Orbes/OrbSlot.png');
@@ -50,12 +48,12 @@ export class PreloadScene extends Phaser.Scene
     //Objetos de la escena
     this.load.image('lava_tex', './assets/sprites/Escena/Plataforma_Ira.png');
     this.load.spritesheet('checkpoint', './assets/sprites/Escena/checkpointSheet.png', {
-            frameWidth: 32,
-            frameHeight: 40
-        });
+      frameWidth: 32,
+      frameHeight: 40
+    });
 
 
-    
+
 
 
     // Angel espada normal
@@ -72,25 +70,29 @@ export class PreloadScene extends Phaser.Scene
     this.load.image('angel_walk_2', 'assets/sprites/Player/Angel_Inicial_2.png');
     this.load.image('angel_walk_3', 'assets/sprites/Player/Angel_Inicial_3.png');
     this.load.image('angel_jump', 'assets/sprites/Player/Angel_Inicial_Salto.png');
-    
+
     // Objetos angel
     this.load.image('plume', 'assets/sprites/Player/Pluma.png');
     this.load.spritesheet('melee', 'assets/sprites/Player/Melee.png',
-    {frameWidth: 64,frameHeight: 64});
-        this.load.spritesheet('melee_Ampliado', 'assets/sprites/Player/Melee_Ancho.png',
-    {frameWidth: 128,frameHeight: 64});
+      { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('melee_Ampliado', 'assets/sprites/Player/Melee_Ancho.png',
+      { frameWidth: 128, frameHeight: 64 });
     this.load.image('playerShieldAura', 'assets/sprites/Player/PlayerShieldAura.png');
 
     // UI
     //this.load.image('angelHealth', './assets/UI/Ghost.png');
     this.load.spritesheet('heartbreak', './assets/sprites/UI/heartbreak.png',
-    {frameWidth: 25,frameHeight: 25});
+      { frameWidth: 25, frameHeight: 25 });
     this.load.image('boss_tracker_base', './assets/sprites/UI/BossTracker/BossesSlots.png');
     this.load.image('piece_anger', './assets/sprites/UI/BossTracker/AngerPiece.png');
     this.load.image('piece_sadness', './assets/sprites/UI/BossTracker/SadnessPiece.png');
     this.load.image('piece_fear', './assets/sprites/UI/BossTracker/FearPiece.png');
 
     // Boss
+    this.load.spritesheet('IraSheet', 'assets/sprites/Bosses/IraSheet.png', {
+      frameWidth: 256,
+      frameHeight: 256
+    });
     this.load.image('ira_flap_1', './assets/sprites/Bosses/ira1.png');
     this.load.image('ira_flap_2', './assets/sprites/Bosses/ira2.png');
     this.load.image('ira_flap_3', './assets/sprites/Bosses/ira3.png');
@@ -116,41 +118,40 @@ export class PreloadScene extends Phaser.Scene
 
     // Tiles
     this.load.spritesheet('tiles', './assets/sprites/Escena/tiles.png', {
-            frameWidth: 32,
-            frameHeight: 32
-        });
-   this.load.image('iceplatform', './assets/sprites/Escena/iceplatform.png');
-   this.load.image('puertaira', './assets/sprites/Escena/PuertaIra.png');
-   this.load.image('puertatriste', './assets/sprites/Escena/Puertatristeza.png');
-   this.load.image('puertamiedo', './assets/sprites/Escena/Puertamiedo.png');
-   this.load.image('platform', './assets/sprites/Escena/platform.png');
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    this.load.image('iceplatform', './assets/sprites/Escena/iceplatform.png');
+    this.load.image('puertaira', './assets/sprites/Escena/PuertaIra.png');
+    this.load.image('puertatriste', './assets/sprites/Escena/Puertatristeza.png');
+    this.load.image('puertamiedo', './assets/sprites/Escena/Puertamiedo.png');
+    this.load.image('platform', './assets/sprites/Escena/platform.png');
 
-   //buttons
-   this.load.image('rbutton', './assets/sprites/Escena/rbutton1.png');
-   this.load.image('bbutton', './assets/sprites/Escena/bbutton1.png');
-   this.load.image('gbutton', './assets/sprites/Escena/ybutton1.png');
-   this.load.image('closedbutton', './assets/sprites/Escena/Closedbutton1.png');
-   //shows   
-  this.load.image('bshowA', './assets/sprites/Escena/Boton_Apagado_1.png');
-  this.load.image('rshowA', './assets/sprites/Escena/Boton_Apagado_2.png');
-  this.load.image('gshowA', './assets/sprites/Escena/Boton_Apagado_3.png');
-  this.load.image('bshowE', './assets/sprites/Escena/Boton_Encendido_1.png');
-  this.load.image('rshowE', './assets/sprites/Escena/Boton_Encendido_2.png');
-  this.load.image('gshowE', './assets/sprites/Escena/Boton_Encendido_3.png');
+    //buttons
+    this.load.image('rbutton', './assets/sprites/Escena/rbutton1.png');
+    this.load.image('bbutton', './assets/sprites/Escena/bbutton1.png');
+    this.load.image('gbutton', './assets/sprites/Escena/ybutton1.png');
+    this.load.image('closedbutton', './assets/sprites/Escena/Closedbutton1.png');
+    //shows   
+    this.load.image('bshowA', './assets/sprites/Escena/Boton_Apagado_1.png');
+    this.load.image('rshowA', './assets/sprites/Escena/Boton_Apagado_2.png');
+    this.load.image('gshowA', './assets/sprites/Escena/Boton_Apagado_3.png');
+    this.load.image('bshowE', './assets/sprites/Escena/Boton_Encendido_1.png');
+    this.load.image('rshowE', './assets/sprites/Escena/Boton_Encendido_2.png');
+    this.load.image('gshowE', './assets/sprites/Escena/Boton_Encendido_3.png');
 
 
 
- this.load.tilemapTiledJSON("mappy","./assets/Maps/map.json");
+    this.load.tilemapTiledJSON("mappy", "./assets/Maps/map.json");
     // Efecto de sonidos
     this.load.audio('jump_sound', './assets/Sounds/Player/jump.mp3');
     this.load.audio('damage_sound', './assets/Sounds/Player/take_damage.mp3');
 
   }
 
-  create() 
-  {
+  create() {
     this.scene.stop();
     this.scene.start('MainMenu');
-    
+
   }
 }
