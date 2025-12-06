@@ -7,12 +7,12 @@ import PlayerDataManager from '../../managers/PlayerDataManager.js';
 
 export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {
-        super(scene, x, y, 'tristeza'); 
+        super(scene, x, y, 'tristeza');
         this.scene = scene;
         this.player = player;
         this.x = x;
         this.y = y;
-        
+
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.setScale(3.8);
@@ -25,13 +25,16 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
         this.body.setOffset(spriteWidth / 8.9, spriteHeight / 12);
         this.body.moves = false;
 
+        this.distanceToFloor = 250;
+
         // Stats
         this.phase = 1;
         this.health = 10;
         this.maxHealth = 10;
         this.damage = 1;
-        this.icicleSpeed = 450;
+        this.icicleSpeed = 900;
         this.waterBallSpeed = 200;
+        this.radialSpeed = 400; 
 
         // Cooldown entre ataques
         this.startCooldown = 2000;
@@ -152,10 +155,10 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
     takeDamage(damage) {
         if (!this.isActivated) return;
-        
+
         this.health -= damage;
         this.setTint(0x0000ff); // Azul para tristeza
-        
+
         // Efecto de parpadeo cuando recibe daño
         this.scene.tweens.add({
             targets: this,
@@ -176,7 +179,7 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
     nextPhase() {
         console.log(`BossSad fase actual: ${this.phase}, salud: ${this.health}`);
-        
+
         if (this.phase === 1) {
             console.log('BossSad entra en FASE 2');
             this.phase = 2;
@@ -193,8 +196,8 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
             this.scene.cameras.main.flash(500, 50, 50, 255); // Azul para tristeza
 
             // DEBUG: Añadir texto para verificar
-            this.scene.add.text(400, 300, 'FASE 2', { 
-                fontSize: '48px', 
+            this.scene.add.text(400, 300, 'FASE 2', {
+                fontSize: '48px',
                 fill: '#00ffff',
                 fontStyle: 'bold'
             }).setOrigin(0.5);
@@ -202,10 +205,10 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
             // Esperar y revivir
             this.scene.time.delayedCall(2000, () => {
                 console.log('Reactivar BossSad para fase 2');
-                
+
                 this.setActive(true);
                 this.setVisible(true);
-                
+
                 // Volver a la posición original
                 this.setX(this.x);
                 this.setY(this.y);
@@ -229,7 +232,7 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
                 // Iniciar cooldown antes del primer ataque
                 this.generateNewCooldown();
                 this.stateMachine.setState('cooldown');
-                
+
                 console.log('BossSad fase 2 activado y listo para atacar');
             });
         } else {
@@ -248,7 +251,7 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         console.log('BossSad muere');
-        
+
         // Asegúrate de que las puertas y pisos existen
         if (this.Bossdoors) {
             console.log('Abriendo puertas del BossSad');
@@ -258,7 +261,7 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
                 }
             });
         }
-       
+
         if (this.floors) {
             console.log('Abriendo pisos del BossSad');
             this.floors.getChildren().forEach(floor => {
@@ -267,31 +270,31 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
                 }
             });
         }
-       
+
         PlayerDataManager.killBoss('sadness');
         this.scene.events.emit('bossDefeated');
-        
+
         console.log('BossSad eliminado del registro');
     }
-    
-    getDoors(iceDoors, iceFloors) { 
+
+    getDoors(iceDoors, iceFloors) {
         this.Bossdoors = iceDoors;
         this.floors = iceFloors;
         console.log('Puertas y pisos asignados a BossSad');
     }
-    
+
     setLife() {
         console.log('Activando BossSad');
         this.setVisible(true);
         this.setActive(true);
         this.isActivated = true;
-        
+
         this.setupCollisions();
 
         // Iniciar cooldown antes del primer ataque
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
-        
+
         console.log('BossSad activado, vida:', this.health);
     }
 }

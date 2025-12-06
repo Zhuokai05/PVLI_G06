@@ -5,10 +5,12 @@ export default class BossSadRadialState extends BaseState {
         this.boss = context;
         this.stateTime = 0;
         this.currentPhase = 'attack'; // attack -> cooldown
-        this.attackDuration = 800;
-        this.cooldownDuration = 500;
+        this.attackDuration = 900;
+        this.cooldownDuration = 1500;
         
-        this.spawnRadialIcicles(7); // 7 carámbanos en semicírculo
+        this.spawnRadialIcicles(12); // 12 carámbanos para mejor cobertura
+        
+        console.log("Ataque radial");
     }
 
     execute(context, time, delta) {
@@ -31,47 +33,79 @@ export default class BossSadRadialState extends BaseState {
 
     spawnRadialIcicles(count) {
         const { scene, radialIcicles } = this.boss;
-        const cam = scene.cameras.main;
         
-        // Posición de lanzamiento: mitad en Y, extremo derecho
-        const startX = cam.width;
-        const startY = cam.height / 2;
+        // Posición de lanzamiento desde el boss
+        const startX = this.boss.x;
+        const startY = this.boss.y - 50;
+        const speed = this.boss.radialSpeed || 300;
         
-        // Ángulo de dispersión (180 grados = semicírculo)
-        const angleRange = 180;
-        const angleStep = angleRange / (count - 1);
-        const startAngle = -90; // Empezar desde arriba
+        // Ángulo de dispersión (360 grados = círculo completo)
+        const angleStep = (Math.PI * 2) / count;
         
         for (let i = 0; i < count; i++) {
-            const angle = Phaser.Math.DegToRad(startAngle + (angleStep * i));
-            const speed = 400;
+            const angle = i * angleStep;
             
-            const velocityX = -Math.cos(angle) * speed;
+            // Calcular dirección
+            const velocityX = Math.cos(angle) * speed;
             const velocityY = Math.sin(angle) * speed;
             
+            // Crear carámbano
             const icicle = radialIcicles.create(startX, startY, 'icicle');
-            icicle.setVelocity(velocityX, velocityY);
-            icicle.setScale(2);
-            icicle.body.allowGravity = false;
-            icicle.setTint(0xadd8e6); // Azul claro
             
-            // Rotar el carámbano según la dirección del movimiento
+            // Configurar física
+            icicle.setVelocity(velocityX, velocityY);
+            icicle.setScale(1.5);
+            icicle.body.allowGravity = false;
+            icicle.setTint(0xadd8e6);
+            
+            // **ROTACIÓN CORREGIDA**
+            // Si el sprite apunta a la derecha por defecto:
+            // - atan2(velocityY, velocityX) ya da el ángulo correcto
+            // - NO sumamos Math.PI/2
             const rotationAngle = Math.atan2(velocityY, velocityX);
             icicle.setRotation(rotationAngle);
+            
+            console.log(`Carámbano ${i}: ángulo=${angle.toFixed(2)} rad, rotación=${rotationAngle.toFixed(2)} rad, velocidad=(${velocityX.toFixed(0)}, ${velocityY.toFixed(0)})`);
 
-            this.cleanupIcicle(icicle);
+            // Configurar cleanup
+            this.setupIcicleCleanup(icicle);
         }
     }
 
-    cleanupIcicle(icicle) {
+    setupIcicleCleanup(icicle) {
         const scene = this.boss.scene;
-        scene.events.on('update', () => {
-            if (!icicle.active) return;
-            const cam = scene.cameras.main;
-            if (icicle.x < -200 || icicle.x > cam.width + 200 || 
-                icicle.y < -200 || icicle.y > cam.height + 200) {
-                icicle.destroy();
-            }
+        
+        // Usar time.addEvent para checkear periódicamente
+        scene.time.addEvent({
+            delay: 100,
+            callback: () => {
+                if (!icicle.active) return;
+                
+                // Destruir si está muy lejos del boss
+                const distance = Phaser.Math.Distance.Between(
+                    this.boss.x, this.boss.y,
+                    icicle.x, icicle.y
+                );
+                
+                if (distance > 800) {
+                    icicle.destroy();
+                }
+                
+                // También destruir si sale completamente de pantalla
+                const cam = scene.cameras.main;
+                const bounds = new Phaser.Geom.Rectangle(
+                    cam.worldView.x - 200,
+                    cam.worldView.y - 200,
+                    cam.worldView.width + 400,
+                    cam.worldView.height + 400
+                );
+                
+                if (!bounds.contains(icicle.x, icicle.y)) {
+                    icicle.destroy();
+                }
+            },
+            callbackScope: this,
+            loop: true
         });
     }
 
@@ -81,6 +115,6 @@ export default class BossSadRadialState extends BaseState {
     }
 
     exit(context) {
-
+        // No necesitamos hacer nada especial aquí
     }
 }
