@@ -255,7 +255,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                 //checkPoint
                 case "checkpoint":
                     this.checkpoints.add(new Checkpoint(this, objeto.x, objeto.y));
-                    this.checkpoints.add(new Checkpoint(this, objeto.x + 100, objeto.y));
+                    //this.checkpoints.add(new Checkpoint(this, objeto.x + 100, objeto.y));
                     break;
 
                 //platforms 
