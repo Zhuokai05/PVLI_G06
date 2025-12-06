@@ -6,13 +6,17 @@ export default class BossSadWaterBallState extends BaseState {
         this.stateTime = 0;
         this.currentPhase = 'spawn'; // spawn -> follow -> explode -> cooldown
         this.spawnDuration = 500;
-        this.followDuration = 3500;
-        this.explodeDuration = 500; // Reducido a 500ms
+        this.followDuration = 5000; 
+        this.explodeDuration = 600; // Aumentado para mejor efecto
         this.cooldownDuration = 500;
+        
+        // Flags para controlar estados
+        this.damageApplied = false;
+        this.ballDestroyed = false; // Para saber si la bola ya fue destruida
         
         this.startSpawnPhase();
         
-        console.log("Bola de agua perseguidora");
+        console.log("Bola de agua perseguidora mejorada");
     }
 
     execute(context, time, delta) {
@@ -27,7 +31,12 @@ export default class BossSadWaterBallState extends BaseState {
                 
             case 'follow':
                 this.followPlayer();
-                if (this.stateTime >= this.followDuration) {
+                
+                // Verificar colisión con el jugador durante el seguimiento
+                this.checkPlayerCollision();
+                
+                // SOLO iniciar explosión si la bola NO ha sido destruida
+                if (this.stateTime >= this.followDuration && !this.ballDestroyed) {
                     this.startExplodePhase();
                 }
                 break;
@@ -50,7 +59,7 @@ export default class BossSadWaterBallState extends BaseState {
         const { scene, waterBalls } = this.boss;
         
         this.waterBall = waterBalls.create(this.boss.x, this.boss.y - 50, 'water_ball');
-        this.waterBall.setScale(1.2);
+        this.waterBall.setScale(1.4); // Un poco más grande
         this.waterBall.body.allowGravity = false;
         this.waterBall.setTint(0x4169e1);
         
@@ -58,13 +67,16 @@ export default class BossSadWaterBallState extends BaseState {
         this.waterBall.following = false;
         this.waterBall.speed = this.boss.waterBallSpeed;
         
-        // Efecto de aparición
+        // Efecto de aparición más vistoso
         this.waterBall.setAlpha(0);
+        this.waterBall.setScale(0.1);
+        
         scene.tweens.add({
             targets: this.waterBall,
             alpha: 1,
-            duration: 300,
-            ease: 'Power2'
+            scale: 1.4,
+            duration: 400,
+            ease: 'Back.easeOut'
         });
     }
 
@@ -72,10 +84,11 @@ export default class BossSadWaterBallState extends BaseState {
         this.currentPhase = 'follow';
         this.stateTime = 0;
         this.waterBall.following = true;
+        this.ballDestroyed = false; // Resetear flag
     }
 
     followPlayer() {
-        if (!this.waterBall || !this.waterBall.active || !this.waterBall.following) return;
+        if (!this.waterBall || !this.waterBall.active || !this.waterBall.following || this.ballDestroyed) return;
         
         const player = this.boss.player;
         const angle = Phaser.Math.Angle.Between(
@@ -87,9 +100,153 @@ export default class BossSadWaterBallState extends BaseState {
         const velocityY = Math.sin(angle) * this.waterBall.speed;
         
         this.waterBall.setVelocity(velocityX, velocityY);
+        
+        // Efecto visual de movimiento 
+        if (this.stateTime % 300 < 10) { // Cada ~300ms
+            this.createTrailEffect();
+        }
+    }
+
+    createTrailEffect() {
+        if (!this.waterBall || !this.waterBall.active || this.ballDestroyed) return;
+        
+        const { scene } = this.boss;
+        const trail = scene.add.circle(
+            this.waterBall.x,
+            this.waterBall.y,
+            15,
+            0x87ceeb,
+            0.6
+        );
+        
+        scene.tweens.add({
+            targets: trail,
+            alpha: 0,
+            scale: 0.5,
+            duration: 300,
+            onComplete: () => {
+                if (trail && trail.active) {
+                    trail.destroy();
+                }
+            }
+        });
+    }
+
+    checkPlayerCollision() {
+        if (!this.waterBall || !this.waterBall.active || this.damageApplied || this.ballDestroyed) return;
+        
+        const player = this.boss.player;
+        const distance = Phaser.Math.Distance.Between(
+            this.waterBall.x, this.waterBall.y,
+            player.x, player.y
+        );
+        
+        // Radio de colisión aumentado
+        const collisionRadius = 40;
+        
+        if (distance <= collisionRadius) {
+            const dir = player.x < this.waterBall.x ? -1 : 1;
+            player.takeDamage(this.boss.damage, dir);
+            this.damageApplied = true;
+            this.ballDestroyed = true; // MARCA que la bola fue destruida
+            
+            // Crear efecto de impacto
+            this.createImpactEffect();
+            
+            // Destruir bola inmediatamente después del impacto
+            const { scene } = this.boss;
+            
+            scene.time.delayedCall(100, () => {
+                if (this.waterBall && this.waterBall.active) {
+                    this.waterBall.destroy();
+                    
+                    // Ir directamente a cooldown SIN crear explosión
+                    this.startCooldownPhase();
+                }
+            });
+        }
+    }
+
+    createImpactEffect() {
+        const { scene } = this.boss;
+        
+        // Efecto de impacto visual
+        const impactCircle = scene.add.circle(
+            this.waterBall.x,
+            this.waterBall.y,
+            60,
+            0x00bfff,
+            0.7
+        );
+        
+        // Ondas de impacto
+        for (let i = 0; i < 3; i++) {
+            const wave = scene.add.circle(
+                this.waterBall.x,
+                this.waterBall.y,
+                30,
+                0x4169e1,
+                0.5 - (i * 0.15)
+            );
+            
+            scene.tweens.add({
+                targets: wave,
+                scale: 3 + (i * 0.5),
+                alpha: 0,
+                duration: 400,
+                delay: i * 80,
+                onComplete: () => {
+                    if (wave && wave.active) {
+                        wave.destroy();
+                    }
+                }
+            });
+        }
+        
+        // Partículas de impacto
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const particle = scene.add.circle(
+                this.waterBall.x,
+                this.waterBall.y,
+                10,
+                0x87ceeb,
+                0.9
+            );
+            
+            scene.tweens.add({
+                targets: particle,
+                x: particle.x + Math.cos(angle) * 50,
+                y: particle.y + Math.sin(angle) * 50,
+                alpha: 0,
+                scale: 0,
+                duration: 300,
+                onComplete: () => {
+                    if (particle && particle.active) {
+                        particle.destroy();
+                    }
+                }
+            });
+        }
+        
+        // Shake de cámara
+        scene.cameras.main.shake(200, 0.015);
+        
+        // Destruir círculo de impacto
+        scene.time.delayedCall(300, () => {
+            if (impactCircle && impactCircle.active) {
+                impactCircle.destroy();
+            }
+        });
     }
 
     startExplodePhase() {
+        // PREVENCIÓN: Si la bola ya fue destruida, no crear explosión
+        if (this.ballDestroyed || this.damageApplied) {
+            this.startCooldownPhase();
+            return;
+        }
+        
         this.currentPhase = 'explode';
         this.stateTime = 0;
         
@@ -100,43 +257,91 @@ export default class BossSadWaterBallState extends BaseState {
             
             this.waterBall.following = false;
             this.waterBall.setVelocity(0, 0);
+            
+            // Marcar bola como destruida
+            this.ballDestroyed = true;
+            
+            // Destruir bola con efecto
+            this.destroyWaterBallWithEffect();
+            
+            // Crear explosión
             this.createExplosion();
-            this.waterBall.destroy();
+        } else if (this.explosionX && this.explosionY) {
+            // Si la bola ya fue destruida por colisión, usar la última posición conocida
+            this.createExplosion();
         }
     }
 
-    createExplosion() {
-        const { scene } = this.boss;
-        const explosionRadius = 150;
+    destroyWaterBallWithEffect() {
+        if (!this.waterBall || !this.waterBall.active) return;
         
-        // **VERSIÓN SIMPLE SIN TWEEN PROBLEMÁTICO**
-        // Crear efecto visual de explosión
-        const explosionCircle = scene.add.circle(
+        const { scene } = this.boss;
+        
+        // Efecto de desvanecimiento antes de destruir
+        scene.tweens.add({
+            targets: this.waterBall,
+            scale: 2,
+            alpha: 0,
+            duration: 200,
+            onComplete: () => {
+                if (this.waterBall && this.waterBall.active) {
+                    this.waterBall.destroy();
+                }
+            }
+        });
+    }
+
+    createExplosion() {
+        // PREVENCIÓN: Si ya se aplicó daño por contacto, no crear explosión
+        if (this.damageApplied) {
+            return;
+        }
+        
+        const { scene } = this.boss;
+        const explosionRadius = 180; 
+        
+        // EFECTO DE EXPLOSIÓN PRINCIPAL
+        const explosionSprite = scene.add.sprite(
             this.explosionX, 
             this.explosionY, 
-            explosionRadius, 
-            0x4169e1, 
-            0.4
+            'water_ball'
         );
         
-        // **EVITAR TWEEENS EN PROPIEDADES QUE SE DESTRUYEN**
-        // En lugar de tween, crear múltiples círculos con diferentes tamaños
-        for (let i = 0; i < 3; i++) {
+        explosionSprite.setScale(0.5);
+        explosionSprite.setTint(0x00bfff);
+        explosionSprite.setAlpha(0.8);
+        
+        // Animación de explosión
+        scene.tweens.add({
+            targets: explosionSprite,
+            scale: 6, 
+            alpha: 0,
+            duration: this.explodeDuration,
+            ease: 'Cubic.easeOut',
+            onComplete: () => {
+                if (explosionSprite && explosionSprite.active) {
+                    explosionSprite.destroy();
+                }
+            }
+        });
+        
+        // ONDAS DE EXPLOSIÓN MÚLTIPLES
+        for (let waveNum = 0; waveNum < 4; waveNum++) {
             const wave = scene.add.circle(
                 this.explosionX,
                 this.explosionY,
                 explosionRadius * 0.3,
-                0x87ceeb,
-                0.6 - (i * 0.2)
+                0x4169e1,
+                0.4 - (waveNum * 0.1)
             );
             
-            // Tween seguro - solo propiedades de transformación
             scene.tweens.add({
                 targets: wave,
-                scale: 3 + (i * 0.5),
+                scale: 4 + (waveNum * 0.3),
                 alpha: 0,
-                duration: 400,
-                delay: i * 100,
+                duration: 500,
+                delay: waveNum * 120,
+                ease: 'Sine.easeOut',
                 onComplete: () => {
                     if (wave && wave.active) {
                         wave.destroy();
@@ -145,25 +350,26 @@ export default class BossSadWaterBallState extends BaseState {
             });
         }
         
-        // Efecto de partículas simples
-        for (let i = 0; i < 12; i++) {
-            const angle = (i / 12) * Math.PI * 2;
+        // PARTÍCULAS DE EXPLOSIÓN MÁS ABUNDANTES
+        for (let i = 0; i < 20; i++) {
+            const angle = (i / 20) * Math.PI * 2;
+            const distance = 90 + Math.random() * 60; // 90-150 píxeles
             const particle = scene.add.circle(
                 this.explosionX,
                 this.explosionY,
-                8,
-                0x00bfff,
-                0.8
+                12 + Math.random() * 8, // 12-20 píxeles
+                0x87ceeb,
+                0.9
             );
             
-            // Tween seguro en propiedades de transformación
             scene.tweens.add({
                 targets: particle,
-                x: particle.x + Math.cos(angle) * 70,
-                y: particle.y + Math.sin(angle) * 70,
+                x: particle.x + Math.cos(angle) * distance,
+                y: particle.y + Math.sin(angle) * distance,
                 alpha: 0,
                 scale: 0,
-                duration: 500,
+                duration: 600 + Math.random() * 200,
+                ease: 'Cubic.easeOut',
                 onComplete: () => {
                     if (particle && particle.active) {
                         particle.destroy();
@@ -172,32 +378,30 @@ export default class BossSadWaterBallState extends BaseState {
             });
         }
         
-        // **VERIFICAR DAÑO INMEDIATAMENTE**
-        const player = this.boss.player;
-        const distance = Phaser.Math.Distance.Between(
-            this.explosionX, this.explosionY,
-            player.x, player.y
-        );
-        
-        if (distance <= explosionRadius) {
-            const dir = player.x < this.explosionX ? -1 : 1;
-            player.takeDamage(this.boss.damage, dir);
+        // VERIFICAR DAÑO POR EXPLOSIÓN (solo si no hubo daño por contacto)
+        if (!this.damageApplied) {
+            const player = this.boss.player;
+            const distance = Phaser.Math.Distance.Between(
+                this.explosionX, this.explosionY,
+                player.x, player.y
+            );
             
-            // Efecto de shake si hace daño
-            scene.cameras.main.shake(200, 0.01);
-        }
-        
-        // **DESTRUIR EL CÍRCULO PRINCIPAL DESPUÉS DE UN TIEMPO CORTO**
-        scene.time.delayedCall(300, () => {
-            if (explosionCircle && explosionCircle.active) {
-                explosionCircle.destroy();
+            if (distance <= explosionRadius) {
+                const dir = player.x < this.explosionX ? -1 : 1;
+                player.takeDamage(this.boss.damage, dir);
+                this.damageApplied = true;
+                
+                // Efecto de shake más fuerte para explosión
+                scene.cameras.main.shake(300, 0.02);
             }
-        });
+        }
     }
 
     startCooldownPhase() {
         this.currentPhase = 'cooldown';
         this.stateTime = 0;
+        this.damageApplied = false;
+        this.ballDestroyed = false;
     }
 
     exit(context) {
@@ -205,5 +409,8 @@ export default class BossSadWaterBallState extends BaseState {
         if (this.waterBall && this.waterBall.active) {
             this.waterBall.destroy();
         }
+        
+        this.damageApplied = false;
+        this.ballDestroyed = false;
     }
 }

@@ -19,7 +19,7 @@ export default class BossSadIcicleState extends BaseState {
         const player = this.boss.player;
         const cam = scene.cameras.main;
 
-        // Crear advertencia vertical - EXACTAMENTE IGUAL
+        // Crear advertencia vertical
         const warningWidth = 120;
         this.spawnX = player.x;
         
@@ -69,14 +69,13 @@ export default class BossSadIcicleState extends BaseState {
         const { scene, icicles } = this.boss;
         const Yspeed = this.boss.icicleSpeed;
         
-        // EXACTAMENTE IGUAL que spawnPunch, solo cambia 'punch' por 'icicle'
         const icicle = icicles.create(this.spawnX, this.boss.y - 400, 'icicle');
         icicle.setVelocityY(Yspeed);
         icicle.setScale(2.5);
         icicle.body.allowGravity = false;
         icicle.setTint(0x4169e1); // Azul en lugar de rojo
         
-        // ÚNICA DIFERENCIA: rotar 90 grados para que apunte hacia abajo
+        // Rotar 90 grados para que apunte hacia abajo
         icicle.setRotation(Math.PI / 2);
 
         this.cleanupIcicle(icicle);
@@ -84,7 +83,7 @@ export default class BossSadIcicleState extends BaseState {
 
     cleanupIcicle(icicle) {
         const scene = this.boss.scene;
-        // EXACTAMENTE IGUAL que cleanupPunch
+
         scene.events.on('update', () => {
             if (!icicle.active) return;
             const cam = scene.cameras.main;
@@ -100,7 +99,6 @@ export default class BossSadIcicleState extends BaseState {
     }
 
     exit(context) {
-        // EXACTAMENTE IGUAL
         if (this.warningRect && this.warningRect.active) {
             this.warningRect.destroy();
         }
