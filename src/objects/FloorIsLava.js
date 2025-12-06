@@ -26,6 +26,7 @@ export default class FloorIsLava extends Phaser.GameObjects.TileSprite {
 
         if (playerReference) {
             scene.physics.add.overlap(this.playerRef, this, () => {
+                if (!this.isRising) return;
                 this.playerRef.die();
             });
         }
