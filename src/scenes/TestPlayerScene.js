@@ -246,7 +246,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "rangeorb":
                     this.orbGroup.add(new RangedOrb(this, objeto.x, objeto.y));
                     break;
-                case "rangeorb":
+                case "attackeorb":
+                    this.orbGroup.add(new AttackRangeOrb(this, objeto.x, objeto.y));
+                    break;
+                case "shieldeorb":
                     this.orbGroup.add(new ShieldOrb(this, objeto.x, objeto.y));
                     break;
                 //checkPoint
