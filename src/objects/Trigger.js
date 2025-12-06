@@ -2,7 +2,7 @@ import MapDoor from '../objects/MapDoor.js';
 export default class InvisibleTrigger extends Phaser.Physics.Arcade.Sprite {
 
     constructor(scene, x, y) {
-        super(scene, x, y, null); 
+        super(scene, x, y, null);
 
         this.scene = scene;
         this.doors = [];
@@ -17,29 +17,27 @@ export default class InvisibleTrigger extends Phaser.Physics.Arcade.Sprite {
 
     getBoss(boss) {
 
-            this.boss = boss;
-       
+        this.boss = boss;
     }
 
-    
+
     getDoors(doorsArray) {
 
-            this.doors = doorsArray;
-       
+        this.doors = doorsArray;
+
     }
     llamar() {
 
-        if (this.primer) 
-            {
-                if (this.boss) 
-                    {
-                          this.boss.setLife();
-                    }
-                
-       this.doors.getChildren().forEach(door => {          
-    door.cambiarAbrir();         
-});
+        if (this.primer) {
+            if (this.boss) {
+                this.boss.setLife();
+                console.log("BOSS FEAR ACTIVATE");
             }
-       this.primer = false;
+
+            this.doors.getChildren().forEach(door => {
+                door.cambiarAbrir();
+            });
+        }
+        this.primer = false;
     }
 }
