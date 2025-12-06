@@ -5,27 +5,32 @@ export default class BossFearCupAttackState extends BaseState {
         this.boss = context;
         this.stateTime = 0;
         this.currentPhase = 'attack'; // attack -> cooldown
-        this.attackDuration = 2000;
-        this.cooldownDuration = 500;
+        this.attackDuration = 6000; 
+        this.cooldownDuration = 1500;
         
         this.cupsSpawned = 0;
         this.maxCups = 10;
         this.cupSpawnInterval = 400;
+        this.timeSinceLastSpawn = 0;
         
-        this.startAttackPhase();
+        console.log("Ataque de tazas iniciado");
     }
 
     execute(context, time, delta) {
         this.stateTime += delta;
+        this.timeSinceLastSpawn += delta;
 
         switch (this.currentPhase) {
             case 'attack':
-                if (this.stateTime >= this.cupSpawnInterval && this.cupsSpawned < this.maxCups) {
+                // Spawnear cups en intervalos
+                if (this.timeSinceLastSpawn >= this.cupSpawnInterval && this.cupsSpawned < this.maxCups) {
                     this.spawnCup();
-                    this.stateTime = 0;
+                    this.timeSinceLastSpawn = 0;
+                    this.cupsSpawned++;
                 }
                 
-                if (this.cupsSpawned >= this.maxCups && this.stateTime >= this.attackDuration) {
+                // Terminar ataque después de la duración
+                if (this.stateTime >= this.attackDuration) {
                     this.startCooldownPhase();
                 }
                 break;
@@ -40,10 +45,18 @@ export default class BossFearCupAttackState extends BaseState {
 
     spawnCup() {
         const { scene, cups } = this.boss;
-        const camWidth = scene.cameras.main.width;
-
-        const x = Phaser.Math.Between(100, camWidth - 100);
-        const cup = cups.create(x, 0, 'vaso');
+        const cam = scene.cameras.main;
+        
+        // Calcular límites del mundo visible en la cámara actual
+        const worldView = cam.worldView;
+        const minX = worldView.left + 100;
+        const maxX = worldView.right - 100;
+        
+        // Spawnear en posición aleatoria dentro del área visible
+        const x = Phaser.Math.Between(minX, maxX);
+        const y = worldView.top - 50; // Arriba de la pantalla
+        
+        const cup = cups.create(x, y, 'vaso');
 
         cup.setScale(1.5);
         cup.setVelocityY(this.boss.cupSpeed);
@@ -51,29 +64,38 @@ export default class BossFearCupAttackState extends BaseState {
         cup.setCollideWorldBounds(false);
 
         this.cleanupCup(cup);
-        this.cupsSpawned++;
+        console.log(`Cup spawned at (${x}, ${y})`);
     }
 
     cleanupCup(cup) {
         const scene = this.boss.scene;
-        scene.events.on('update', () => {
+        const cleanupCheck = () => {
             if (!cup.active) return;
+            
+            // Destruir si sale de los límites del mundo visible
             const cam = scene.cameras.main;
-            if (cup.x < -200 || cup.x > cam.width + 200 || cup.y > cam.height + 200) {
+            const worldView = cam.worldView;
+            
+            if (cup.y > worldView.bottom + 200) {
+                cup.destroy();
+            }
+        };
+        
+        // Verificar cada frame
+        scene.events.on('update', cleanupCheck);
+        
+        // También agregar un timer de seguridad
+        scene.time.delayedCall(5000, () => {
+            if (cup && cup.active) {
                 cup.destroy();
             }
         });
     }
 
-    startAttackPhase() {
-        this.currentPhase = 'attack';
-        this.stateTime = 0;
-        this.cupsSpawned = 0;
-    }
-
     startCooldownPhase() {
         this.currentPhase = 'cooldown';
         this.stateTime = 0;
+        console.log("Ataque de tazas terminado, entrando en cooldown");
     }
 
     exit(context) {

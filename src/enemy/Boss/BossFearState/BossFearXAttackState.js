@@ -6,8 +6,8 @@ export default class BossFearXAttackState extends BaseState {
         this.stateTime = 0;
         this.currentPhase = 'warning'; // warning -> attack -> cooldown
         this.warningDuration = 1000;
-        this.attackDuration = 1500;
-        this.cooldownDuration = 500;
+        this.attackDuration = 2000;
+        this.cooldownDuration = 1000;
         
         // Crear garras para el ataque
         this.boss.createClaws();
@@ -17,12 +17,13 @@ export default class BossFearXAttackState extends BaseState {
 
     startWarningPhase() {
         const { scene } = this.boss;
-        const cam = scene.cameras.main;
+        const bossX = this.boss.x;
+        const bossY = this.boss.y;
 
-        // Crear indicadores de trayectoria usando rectángulos en lugar de líneas
+        // Crear indicadores de trayectoria usando coordenadas del mundo
         this.leftWarning = scene.add.rectangle(
-            cam.width / 2 - 300, 
-            cam.height / 2 + 100,
+            bossX - 300, 
+            bossY + 100,
             300, 
             60, 
             0xff0000, 
@@ -31,8 +32,8 @@ export default class BossFearXAttackState extends BaseState {
         this.leftWarning.setAngle(45);
         
         this.rightWarning = scene.add.rectangle(
-            cam.width / 2 + 300, 
-            cam.height / 2 + 100,
+            bossX + 300, 
+            bossY + 100,
             300, 
             60, 
             0xff0000, 
@@ -79,8 +80,8 @@ export default class BossFearXAttackState extends BaseState {
         this.stateTime = 0;
         
         // Destruir advertencias
-        this.leftWarning.destroy();
-        this.rightWarning.destroy();
+        if (this.leftWarning) this.leftWarning.destroy();
+        if (this.rightWarning) this.rightWarning.destroy();
         
         // Mover garras en forma de X
         this.moveClawsInXPattern();
@@ -88,15 +89,16 @@ export default class BossFearXAttackState extends BaseState {
 
     moveClawsInXPattern() {
         const { scene } = this.boss;
-        const cam = scene.cameras.main;
+        const bossX = this.boss.x;
+        const bossY = this.boss.y;
         
-        // Posiciones iniciales y finales
-        const startLeftX = cam.width / 2 - 380;
-        const startRightX = cam.width / 2 + 380;
-        const startY = cam.height / 2 - 100;
-        const endLeftX = cam.width / 2 + 300;
-        const endRightX = cam.width / 2 - 300;
-        const endY = cam.height / 2 + 200;
+        // Posiciones iniciales y finales (coordenadas del mundo)
+        const startLeftX = bossX - 380;
+        const startRightX = bossX + 380;
+        const startY = bossY - 100;
+        const endLeftX = bossX + 300;
+        const endRightX = bossX - 300;
+        const endY = bossY + 400;
         
         // Garra izquierda: va hacia abajo-derecha
         scene.tweens.add({
@@ -106,7 +108,6 @@ export default class BossFearXAttackState extends BaseState {
             duration: this.attackDuration,
             ease: 'Power2',
             onUpdate: (tween, target) => {
-                // Añadir movimiento sinusoidal ligero para curvatura
                 const progress = tween.progress;
                 target.y = startY + (endY - startY) * progress + Math.sin(progress * Math.PI * 2) * 20;
             }
@@ -120,7 +121,6 @@ export default class BossFearXAttackState extends BaseState {
             duration: this.attackDuration,
             ease: 'Power2',
             onUpdate: (tween, target) => {
-                // Añadir movimiento sinusoidal ligero para curvatura
                 const progress = tween.progress;
                 target.y = startY + (endY - startY) * progress + Math.sin(progress * Math.PI * 2) * 20;
             }
