@@ -294,11 +294,9 @@ export default class TestPlayerScene extends Phaser.Scene {
 
             }
         })
-
         this.cheatManager = new CheatManager(this, this.player);
         this.checkpoints.add(new Checkpoint(this, 1200, 1550));
-        const distanciaSegura = 800;
-        this.lava = new FloorIsLava(this, this.player.y + distanciaSegura, 25, this.player);
+        this.lava = new FloorIsLava(this, this.player.y + 0, 25, this.player);
 
         //    //ira
         //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',

@@ -26,6 +26,7 @@ export default class FloorIsLava extends Phaser.GameObjects.TileSprite {
 
         if (playerReference) {
             scene.physics.add.overlap(this.playerRef, this, () => {
+                if (!this.isRising) return;
                 this.playerRef.die();
             });
         }
@@ -49,6 +50,7 @@ export default class FloorIsLava extends Phaser.GameObjects.TileSprite {
 
     // Iniciar la subida de la lava
     startLava() {
+        this.y = this.playerRef.y + 300;
         this.isRising = true;
         this.setVisible(true);
     }
