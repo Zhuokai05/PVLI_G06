@@ -10,6 +10,8 @@ export default class BossSadIcicleState extends BaseState {
         this.cooldownDuration = 500;
         
         this.startWarningPhase();
+        
+        console.log("Carámbanos verticales");
     }
 
     startWarningPhase() {
@@ -17,16 +19,16 @@ export default class BossSadIcicleState extends BaseState {
         const player = this.boss.player;
         const cam = scene.cameras.main;
 
-        // Crear advertencia vertical
+        // Crear advertencia vertical - EXACTAMENTE IGUAL
         const warningWidth = 120;
         this.spawnX = player.x;
         
         this.warningRect = scene.add.rectangle(
             this.spawnX,
-            cam.height / 2,
+            this.boss.y,
             warningWidth,
             cam.height,
-            0x0000ff,
+            0x4169e1, // Azul en lugar de rojo
             0.5
         );
     }
@@ -67,24 +69,26 @@ export default class BossSadIcicleState extends BaseState {
         const { scene, icicles } = this.boss;
         const Yspeed = this.boss.icicleSpeed;
         
-        const icicle = icicles.create(this.spawnX, 0, 'icicle');
+        // EXACTAMENTE IGUAL que spawnPunch, solo cambia 'punch' por 'icicle'
+        const icicle = icicles.create(this.spawnX, this.boss.y - 400, 'icicle');
         icicle.setVelocityY(Yspeed);
         icicle.setScale(2.5);
         icicle.body.allowGravity = false;
-        icicle.setTint(0x6b6bff);
+        icicle.setTint(0x4169e1); // Azul en lugar de rojo
         
-        // Rotar el carámbano 90 grados para que apunte hacia abajo
-        icicle.setRotation(Math.PI / 2); 
+        // ÚNICA DIFERENCIA: rotar 90 grados para que apunte hacia abajo
+        icicle.setRotation(Math.PI / 2);
 
         this.cleanupIcicle(icicle);
     }
 
     cleanupIcicle(icicle) {
         const scene = this.boss.scene;
+        // EXACTAMENTE IGUAL que cleanupPunch
         scene.events.on('update', () => {
             if (!icicle.active) return;
             const cam = scene.cameras.main;
-            if (icicle.y > cam.height + 200) {
+            if (icicle.y > this.boss.y + this.boss.distanceToFloor) {
                 icicle.destroy();
             }
         });
@@ -96,6 +100,7 @@ export default class BossSadIcicleState extends BaseState {
     }
 
     exit(context) {
+        // EXACTAMENTE IGUAL
         if (this.warningRect && this.warningRect.active) {
             this.warningRect.destroy();
         }
