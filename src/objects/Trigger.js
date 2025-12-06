@@ -30,8 +30,8 @@ export default class InvisibleTrigger extends Phaser.Physics.Arcade.Sprite {
 
         if (this.primer) {
             if (this.boss) {
+                console.log("EL BOSS DE LA PUERTA REGISTRADO ES " + this.boss);
                 this.boss.setLife();
-                console.log("BOSS FEAR ACTIVATE");
             }
 
             this.doors.getChildren().forEach(door => {

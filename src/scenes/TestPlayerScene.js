@@ -275,6 +275,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.enemies.add(this.tristeboss);
                     break;
                 case "miedoboss":
+                    console.log("CREANDO BOSS MIEDO");
                     this.miedoboss = new BossFear(this, objeto.x, objeto.y, this.player);
                     this.enemies.add(this.miedoboss);
                     break;
@@ -398,8 +399,11 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.fearbossdoors.getChildren().forEach(door => {
             door.abrirPuerta();
         });
-        if (this.feartrigger) this.feartrigger.getDoors(this.fearbossdoors);
-        if (this.feartrigger && this.miedobossteboss) this.feartrigger.getBoss(this.miedoboss);
+        if (this.feartrigger) {
+            console.log("ASIGNANDO PUERTAS TRIGGER MIEDO");
+            this.feartrigger.getDoors(this.fearbossdoors);
+        }
+        if (this.feartrigger && this.miedoboss) this.feartrigger.getBoss(this.miedoboss);
 
         if (this.iraboss) this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
         if (this.tristeboss) this.tristeboss.getDoors(this.icebossdoors, this.icefloordoors);
