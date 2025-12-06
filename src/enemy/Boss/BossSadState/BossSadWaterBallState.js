@@ -4,21 +4,23 @@ export default class BossSadWaterBallState extends BaseState {
     enter(context) {
         this.boss = context;
         this.stateTime = 0;
-        this.currentPhase = 'attack'; // attack -> follow -> explode -> cooldown
-        this.attackDuration = 500;
+        this.currentPhase = 'spawn'; // spawn -> follow -> explode -> cooldown
+        this.spawnDuration = 500;
         this.followDuration = 3500;
         this.explodeDuration = 500;
         this.cooldownDuration = 500;
         
-        this.spawnWaterBall();
+        this.startSpawnPhase();
+        
+        console.log("Bola de agua perseguidora");
     }
 
     execute(context, time, delta) {
         this.stateTime += delta;
 
         switch (this.currentPhase) {
-            case 'attack':
-                if (this.stateTime >= this.attackDuration) {
+            case 'spawn':
+                if (this.stateTime >= this.spawnDuration) {
                     this.startFollowPhase();
                 }
                 break;
@@ -44,23 +46,32 @@ export default class BossSadWaterBallState extends BaseState {
         }
     }
 
-    spawnWaterBall() {
+    startSpawnPhase() {
         const { scene, waterBalls } = this.boss;
-        const bossX = this.boss.x;
-        const bossY = this.boss.y;
         
-        this.waterBall = waterBalls.create(bossX, bossY - 50, 'water_ball');
-        // Reducir tamaño 
-        this.waterBall.setScale(1);
+        this.waterBall = waterBalls.create(this.boss.x, this.boss.y - 50, 'water_ball');
+        this.waterBall.setScale(1.2);
         this.waterBall.body.allowGravity = false;
         this.waterBall.setTint(0x4169e1);
         
         // Propiedades de seguimiento
-        this.waterBall.following = true;
+        this.waterBall.following = false;
         this.waterBall.speed = this.boss.waterBallSpeed;
+        
+        // Efecto de aparición
+        this.waterBall.setAlpha(0);
+        scene.tweens.add({
+            targets: this.waterBall,
+            alpha: 1,
+            duration: 300,
+            ease: 'Power2'
+        });
+    }
 
-        // Marcar como destructible por el jugador
-        this.waterBall.isDestructibleByPlayer = true;
+    startFollowPhase() {
+        this.currentPhase = 'follow';
+        this.stateTime = 0;
+        this.waterBall.following = true;
     }
 
     followPlayer() {
@@ -78,11 +89,6 @@ export default class BossSadWaterBallState extends BaseState {
         this.waterBall.setVelocity(velocityX, velocityY);
     }
 
-    startFollowPhase() {
-        this.currentPhase = 'follow';
-        this.stateTime = 0;
-    }
-
     startExplodePhase() {
         this.currentPhase = 'explode';
         this.stateTime = 0;
@@ -97,7 +103,7 @@ export default class BossSadWaterBallState extends BaseState {
 
     createExplosion() {
         const { scene } = this.boss;
-        const explosionRadius = 80; 
+        const explosionRadius = 100;
         
         // Crear efecto visual de explosión
         const explosionCircle = scene.add.circle(
@@ -107,6 +113,27 @@ export default class BossSadWaterBallState extends BaseState {
             0x4169e1, 
             0.3
         );
+        
+        // Efecto de partículas
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const particle = scene.add.circle(
+                this.waterBall.x,
+                this.waterBall.y,
+                10,
+                0x87ceeb,
+                0.7
+            );
+            
+            scene.tweens.add({
+                targets: particle,
+                x: particle.x + Math.cos(angle) * 50,
+                y: particle.y + Math.sin(angle) * 50,
+                alpha: 0,
+                duration: 300,
+                onComplete: () => particle.destroy()
+            });
+        }
         
         // Verificar daño al jugador
         const distance = Phaser.Math.Distance.Between(
@@ -131,6 +158,7 @@ export default class BossSadWaterBallState extends BaseState {
     }
 
     exit(context) {
+        // Limpiar bola de agua si aún existe
         if (this.waterBall && this.waterBall.active) {
             this.waterBall.destroy();
         }
