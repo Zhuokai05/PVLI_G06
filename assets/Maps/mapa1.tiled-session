@@ -42,11 +42,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 0.25,
-            "selectedLayer": 1,
+            "scale": 0.03125,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 17478,
-                "y": 850
+                "x": 23824,
+                "y": 4528
             }
         },
         "map.json#Ira": {
@@ -66,25 +66,14 @@
             "scaleInDock": 1
         },
         "mapa3.json": {
-            "scale": 0.0625,
+            "scale": 0.015625,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": -1432,
-                "y": -120
+                "x": 35168,
+                "y": 16000
             }
         },
         "mapa3.json#Ira": {
-            "scaleInDock": 1
-        },
-        "mappy.json": {
-            "scale": 0.06689453125,
-            "selectedLayer": 0,
-            "viewCenter": {
-                "x": 5120,
-                "y": 3998.832116788321
-            }
-        },
-        "mappy.json#ira": {
             "scaleInDock": 1
         }
     },
@@ -102,7 +91,6 @@
     "project": "mapa1.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "mappy.json",
         "map.json",
         "iraboss.json",
         "map2.json",
