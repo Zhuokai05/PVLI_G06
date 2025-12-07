@@ -349,6 +349,9 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.lavatrigger.body.setAllowGravity(false);
                     this.lavatrigger.body.setImmovable(true);
                     break;
+                case "trap":
+                    this.trap = new Trap(this, objeto.x, objeto.y, 'basicEnemyFear');
+                    break;
                 // Paneles texto
                 case "tutorial_Move_Jump":
                     this.tutorial_move_jump = new TutorialPanel(this, objeto.x, objeto.y, 'No hay', 'Presiona ESPACIO para saltar\nUsa WASD para mover');

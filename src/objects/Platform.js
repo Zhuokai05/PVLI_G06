@@ -7,13 +7,15 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+        this.setScale(2.5, 1);
+
         this.body.setAllowGravity(false);
         this.setImmovable(true);
         this.body.moves = false;
 
         this.active = true;
         this.visible = true;
-        
+
         // Nueva propiedad para rastrear si está desactivada
         this.isDeactivated = false;
     }
@@ -21,14 +23,14 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
     // Método para desactivar la plataforma (por colisión con puño)
     deactivateByPunch() {
         if (this.isDeactivated) return; // Si ya está desactivada, no hacer nada
-        
+
         this.isDeactivated = true;
         this.setActive(false);
         this.setVisible(false);
         this.body.enable = false;
 
-        // Reactivar después de 5 segundos (5000 ms)
-        this.scene.time.delayedCall(5000, () => {
+        // Reactivar después de X segundos
+        this.scene.time.delayedCall(4000, () => {
             this.reactivate();
         });
     }
@@ -43,10 +45,9 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
         this.setImmovable(true);
         this.body.moves = false;
     }
-    
-    // Tu método original (lo mantengo por si lo necesitas para otras cosas)
+
     action() {
-        if (!this.active || this.isDeactivated) return; 
+        if (!this.active || this.isDeactivated) return;
 
         this.setActive(false);
         this.setVisible(false);
