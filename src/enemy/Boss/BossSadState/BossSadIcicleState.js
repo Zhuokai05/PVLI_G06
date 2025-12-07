@@ -71,7 +71,7 @@ export default class BossSadIcicleState extends BaseState {
         
         const icicle = icicles.create(this.spawnX, this.boss.y - 400, 'icicle');
         icicle.setVelocityY(Yspeed);
-        icicle.setScale(2.5);
+        icicle.setScale(1.5);
         icicle.body.allowGravity = false;
         icicle.setTint(0x4169e1); // Azul en lugar de rojo
         

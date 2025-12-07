@@ -116,7 +116,7 @@ export default class BossSadRadialState extends BaseState {
             
             // Configurar física
             icicle.setVelocity(velocityX, velocityY);
-            icicle.setScale(1.5);
+            icicle.setScale(1);
             icicle.body.allowGravity = false;
             icicle.setTint(0xadd8e6);
             
