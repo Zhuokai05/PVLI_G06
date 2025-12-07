@@ -42,6 +42,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('orbMoveSpeed', './assets/sprites/UI/Orbes/OrbeHielo.png');
     this.load.image('orbRanged', './assets/sprites/UI/Orbes/orbWings.png');
     this.load.image('orbDash', './assets/sprites/UI/Orbes/orbVoid.png');
+    this.load.image('orbBloodSteal', './assets/sprites/UI/Orbes/orbBloodSteal.png');
     this.load.image('orbShield', './assets/sprites/UI/Orbes/orbShield.png');
     this.load.image('orbAttackRange', './assets/sprites/UI/Orbes/orbAttackRange.png');
 

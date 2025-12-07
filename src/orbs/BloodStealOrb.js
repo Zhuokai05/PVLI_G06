@@ -7,7 +7,7 @@ export default class BloodStealOrb extends Orb {
 
   onActivate(player) {
     this.player.bloodStealAmount = 1;
-    this.player.orbTint = 0x4c2882;
+    this.player.orbTint = 0x8B0000;
     this.player.setTint(player.orbTint);
   }
 

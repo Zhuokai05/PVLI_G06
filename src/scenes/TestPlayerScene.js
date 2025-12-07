@@ -14,6 +14,7 @@ import AttackRangeOrb from '../orbs/AttackRangeOrb.js';
 import BasePlatform from '../objects/Platform.js';
 import IcePlatform from '../objects/IcePlatform.js';
 import ShieldOrb from '../orbs/ShieldOrb.js';
+import BloodStealOrb from '../orbs/BloodStealOrb.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 import Checkpoint from '../objects/Checkpoint.js';
 import DoorBoss from '../objects/BossDoor.js';
@@ -31,6 +32,7 @@ import BossRoom from '../objects/BossRoom.js';
 import FloorIsLava from '../objects/FloorIsLava.js';
 import CheatManager from '../managers/CheatManager.js';
 import TutorialPanel from '../objects/TutorialPanel.js'; 
+
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
@@ -314,6 +316,8 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.cheatManager = new CheatManager(this, this.player);
         this.checkpoints.add(new Checkpoint(this, 1200, 1550));
         this.lava = new FloorIsLava(this, this.player.y + 0, 25, this.player);
+
+         this.orbGroup.add(new BloodStealOrb(this, 1450, 1550));
 
         //    //ira
         //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',
