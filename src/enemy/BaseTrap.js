@@ -1,14 +1,20 @@
 import BaseEnemy from './BaseEnemy.js';
 
+/**
+ * trampa basica que toca y mata
+ */
 export default class BaseTrap extends BaseEnemy {
+
   constructor(scene, x, y, sprite) {
     super(scene, x, y, sprite);
 
-    this.speed = 0;
-    this.inmune = true;
-    this.collisionDamage = 100;
+    // stats
+    this.speed = 0;                                     // trampa no se mueve
+    this.inmune = true;                                 // no recibe danio
+    this.collisionDamage = 100;                         // danio extremo
 
-    this.setScale(15, 1);
-    this.setDepth(-1);
+    // render
+    this.setScale(15, 1);                               // trampa muy larga
+    this.setDepth(-1);                                  // dibujar detras
   }
 }

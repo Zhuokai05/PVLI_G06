@@ -2,17 +2,24 @@ import BaseEnemy from './BaseEnemy.js';
 import GroundEnemyMoveState from './enemyMove/GroundEnemyMoveState.js';
 import MeleeEnemyAttackState from './enemyAttack/MeleeEnemyAttackState.js';
 
+/**
+ * enemigo terrestre melee
+ */
 export default class MeleeEnemy extends BaseEnemy {
-  constructor(scene, x, y, texture = 'enemy',frame = 0, moveAnimationKey, attackAnimationKey,deathAnimationKey) {
-    super(scene, x, y, texture,frame, moveAnimationKey, attackAnimationKey,deathAnimationKey);
 
-    this.speed = 70;
-    this.attackRange = 80;
+  constructor(scene, x, y, texture='enemy', frame=0,
+    moveAnimationKey, attackAnimationKey, deathAnimationKey)
+  {
+    super(scene, x, y, texture, frame, moveAnimationKey, attackAnimationKey, deathAnimationKey);
 
-    this.meleeAttackWidge = 60; //ancho del hitbox de ataque 
-    this.meleeAttackHeight = 60;// alto del hitbox de ataque
-    this.meleeAttackDist = 40; //distancia de su ataque
+    // stats
+    this.speed = 70;                                    // velocidad
+    this.attackRange = 80;                              // rango ataque
+    this.meleeAttackWidge = 60;                         // ancho hitbox
+    this.meleeAttackHeight = 60;                        // alto hitbox
+    this.meleeAttackDist = 40;                          // distancia ataque
 
+    // estados
     this.stateMachine
       .addState('move', new GroundEnemyMoveState())
       .addState('attack', new MeleeEnemyAttackState())

@@ -2,32 +2,37 @@ import BaseEnemy from './BaseEnemy.js';
 import GroundEnemyMoveState from './enemyMove/GroundEnemyMoveState.js';
 import MineEnemyAttackState from './enemyAttack/MineEnemyAttackState.js';
 
+/**
+ * enemigo mina (explota al atacar)
+ */
 export default class MineEnemy extends BaseEnemy {
-  constructor(scene, x, y, texture = 'enemy',frame = 0, moveAnimationKey, attackAnimationKey,deathAnimationKey) {
-    super(scene, x, y, texture,frame, moveAnimationKey, attackAnimationKey,deathAnimationKey);
 
-    this.setScale(2);
-    this.speed = 120;
-    this.attackRange = 50; //rango de ataque
-    this.attackDuration = 1000; //cuanto tarda su ataque en explotar
-    this.damage=1;
+  constructor(scene, x, y, texture='enemy', frame=0,
+    moveAnimationKey, attackAnimationKey, deathAnimationKey)
+  {
+    super(scene, x, y, texture, frame, moveAnimationKey, attackAnimationKey, deathAnimationKey);
 
-    this.meleeAttackWidge = 100; //ancho del hitbox de ataque 
-    this.meleeAttackHeight = 100;// alto del hitbox de ataque
+    // stats
+    this.setScale(2);                                   // escalar sprite
+    this.speed = 120;                                   // velocidad
+    this.attackRange = 50;                              // rango
+    this.attackDuration = 1000;                         // explosion demora
+    this.damage = 1;                                    // danio explosion
+    this.meleeAttackWidge = 100;                        // ancho hitbox
+    this.meleeAttackHeight = 100;                       // alto hitbox
+    this.startAttackTime = 0;                           // ataque inmediato
 
-    this.startAttackTime = 0; //no se puede cancelar su ataque por lo que no hay que cargarlo
-
+    // estados
     this.stateMachine
       .addState('move', new GroundEnemyMoveState())
       .addState('attack', new MineEnemyAttackState())
       .setState('move');
-
   }
 
-   CollisionWithPlayer(player, enemy) {
-    //lo dejamos vacio para que no dañe al jugador en colision, ya que puede hacer doble daño con la de explosion
+  /**
+   * sobreescribe colision para que no haga doble danio
+   */
+  CollisionWithPlayer(player, enemy) {
+    // no hace nada (evita doble danio por explosion)
   }
 }
-
-
-  

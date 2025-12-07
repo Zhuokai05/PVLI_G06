@@ -1,35 +1,50 @@
 import BaseEnemyAttackState from './BaseEnemyAttackState.js';
 
+/**
+ * estado de explosion para enemigo mina
+ */
 export default class MineEnemyAttackState extends BaseEnemyAttackState {
   
-    enter(enemy){
+    enter(enemy) {
         super.enter(enemy);
-        this.Explode(enemy);
+        this.Explode(enemy);                     // crear hitbox de explosion
     }
 
     execute(enemy, time, delta) {
         super.execute(enemy, time, delta);
     }
 
+    /**
+     * crea el hitbox de explosion
+     */
     Explode(enemy) {
 
-        // hitbox del area de ataque
-        this.hitbox = enemy.scene.add.rectangle(enemy.x, enemy.y, enemy.meleeAttackWidge,enemy.meleeAttackHeight, 0xff0000, 0.4);
+        this.hitbox = enemy.scene.add.rectangle(
+            enemy.x,
+            enemy.y,
+            enemy.meleeAttackWidge,
+            enemy.meleeAttackHeight,
+            0xff0000,
+            0.4
+        );
 
         enemy.scene.physics.add.existing(this.hitbox);
         this.hitbox.body.allowGravity = false;
-
     }
 
-    exit(enemy){
-        //cuando termina el ataque, mira si esta el jugador dentro y le hace daño
-        enemy.scene.physics.overlap(this.hitbox, enemy.player, (hb, player) => {
-            let knockbackDirection = player.x < enemy.x ? -1 : 1;
-            player.takeDamage(enemy.damage, knockbackDirection);
-        });
+    exit(enemy) {
 
-        //destruye el hitbox y muere tras explotar
+        // aplicar danio si jugador esta dentro
+        enemy.scene.physics.overlap(
+            this.hitbox,
+            enemy.player,
+            (hb, player) => {
+                let knockDir = player.x < enemy.x ? -1 : 1;
+                player.takeDamage(enemy.damage, knockDir);
+            }
+        );
+
         this.hitbox.destroy();
-        enemy.die();
+        enemy.die();                             // mina muere tras explotar
     }
 }

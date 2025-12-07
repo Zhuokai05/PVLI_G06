@@ -2,35 +2,41 @@ import FlyingEnemyMoveState from './enemyMove/FlyingEnemyMoveState.js';
 import RangedEnemyAttackState from './enemyAttack/RangedEnemyAttackState.js';
 import BaseEnemy from './BaseEnemy.js';
 
+/**
+ * enemigo volador con ataque a distancia
+ */
 export default class FlyingRangedEnemy extends BaseEnemy {
-    constructor(scene, x, y, texture = 'enemy',frame = 0, moveAnimationKey, attackAnimationKey,deathAnimationKey,projectileTexture,projectileTextureFrame) {
-        super(scene, x, y, texture,frame, moveAnimationKey, attackAnimationKey,deathAnimationKey,projectileTexture,projectileTextureFrame);
 
-        this.setScale(2);
-        this.body.allowGravity = false; 
+    constructor(scene, x, y, texture='enemy', frame=0,
+        moveAnimationKey, attackAnimationKey, deathAnimationKey,
+        projectileTexture, projectileTextureFrame)
+    {
+        super(scene, x, y, texture, frame,
+            moveAnimationKey, attackAnimationKey, deathAnimationKey,
+            projectileTexture, projectileTextureFrame);
 
-        /* reducimos el collider a la mitad, ya que hay un proble con el spritesheet donde las celdas son de 64 
-        pero el sprite solo esta en el medio, con un gran margen vacio */
+        // render
+        this.setScale(2);                               // mas grande
+        this.body.allowGravity = false;                 // volador sin gravedad
+
+        // collider reducido
         this.colliderWidthDivisor = 2;
         this.colliderHeightDivisor = 2;
-        this.DivideCollider( this.colliderWidthDivisor, this.colliderHeightDivisor);
-        
-        this.speed = 120;
-        this.verticalSpeed = 60;
-        this.attackDuration = 600;
+        this.DivideCollider(this.colliderWidthDivisor, this.colliderHeightDivisor);
 
-        this.attackRange = 200;
-        this.attackDuration = 1500;
-        this.damage = 1;
+        // stats
+        this.speed = 120;                               // velocidad horizontal
+        this.verticalSpeed = 60;                        // velocidad vertical
+        this.attackDuration = 1500;                     // duracion ataque
+        this.attackRange = 200;                         // rango ataque
+        this.damage = 1;                                // danio
+        this.detectPlayerRangeX = 1000;                 // deteccion x
+        this.detectPlayerRangeY = 800;                  // deteccion y
 
-        this.detectPlayerRangeX = 1000; //rango en X que empieza a detecta el jugador
-        this.detectPlayerRangeY = 800; //rango en Y que empieza a detecta el jugador
-
-
+        // estados
         this.stateMachine
             .addState('move', new FlyingEnemyMoveState())
             .addState('attack', new RangedEnemyAttackState())
             .setState('move');
     }
-
 }

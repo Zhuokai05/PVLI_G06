@@ -7,95 +7,103 @@ import PlayerDashState from './States/PlayerDashState.js';
 import PlayerKnockbackState from './States/PlayerKnockbackState.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 
-
-
 /**
- * @Class Player
- * Clase del objeto Player 
+ * clase player
+ * representa al jugador controlado por el usuario
  */
-
-
 export default class Player extends Phaser.Physics.Arcade.Sprite {
+
+    /**
+     * constructor del jugador
+     */
     constructor(scene, x, y) {
         super(scene, x, y, 'angel_sword_idle');
 
-        this.scene = scene;
-        this.scene.add.existing(this);
-        this.scene.physics.add.existing(this);
+        // escena
+        this.scene = scene;                                    // referencia a escena
+        this.scene.add.existing(this);                         // agregar sprite
+        this.scene.physics.add.existing(this);                 // activar fisicas
+        this.setCollideWorldBounds(true);                      // colision con bordes
+        this.setGravityY(1000);                                // gravedad
 
-        this.setCollideWorldBounds(true); //poder chocar con los bordes del mundo
+        // vida
+        this.health = 5;                                       // vida actual
+        this.maxHealth = 5;                                    // vida maxima
+        this.dead = false;                                     // estado muerto
 
-        this.setGravityY(1000);
+        // ataque
+        this.damage = 10;                                      // daño melee
+        this.rangeDamage = 1;                                  // daño a distancia
+        this.meleeAttackDist = 100;                            // distancia hitbox
+        this.meleeAttackWidge = 120;                           // ancho hitbox
+        this.meleeAttackHeight = 70;                           // alto hitbox
+        this.attackCooldown = 300;                             // cooldown melee
+        this.attackDuration = 200;                             // duracion hitbox
+        this.isAttacking = false;                              // esta atacando
 
-        this.scene = scene;
+        // ataque rango
+        this.rangeAttackDuration = 3000;                       // duracion del proyectil
+        this.rangeAttackSpeed = 800;                           // velocidad proyectil
+        this.rangeAttackCooldownTimer = 0;                     // cooldown restante
+        this.rangeAttackCooldown = 500;                        // cooldown ataque rango
 
-        this.health = 5; //vida actual
-        this.maxHealth = 5; //vida maxima
-        this.dead = false;
-        this.damage = 10; //daño que causa su ataque cuerpo a cuerpo
-        this.rangeDamage = 1; //daño que cause su ataque a distancia
-        this.direction = 1; // 1 derecha, -1 izquierda
-        this.grounded = false;
-        this.respawnPoint = { x: 0, y: 0 }; //punto de respawn
+        // movimiento
+        this.direction = 1;                                    // direccion horizontal
+        this.grounded = false;                                 // si toca el suelo
+        this.movementSpeed = 300;                              // velocidad movimiento
+        this.maxVelocityX = 1000;                              // vmax x
+        this.maxVelocityY = 1000;                              // vmax y
 
-        this.maxVelocityX = 1000; //velocidad maxima en X
-        this.maxVelocityY = 1000;//velocidad maxima en Y
-        //booleanas segun el orbe que esta activado
-        this.canDash = false;
-        this.canShield = false;
-        this.canRangeAttack = false;
-        this.canShield = false;
+        // salto
+        this.jumpSpeed = 800;                                  // velocidad salto
+        this.canPogoJump = false;                              // pogo jump activo
+        this.pogoJumpJudgeTime = 100;                          // ventana pogo
+        this.pogoJumpSpeed = 600;                              // fuerza pogo
+        this.jumpBufferTime = 200;                             // tiempo buffer salto
+        this.jumpBufferTimer = 0;                              // timer buffer salto
+        this.speedReduceRatioAtJump = 0.8;                     // reduccion velocidad
 
-        this.hasShield = false; //si esta activado su escudo
-        this.shieldCooldown = 5000; //cooldown de su escudo
-        this.shieldCooldownTimer = 0;
+        // dash
+        this.canDash = false;                                  // tiene dash
+        this.isDashing = false;                                // estado dash
+        this.dashSpeed = 800;                                  // velocidad dash
+        this.dashDuration = 200;                               // duracion dash
+        this.dashCooldown = 500;                               // cooldown dash
+        this.dashCooldownTimer = 0;                            // timer cooldown dash
 
-        this.movementSpeed = 300; //velocidad de movimiento
-        this.jumpSpeed = 800; //velocidad de salto
-        this.canPogoJump = false;
-        this.pogoJumpJudgeTime = 100; //tiempo que puedes hacer pogo jump tras atacar hacia abajo y dar a un enemigo
-        this.pogoJumpSpeed = 600; //velocidad de pogo jump 
-        this.jumpBufferTime = 200; //tiempo de margen de salto
-        this.jumpBufferTimer = 0;
-        this.speedReduceRatioAtJump = 0.8; //la velocidad que reduce el juagdor durante su salto
+        // escudo
+        this.canShield = false;                                // tiene escudo
+        this.hasShield = false;                                // escudo activo
+        this.shieldCooldown = 5000;                            // cooldown escudo
+        this.shieldCooldownTimer = 0;                          // timer cooldown escudo
 
-        this.isDashing = false;
-        this.dashSpeed = 800; //velocidad del dash
-        this.dashDuration = 200; //tiempo que dura el dash
-        this.dashCooldown = 500; //tiempo que hay que esperar el jugador entre dashes
-        this.dashCooldownTimer = 0;
+        // invulnerable
+        this.invulnerable = false;                             // estado invulnerable
+        this.invulnerableTime = 1000;                          // duracion invulnerable
+        this.knockbackTime = 200;                              // tiempo knockback
+        this.knockbackDistance = 200;                          // distancia knockback
 
-        this.meleeAttackDist = 100; //distancia entre el jugador y su hitbox de ataque
-        this.meleeAttackWidge = 120;
-        this.meleeAttackHeight = 70;
-        this.attackCooldown = 300; //el tiempo que debe de pasar tras un ataque para poder atacar otra vez 
-        this.attackDuration = 200; //cuanto dura el hitbox de su ataque
-        this.isAttacking = false; //si esta atacando
+        // orbes
+        this.orbs = [];                                        // lista orbes recogidos
+        this.equippedOrbs = [null, null];                      // orbes equipados
+        this.activeOrbIndex = 0;                               // orbe activo
+        this.damageMultiplier = 1.0;                           // multiplicador daño
+        this.speedMultiplier = 1.0;                            // multiplicador velocidad
+        this.bloodStealAmount = 0;                             // robo de vida
+        this.jumpSpeedModifier = 1.0;                          // modificador salto
+        this.attackRangeMultiplier = 1.0;                      // modificador rango melee
+        this.orbTint = 0xffffff;                               // color original
 
-        this.rangeAttackDuration = 3000; //en cuanto tiempo se destruye el projectile invocado
-        this.rangeAttackSpeed = 800; //la velocidad del projectile que lanza
-        this.rangeAttackCooldownTimer = 0;
-        this.rangeAttackCooldown = 500; //el cooldown de su ataque a distancia
+        // respawn
+        this.respawnPoint = { x: 0, y: 0 };                    // punto respawn
 
-        this.invulnerable = false;
-        this.invulnerableTime = 1000; //tiempo invulnerable despues de recibir daño
-        this.knockbackTime = 200; // tiempo de su knockback
-        this.knockbackDistance = 200; //distancia de su knockback
+        // render
+        this.setDepth(5);                                      // profundidad sprite
 
-        this.orbs = [];                 //  orbes recogidos
-        this.equippedOrbs = [null, null]; // orbes 2 equipados
-        this.activeOrbIndex = 0;        // indice del orbe activo (0 o 1)
-        this.damageMultiplier = 1.0;    // modificador de daño 
-        this.speedMultiplier = 1.0;     //modificador de velocidad
-        this.bloodStealAmount = 0;
-        this.jumpSpeedModifier = 1.0;
-        this.attackRangeMultiplier = 1.0;    //modificador rango de ataque melee
-        this.orbTint = 0xffffff;     //color original del jugador
+        // input
+        this.keys = scene.inputManager.keys;                   // teclas jugador
 
-        this.setDepth(5);
-
-        this.keys = scene.inputManager.keys;
-
+        // estados
         this.stateMachine = new StateMachine(this, 'player');
         this.stateMachine
             .addState('idle', new PlayerIdleState())
@@ -107,127 +115,86 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             .setState('idle');
 
         this.keys.changeOrb.on('down', () => {
-            this.switchActiveOrb();
+            this.switchActiveOrb();                            // cambiar orbe
         });
 
-        this.createSFX();
+        this.createSFX();                                      // cargar sonidos
 
-        //aura del escudo cuando tiene el escudo activado
         this.shieldAura = this.scene.add.image(this.x, this.y, 'playerShieldAura')
-            .setDepth(this.depth + 1)           // delante del jugador
-            .setAlpha(0.8)                      // semitransparente
-            .setVisible(false)                  // oculto por defecto
+            .setDepth(this.depth + 1)
+            .setAlpha(0.8)
+            .setVisible(false)
             .setScale(1.2);
 
-        this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);   //velocidad maxima
+        this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);
     }
 
-    createSFX(){
-          // Sonidos
-        this.attackSound = this.scene.sound.add('PlayerAttack_sound', {
-            volume: 0.2,
-            loop: false
-        });
-
-        this.attackHitSound = this.scene.sound.add('PlayerAttackHit_sound', {
-            volume: 0.4,
-            loop: false
-        });
-
-        this.jumpSound = this.scene.sound.add('PlayerJump_sound', {
-            volume: 1,
-            loop: false
-        });
-
-        this.shieldSound = this.scene.sound.add('PlayerShield_sound', {
-            volume: 0.3,
-            loop: false
-        });
-
-        this.shieldBlockSound = this.scene.sound.add('PlayerShieldBlock_sound', {
-            volume: 0.3,
-            loop: false
-        });
-
-        this.jumpEndSound = this.scene.sound.add('PlayerJumpEnd_sound', {
-            volume: 0.2,
-            loop: false
-        });
-
-        this.damagedSound = this.scene.sound.add('PlayerDamaged_sound', {
-            volume: 0.3,
-            loop: false
-        })
-
-        this.takeOrbSound = this.scene.sound.add('PlayerTakeOrb_sound', {
-            volume: 0.3,
-            loop: false
-        })
-
-        this.changeOrbSound = this.scene.sound.add('PlayerChangeOrb_sound', {
-            volume: 0.3,
-            loop: false
-        })
-
-        this.rangeAttackSound = this.scene.sound.add('PlayerRangeAttack_sound', {
-            volume: 1,
-            loop: false
-        })
-
-        this.dashSound = this.scene.sound.add('PlayerDash_sound', {
-            volume: 0.3,
-            loop: false
-        })
+    /**
+     * crea los sonidos
+     */
+    createSFX() {
+        this.attackSound = this.scene.sound.add('PlayerAttack_sound', { volume: 0.2 });
+        this.attackHitSound = this.scene.sound.add('PlayerAttack_sound', { volume: 0.2 });
+        this.jumpSound = this.scene.sound.add('PlayerJump_sound', { volume: 1 });
+        this.shieldSound = this.scene.sound.add('PlayerShield_sound', { volume: 0.3 });
+        this.shieldBlockSound = this.scene.sound.add('PlayerShieldBlock_sound', { volume: 0.3 });
+        this.jumpEndSound = this.scene.sound.add('PlayerJumpEnd_sound', { volume: 0.2 });
+        this.damagedSound = this.scene.sound.add('PlayerDamaged_sound', { volume: 0.3 });
+        this.takeOrbSound = this.scene.sound.add('PlayerTakeOrb_sound', { volume: 0.3 });
+        this.changeOrbSound = this.scene.sound.add('PlayerChangeOrb_sound', { volume: 0.3 });
+        this.rangeAttackSound = this.scene.sound.add('PlayerRangeAttack_sound', { volume: 1 });
+        this.dashSound = this.scene.sound.add('PlayerDash_sound', { volume: 0.3 });
     }
-    
+
+    /**
+     * update principal
+     */
     update(time, delta) {
-        this.stateMachine.step(time, delta);
 
-        this.attackDir = this.getAttackDirection();
+        this.stateMachine.step(time, delta);                  // avanzar estado
+        this.attackDir = this.getAttackDirection();           // direccion ataque
 
         if (Phaser.Input.Keyboard.JustDown(this.keys.useOrb)) {
+
             if (this.canDash && this.dashCooldownTimer <= 0 && !this.isDashing) {
-                this.stateMachine.setState('dash');
+                this.stateMachine.setState('dash');           // ejecutar dash
             }
+
             else if (this.canRangeAttack && this.rangeAttackCooldownTimer <= 0 && !this.isAttacking) {
-                this.performRangeAttack();
+                this.performRangeAttack();                    // ataque distancia
             }
+
             else if (this.canShield && !this.hasShield && this.shieldCooldownTimer <= 0) {
-                this.shieldAura.setVisible(true);
+                this.shieldAura.setVisible(true);             // activar escudo
                 this.hasShield = true;
                 this?.shieldSound?.play();
-                console.log("escudo activado")
             }
         }
 
-        // ataques cuerpo a cuerpo (si hay direccion de ataque)
         if (this.attackDir && !this.isDashing) {
-            this.performMeleeAttack(this.attackDir);
+            this.performMeleeAttack(this.attackDir);          // ataque melee
         }
 
-        // manejo del buffer de salto (se comprueba siempre)
-        if (Phaser.Input.Keyboard.JustDown(this.keys.jump) || Phaser.Input.Keyboard.JustDown(this.keys.space)) {
-            this.jumpBufferTimer = this.jumpBufferTime;
+        if (Phaser.Input.Keyboard.JustDown(this.keys.jump) ||
+            Phaser.Input.Keyboard.JustDown(this.keys.space)) {
+            this.jumpBufferTimer = this.jumpBufferTime;       // buffer salto
         } else {
             this.jumpBufferTimer -= delta;
         }
 
-        // reducir timers independientes de si atacamos o no
         this.dashCooldownTimer -= delta;
         this.shieldCooldownTimer -= delta;
         this.rangeAttackCooldownTimer -= delta;
 
-        //movemos al sprite de escudo
         if (this.shieldAura) {
-            this.shieldAura.x = this.x;
+            this.shieldAura.x = this.x;                       // mover aura
             this.shieldAura.y = this.y;
         }
     }
 
     /**
-        * @param {int} damage daño que recibe el jugador
-        * @param {int} knockbackdirection direccion que empuja al jugador, 1 derecha y -1 izquierda   
-        */
+     * aplicar daño
+     */
     takeDamage(damage, knockbackdirection) {
 
         if (this.invulnerable) return;
@@ -236,76 +203,56 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.safeDelay(this.invulnerableTime * 0.8, () => this.setTint(this.orbTint));
 
         this.invulnerable = true;
-        this.safeDelay(this.invulnerableTime, () => (this.invulnerable = false));
+        this.safeDelay(this.invulnerableTime, () => this.invulnerable = false);
 
-        if (this.hasShield && damage === 1) { // si tiene escudo, bloquea los daños no mortales
+        if (this.hasShield && damage === 1) {
             this.shieldCooldownTimer = this.shieldCooldown;
             this.hasShield = false;
             if (this.shieldAura) this.shieldAura.setVisible(false);
-            console.log("daño bloqueado")
             this?.shieldBlockSound?.play();
             return;
         }
 
         this?.damagedSound?.play();
-
         this.health -= damage;
         this.emit('updateHearts', this.health, true);
-        console.log(damage + ' daño recibido. Vida: ', + this.health);
 
-
-
-
-        if (this.health <= 0) {
-            this.die();
-        }
+        if (this.health <= 0) this.die();
 
         if (knockbackdirection && !this.dead) {
             this.stateMachine.setState('knockback', knockbackdirection);
         }
     }
 
-    // recoge el orbe si no lo tiene ya el player
-
     /**
-     * 
-     * @param {Orb} orb orbe que recoge el jugador  
+     * recoger orbe
      */
     collectOrb(orb) {
+
         if (!this.orbs.includes(orb)) {
             this.orbs.push(orb);
-            console.log('orbe recogido: ' + orb.name);
             this?.takeOrbSound?.play();
         }
 
-        for (let i = 0; i < this.equippedOrbs.length; i++) { //si hay algun slot libre, se autoequipa el orbe recogido
+        for (let i = 0; i < this.equippedOrbs.length; i++) {
             if (!this.equippedOrbs[i]) {
-                this.equipOrb(i, orb)
-                console.log('orbe equipado automaticamente en slot: ' + i);
-
-                if (this.activeOrbIndex === i) { //se autoactiva el primer orbe que recoges
-                    this.ActivateOrb(i)
+                this.equipOrb(i, orb);
+                if (this.activeOrbIndex === i) {
+                    this.ActivateOrb(i);
                 }
                 return;
             }
         }
     }
 
-    //equipar orbe orb en el slot slotIndex
-
     /**
-     * 
-     * @param {Int} slotIndex index de donde coloca el orbe, puede ser 0 o 1  
-     * @param {Orb} orb orbe que equipa
+     * equipar orbe
      */
     equipOrb(slotIndex, orb) {
 
         if (!orb) return;
         if (slotIndex < 0 || slotIndex > 1) return;
-
-        if (!this.orbs.includes(orb)) {
-            return;
-        }
+        if (!this.orbs.includes(orb)) return;
 
         if (this.equippedOrbs[slotIndex]) {
             this.equippedOrbs[slotIndex].onDesequip(this);
@@ -314,71 +261,78 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.equippedOrbs[slotIndex] = orb;
         orb.onEquip(this);
-        console.log('orbe equipado en slot ' + slotIndex + ' ' + orb.name);
         this.emit('orbChanged');
     }
 
+    /**
+     * dessequipar orbe
+     */
     desEquipOrb(slotIndex) {
-        if ((this.equippedOrbs[slotIndex] === null)) return;
-        if (slotIndex < 0 || slotIndex > 1) return;
+
+        if (!this.equippedOrbs[slotIndex]) return;
 
         this.equippedOrbs[slotIndex].onDesequip(this);
         this.equippedOrbs[slotIndex].onDesactivate(this);
-
         this.equippedOrbs[slotIndex] = null;
 
-        this.switchActiveOrb()
-        console.log('orbe desquipado en slot ' + slotIndex);
+        this.switchActiveOrb();
         this.emit('orbChanged');
     }
 
-    //cambiar orbe activo al siguiente slot
+    /**
+     * cambiar orbe activo
+     */
     switchActiveOrb() {
         let nextIndex = (this.activeOrbIndex + 1) % this.equippedOrbs.length;
         this.ActivateOrb(nextIndex);
         this?.changeOrbSound?.play();
     }
 
-    //cambiar orbe activo introduciendo manualmente el slot como parametro
     /**
-     * 
-     * @param {int} slotIndex index del orbe que quieres activar, puede ser 0 o 1. 
+     * activar orbe
      */
     ActivateOrb(slotIndex) {
+
         let currentOrb = this.equippedOrbs[this.activeOrbIndex];
         let nextOrb = this.equippedOrbs[slotIndex];
 
-        if (nextOrb) {
-            if (currentOrb) currentOrb.onDesactivate(this);
-            nextOrb.onActivate(this);
-            this.activeOrbIndex = slotIndex;
-            console.log('orbe activo: ' + nextOrb.name + ' efecto: ' + nextOrb.description);
-            this.emit('orbChanged');
-        }
+        if (!nextOrb) return;
+
+        if (currentOrb) currentOrb.onDesactivate(this);
+
+        nextOrb.onActivate(this);
+        this.activeOrbIndex = slotIndex;
+
+        this.emit('orbChanged');
     }
 
-
-
+    /**
+     * muerte del jugador
+     */
     die() {
         if (this.dead) return;
+
         if (this.shieldAura) this.shieldAura.setVisible(false);
-        console.log('Intentando cambiar a GameOver scene...');
+
         this.health = this.maxHealth;
         this.scene.scene.stop();
         this.scene.scene.launch('GameOver');
+
         this.dead = true;
-        console.log('jugador muerto');
         this.setVelocity(0, 0);
         this.stateMachine.setState('dead');
     }
 
-
-    //comprueba si el jugador esta en el suelo
+    /**
+     * jugador esta tocando el suelo
+     */
     isGrounded() {
         return this.body.onFloor();
     }
 
-    //detecta si el jugador ha pulsado alguna tecla de ataque y si es el caso devuelve en que direccion
+    /**
+     * direccion de ataque
+     */
     getAttackDirection() {
 
         if (Phaser.Input.Keyboard.JustDown(this.keys.upArrow)) return 'up';
@@ -389,116 +343,88 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         return null;
     }
 
-    //realiza el ataque segun la direccion
     /**
-     * 
-     * @param {string} direction direccion en la que ataca el jugador: left, right, up, down
+     * ataque melee
      */
     performMeleeAttack(direction) {
-        //comprueba si puede atacar
+
         if (this.isAttacking) return;
 
         this?.attackSound?.play();
-
-        console.log('attack');
-
         this.isAttacking = true;
-        //cooldown entre ataques
-        this.safeDelay(this.attackCooldown, () => {
-            this.isAttacking = false;
-        });
 
+        this.safeDelay(this.attackCooldown, () => this.isAttacking = false);
 
         let offsetX = 0, offsetY = 0;
         let w = this.meleeAttackWidge;
         let h = this.meleeAttackHeight * this.attackRangeMultiplier;
 
-        //calculamos el offset del hitbox segun la direccion
         switch (direction) {
             case 'left': offsetX = -this.meleeAttackDist; break;
             case 'right': offsetX = this.meleeAttackDist; break;
-            case 'up': offsetY = -this.meleeAttackDist;[w, h] = [h, w]; break;
-            case 'down': offsetY = this.meleeAttackDist;[w, h] = [h, w]; break;
+            case 'up': offsetY = -this.meleeAttackDist; [w,h]=[h,w]; break;
+            case 'down': offsetY = this.meleeAttackDist; [w,h]=[h,w]; break;
         }
 
-        //creamos el hitbox de ataqeu rectangular
         let hitbox = this.scene.add.rectangle(this.x + offsetX, this.y + offsetY, h, w, 0xff0000, 0.5);
         this.scene.physics.add.existing(hitbox);
         hitbox.body.allowGravity = false;
 
-        let hitEnemies = new Set(); // guarda enemigos dañados
+        let hitEnemies = new Set();
 
         this.scene.physics.add.overlap(hitbox, this.scene.enemies, (hb, enemy) => {
-            //no hacer daño varias veces al mismo enemigo
+
             if (hitEnemies.has(enemy)) return;
             hitEnemies.add(enemy);
+
             enemy.takeDamage(this.damage * this.damageMultiplier);
-            this?.attackHitSound?.play();
+
             if (direction === 'down') {
                 this.canPogoJump = true;
-
-                this.safeDelay(this.pogoJumpJudgeTime, () => {
-                    this.canPogoJump = false;
-                });
+                this.safeDelay(this.pogoJumpJudgeTime, () => this.canPogoJump = false);
             }
         });
 
-        // SPRITE DE ATAQUE MELEE
         let meleeSprite;
+
         if (this.attackRangeMultiplier != 1) {
             meleeSprite = this.scene.add.sprite(this.x + offsetX, this.y + offsetY, 'melee_Ampliado');
-            meleeSprite.setDepth(10);
             meleeSprite.play({ key: 'melee_ampliado_anim', repeat: 0 });
-        }
-        else {
+        } else {
             meleeSprite = this.scene.add.sprite(this.x + offsetX, this.y + offsetY, 'melee');
-            meleeSprite.setDepth(10);
             meleeSprite.play({ key: 'melee_anim', repeat: 0 });
         }
-        // Ajustar rotación / flip
+
+        meleeSprite.setDepth(10);
+
         switch (direction) {
-            case 'right':
-                meleeSprite.setFlipX(false);
-                meleeSprite.setAngle(0);
-                break;
-
-            case 'left':
-                meleeSprite.setFlipX(true);
-                meleeSprite.setAngle(0);
-                break;
-
-            case 'up':
-                meleeSprite.setFlipX(false);
-                meleeSprite.setAngle(-90);
-                break;
-
-            case 'down':
-                meleeSprite.setFlipX(false);
-                meleeSprite.setAngle(90);
-                break;
+            case 'right': meleeSprite.setFlipX(false); meleeSprite.setAngle(0); break;
+            case 'left': meleeSprite.setFlipX(true); meleeSprite.setAngle(0); break;
+            case 'up': meleeSprite.setAngle(-90); break;
+            case 'down': meleeSprite.setAngle(90); break;
         }
 
-
-        // Destruir hitbox y sprite después de la duración del ataque
         this.safeDelay(this.attackDuration, () => {
             hitbox.destroy();
             meleeSprite.destroy();
         });
     }
 
-
+    /**
+     * delay seguro
+     */
     safeDelay(time, callback) {
         if (!this.scene || !this.scene.time) return;
         this.scene.time.delayedCall(time, () => {
             if (this.scene) callback();
         });
-
     }
 
-    //performRangeAttack(direction) {
-    //}
-
+    /**
+     * ataque distancia
+     */
     performRangeAttack() {
+
         if (!this.canRangeAttack) return;
         if (this.isAttacking) return;
 
@@ -509,38 +435,25 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.safeDelay(this.rangeAttackCooldown, () => this.isAttacking = false);
 
-        // crear proyectil
         let projectile = this.scene.physics.add.sprite(this.x, this.y, 'plume');
         projectile.setDepth(4);
         projectile.body.allowGravity = false;
 
-        // Determinar la dirección del proyectil basada en la dirección del jugador
-        let direction = this.direction; // 1 para derecha, -1 para izquierda
+        let direction = this.direction;
 
-        // Velocidad según la dirección del jugador
         projectile.setVelocityX(this.rangeAttackSpeed * direction);
+        projectile.setFlipX(direction === -1);
 
-        // Rotar el sprite si está disparando a la izquierda
-        if (direction === -1) {
-            projectile.setFlipX(true);
-        } else {
-            projectile.setFlipX(false);
-        }
-
-
-        // destruir despues de su duracion
         this.safeDelay(this.rangeAttackDuration, () => {
             if (projectile.active) projectile.destroy();
         });
 
-        //destruye al chocar una pared
         if (this.scene.ground) {
             this.scene.physics.add.collider(projectile, this.scene.ground, () => {
                 projectile.destroy();
             });
         }
 
-        // hace daño a enemigos
         this.scene.physics.add.overlap(projectile, this.scene.enemies, (proj, enemy) => {
             enemy.takeDamage(this.rangeDamage * this.damageMultiplier);
             proj.destroy();

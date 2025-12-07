@@ -1,30 +1,38 @@
 import BaseState from '../../stateMachine/BaseState.js';
 
+/**
+ * estado salto del jugador
+ */
 export default class PlayerJumpState extends BaseState {
-    enter(player) {
-        //aplicar velocidad salto
-        
 
-        player?.jumpSound?.play();
-        player.setVelocityY(-player.jumpSpeed*player.jumpSpeedModifier);
+    /**
+     * se ejecuta al iniciar el salto
+     */
+    enter(player) {
+        player?.jumpSound?.play();                                 // sonido salto
+        player.setVelocityY(-player.jumpSpeed * player.jumpSpeedModifier); // aplicar salto
     }
 
+    /**
+     * logica del salto
+     */
     execute(player) {
 
-        //si el jugador ha pulsado A 
+        // movimiento en el aire a la izquierda
         if (player.keys.left.isDown) {
             player.setFlipX(true);
             player.direction = -1;
-            player.setVelocityX(player.direction * player.movementSpeed*player.speedMultiplier)
+            player.setVelocityX(player.direction * player.movementSpeed * player.speedMultiplier);
         }
-         //si el jugador ha pulsado D 
+
+        // movimiento en el aire a la derecha
         else if (player.keys.right.isDown) {
             player.setFlipX(false);
             player.direction = 1;
-            player.setVelocityX(player.direction * player.movementSpeed*player.speedMultiplier)
+            player.setVelocityX(player.direction * player.movementSpeed * player.speedMultiplier);
         }
 
-        //si esta en el suelo cambia de estado
+        // si toca el suelo -> volver a idle o move
         if (player.isGrounded()) {
             if (Math.abs(player.body.velocity.x) > 10)
                 player.stateMachine.setState('move');
@@ -32,22 +40,19 @@ export default class PlayerJumpState extends BaseState {
                 player.stateMachine.setState('idle');
         }
 
-        if (player.canPogoJump && player.jumpBufferTimer >0){
+        // pogo jump
+        if (player.canPogoJump && player.jumpBufferTimer > 0) {
             player.canPogoJump = false;
-            player.setVelocityY(-player.pogoJumpSpeed*player.jumpSpeedModifier);
-            player.play('jump', true);            
+            player.setVelocityY(-player.pogoJumpSpeed * player.jumpSpeedModifier);
+            player.play('jump', true);
         }
-        /*
-        //ataque del jugador
-        if (player.attackDir && !player.isAttacking) {
-    
-            player.stateMachine.setState('attack');
-            return;
-        } */
     }
 
-    exit(player){
-        player?.jumpEndSound?.play();
-        player.canPogoJump = false;
+    /**
+     * al salir del estado salto
+     */
+    exit(player) {
+        player?.jumpEndSound?.play();     // sonido de finalizar salto
+        player.canPogoJump = false;       // quitar pogo jump
     }
 }

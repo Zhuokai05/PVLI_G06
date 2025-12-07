@@ -1,94 +1,99 @@
 import BaseState from '../../stateMachine/BaseState.js';
 
+/**
+ * estado dash del jugador
+ * controla el movimiento rapido e invulnerable
+ */
 export default class PlayerDashState extends BaseState {
    
+    /**
+     * se ejecuta al entrar en el estado dash
+     */
     enter(player) {
 
-        this?.dashSound?.play();
-        this.dashSpawnShadowFrequency = 40; //frecuencia en la que invoca sombras que siguen al jugador cuando dashea
-        this.dashShadowDuration = 250; //duracion de cada sombra
+        this?.dashSound?.play();                               // reproducir sonido dash
+        this.dashSpawnShadowFrequency = 40;                    // frecuencia de sombras
+        this.dashShadowDuration = 250;                         // duracion sombras
 
-   
-        this.player = player;
-        player.isDashing = true;
+        this.player = player;                                  // referencia al jugador
+        player.isDashing = true;                               // activar estado dash
+        player.invulnerable = true;                            // invulnerable mientras dash
 
-        player.invulnerable = true;
+        // guardar estado previo
+        this.previousGravity = player.body.gravity.y;          // gravedad previa
+        this.previousVelX = player.body.velocity.x;            // velocidad previa
 
-        //guardamos su estado anterior
-        this.previousGravity = player.body.gravity.y;
-        this.previousVelX = player.body.velocity.x;
-
-        player.setGravityY(0); 
+        // quitar gravedad temporalmente
+        player.setGravityY(0);
         player.setVelocityY(0);
-        //player.play('dash', true);
 
-        let direction = player.direction ; // 1 o -1 según donde mire
-        player.setVelocityX(player.dashSpeed * direction);
+        let direction = player.direction;                      // direccion horizontal
+        player.setVelocityX(player.dashSpeed * direction);     // velocidad final del dash
 
+        // handler de colision con bordes del mundo
         this.collisionHandler = () => {
-            if (player.isDashing) {
-                player.isDashing = false;
-            }
+            if (player.isDashing) player.isDashing = false;     // parar dash si choca
         };
 
-        //evento de cuando choca con worldbounds, llama a collisionHandler
+        // registrar evento
         player.scene.physics.world.on('worldbounds', this.collisionHandler);
         player.body.onWorldBounds = true;
 
-        //acabar el dash
+        // temporizador para terminar dash
         player.safeDelay(player.dashDuration, () => {
             player.isDashing = false;
         });
 
-        player.alpha = 0.5;
+        player.alpha = 0.5;                                    // semitransparente mientras dash
 
-        //timer para invocar sombras detras del jugador
+        // timer que genera sombras
         this.ghostTimer = player.scene.time.addEvent({
             delay: this.dashSpawnShadowFrequency,
             loop: true,
             callback: () => {
-                if (player.isDashing) {
-                    this.spawnDashGhost();
-                }
+                if (player.isDashing) this.spawnDashGhost();    // crear sombra si aun dasheando
             }
         });
 
     }
 
+    /**
+     * se ejecuta cada frame mientras el jugador este en dash
+     */
     execute(player) {
-        if (!player.isDashing) {
-            player.dashCooldownTimer = player.dashCooldown;
-            player.stateMachine.setState('idle');
-            return;
+        if (!player.isDashing) {                                // si el dash termina
+            player.dashCooldownTimer = player.dashCooldown;     // iniciar cooldown
+            player.stateMachine.setState('idle');               // volver a idle
         }
     }
 
+    /**
+     * se ejecuta al salir del estado dash
+     */
     exit(player){
-        player.isDashing = false;
-        player.setGravityY(this.previousGravity);
-        player.setVelocityY(0);
-        player.setVelocityX(this.previousVelX);
-        //quitamos el evento
+        player.isDashing = false;                               // quitar estado dash
+        player.setGravityY(this.previousGravity);               // restaurar gravedad
+        player.setVelocityY(0);                                 // reset vertical
+        player.setVelocityX(this.previousVelX);                 // restaurar velocidad anterior
+
         player.scene.physics.world.off('worldbounds', this.collisionHandler);
-        player.isDashing = false;
-        player.invulnerable = false;
+        player.invulnerable = false;                            // ya no invulnerable
+        player.alpha = 1;                                       // recuperar opacidad
 
-        player.alpha = 1;
-
-        if (this.ghostTimer) {
-            this.ghostTimer.remove();
-        }
+        if (this.ghostTimer) this.ghostTimer.remove();          // cancelar sombras
     }
 
-    //pina sombras que sigue al jugador
+    /**
+     * genera sombras del jugador mientras hace dash
+     */
     spawnDashGhost() {
         let ghost = this.player.scene.add.sprite(this.player.x, this.player.y, this.player.texture.key);
-        ghost.setFlipX(this.player.flipX);
-        ghost.setScale(this.player.scaleX); 
-        ghost.setDepth(this.player.depth - 1); // para que este pintado detras del jugador
-        ghost.alpha = 0.6;
+        ghost.setFlipX(this.player.flipX);                      // misma orientacion
+        ghost.setScale(this.player.scaleX);                     // misma escala
+        ghost.setDepth(this.player.depth - 1);                  // dibujar detras
+        ghost.alpha = 0.6;                                      // semitransparente
 
-        // Tween de desaparicion
+        // tween de desaparicion
         this.player.scene.tweens.add({
             targets: ghost,
             alpha: 0,

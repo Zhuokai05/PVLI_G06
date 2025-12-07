@@ -1,52 +1,68 @@
 import StateMachine from '../stateMachine/StateMachine.js';
 
+/**
+ * clase base de todos los enemigos
+ * contiene stats comunes, deteccion, danio y muerte
+ */
 export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
 
-  constructor(scene, x, y, texture = 'enemy',frame = 0, 
-    moveAnimationKey, attackAnimationKey,deathAnimationKey,projectileTexture,projectileTextureFrame)
+  /**
+   * constructor base
+   */
+  constructor(scene, x, y, texture = 'enemy', frame = 0,
+    moveAnimationKey, attackAnimationKey, deathAnimationKey,
+    projectileTexture, projectileTextureFrame)
   {
+    super(scene, x, y, texture, frame);
 
-    super(scene, x, y, texture,frame);
-    scene.add.existing(this);
-    scene.physics.add.existing(this);
+    // escena y fisicas
+    scene.add.existing(this);                         // agregar sprite
+    scene.physics.add.existing(this);                 // activar fisicas
+    this.scene = scene;                               // guardar escena
+    this.player = scene.player;                       // referencia al jugador
 
-    this.moveAnimationKey = moveAnimationKey;
-    this.attackAnimationKey = attackAnimationKey;
-    this.deathAnimationKey = deathAnimationKey;
-    this.projectileTexture = projectileTexture;
-    this.projectileTextureFrame = projectileTextureFrame;
+    // animaciones
+    this.moveAnimationKey = moveAnimationKey;         // anim caminar
+    this.attackAnimationKey = attackAnimationKey;     // anim atacar
+    this.deathAnimationKey = deathAnimationKey;       // anim muerte
+    this.projectileTexture = projectileTexture;       // sprite proyectil
+    this.projectileTextureFrame = projectileTextureFrame; // frame proyectil
 
-    
-    //en casos de que el sprite tenga mucho borde, osea collider muy grande, le reducimos el collider
-    this.colliderWidthDivider = 1;
-    this.colliderHeightDivider = 1;
+    // collider
+    this.colliderWidthDivider = 1;                    // divisor ancho collider
+    this.colliderHeightDivider = 1;                   // divisor alto collider
 
-    this.collisionDamage = 1; // daño que hace al jugador al colisionar con el
-    this.scene = scene;
-    this.player = scene.player;
-    this.speed = 50; //velocidad
-    this.verticalSpeed = 0; //velocidad en Y
-    this.attackRange = 80; //rango de ataque
-    this.health = 3; //vida
-    this.distanceBtwEnemies = 20; //distancia minima que existe entre los enemigos
-    this.dead=false; //si esta muerto
-    this.body.pushable = false; //para que no pueda ser empujado
-    this.applyKnockbackToPlayer = true; // si aplica knockback al jugador
-    this.detectPlayerRangeX = 500; //rango en X que empieza a detecta el jugador
-    this.detectPlayerRangeY = 50; //rango en Y que empieza a detecta el jugador
-    this.isAttacking = false;
-    
-    this.damage = 1; // el daño que hace
+    // stats
+    this.health = 3;                                  // vida
+    this.speed = 50;                                  // velocidad movimiento
+    this.verticalSpeed = 0;                           // velocidad vertical
+    this.attackRange = 80;                            // rango ataque melee
+    this.damage = 1;                                  // danio base
+    this.collisionDamage = 1;                         // danio por colision
+    this.startAttackTime = 1000;                      // tiempo hasta atacar
+    this.attackDuration = 100;                        // duracion ataque
+    this.distanceBtwEnemies = 20;                     // distancia minima entre enemigos
 
-    this.startAttackTime = 1000; //en cuanto tiempo empieza el ataque estando player delante
-    this.attackDuration = 100; //cuanto dura el ataque
+    // estado y control
+    this.dead = false;                                // enemigo esta vivo
+    this.isAttacking = false;                         // esta atacando
+    this.applyKnockbackToPlayer = true;               // aplica knockback al jugador
 
+    // deteccion del jugador
+    this.detectPlayerRangeX = 500;                    // rango x de deteccion
+    this.detectPlayerRangeY = 50;                     // rango y de deteccion
+
+    // fisicas
+    this.body.pushable = false;                       // no puede ser empujado
+    this.maxVelocityX = 1000;                         // vmax x
+    this.maxVelocityY = 1000;                         // vmax y
+    this.setDepth(4);                                 // profundidad render
+    this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);
+
+    // estado maquina
     this.stateMachine = new StateMachine(this, 'enemy');
 
-    this.maxVelocityX = 1000; //velocidad maxima en X
-    this.maxVelocityY = 1000;//velocidad maxima en Y
-
-    //colision contra el player
+    // colision con jugador
     this.playerOverlap = scene.physics.add.overlap(
       this,
       this.player,
@@ -54,99 +70,99 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
       null,
       this
     );
-
-    this.setDepth(4);
-
-    this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY); //velocidad maxima
-
   }
 
+  /**
+   * update comun de todos los enemigos
+   */
   update(time, delta) {
     if (this.dead || this.player.dead) return;
-    this.stateMachine.step(time, delta);
+    this.stateMachine.step(time, delta);               // avanzar estado
   }
 
-  //detecta si la posicion del jugador esta dentro de su rango de deteccion
+  /**
+   * comprueba si el jugador esta en rango de deteccion
+   */
   canSeePlayer() {
-    let distX = Math.abs(this.player.x - this.x);
-    let distY = Math.abs(this.player.y - this.y);
+    let distX = Math.abs(this.player.x - this.x);      // distancia x
+    let distY = Math.abs(this.player.y - this.y);      // distancia y
     return distX < this.detectPlayerRangeX && distY < this.detectPlayerRangeY;
   }
 
-
-  //en casos de que el sprite tenga mucho borde, osea collider muy grande, le reducimos el collider
-  DivideCollider(colliderWidthDivisor,colliderHeightDivisor){
-    this.body.setSize(this.width / colliderWidthDivisor, this.height / colliderHeightDivisor);
-    this.body.setOffset((this.width-this.width/colliderWidthDivisor)/2, (this.height-this.height/colliderHeightDivisor)/ 2);
+  /**
+   * reduce el tamano del collider
+   */
+  DivideCollider(divW, divH) {
+    this.body.setSize(this.width / divW, this.height / divH);
+    this.body.setOffset(
+      (this.width - this.width / divW) / 2,
+      (this.height - this.height / divH) / 2
+    );
   }
-  //funcion que se llama al colisionar con el jugador
 
   /**
-   * 
-   * @param {Player} player el jugador que colisiona
-   * @param {Enemy} enemy el enemigo que colisiona   
+   * colision entre jugador y enemigo
    */
   CollisionWithPlayer(player, enemy) {
-    console.log('Colision con enemigo');
+    console.log('colision con enemigo');
 
-    //si hace knockback le aplicamos knockback 
-    if (this.applyKnockbackToPlayer){
-      let knockbackDirection = player.x < enemy.x ? 1 : -1;
-      this.player.takeDamage(this.collisionDamage,knockbackDirection);
-    }
-    
-    else 
-    {
+    if (this.applyKnockbackToPlayer) {
+      let dir = player.x < enemy.x ? 1 : -1;           // direccion knockback
+      this.player.takeDamage(this.collisionDamage, dir);
+    } else {
       this.player.takeDamage(this.collisionDamage);
     }
   }
 
+  /**
+   * recibir danio
+   */
   takeDamage(amount) {
     if (this.inmune) return;
-    this.health -= amount;
+
+    this.health -= amount;                             // quitar vida
     console.log(`Enemy HP: ${this.health}`);
 
-    if (this.health <= 0) {
-      this.die();
-    }
+    if (this.health <= 0) this.die();                  // morir si llega a 0
   }
 
-  //muerte del enemigo
+  /**
+   * muerte del enemigo
+   */
   die() {
-    if (this.dead) return; 
-    this.dead = true;
-    
-    this.body.allowGravity = true; 
-    this.setVelocityX(0);
+    if (this.dead) return;
 
-    if(this.player && this.player.health < this.player.maxHealth){
-      this.player.health +=this.player.bloodStealAmount;
+    this.dead = true;
+    this.body.allowGravity = true;                     // gravedad al morir
+    this.setVelocityX(0);                              // detener movimiento
+
+    // robo de vida del jugador
+    if (this.player && this.player.health < this.player.maxHealth) {
+      this.player.health += this.player.bloodStealAmount;
       this.player.emit('updateHearts', this.player.health, false);
     }
-      //si tiene animacion de muerte, se espera acabar la animacion y de destruye
-    if(this.deathAnimationKey){
+
+    // animacion de muerte
+    if (this.deathAnimationKey) {
       this.play(this.deathAnimationKey, true);
       this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
         this.setActive(false);
         this.setVisible(false);
         this.destroy();
       });
-    } 
-    
-    else {
-      this.scene.time.delayedCall(100, () => {
-        this.destroy();
-      });
+    } else {
+      // muerte sin animacion
+      this.scene.time.delayedCall(100, () => this.destroy());
     }
   }
 
-  playMoveAnimation(){
-    if(this.dead) return;
-    if(this.moveAnimationKey) this.play(this.moveAnimationKey, true);
+  playMoveAnimation() {
+    if (!this.dead && this.moveAnimationKey)
+      this.play(this.moveAnimationKey, true);
   }
 
-  playAttackAnimation(){
-    if(this.dead) return;
-    if(this.attackAnimationKey) this.play(this.attackAnimationKey, true);
+  playAttackAnimation() {
+    if (!this.dead && this.attackAnimationKey)
+      this.play(this.attackAnimationKey, true);
   }
 }
