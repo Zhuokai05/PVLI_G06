@@ -199,8 +199,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "bossdoorexit":
                     this.irabossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertaira');
                     break;
+
                 case "sadnessbossdoor":
                     this.tristebossdoor = new SadnessBossDoor(this, objeto.x, objeto.y, 'puertatriste');
+                    this.bottones = new TutorialPanel(this, objeto.x, objeto.y - 50, 'No hay','Esta puerta se abre con botones.');
                     break;
                 case "sadnessbossdoorcontrary":
                     this.tristebossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste');
@@ -509,7 +511,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.iraPlatforms);
         this.physics.add.collider(layer, this.enemies);
         this.cameras.main.startFollow(this.player);
-        this.cameras.main.setFollowOffset(0, 200);
+        this.cameras.main.setFollowOffset(0, 100);
         this.cameras.main.setBounds(-200, 0, 140000, 100000);
 
 
@@ -888,6 +890,9 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         if (this.player && this.tutorial_attack) {
             this.tutorial_attack.update(this.player);
+        }
+        if (this.player && this.bottones) {
+            this.bottones.update(this.player);
         }
     }
     handleBossRoom(bossRoom) {
