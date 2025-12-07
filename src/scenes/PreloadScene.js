@@ -152,6 +152,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.audio('PlayerJump_sound', './assets/Sounds/Player/PlayerJump.wav');
     this.load.audio('PlayerJumpEnd_sound', './assets/Sounds/Player/PlayerJumpEnd.wav');
     this.load.audio('PlayerAttack_sound', './assets/Sounds/Player/PlayerAttack.wav');
+    this.load.audio('PlayerAttackHit_sound', './assets/Sounds/Player/PlayerAttackHit.wav');
     this.load.audio('PlayerDamaged_sound', './assets/Sounds/Player/PlayerDamaged.wav');
     this.load.audio('PlayerTakeOrb_sound', './assets/Sounds/Player/PlayerTakeOrb.mp3');
     this.load.audio('PlayerChangeOrb_sound', './assets/Sounds/Player/PlayerChangeOrb.wav');
@@ -159,6 +160,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.audio('PlayerDash_sound', './assets/Sounds/Player/PlayerDash.wav');
     this.load.audio('PlayerShield_sound', './assets/Sounds/Player/PlayerShield.wav');
     this.load.audio('PlayerShieldBlock_sound', './assets/Sounds/Player/PlayerShieldBlock.wav');
+
 
     //objetos
     this.load.audio('ActivateCheckpoint_sound', './assets/Sounds/Object/Checkpoint.wav');

@@ -129,6 +129,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             loop: false
         });
 
+        this.attackHitSound = this.scene.sound.add('PlayerAttackHit_sound', {
+            volume: 0.4,
+            loop: false
+        });
+
         this.jumpSound = this.scene.sound.add('PlayerJump_sound', {
             volume: 1,
             loop: false
@@ -428,7 +433,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (hitEnemies.has(enemy)) return;
             hitEnemies.add(enemy);
             enemy.takeDamage(this.damage * this.damageMultiplier);
-
+            this?.attackHitSound?.play();
             if (direction === 'down') {
                 this.canPogoJump = true;
 
