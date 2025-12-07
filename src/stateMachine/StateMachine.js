@@ -57,3 +57,4 @@ export default class StateMachine {
     /**
      * ejecuta el estado actual cada frame
      */
+}
