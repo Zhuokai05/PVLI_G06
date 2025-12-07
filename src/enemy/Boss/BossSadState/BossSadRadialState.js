@@ -19,7 +19,6 @@ export default class BossSadRadialState extends BaseState {
         const cam = scene.cameras.main;
 
         // Crear advertencia circular alrededor del boss
-        // Usamos un círculo en lugar de rectángulo para radial
         this.warningCircle = scene.add.circle(
             this.boss.x,
             this.boss.y,
@@ -78,18 +77,21 @@ export default class BossSadRadialState extends BaseState {
         this.stateTime = 0;
         
         // Destruir advertencias
-        this.destroyWarning();
+        this.destroyAllWarnings();
         
         // Lanzar carámbanos
         this.spawnRadialIcicles(12);
     }
-
-    destroyWarning() {
+    
+    // NUEVO MÉTODO (renombrar destroyWarning a destroyAllWarnings)
+    destroyAllWarnings() {
         if (this.warningCircle && this.warningCircle.active) {
             this.warningCircle.destroy();
+            this.warningCircle = null;
         }
         if (this.warningBorder && this.warningBorder.active) {
             this.warningBorder.destroy();
+            this.warningBorder = null;
         }
     }
 
@@ -173,6 +175,6 @@ export default class BossSadRadialState extends BaseState {
 
     exit(context) {
         // Asegurarse de limpiar las advertencias si aún existen
-        this.destroyWarning();
+        this.destroyAllWarnings();
     }
 }
