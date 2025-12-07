@@ -110,7 +110,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.switchActiveOrb();
         });
 
-        // Sonidos
+        this.createSFX();
+
+        //aura del escudo cuando tiene el escudo activado
+        this.shieldAura = this.scene.add.image(this.x, this.y, 'playerShieldAura')
+            .setDepth(this.depth + 1)           // delante del jugador
+            .setAlpha(0.8)                      // semitransparente
+            .setVisible(false)                  // oculto por defecto
+            .setScale(1.2);
+
+        this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);   //velocidad maxima
+    }
+
+    createSFX(){
+          // Sonidos
         this.attackSound = this.scene.sound.add('PlayerAttack_Sound', {
             volume: 0.2,
             loop: false
@@ -160,17 +173,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             volume: 0.3,
             loop: false
         })
-
-        //aura del escudo cuando tiene el escudo activado
-        this.shieldAura = this.scene.add.image(this.x, this.y, 'playerShieldAura')
-            .setDepth(this.depth + 1)           // delante del jugador
-            .setAlpha(0.8)                      // semitransparente
-            .setVisible(false)                  // oculto por defecto
-            .setScale(1.2);
-
-        this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);   //velocidad maxima
     }
-
+    
     update(time, delta) {
         this.stateMachine.step(time, delta);
 
