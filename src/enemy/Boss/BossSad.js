@@ -84,27 +84,36 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     }
 
     setupCollisions() {
-        this.icicleOverlap = this.scene.physics.add.overlap(
-            this.icicles,
-            this.player,
-            this.icicleCollisionWithPlayer,
-            null,
-            this
-        );
-        this.waterBallOverlap = this.scene.physics.add.overlap(
-            this.waterBalls,
-            this.player,
-            this.waterBallCollisionWithPlayer,
-            null,
-            this
-        );
-        this.radialIcicleOverlap = this.scene.physics.add.overlap(
-            this.radialIcicles,
-            this.player,
-            this.radialIcicleCollisionWithPlayer,
-            null,
-            this
-        );
+        // Configurar overlaps solo si no existen ya
+        if (!this.icicleOverlap) {
+            this.icicleOverlap = this.scene.physics.add.overlap(
+                this.icicles,
+                this.player,
+                this.icicleCollisionWithPlayer,
+                null,
+                this
+            );
+        }
+        
+        if (!this.waterBallOverlap) {
+            this.waterBallOverlap = this.scene.physics.add.overlap(
+                this.waterBalls,
+                this.player,
+                this.waterBallCollisionWithPlayer,
+                null,
+                this
+            );
+        }
+        
+        if (!this.radialIcicleOverlap) {
+            this.radialIcicleOverlap = this.scene.physics.add.overlap(
+                this.radialIcicles,
+                this.player,
+                this.radialIcicleCollisionWithPlayer,
+                null,
+                this
+            );
+        }
     }
 
     startRandomState() {
@@ -148,13 +157,13 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
-        if (this.notdead) {
+        if (this.notdead && this.isActivated) { // Solo actualizar si está vivo y activado
             this.stateMachine.step(time, delta);
         }
     }
 
     takeDamage(damage) {
-        if (!this.isActivated) return;
+        if (!this.isActivated || !this.notdead) return; // No recibir daño si no está activado o ya está muerto
 
         this.health -= damage;
         this.setTint(0x0000ff); // Azul para tristeza
@@ -182,6 +191,16 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
 
         if (this.phase === 1) {
             console.log('BossSad entra en FASE 2');
+            
+            // LIMPIAR WARNINGS ANTES DE LA TRANSICIÓN
+            this.cleanupAllWarnings();
+            this.clearActiveAttackObjects();
+            
+            // Cambiar a estado inactivo durante la transición
+            if (this.stateMachine) {
+                this.stateMachine.setState('inactive');
+            }
+
             this.phase = 2;
             this.health = this.maxHealth + 3; // Dar más vida para fase 2
 
@@ -195,29 +214,12 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
             this.scene.cameras.main.shake(800, 0.02);
             this.scene.cameras.main.flash(500, 50, 50, 255); // Azul para tristeza
 
-            // DEBUG: Añadir texto para verificar
-            this.scene.add.text(400, 300, 'FASE 2', {
-                fontSize: '48px',
-                fill: '#00ffff',
-                fontStyle: 'bold'
-            }).setOrigin(0.5);
-
             // Esperar y revivir
             this.scene.time.delayedCall(2000, () => {
                 console.log('Reactivar BossSad para fase 2');
 
                 this.setActive(true);
                 this.setVisible(true);
-
-                // Volver a la posición original
-                this.setX(this.x);
-                this.setY(this.y);
-
-                // Asegurar que el cuerpo de física esté configurado
-                const spriteWidth = this.displayWidth;
-                const spriteHeight = this.displayHeight;
-                this.body.setSize(spriteWidth / 35, spriteHeight / 35);
-                this.body.setOffset(spriteWidth / 8.9, spriteHeight / 12);
 
                 // Efecto de aparición
                 this.scene.tweens.add({
@@ -227,7 +229,8 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
                     ease: 'Sine.easeInOut'
                 });
 
-                //this.setupCollisions();
+                // Asegurar que las colisiones estén configuradas
+                this.setupCollisions();
 
                 // Iniciar cooldown antes del primer ataque
                 this.generateNewCooldown();
@@ -252,6 +255,20 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
     die() {
         console.log('BossSad muere');
 
+        // IMPORTANTE: Limpiar todos los warnings y estados activos
+        this.cleanupAllWarnings();
+        
+        // Desactivar el estado actual si existe
+        if (this.stateMachine && this.stateMachine.currentState && 
+            this.stateMachine.currentState.exit) {
+            this.stateMachine.currentState.exit(this);
+        }
+        
+        // Cambiar a estado inactivo
+        if (this.stateMachine) {
+            this.stateMachine.setState('inactive');
+        }
+
         // Asegúrate de que las puertas y pisos existen
         if (this.Bossdoors) {
             console.log('Abriendo puertas del BossSad');
@@ -274,6 +291,13 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
         PlayerDataManager.killBoss('sadness');
         this.scene.events.emit('bossDefeated');
 
+        // Desactivar físicas
+        this.setActive(false);
+        this.setVisible(false);
+        
+        // IMPORTANTE: Destruir todos los objetos de ataque
+        this.destroyAllAttackObjects();
+        
         console.log('BossSad eliminado del registro');
     }
 
@@ -296,5 +320,71 @@ export default class BossSad extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.setState('cooldown');
 
         console.log('BossSad activado, vida:', this.health);
+    }
+    
+    // NUEVOS MÉTODOS PARA LIMPIAR WARNINGS
+    cleanupAllWarnings() {
+        // Si hay un estado actual activo, llamar a su método de limpieza
+        if (this.stateMachine && this.stateMachine.currentState) {
+            const currentState = this.stateMachine.currentState;
+            
+            // Llamar a métodos específicos de limpieza si existen
+            if (typeof currentState.destroyAllWarnings === 'function') {
+                currentState.destroyAllWarnings();
+            }
+            
+            // También intentar limpiar warnings directamente
+            if (currentState.warningRect && currentState.warningRect.destroy) {
+                currentState.warningRect.destroy();
+            }
+            if (currentState.warningCircle && currentState.warningCircle.destroy) {
+                currentState.warningCircle.destroy();
+            }
+            if (currentState.warningBorder && currentState.warningBorder.destroy) {
+                currentState.warningBorder.destroy();
+            }
+            if (currentState.waterBall && currentState.waterBall.destroy) {
+                currentState.waterBall.destroy();
+            }
+        }
+    }
+    
+    clearActiveAttackObjects() {
+        // Solo limpiar objetos activos, mantener los grupos
+        if (this.icicles) {
+            this.icicles.clear(true, true);
+        }
+        
+        if (this.waterBalls) {
+            this.waterBalls.clear(true, true);
+        }
+        
+        if (this.radialIcicles) {
+            this.radialIcicles.clear(true, true);
+        }
+    }
+    
+    destroyAllAttackObjects() {
+        // Destruir todos los objetos activos
+        this.clearActiveAttackObjects();
+        
+        // Desactivar overlaps solo cuando muere definitivamente
+        this.removeAllColliders();
+    }
+    
+    removeAllColliders() {
+        // Solo eliminar overlaps cuando el boss muere definitivamente
+        if (this.icicleOverlap) {
+            this.scene.physics.world.removeCollider(this.icicleOverlap);
+            this.icicleOverlap = null;
+        }
+        if (this.waterBallOverlap) {
+            this.scene.physics.world.removeCollider(this.waterBallOverlap);
+            this.waterBallOverlap = null;
+        }
+        if (this.radialIcicleOverlap) {
+            this.scene.physics.world.removeCollider(this.radialIcicleOverlap);
+            this.radialIcicleOverlap = null;
+        }
     }
 }

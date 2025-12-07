@@ -7,12 +7,12 @@ export default class BossSadWaterBallState extends BaseState {
         this.currentPhase = 'spawn'; // spawn -> follow -> explode -> cooldown
         this.spawnDuration = 500;
         this.followDuration = 5000; 
-        this.explodeDuration = 600; // Aumentado para mejor efecto
+        this.explodeDuration = 600;
         this.cooldownDuration = 500;
         
         // Flags para controlar estados
         this.damageApplied = false;
-        this.ballDestroyed = false; // Para saber si la bola ya fue destruida
+        this.ballDestroyed = false;
         
         this.startSpawnPhase();
         
@@ -59,7 +59,7 @@ export default class BossSadWaterBallState extends BaseState {
         const { scene, waterBalls } = this.boss;
         
         this.waterBall = waterBalls.create(this.boss.x, this.boss.y - 50, 'water_ball');
-        this.waterBall.setScale(1.4); // Un poco más grande
+        this.waterBall.setScale(1.4);
         this.waterBall.body.allowGravity = false;
         this.waterBall.setTint(0x4169e1);
         
@@ -84,7 +84,7 @@ export default class BossSadWaterBallState extends BaseState {
         this.currentPhase = 'follow';
         this.stateTime = 0;
         this.waterBall.following = true;
-        this.ballDestroyed = false; // Resetear flag
+        this.ballDestroyed = false;
     }
 
     followPlayer() {
@@ -102,7 +102,7 @@ export default class BossSadWaterBallState extends BaseState {
         this.waterBall.setVelocity(velocityX, velocityY);
         
         // Efecto visual de movimiento 
-        if (this.stateTime % 300 < 10) { // Cada ~300ms
+        if (this.stateTime % 300 < 10) {
             this.createTrailEffect();
         }
     }
@@ -148,7 +148,7 @@ export default class BossSadWaterBallState extends BaseState {
             const dir = player.x < this.waterBall.x ? -1 : 1;
             player.takeDamage(this.boss.damage, dir);
             this.damageApplied = true;
-            this.ballDestroyed = true; // MARCA que la bola fue destruida
+            this.ballDestroyed = true;
             
             // Crear efecto de impacto
             this.createImpactEffect();
@@ -353,11 +353,11 @@ export default class BossSadWaterBallState extends BaseState {
         // PARTÍCULAS DE EXPLOSIÓN MÁS ABUNDANTES
         for (let i = 0; i < 20; i++) {
             const angle = (i / 20) * Math.PI * 2;
-            const distance = 90 + Math.random() * 60; // 90-150 píxeles
+            const distance = 90 + Math.random() * 60;
             const particle = scene.add.circle(
                 this.explosionX,
                 this.explosionY,
-                12 + Math.random() * 8, // 12-20 píxeles
+                12 + Math.random() * 8,
                 0x87ceeb,
                 0.9
             );
@@ -403,13 +403,17 @@ export default class BossSadWaterBallState extends BaseState {
         this.damageApplied = false;
         this.ballDestroyed = false;
     }
-
-    exit(context) {
-        // Limpiar bola de agua si aún existe
+    
+    // NUEVO MÉTODO
+    destroyAllWarnings() {
         if (this.waterBall && this.waterBall.active) {
             this.waterBall.destroy();
+            this.waterBall = null;
         }
-        
+    }
+
+    exit(context) {
+        this.destroyAllWarnings();
         this.damageApplied = false;
         this.ballDestroyed = false;
     }

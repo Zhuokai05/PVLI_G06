@@ -61,7 +61,7 @@ export default class BossSadIcicleState extends BaseState {
         this.currentPhase = 'attack';
         this.stateTime = 0;
         
-        this.warningRect.destroy();
+        this.destroyAllWarnings();
         this.spawnIcicle();
     }
 
@@ -97,10 +97,16 @@ export default class BossSadIcicleState extends BaseState {
         this.currentPhase = 'cooldown';
         this.stateTime = 0;
     }
+    
+    // NUEVO MÉTODO
+    destroyAllWarnings() {
+        if (this.warningRect) {
+            this.warningRect.destroy();
+            this.warningRect = null;
+        }
+    }
 
     exit(context) {
-        if (this.warningRect && this.warningRect.active) {
-            this.warningRect.destroy();
-        }
+        this.destroyAllWarnings();
     }
 }
