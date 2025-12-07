@@ -291,7 +291,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.Bossrooms.add(new BossRoom(this, objeto.x, objeto.y, objeto.width, objeto.height));
                     break;
 
-
+                
             }
         })
         this.cheatManager = new CheatManager(this, this.player);
@@ -397,10 +397,10 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.fearbossdoors.getChildren().forEach(door => {
             door.abrirPuerta();
         });
-        if (this.feartrigger) {
-            console.log("ASIGNANDO PUERTAS TRIGGER MIEDO");
-            this.feartrigger.getDoors(this.fearbossdoors);
-        }
+
+
+        if (this.feartrigger) this.feartrigger.getDoors(this.fearbossdoors);
+
         if (this.feartrigger && this.miedoboss) this.feartrigger.getBoss(this.miedoboss);
 
         if (this.iraboss) this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
