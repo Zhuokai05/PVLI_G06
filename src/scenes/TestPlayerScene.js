@@ -272,6 +272,9 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "finaltrigger":
                     this.finaltrigger = new InvisibleTrigger(this, objeto.x, objeto.y);
                     break;
+                case "finaltrigger2":
+                    this.finaltrigger2 = new InvisibleTrigger(this, objeto.x, objeto.y);
+                    break;
                 //orbes 
                 case "speedorb":
                     this.orbGroup.add(new MoveSpeedOrb(this, objeto.x, objeto.y));
@@ -482,6 +485,9 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.finaltrigger) this.finaltrigger.getDoors(this.finalbossdoors);
 
         if (this.finaltrigger && this.finalboss) this.finaltrigger.getBoss(this.finalboss);
+        if (this.finaltrigger2) this.finaltrigger2.getDoors(this.finalbossdoors);
+
+        if (this.finaltrigger2 && this.finalboss) this.finaltrigger2.getBoss(this.finalboss);
 
         if (this.iraboss) this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
         if (this.tristeboss) this.tristeboss.getDoors(this.icebossdoors, this.icefloordoors);
@@ -561,6 +567,9 @@ export default class TestPlayerScene extends Phaser.Scene {
             this.finaltrigger.llamar();
         });
 
+        this.physics.add.overlap(this.player, this.finaltrigger2, () => {
+            this.finaltrigger2.llamar();
+        });
         this.physics.add.overlap(this.player, this.blueButton, () => {
             if (Phaser.Input.Keyboard.JustDown(this.keyE)) this.blueButton.press();
         });

@@ -1,6 +1,12 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
 export default class BossSadRadialState extends BaseState {
+    constructor(texture = 'icicle') {
+        super(); 
+        this.texture = texture;
+    }
+   
+    
     enter(context) {
         this.boss = context;
         this.stateTime = 0;
@@ -114,13 +120,13 @@ export default class BossSadRadialState extends BaseState {
             const velocityY = Math.sin(angle) * speed;
             
             // Crear carámbano
-            const icicle = radialIcicles.create(startX, startY, 'icicle');
+            const icicle = radialIcicles.create(startX, startY, this.texture);
             
             // Configurar física
             icicle.setVelocity(velocityX, velocityY);
             icicle.setScale(1);
             icicle.body.allowGravity = false;
-            icicle.setTint(0xadd8e6);
+            ///icicle.setTint(0xadd8e6);
             
             // Rotación
             const rotationAngle = Math.atan2(velocityY, velocityX);

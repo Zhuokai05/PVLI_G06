@@ -1,6 +1,10 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
 export default class BossFearCupAttackState extends BaseState {
+    constructor(texture = 'vaso') {
+        super(); 
+        this.texture = texture;
+    }
     enter(context) {
         this.boss = context;
         this.stateTime = 0;
@@ -56,7 +60,7 @@ export default class BossFearCupAttackState extends BaseState {
         const x = Phaser.Math.Between(minX, maxX);
         const y = worldView.top - 50; // Arriba de la pantalla
         
-        const cup = cups.create(x, y, 'vaso');
+        const cup = cups.create(x, y, this.texture);
 
         cup.setScale(1.5);
         cup.setVelocityY(this.boss.cupSpeed);

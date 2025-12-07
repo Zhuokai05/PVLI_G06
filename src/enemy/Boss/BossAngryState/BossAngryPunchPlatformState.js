@@ -1,6 +1,10 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
 export default class BossAngryPunchPlatformState extends BaseState {
+    constructor(texture = 'punch') {
+        super(); 
+        this.texture = texture;
+    }
     enter(context) {
         this.boss = context;
         this.stateTime = 0;
@@ -68,11 +72,11 @@ export default class BossAngryPunchPlatformState extends BaseState {
         const { scene, punches } = this.boss;
         const Yspeed = this.boss.punchYSpeed;
 
-        const punch = punches.create(this.spawnX, this.boss.y - 300, 'punch');
+        const punch = punches.create(this.spawnX, this.boss.y - 300, this.texture);
         punch.setVelocityY(Yspeed);
         punch.setScale(2.5);
         punch.body.allowGravity = false;
-        punch.setTint(0xff6b6b);
+        //punch.setTint(0xff6b6b);
 
         // Marcar este puño como puño de plataforma
         punch.isPlatformPunch = true;

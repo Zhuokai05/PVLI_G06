@@ -117,6 +117,14 @@ export class PreloadScene extends Phaser.Scene {
 
     this.load.image('tutorial', './assets/sprites/Bosses/bossTutorial.png');
 
+    //final
+    this.load.image('final', './assets/sprites/Bosses/final.png');
+    this.load.image('fgarra', './assets/sprites/Bosses/FGarra.png');
+    this.load.image('fvaso', './assets/sprites/Bosses/FVaso.png');
+    this.load.image('ffire_ball', 'assets/sprites/Bosses/FFire_ball.png');
+    this.load.image('fpunch', 'assets/sprites/Bosses/FAngry_punch.png');
+    this.load.image('ficicle', './assets/sprites/Bosses/FSad_ice.png');
+    this.load.image('fwater_ball', './assets/sprites/Bosses/FWater_ball.png');
     // Menus
     this.load.image('defeat_background', './assets/sprites/Menu/Fondo_derrota.png');
     this.load.image('defeat_player', './assets/sprites/Menu/Player_derrota.png');

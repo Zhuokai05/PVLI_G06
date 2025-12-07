@@ -1,6 +1,10 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
 export default class BossAngryFireBallState extends BaseState {
+    constructor(texture = 'fire_ball') {
+        super(); 
+        this.texture = texture;
+    }
     enter(context) {
         this.boss = context;
         this.stateTime = 0;
@@ -60,7 +64,7 @@ export default class BossAngryFireBallState extends BaseState {
 
         const colX = Phaser.Math.RND.pick(this.columns);
 
-        let fireball = fireballs.create(colX, this.boss.y - 350, 'fire_ball');
+        let fireball = fireballs.create(colX, this.boss.y - 350, this.texture);
 
         fireball.setScale(1.4);
         fireball.body.allowGravity = false;

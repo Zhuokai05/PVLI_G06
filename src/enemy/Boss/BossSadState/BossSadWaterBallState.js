@@ -1,6 +1,12 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
 export default class BossSadWaterBallState extends BaseState {
+   constructor(texture = 'water_ball') {
+        super(); 
+        this.texture = texture;
+    }
+   
+   
     enter(context) {
         this.boss = context;
         this.stateTime = 0;
@@ -58,10 +64,10 @@ export default class BossSadWaterBallState extends BaseState {
     startSpawnPhase() {
         const { scene, waterBalls } = this.boss;
         
-        this.waterBall = waterBalls.create(this.boss.x, this.boss.y - 50, 'water_ball');
+        this.waterBall = waterBalls.create(this.boss.x, this.boss.y - 50, this.texture);
         this.waterBall.setScale(1.4);
         this.waterBall.body.allowGravity = false;
-        this.waterBall.setTint(0x4169e1);
+        //this.waterBall.setTint(0x4169e1);
         
         // Propiedades de seguimiento
         this.waterBall.following = false;
@@ -304,7 +310,7 @@ export default class BossSadWaterBallState extends BaseState {
         const explosionSprite = scene.add.sprite(
             this.explosionX, 
             this.explosionY, 
-            'water_ball'
+            this.texture
         );
         
         explosionSprite.setScale(0.5);

@@ -1,6 +1,11 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
 export default class BossFearXAttackState extends BaseState {
+    constructor(texture = 'punch') {
+        super(); 
+        this.texture = texture;
+    }
+    
     enter(context) {
         this.boss = context;
         this.stateTime = 0;

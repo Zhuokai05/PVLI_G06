@@ -11,20 +11,20 @@ import FinalBossCooldownState from './BossFinalState/BossFinalCooldownState.js'
 
 export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {
-        super(scene, x, y, 'ira_flap_1');
+        super(scene, x, y, 'final');
         this.scene = scene;
         this.player = player;
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setScale(4.3);
+        this.setScale(2.5);
         this.setCollideWorldBounds(true);
         this.setImmovable(true);
 
         const spriteWidth = this.displayWidth;
         const spriteHeight = this.displayHeight;
-        this.body.setSize(spriteWidth / 35, spriteHeight / 35);
-        this.body.setOffset(spriteWidth / 9.9, spriteHeight / 12);
+        this.body.setSize(spriteWidth / 18, spriteHeight / 18);
+        this.body.setOffset(spriteWidth / 6, spriteHeight / 6.5);
         this.body.moves = false;
 
         this.phase = 1;
@@ -57,14 +57,14 @@ export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
 
         this.stateMachine = new StateMachine(this, 'finalBoss');
 
-        this.stateMachine.addState('fireball', new BossAngryFireBallState());
-        this.stateMachine.addState('punch', new BossAngryPunchState());
-        this.stateMachine.addState('punchPlatform', new BossAngryPunchPlatformState());
+        this.stateMachine.addState('fireball', new BossAngryFireBallState('ffire_ball'));
+        this.stateMachine.addState('punch', new BossAngryPunchState('fpunch'));
+        this.stateMachine.addState('punchPlatform', new BossAngryPunchPlatformState('fpunch'));
         this.stateMachine.addState('xAttack', new BossFearXAttackState());
-        this.stateMachine.addState('cupAttack', new BossFearCupAttackState());
-        this.stateMachine.addState('icicle', new BossSadIcicleState());
-        this.stateMachine.addState('radial', new BossSadRadialState());
-        this.stateMachine.addState('waterball', new BossSadWaterBallState());
+        this.stateMachine.addState('cupAttack', new BossFearCupAttackState('fvaso'));
+        this.stateMachine.addState('icicle', new BossSadIcicleState('ficicle'));
+        this.stateMachine.addState('radial', new BossSadRadialState('ficicle'));
+        this.stateMachine.addState('waterball', new BossSadWaterBallState('fwater_ball'));
         this.stateMachine.addState('cooldown', new FinalBossCooldownState());
 
         // AÑADIR ESTADO INACTIVE
@@ -358,8 +358,8 @@ export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
 
     createClaws() {
         // Usar coordenadas del mundo 
-        this.leftClaw = this.scene.physics.add.sprite(this.x - 380, this.y - 50, 'garra');
-        this.rightClaw = this.scene.physics.add.sprite(this.x + 380, this.y - 50, 'garra');
+        this.leftClaw = this.scene.physics.add.sprite(this.x - 380, this.y - 50, 'fgarra');
+        this.rightClaw = this.scene.physics.add.sprite(this.x + 380, this.y - 50, 'fgarra');
 
         this.leftClaw.setScale(3.5);
         this.rightClaw.setScale(3.5);

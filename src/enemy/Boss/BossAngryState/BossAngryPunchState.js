@@ -1,6 +1,10 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
 export default class BossAngryPunchState extends BaseState {
+    constructor(texture = 'punch') {
+        super(); 
+        this.texture = texture;
+    }
     enter(context) {
         this.boss = context;
         this.stateTime = 0;
@@ -260,18 +264,18 @@ export default class BossAngryPunchState extends BaseState {
         let punch;
 
         if (this.attackDirection === 'left') {
-            punch = punches.create(this.boss.x - cam.width / 2, this.fixedSpawnY, 'punch');
+            punch = punches.create(this.boss.x - cam.width / 2, this.fixedSpawnY, this.texture);
             punch.setVelocityX(Xspeed);
             punch.setAngle(-90);
         } else {
-            punch = punches.create(this.boss.x + cam.width / 2, this.fixedSpawnY, 'punch');
+            punch = punches.create(this.boss.x + cam.width / 2, this.fixedSpawnY,this.texture );
             punch.setVelocityX(-Xspeed);
             punch.setAngle(90);
         }
 
         punch.setScale(2.5);
         punch.body.allowGravity = false;
-        punch.setTint(0x6b6bff);
+       // punch.setTint(0x6b6bff);
 
         // Asegurar que los puños laterales NO sean platformPunch
         punch.isPlatformPunch = false;

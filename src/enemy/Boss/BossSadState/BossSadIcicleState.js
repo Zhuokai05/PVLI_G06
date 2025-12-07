@@ -1,6 +1,11 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
 export default class BossSadIcicleState extends BaseState {
+   constructor(texture = 'icicle') {
+        super(); 
+        this.texture = texture;
+    }
+   
     enter(context) {
         this.boss = context;
         this.stateTime = 0;
@@ -69,11 +74,11 @@ export default class BossSadIcicleState extends BaseState {
         const { scene, icicles } = this.boss;
         const Yspeed = this.boss.icicleSpeed;
         
-        const icicle = icicles.create(this.spawnX, this.boss.y - 400, 'icicle');
+        const icicle = icicles.create(this.spawnX, this.boss.y - 400, this.texture);
         icicle.setVelocityY(Yspeed);
         icicle.setScale(1.5);
         icicle.body.allowGravity = false;
-        icicle.setTint(0x4169e1); // Azul en lugar de rojo
+        //icicle.setTint(0x4169e1); // Azul en lugar de rojo
         
         // Rotar 90 grados para que apunte hacia abajo
         icicle.setRotation(Math.PI / 2);
