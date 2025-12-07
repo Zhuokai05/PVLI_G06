@@ -94,16 +94,16 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
     }
 
     setupCollisions() {
-        // Colisiones de tazas con jugador
-        this.cupOverlap = this.scene.physics.add.overlap(
-            this.cups,
-            this.player,
-            this.cupCollisionWithPlayer,
-            null,
-            this
-        );
-
-        // Similar a ira: no hay colisiones específicas de puñetazos
+        // Configurar overlaps solo si no existen ya
+        if (!this.cupOverlap) {
+            this.cupOverlap = this.scene.physics.add.overlap(
+                this.cups,
+                this.player,
+                this.cupCollisionWithPlayer,
+                null,
+                this
+            );
+        }
     }
 
     startRandomState() {
@@ -133,7 +133,7 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
-        if (this.notdead) {
+        if (this.notdead && this.isActivated) { // Solo actualizar si está vivo y activado
             this.stateMachine.step(time, delta);
         }
 
@@ -144,7 +144,7 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(damage) {
-        if (!this.isActivated) return;
+        if (!this.isActivated || !this.notdead) return; // No recibir daño si no está activado o ya está muerto
 
         this.health -= damage;
         // Tint rojo similar a ira pero sin animación
@@ -174,6 +174,16 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
     nextPhase() {
         if (this.phase === 1) {
             console.log('BossFear entra en FASE 2');
+            
+            // LIMPIAR WARNINGS ANTES DE LA TRANSICIÓN
+            this.cleanupAllWarnings();
+            this.clearActiveAttackObjects();
+            
+            // Cambiar a estado inactivo durante la transición
+            if (this.stateMachine) {
+                this.stateMachine.setState('inactive');
+            }
+
             this.phase = 2;
             this.health = this.maxHealth + 3;
 
@@ -205,6 +215,9 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
                     duration: 800,
                     ease: 'Sine.easeInOut'
                 });
+
+                // Asegurar que las colisiones estén configuradas
+                this.setupCollisions();
 
                 // Iniciar cooldown antes del primer ataque (igual que ira)
                 this.generateNewCooldown();
@@ -258,6 +271,20 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
     die() {
         console.log('BossFear derrotado definitivamente');
 
+        // IMPORTANTE: Limpiar todos los warnings y estados activos
+        this.cleanupAllWarnings();
+        
+        // Desactivar el estado actual si existe
+        if (this.stateMachine && this.stateMachine.currentState && 
+            this.stateMachine.currentState.exit) {
+            this.stateMachine.currentState.exit(this);
+        }
+        
+        // Cambiar a estado inactivo
+        if (this.stateMachine) {
+            this.stateMachine.setState('inactive');
+        }
+
         // Similar a ira: abrir puertas
         if (this.Bossdoors) {
             this.Bossdoors.getChildren().forEach(door => {
@@ -270,11 +297,17 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
         // Similar a ira: registrar muerte
         PlayerDataManager.killBoss('fear');
         this.scene.events.emit('bossDefeated');
+
+        // Desactivar físicas
+        this.setActive(false);
+        this.setVisible(false);
+        
+        // IMPORTANTE: Destruir todos los objetos de ataque
+        this.destroyAllAttackObjects();
     }
 
     getDoors(doors) {
         this.Bossdoors = doors;
-        
     }
 
     setLife() {
@@ -292,5 +325,55 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
         // Iniciar cooldown antes del primer ataque (igual que ira)
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
+    }
+    
+    // NUEVOS MÉTODOS PARA LIMPIAR WARNINGS
+    cleanupAllWarnings() {
+        // Si hay un estado actual activo, llamar a su método de limpieza
+        if (this.stateMachine && this.stateMachine.currentState) {
+            const currentState = this.stateMachine.currentState;
+            
+            // Llamar a métodos específicos de limpieza si existen
+            if (typeof currentState.destroyAllWarnings === 'function') {
+                currentState.destroyAllWarnings();
+            }
+            
+            // También intentar limpiar warnings directamente
+            if (currentState.leftWarning && currentState.leftWarning.destroy) {
+                currentState.leftWarning.destroy();
+            }
+            if (currentState.rightWarning && currentState.rightWarning.destroy) {
+                currentState.rightWarning.destroy();
+            }
+            
+            // Limpiar garras si existen
+            this.destroyClaws();
+        }
+    }
+    
+    clearActiveAttackObjects() {
+        // Solo limpiar objetos activos, mantener los grupos
+        if (this.cups) {
+            this.cups.clear(true, true);
+        }
+        
+        // Limpiar garras
+        this.destroyClaws();
+    }
+    
+    destroyAllAttackObjects() {
+        // Destruir todos los objetos activos
+        this.clearActiveAttackObjects();
+        
+        // Desactivar overlaps solo cuando muere definitivamente
+        this.removeAllColliders();
+    }
+    
+    removeAllColliders() {
+        // Solo eliminar overlaps cuando el boss muere definitivamente
+        if (this.cupOverlap) {
+            this.scene.physics.world.removeCollider(this.cupOverlap);
+            this.cupOverlap = null;
+        }
     }
 }

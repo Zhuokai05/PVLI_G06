@@ -97,9 +97,16 @@ export default class BossFearCupAttackState extends BaseState {
         this.stateTime = 0;
         console.log("Ataque de tazas terminado, entrando en cooldown");
     }
+    
+    // NUEVO MÉTODO
+    destroyAllWarnings() {
+        // En este estado no hay warnings visuales, pero podemos limpiar las tazas
+        if (this.boss && this.boss.cups) {
+            this.boss.cups.clear(true, true);
+        }
+    }
 
     exit(context) {
-        // Limpiar cups restantes
-        this.boss.cups.clear(true, true);
+        this.destroyAllWarnings();
     }
 }

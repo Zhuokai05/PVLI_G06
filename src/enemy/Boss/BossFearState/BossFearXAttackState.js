@@ -80,8 +80,7 @@ export default class BossFearXAttackState extends BaseState {
         this.stateTime = 0;
         
         // Destruir advertencias
-        if (this.leftWarning) this.leftWarning.destroy();
-        if (this.rightWarning) this.rightWarning.destroy();
+        this.destroyAllWarnings();
         
         // Mover garras en forma de X
         this.moveClawsInXPattern();
@@ -134,15 +133,21 @@ export default class BossFearXAttackState extends BaseState {
         // Destruir garras al terminar el ataque
         this.boss.destroyClaws();
     }
+    
+    // NUEVO MÉTODO
+    destroyAllWarnings() {
+        if (this.leftWarning) {
+            this.leftWarning.destroy();
+            this.leftWarning = null;
+        }
+        if (this.rightWarning) {
+            this.rightWarning.destroy();
+            this.rightWarning = null;
+        }
+    }
 
     exit(context) {
-        // Limpiar advertencias si aún existen
-        if (this.leftWarning && this.leftWarning.active) {
-            this.leftWarning.destroy();
-        }
-        if (this.rightWarning && this.rightWarning.active) {
-            this.rightWarning.destroy();
-        }
+        this.destroyAllWarnings();
         
         // Asegurarse de que las garras se destruyan
         this.boss.destroyClaws();
