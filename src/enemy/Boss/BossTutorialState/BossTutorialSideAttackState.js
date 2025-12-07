@@ -9,7 +9,7 @@ export default class BossTutorialSideAttackState extends BaseState {
 
         // Duraciones en ms 
         this.warningDuration = 1000;
-        this.attackDuration = 1000;
+        this.attackDuration = 2000;
         this.cooldownDuration = 1000;
 
         // Reseteo flag
