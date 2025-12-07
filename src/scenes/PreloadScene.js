@@ -149,9 +149,9 @@ export class PreloadScene extends Phaser.Scene {
     // Efecto de sonidos
 
     //player
-    this.load.audio('PlayerJump_Sound', './assets/Sounds/Player/PlayerJump.wav');
-    this.load.audio('PlayerJumpEnd_Sound', './assets/Sounds/Player/PlayerJumpEnd.wav');
-    this.load.audio('PlayerAttack_Sound', './assets/Sounds/Player/PlayerAttack.wav');
+    this.load.audio('PlayerJump_sound', './assets/Sounds/Player/PlayerJump.wav');
+    this.load.audio('PlayerJumpEnd_sound', './assets/Sounds/Player/PlayerJumpEnd.wav');
+    this.load.audio('PlayerAttack_sound', './assets/Sounds/Player/PlayerAttack.wav');
     this.load.audio('PlayerDamaged_sound', './assets/Sounds/Player/PlayerDamaged.wav');
     this.load.audio('PlayerTakeOrb_sound', './assets/Sounds/Player/PlayerTakeOrb.mp3');
     this.load.audio('PlayerChangeOrb_sound', './assets/Sounds/Player/PlayerChangeOrb.wav');

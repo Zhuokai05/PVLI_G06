@@ -124,27 +124,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     createSFX(){
           // Sonidos
-        this.attackSound = this.scene.sound.add('PlayerAttack_Sound', {
+        this.attackSound = this.scene.sound.add('PlayerAttack_sound', {
             volume: 0.2,
             loop: false
         });
 
-        this.jumpSound = this.scene.sound.add('PlayerJump_Sound', {
+        this.jumpSound = this.scene.sound.add('PlayerJump_sound', {
             volume: 1,
             loop: false
         });
 
-        this.shieldSound = this.scene.sound.add('PlayerShield_Sound', {
+        this.shieldSound = this.scene.sound.add('PlayerShield_sound', {
             volume: 0.3,
             loop: false
         });
 
-        this.shieldBlockSound = this.scene.sound.add('PlayerShieldBlock_Sound', {
+        this.shieldBlockSound = this.scene.sound.add('PlayerShieldBlock_sound', {
             volume: 0.3,
             loop: false
         });
 
-        this.jumpEndSound = this.scene.sound.add('PlayerJumpEnd_Sound', {
+        this.jumpEndSound = this.scene.sound.add('PlayerJumpEnd_sound', {
             volume: 0.2,
             loop: false
         });
