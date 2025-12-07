@@ -113,22 +113,29 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     }
 
     setupCollisions() {
-        this.fireballOverlap = this.scene.physics.add.overlap(
-            this.fireballs,
-            this.player,
-            this.FireballCollisionWithPlayer,
-            null,
-            this
-        );
-        this.punchOverlap = this.scene.physics.add.overlap(
-            this.punches,
-            this.player,
-            this.PunchCollisionWithPlayer,
-            null,
-            this
-        );
+        // Configurar overlaps solo si no existen ya
+        if (!this.fireballOverlap) {
+            this.fireballOverlap = this.scene.physics.add.overlap(
+                this.fireballs,
+                this.player,
+                this.FireballCollisionWithPlayer,
+                null,
+                this
+            );
+        }
+
+        if (!this.punchOverlap) {
+            this.punchOverlap = this.scene.physics.add.overlap(
+                this.punches,
+                this.player,
+                this.PunchCollisionWithPlayer,
+                null,
+                this
+            );
+        }
+
         // Configurar colisión entre puños y plataformas de ira
-        if (this.platforms) {
+        if (this.platforms && !this.punchPlatformOverlap) {
             this.punchPlatformOverlap = this.scene.physics.add.overlap(
                 this.punches,
                 this.platforms,
@@ -174,13 +181,14 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
-        if (this.notdead) {
+        if (this.notdead && this.isActivated) { // Solo actualizar si está vivo y activado
             this.stateMachine.step(time, delta);
         }
     }
 
     takeDamage(damage) {
-        if (!this.isActivated) return; // No recibir daño si no está activado
+        if (!this.isActivated || !this.notdead) return; // No recibir daño si no está activado o ya está muerto
+
         this.health -= damage;
         this.setTint(0xff0000);
 
@@ -203,6 +211,16 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     nextPhase() {
         if (this.phase === 1) {
             console.log('Boss entra en FASE 2');
+
+            // LIMPIAR WARNINGS ANTES DE LA TRANSICIÓN
+            this.cleanupAllWarnings();
+            this.destroyAllAttackObjects();
+
+            // Cambiar a estado inactivo durante la transición
+            if (this.stateMachine) {
+                this.stateMachine.setState('inactive');
+            }
+
             this.phase = 2;
             this.health = this.maxHealth + 3;
 
@@ -243,6 +261,22 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         console.log('Boss derrotado definitivamente');
+
+        // IMPORTANTE: Limpiar todos los warnings y estados activos
+        this.cleanupAllWarnings();
+
+        // Desactivar el estado actual si existe
+        if (this.stateMachine && this.stateMachine.currentState &&
+            this.stateMachine.currentState.exit) {
+            this.stateMachine.currentState.exit(this);
+        }
+
+        // Cambiar a estado inactivo
+        if (this.stateMachine) {
+            this.stateMachine.setState('inactive');
+        }
+
+        // Código existente...
         this.Bossdoors.getChildren().forEach(door => {
             if (door.abrirPuerta) {
                 door.abrirPuerta();
@@ -255,17 +289,15 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
             }
         });
 
-
-
         PlayerDataManager.killBoss('anger');
-
-        /*console.log('BossSad derrotado definitivamente');
-        this.scene.time.delayedCall(2000, () => {
-            this.scene.scene.stop();
-            this.scene.scene.launch('Win');
-            this.destroy();*/
         this.scene.events.emit('bossDefeated');
 
+        // Desactivar físicas
+        this.setActive(false);
+        this.setVisible(false);
+
+        // IMPORTANTE: Destruir todos los objetos de ataque
+        this.destroyAllAttackObjects();
     }
     getDoors(iraDoors, iraFloors) {
         this.Bossdoors = iraDoors;
@@ -301,6 +333,46 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         } else {
             // Para puños laterales, solo destruir el puño pero NO desactivar la plataforma
             console.log("Puño lateral detectado - solo destruyendo puño");
+        }
+    }
+
+    cleanupAllWarnings() {
+        // Si hay un estado actual activo, llamar a su método de limpieza
+        if (this.stateMachine && this.stateMachine.currentState) {
+            const currentState = this.stateMachine.currentState;
+
+            // Llamar a métodos específicos de limpieza si existen
+            if (typeof currentState.destroyAllWarnings === 'function') {
+                currentState.destroyAllWarnings();
+            }
+
+            // También intentar limpiar warnings directamente
+            if (currentState.warningRect && currentState.warningRect.destroy) {
+                currentState.warningRect.destroy();
+            }
+            if (currentState.warningBorder && currentState.warningBorder.destroy) {
+                currentState.warningBorder.destroy();
+            }
+            if (currentState.warningText && currentState.warningText.destroy) {
+                currentState.warningText.destroy();
+            }
+            if (currentState.arrows) {
+                currentState.arrows.forEach(arrow => {
+                    if (arrow && arrow.destroy) arrow.destroy();
+                });
+            }
+        }
+    }
+
+    destroyAllAttackObjects() {
+        // Destruir todos los fireballs activos
+        if (this.fireballs) {
+            this.fireballs.clear(true, true);
+        }
+
+        // Destruir todos los punches activos
+        if (this.punches) {
+            this.punches.clear(true, true);
         }
     }
 }

@@ -225,28 +225,31 @@ export default class BossAngryPunchState extends BaseState {
 
     destroyAllWarnings() {
         // Destruir rectángulo de advertencia
-        if (this.warningRect && this.warningRect.active) {
+        if (this.warningRect) {
             this.warningRect.destroy();
+            this.warningRect = null;
         }
 
         // Destruir borde
-        if (this.warningBorder && this.warningBorder.active) {
+        if (this.warningBorder) {
             this.warningBorder.destroy();
+            this.warningBorder = null;
         }
 
         // Destruir texto
-        if (this.warningText && this.warningText.active) {
+        if (this.warningText) {
             this.warningText.destroy();
+            this.warningText = null;
         }
 
         // Destruir todas las flechas
         if (this.arrows) {
             this.arrows.forEach(arrow => {
-                if (arrow && arrow.active) {
+                if (arrow) {
                     arrow.destroy();
                 }
             });
-            this.arrows = [];
+            this.arrows = null;
         }
     }
 
@@ -306,7 +309,7 @@ export default class BossAngryPunchState extends BaseState {
     }
 
     exit(context) {
-        // Limpiar todas las advertencias si aún existen
+        // Asegurar que se limpien los warnings al salir del estado
         this.destroyAllWarnings();
     }
 }
