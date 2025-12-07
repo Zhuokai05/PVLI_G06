@@ -78,6 +78,10 @@ export default class TestPlayerScene extends Phaser.Scene {
             allowGravity: false,
             immovable: true
         });
+         this.finalbossdoors = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+        });
 
 
         this.iraPlatforms = this.physics.add.group({
@@ -181,6 +185,9 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "tutodoor":
                     this.tutobossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;
+                case "finaldoor":
+                    this.finalbossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    break;
 
                 //bossdoor
                 case "bossdoor":
@@ -210,6 +217,16 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
                 case "fearbossdoorexit":
                     this.fearbossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertamiedo');
+                    break;
+
+                case "finalbossdoor":
+                    this.finalbossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertamiedo');
+                    break;
+                case "finalbossdoorcontrary":
+                    this.finalbossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertamiedo');
+                    break;
+                case "finalbossdoorexit":
+                    this.finalbossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertamiedo');
                     break;
 
                 //buttons
@@ -249,6 +266,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "tutotrigger":
                     this.tutotrigger = new InvisibleTrigger(this, objeto.x, objeto.y);
                     break;
+
+                case "finaltrigger":
+                    this.finaltrigger = new InvisibleTrigger(this, objeto.x, objeto.y);
+                    break;
                 //orbes 
                 case "speedorb":
                     this.orbGroup.add(new MoveSpeedOrb(this, objeto.x, objeto.y));
@@ -267,6 +288,15 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
                 case "shieldeorb":
                     this.orbGroup.add(new ShieldOrb(this, objeto.x, objeto.y));
+                    break;
+                case "vamporb":
+                    this.orbGroup.add(new BloodStealOrb(this, objeto.x, objeto.y));
+                    break;
+                case "jumpdeorb":
+                   this.orbGroup.add(new JumpOrb(this, objeto.x, objeto.y));
+                    break;
+                case "shieldeorb":
+                   this.orbGroup.add(new ShieldOrb(this, objeto.x, objeto.y));
                     break;
                 //checkPoint
                 case "checkpoint":
@@ -306,8 +336,15 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
                 case "room":
                     this.Bossrooms.add(new BossRoom(this, objeto.x, objeto.y, objeto.width, objeto.height));
-                    break;
+                    
 
+                //lava    
+                case "lava":
+                     this.lavatrigger = this.add.zone(objeto.x, objeto.y, objeto.width, objeto.height);
+                     this.physics.add.existing(this.lavatrigger);
+                     this.lavatrigger.body.setAllowGravity(false);
+                     this.lavatrigger.body.setImmovable(true);
+                    break;
                 // Paneles texto
                 case "tutorial_Move_Jump":
                     this.tutorial_move_jump = new TutorialPanel(this, objeto.x, objeto.y, 'No hay','Presiona ESPACIO para saltar\nUsa WASD para mover');
@@ -315,11 +352,10 @@ export default class TestPlayerScene extends Phaser.Scene {
             }
         })
         this.cheatManager = new CheatManager(this, this.player);
-        this.checkpoints.add(new Checkpoint(this, 1200, 1550));
-        this.lava = new FloorIsLava(this, this.player.y + 0, 25, this.player);
+       
 
-         this.orbGroup.add(new BloodStealOrb(this, 1450, 1550));
-          this.orbGroup.add(new JumpOrb(this, 1500, 1550));
+         
+          
 
         //    //ira
         //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',
@@ -398,6 +434,19 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.fearbossdoorcontrary) this.doors.add(this.fearbossdoorcontrary);
         if (this.fearbossdoorexit) this.doors.add(this.fearbossdoorexit);
 
+        //final
+        if (this.finalbossdoor && this.finalbossdoorcontrary) {
+            this.finalbossdoor.setContrary(this.finalbossdoorcontrary);
+            this.finalbossdoorcontrary.setContrary(this.finalbossdoor);
+        }
+
+        if (this.finalbossdoorexit && this.finalbossdoor) {
+            this.finalbossdoorexit.setContrary(this.finalbossdoor);
+        }
+
+        if (this.finalbossdoor) this.doors.add(this.finalbossdoor);
+        if (this.finalbossdoorcontrary) this.doors.add(this.finalbossdoorcontrary);
+        if (this.finalbossdoorexit) this.doors.add(this.finalbossdoorexit);
 
         //bossdoors y triggers
 
@@ -424,24 +473,36 @@ export default class TestPlayerScene extends Phaser.Scene {
             door.abrirPuerta();
         });
 
-        this.tutobossdoors.getChildren().forEach(door => {
-            door.abrirPuerta();
-        });
-
+        
 
         if (this.feartrigger) this.feartrigger.getDoors(this.fearbossdoors);
 
         if (this.feartrigger && this.miedoboss) this.feartrigger.getBoss(this.miedoboss);
+
+        this.tutobossdoors.getChildren().forEach(door => {
+            door.abrirPuerta();
+        });
+
+       
+
 
         if (this.tutotrigger) this.tutotrigger.getDoors(this.tutobossdoors);
 
         if (this.tutotrigger && this.tutoboss) this.tutotrigger.getBoss(this.tutoboss);
 
 
+         this.finalbossdoors.getChildren().forEach(door => {
+            door.abrirPuerta();
+        });
+        if (this.finaltrigger) this.finaltrigger.getDoors(this.finalbossdoors);
+
+        if (this.finaltrigger && this.finalboss) this.finaltrigger.getBoss(this.finalboss);
+
         if (this.iraboss) this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
         if (this.tristeboss) this.tristeboss.getDoors(this.icebossdoors, this.icefloordoors);
         if (this.miedoboss) this.miedoboss.getDoors(this.fearbossdoors);
         if (this.tutoboss) this.tutoboss.getDoors(this.tutobossdoors);
+        if (this.finalboss) this.finalboss.getDoors(this.finalbossdoors);
 
         //mapdoors
 
@@ -457,6 +518,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.icefloordoors);
         this.physics.add.collider(this.player, this.fearbossdoors);
         this.physics.add.collider(this.player, this.tutobossdoors);
+        this.physics.add.collider(this.player, this.finalbossdoors);
 
 
 
@@ -472,16 +534,17 @@ export default class TestPlayerScene extends Phaser.Scene {
         //Overlaps
         //Evento de activación de la lava
         //------------------------------
-        const triggerZone = this.add.zone(1500, 1300, 100, 200);
-        this.physics.add.existing(triggerZone);
-        triggerZone.body.setAllowGravity(false);
-        triggerZone.body.setImmovable(true);
+     
 
-        this.physics.add.overlap(this.player, triggerZone, () => {
+      if (this.lavatrigger)
+        {
+            this.physics.add.overlap(this.player, this.lavatrigger, () => {
+            this.lava = new FloorIsLava(this, this.lavatrigger.y, 75, this.player);
             this.lava.startLava();
-            triggerZone.destroy();
+            this.lavatrigger.destroy();
             this.cameras.main.shake(500, 0.01);
         });
+        }     
         //------------------------------
         this.physics.add.overlap(this.player, this.orbGroup, (player, orb) => {
             orb.collect(player);
@@ -508,6 +571,10 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
         this.physics.add.overlap(this.player, this.tutotrigger, () => {
             this.tutotrigger.llamar();
+        });
+
+        this.physics.add.overlap(this.player, this.finaltrigger, () => {
+            this.finaltrigger.llamar();
         });
 
         this.physics.add.overlap(this.player, this.blueButton, () => {

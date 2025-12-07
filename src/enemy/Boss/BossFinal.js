@@ -27,13 +27,12 @@ export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
         this.body.setOffset(spriteWidth / 9.9, spriteHeight / 12);
         this.body.moves = false;
        
-        const cam = scene.cameras.main;
-        this.setPosition(cam.width /2, cam.height / 2 - 50);
+    
 
    
         this.phase = 1;
-        this.health = 100;
-        this.maxHealth = 100;
+        this.health = 1;
+        this.maxHealth = 1;
         this.damage = 1;
 
         this.fireballSpeed = 450;
@@ -89,6 +88,13 @@ export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
 
         // Iniciar con cooldown
         this.stateMachine.setState('cooldown');
+
+
+        
+        this.setVisible(false);
+        this.setActive(false);
+
+        this.isActivated = false;
     }
 
     selectRandomStates(count) {
@@ -193,12 +199,18 @@ export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
     }
 
     startRandomState() {
+         if (!this.isActivated) return;
         const randomState = Phaser.Math.RND.pick(this.availableStates);
         console.log('FinalBoss ejecutando:', randomState);
         this.stateMachine.setState(randomState);
     }
 
     selectNextState() {
+         if (!this.isActivated) {
+            // Si no está activado, volver al estado inactivo
+            this.stateMachine.setState('inactive');
+            return;
+        }
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
     }
@@ -214,6 +226,7 @@ export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(damage) {
+         if (!this.isActivated) return;
         this.health -= damage;
         this.setTint(0xff00ff);
         
@@ -279,14 +292,23 @@ export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
         
         this.scene.cameras.main.shake(2000, 0.05);
         this.scene.cameras.main.flash(1500, 255, 215, 0);
+ if (this.leftClaw) this.leftClaw.destroy();
+            if (this.rightClaw) this.rightClaw.destroy();
+   this.Bossdoors.getChildren().forEach(door => {
+            if (door.abrirPuerta) {
+                door.abrirPuerta();
+            }
+        });
+
+
+
         
-        this.scene.time.delayedCall(3000, () => {   
+        this.scene.time.delayedCall(5000, () => {   
             this.scene.scene.stop(); 
             this.scene.scene.launch('Win');
             this.destroy();
             
-            if (this.leftClaw) this.leftClaw.destroy();
-            if (this.rightClaw) this.rightClaw.destroy();
+           
         });
     }
 
@@ -334,5 +356,21 @@ export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
             this.rightClaw = null;
         }
         this.clawsActive = false;
+    }
+
+
+    getDoors(iraDoors) {
+        this.Bossdoors = iraDoors;
+       
+    }
+    setLife() {
+        this.setVisible(true);
+        this.setActive(true);
+        this.isActivated = true; // Activar el boss
+        this.setupCollisions();
+
+        // Iniciar cooldown antes del primer ataque
+        this.generateNewCooldown();
+        this.stateMachine.setState('cooldown');
     }
 }

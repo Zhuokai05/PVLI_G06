@@ -3,10 +3,10 @@ export default class FloorIsLava extends Phaser.GameObjects.TileSprite {
 
         const width = 2000;
         const height = 500;
-
+       
 
         super(scene, 0, y, width, height, 'lava_tex');
-
+        this.y = y;
         this.scene = scene;
         this.riseSpeed = speed;
         this.playerRef = playerReference;
