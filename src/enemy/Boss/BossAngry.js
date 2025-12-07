@@ -290,13 +290,17 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
     // Método para manejar colisión de puño con plataforma
     punchCollisionWithPlatform(punch, platform) {
         if (!punch.active || !platform.active) return;
-        
-        // Llamar al método de desactivación de la plataforma
-        if (platform.deactivateByPunch) {
-            platform.deactivateByPunch();
+
+        // SOLO los puños marcados como platformPunch pueden desactivar plataformas
+        if (punch.isPlatformPunch) {
+            console.log("Puño vertical detectado - desactivando plataforma");
+            if (platform.deactivateByPunch) {
+                platform.deactivateByPunch();
+            }
+            punch.destroy();
+        } else {
+            // Para puños laterales, solo destruir el puño pero NO desactivar la plataforma
+            console.log("Puño lateral detectado - solo destruyendo puño");
         }
-        
-        // Destruir el puño después de colisionar con la plataforma
-        punch.destroy();
     }
 }
