@@ -2,25 +2,30 @@ import StateMachine from '../../stateMachine/StateMachine.js';
 import BossTutorialSideAttackState from './BossTutorialState/BossTutorialSideAttackState.js';
 import BossTutorialJumpAttackState from './BossTutorialState/BossTutorialJumpAttackState.js';
 import BossTutorialCooldownState from './BossTutorialState/BossTutorialCooldownState.js';
+import PlayerDataManager from '../../managers/PlayerDataManager.js';
 
 export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'tutorial');
         this.scene = scene;
         this.player = player;
+        this.x = x;
+        this.y = y;
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        // Escala y colisiones base
+        // Escala y colisiones
         this.setScale(2);
         this.setCollideWorldBounds(true);
+        this.setImmovable(true);
 
-        // Ajustes del body (puedes afinar offsets/tamaños)
+        // Ajustes del body
         const spriteW = this.displayWidth;
         const spriteH = this.displayHeight;
         this.body.setSize(spriteW * 0.45, spriteH * 0.4);
         this.body.setOffset(0, spriteH * 0.05);
+        this.body.moves = false;
 
         // Stats
         this.phase = 1;
@@ -28,41 +33,78 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
         this.maxHealth = 6;
         this.damage = 1;
 
-        // Cooldown
+        // Cooldown entre ataques
         this.startCooldown = 3000;
-        this.attackCooldown = this.startCooldown;
-        this.minCooldown = 3000;   
-        this.maxCooldown = 3000;  
+        this.attackCooldown = 0;
+        this.minCooldown = 3000;
+        this.maxCooldown = 3000;
 
         // Máquina de estados
         this.stateMachine = new StateMachine(this, 'bossTutorial');
+
+        // Registrar todos los estados
         this.stateMachine.addState('sideAttack', new BossTutorialSideAttackState());
         this.stateMachine.addState('jumpAttack', new BossTutorialJumpAttackState());
+
+        // Estados disponibles por fase - FASE 1: solo sideAttack
+        this.availableStates = ['sideAttack'];
+
+        // Estado especial para cooldown
         this.stateMachine.addState('cooldown', new BossTutorialCooldownState());
 
-        // estados disponibles según fase
-        this.availableStates = ['sideAttack']; // fase 1 solo sideAttack
+        // AÑADIR ESTADO INACTIVE
+        this.stateMachine.addState('inactive', {
+            enter: () => {
+                console.log('BossTutorial inactivo');
+            },
+            step: () => {
+                // No ejecutar lógica de estado
+            },
+            exit: () => { }
+        });
 
+        // Iniciar en estado inactivo
+        this.stateMachine.setState('inactive');
+
+        this.attackCooldown = this.startCooldown;
+        this.notdead = true;
+
+        this.setVisible(false);
+        this.setActive(false);
+        this.isActivated = false;
+
+        // Flag para saber si golpeó al player durante un sweep
+        this._hitPlayerThisSweep = false;
+    }
+
+    setupCollisions() {
         // Colisión entre boss y player (para detectar golpe cuerpo a cuerpo)
-        this.bossPlayerOverlap = scene.physics.add.overlap(
+        this.bossPlayerOverlap = this.scene.physics.add.overlap(
             this,
             this.player,
             this.onHitPlayer,
             null,
             this
         );
+    }
 
-        // Flag para saber si golpeó al player durante un sweep
-        this._hitPlayerThisSweep = false;
+    startRandomState() {
+        if (!this.isActivated) return;
+        const randomState = Phaser.Math.RND.pick(this.availableStates);
+        this.stateMachine.setState(randomState);
+    }
 
-        // Alive flag - CAMBIADO: usar notdead como BossAngry
-        this.notdead = true;
-
-        // Iniciar en cooldown para espaciar primera acción
-        this.attackCooldown = this.startCooldown;
+    selectNextState() {
+        if (!this.isActivated) {
+            this.stateMachine.setState('inactive');
+            return;
+        }
+        this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
+    }
 
-         this.isActivated = false;
+    generateNewCooldown() {
+        this.attackCooldown = Phaser.Math.Between(this.minCooldown, this.maxCooldown);
     }
 
     // Maneja colisión directa boss <-> player
@@ -80,43 +122,34 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
 
         // Pequeño cooldown en el player para evitar daño repetido instantáneo
         player._recentlyHitByBoss = true;
-        this.scene.time.delayedCall(300, () => { if (player) player._recentlyHitByBoss = false; });
-    }
-
-    generateNewCooldown() {
-        this.attackCooldown = 3000;
-    }
-
-    startRandomState() {
-        const s = Phaser.Math.RND.pick(this.availableStates);
-        this.stateMachine.setState(s);
-    }
-
-    selectNextState() {
-        this.generateNewCooldown();
-        this.stateMachine.setState('cooldown');
+        this.scene.time.delayedCall(300, () => { 
+            if (player) player._recentlyHitByBoss = false; 
+        });
     }
 
     update(time, delta) {
-        // CAMBIADO: usar notdead como BossAngry
         if (this.notdead) {
             this.stateMachine.step(time, delta);
         }
     }
 
     takeDamage(damage) {
-        // CAMBIADO: Verificar notdead como BossAngry
-        if (!this.notdead) return;
-        
+        if (!this.isActivated) return;
+
         this.health -= damage;
-        this.setTint(0xff0000);
+        this.setTint(0xff0000); // Rojo para tutorial
+
+        // Efecto de parpadeo cuando recibe daño
         this.scene.tweens.add({
             targets: this,
             alpha: 0.5,
             duration: 100,
             yoyo: true,
             repeat: 2,
-            onComplete: () => { this.clearTint(); this.setAlpha(1); }
+            onComplete: () => {
+                this.clearTint();
+                this.setAlpha(1);
+            }
         });
 
         if (this.health <= 0) {
@@ -125,59 +158,107 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
     }
 
     nextPhase() {
+        console.log(`BossTutorial fase actual: ${this.phase}, salud: ${this.health}`);
+
         if (this.phase === 1) {
-            // pasar a fase 2
+            console.log('BossTutorial entra en FASE 2');
             this.phase = 2;
-            // regenerar vida (puedes ajustar)
-            this.maxHealth = 9;
-            this.health = this.maxHealth;
-            // añadir jumpAttack a disponibles
+            this.health = this.maxHealth + 3; // Dar más vida para fase 2
+
+            // FASE 2: añadir el estado jumpAttack a los disponibles
             this.availableStates.push('jumpAttack');
+            console.log('Estados disponibles en fase 2:', this.availableStates);
 
-            // Actualizar cooldowns para fase 2 también a 3 segundos
-            this.minCooldown = 3000;
-            this.maxCooldown = 3000;
-
-            // Pequeña pausa/efecto
+            // Efecto visual y pausa
+            this.setActive(false);
+            this.setVisible(false);
             this.scene.cameras.main.shake(600, 0.02);
-            this.scene.time.delayedCall(1000, () => {
+            this.scene.cameras.main.flash(500, 255, 50, 50); // Rojo para tutorial
+
+            // DEBUG: Añadir texto para verificar
+            this.scene.add.text(400, 300, 'FASE 2', {
+                fontSize: '48px',
+                fill: '#ff0000',
+                fontStyle: 'bold'
+            }).setOrigin(0.5);
+
+            // Esperar y revivir
+            this.scene.time.delayedCall(2000, () => {
+                console.log('Reactivar BossTutorial para fase 2');
+
+                this.setActive(true);
+                this.setVisible(true);
+
+                // Volver a la posición original
+                this.setX(this.x);
+                this.setY(this.y);
+
+                // Asegurar que el cuerpo de física esté configurado
+                const spriteW = this.displayWidth;
+                const spriteH = this.displayHeight;
+                this.body.setSize(spriteW * 0.45, spriteH * 0.4);
+                this.body.setOffset(0, spriteH * 0.05);
+
+                // Efecto de aparición
+                this.scene.tweens.add({
+                    targets: this,
+                    alpha: { from: 0, to: 1 },
+                    duration: 800,
+                    ease: 'Sine.easeInOut'
+                });
+
+                this.setupCollisions();
+
+                // Iniciar cooldown antes del primer ataque
                 this.generateNewCooldown();
                 this.stateMachine.setState('cooldown');
+
+                console.log('BossTutorial fase 2 activado y listo para atacar');
             });
         } else {
+            console.log('BossTutorial derrotado completamente');
             this.notdead = false;
             this.setVisible(false);
             this.die();
         }
     }
 
-     die() {
-          console.log('BossFear derrotado definitivamente');
-  
-          // Similar a ira: abrir puertas
-          if (this.Bossdoors) {
-              this.Bossdoors.getChildren().forEach(door => {
-                  if (door.abrirPuerta) {
-                      door.abrirPuerta();
-                  }
-              });
-          }
-  
-      
-      }
-  
-    getDoors(iraDoors) {
-        this.Bossdoors = iraDoors;
-        
+    die() {
+        console.log('BossTutorial muere');
+
+        // Asegúrate de que las puertas existen
+        if (this.Bossdoors) {
+            console.log('Abriendo puertas del BossTutorial');
+            this.Bossdoors.getChildren().forEach(door => {
+                if (door.abrirPuerta) {
+                    door.abrirPuerta();
+                }
+            });
+        }
+
+        PlayerDataManager.killBoss('tutorial');
+        this.scene.events.emit('bossDefeated');
+
+        console.log('BossTutorial eliminado del registro');
     }
+
+    getDoors(tutorialDoors) {
+        this.Bossdoors = tutorialDoors;
+        console.log('Puertas asignadas a BossTutorial');
+    }
+
     setLife() {
+        console.log('Activando BossTutorial');
         this.setVisible(true);
         this.setActive(true);
-        this.isActivated = true; // Activar el boss
-        
+        this.isActivated = true;
+
+        this.setupCollisions();
 
         // Iniciar cooldown antes del primer ataque
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
+
+        console.log('BossTutorial activado, vida:', this.health);
     }
 }
