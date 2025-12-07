@@ -2,10 +2,10 @@ import PlayerDataManager from "../managers/PlayerDataManager.js";
 
 export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-        super(scene, x, y, 'checkpoint'); 
-        
+        super(scene, x, y, 'checkpoint');
+
         this.x = x;
-        this.y = y; 
+        this.y = y;
 
         this.setOrigin(0.5, 1);
         this.setScale(5);
@@ -18,13 +18,13 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
         this.body.allowGravity = false;
 
         // --- AJUSTE DEL CUERPO FÍSICO ---
-        const width = this.width; 
+        const width = this.width;
         const height = this.height;
         const bodyW = Math.floor(width * 0.6);
         const bodyH = Math.floor(height * 0.25);
         this.body.setSize(bodyW, bodyH);
         this.body.setOffset(
-            (width - bodyW) / 2, 
+            (width - bodyW) / 2,
             height - bodyH
         );
 
@@ -55,7 +55,7 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
         });
 
         // --- ZONA DE ACTIVACIÓN ---
-        this.prompt = this.scene.add.text(this.x, this.y - this.displayHeight,this.activated?'Presiona E para inventario de orbes':'Presiona E para activar checkpoint', {
+        this.prompt = this.scene.add.text(this.x, this.y - this.displayHeight, this.activated ? 'Presiona E para inventario de orbes' : 'Presiona E para activar checkpoint', {
             font: '16px Arial',
             fill: '#ffffff',
             backgroundColor: 'rgba(0,0,0,0.5)',
@@ -66,7 +66,9 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
         this._keydownHandler = (event) => {
             if ((event.key === 'e' || event.key === 'E') && this.playerNearby) {
                 let player = this.scene.player;
-                if(this.activated){
+                if (this.activated) {
+                    player.health = player.maxHealth;
+                    player.emit("updateHearts", player.health);
                     let fromKey = this.scene.scene.key || null;
                     this.scene.scene.pause(fromKey);
                     this.scene.scene.launch('OrbSelect', { fromScene: fromKey, tPlayer: player });
@@ -82,18 +84,18 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
 
     activate(player) {
         if (this.activated) return;
-       
+
         if (this.prompt) {
             this.prompt.setText("Presiona E para inventario de orbes");
         }
 
         this.activated = true;
         this.play('cp_transition');
-      
-        this.once('animationcomplete', (anim) => {    
+
+        this.once('animationcomplete', (anim) => {
 
             this.scene.events.emit('checkpoint_activated', this);
-            
+
             if (anim.key === 'cp_transition') {
                 this.play('cp_idle_on');
             }
@@ -113,8 +115,8 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
 
         player.health = player.maxHealth;
         player.emit("updateHearts", player.health);
-        
-        PlayerDataManager.data.respawnPoint = { x: this.x, y: this.y - 50};
+
+        PlayerDataManager.data.respawnPoint = { x: this.x, y: this.y - 50 };
         PlayerDataManager.saveDataFromPlayer(player);
     }
 
@@ -124,7 +126,7 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
         if (this.prompt) {
             this.prompt.setText("Presiona E para activar checkpoint");
         }
-        
+
         this.activated = false;
         this.play('cp_idle_off');
         this.clearTint();
