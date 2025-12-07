@@ -11,7 +11,8 @@ export default class CheatManager {
             { name: "Spawn Inicial", x: 950, y: 900 },
             { name: "Boss Ira", x: 6000, y: 4500 },
             { name: "Boss Tristeza", x: 16800, y: 3750 },
-            { name: "Final del Nivel", x: 950, y: 900 }
+            { name: "Final del Nivel", x: 17250, y: 8450 },
+            { name: "Ejemplo", x: 950, y: 900 }
         ];
 
         // Input (SHIFT + T)
