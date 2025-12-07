@@ -30,6 +30,7 @@ import InvisibleTrigger from '../objects/Trigger.js';
 import BossRoom from '../objects/BossRoom.js';
 import FloorIsLava from '../objects/FloorIsLava.js';
 import CheatManager from '../managers/CheatManager.js';
+import TutorialPanel from '../objects/TutorialPanel.js'; 
 
 export default class TestPlayerScene extends Phaser.Scene {
     constructor() {
@@ -173,12 +174,12 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
                 case "feardoor":
                     this.fearbossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
-                    break;    
+                    break;
                 case "tutodoor":
                     this.tutobossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
-                    break;  
+                    break;
 
-                    //bossdoor
+                //bossdoor
                 case "bossdoor":
                     this.irabossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertaira');
                     break;
@@ -198,7 +199,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.tristebossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste');
                     break;
 
-                   case "fearbossdoor":
+                case "fearbossdoor":
                     this.fearbossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertamiedo');
                     break;
                 case "fearbossdoorcontrary":
@@ -206,7 +207,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
                 case "fearbossdoorexit":
                     this.fearbossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertamiedo');
-                    break;   
+                    break;
 
                 //buttons
                 case "redbutton":
@@ -218,7 +219,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "bluebutton":
                     this.blueButton = new Button(this, objeto.x, objeto.y, 'bbutton', 'azul');
                     break;
-                    case "redshow":
+                case "redshow":
                     this.redshow = new ShowButton(this, objeto.x, objeto.y, 'rshowA', 'rshowE');
                     break;
                 case "greenshow":
@@ -304,7 +305,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.Bossrooms.add(new BossRoom(this, objeto.x, objeto.y, objeto.width, objeto.height));
                     break;
 
-                
+                // Paneles texto
+                case "tutorial_Move_Jump":
+                    this.tutorial_move_jump = new TutorialPanel(this, objeto.x, objeto.y, 'No hay','Presiona ESPACIO para saltar\nUsa WASD para mover');
+                    break;
             }
         })
         this.cheatManager = new CheatManager(this, this.player);
@@ -387,7 +391,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.fearbossdoor) this.doors.add(this.fearbossdoor);
         if (this.fearbossdoorcontrary) this.doors.add(this.fearbossdoorcontrary);
         if (this.fearbossdoorexit) this.doors.add(this.fearbossdoorexit);
-        
+
 
         //bossdoors y triggers
 
@@ -404,7 +408,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.icebossdoors.getChildren().forEach(door => {
             door.abrirPuerta();
         });
-         this.icefloordoors.getChildren().forEach(door => {
+        this.icefloordoors.getChildren().forEach(door => {
             door.cerrarPuerta();
         });
         if (this.icetrigger) this.icetrigger.getDoors(this.icebossdoors);
@@ -414,7 +418,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             door.abrirPuerta();
         });
 
-          this.tutobossdoors.getChildren().forEach(door => {
+        this.tutobossdoors.getChildren().forEach(door => {
             door.abrirPuerta();
         });
 
@@ -422,11 +426,11 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.feartrigger) this.feartrigger.getDoors(this.fearbossdoors);
 
         if (this.feartrigger && this.miedoboss) this.feartrigger.getBoss(this.miedoboss);
-        
+
         if (this.tutotrigger) this.tutotrigger.getDoors(this.tutobossdoors);
 
         if (this.tutotrigger && this.tutoboss) this.tutotrigger.getBoss(this.tutoboss);
-        
+
 
         if (this.iraboss) this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
         if (this.tristeboss) this.tristeboss.getDoors(this.icebossdoors, this.icefloordoors);
@@ -496,7 +500,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.feartrigger, () => {
             this.feartrigger.llamar();
         });
-         this.physics.add.overlap(this.player, this.tutotrigger, () => {
+        this.physics.add.overlap(this.player, this.tutotrigger, () => {
             this.tutotrigger.llamar();
         });
 
@@ -820,6 +824,11 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         if (this.cheatManager) {
             this.cheatManager.update();
+        }
+
+        // Paneles de texto
+        if (this.player && this.tutorial_move_jump) {
+            this.tutorial_move_jump.update(this.player);
         }
     }
     handleBossRoom(bossRoom) {
