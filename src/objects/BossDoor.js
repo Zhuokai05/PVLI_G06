@@ -8,6 +8,13 @@ export default class DoorBoss extends Door
 
         this.contrary = null; 
         
+        //sonidos
+
+         this.tpSound = this.scene.sound.add('Teleport_sound', {
+            volume: 0.3,
+            loop: false
+        })
+        
     }
 
     getPosition()
@@ -28,6 +35,7 @@ export default class DoorBoss extends Door
             return;
         }
 
+        this?.tpSound?.play();
         const destino = this.contrary.getPosition();
 
         const player = this.scene.player;

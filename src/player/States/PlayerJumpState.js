@@ -4,12 +4,9 @@ export default class PlayerJumpState extends BaseState {
     enter(player) {
         //aplicar velocidad salto
         
-        if (player.jumpSound) {
-            player.jumpSound.play();
-        }
 
+        player?.jumpSound?.play();
         player.setVelocityY(-player.jumpSpeed*player.jumpSpeedModifier);
-        player.play('Player_jump', true);
     }
 
     execute(player) {
@@ -50,6 +47,7 @@ export default class PlayerJumpState extends BaseState {
     }
 
     exit(player){
+        player?.jumpEndSound?.play();
         player.canPogoJump = false;
     }
 }

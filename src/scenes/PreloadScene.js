@@ -145,9 +145,22 @@ export class PreloadScene extends Phaser.Scene {
 
 
     this.load.tilemapTiledJSON("mappy", "./assets/Maps/map.json");
+
     // Efecto de sonidos
-    this.load.audio('jump_sound', './assets/Sounds/Player/jump.mp3');
-    this.load.audio('damage_sound', './assets/Sounds/Player/take_damage.mp3');
+
+    //player
+    this.load.audio('PlayerJump_Sound', './assets/Sounds/Player/PlayerJump.wav');
+    this.load.audio('PlayerJumpEnd_Sound', './assets/Sounds/Player/PlayerJumpEnd.wav');
+    this.load.audio('PlayerAttack_Sound', './assets/Sounds/Player/PlayerAttack.wav');
+    this.load.audio('PlayerDamaged_sound', './assets/Sounds/Player/PlayerDamaged.wav');
+
+    //objetos
+    this.load.audio('ActivateCheckpoint_sound', './assets/Sounds/Object/Checkpoint.wav');
+    this.load.audio('Teleport_sound', './assets/Sounds/Object/OpenDoor.wav');
+
+    //musica    
+    this.load.audio('bg_Music', 'assets/Sounds/Music/MainMusic.wav');
+
 
   }
 

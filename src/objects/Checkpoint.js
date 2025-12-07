@@ -79,6 +79,14 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
             }
         };
 
+        //sonidos
+
+         this.activateSound = this.scene.sound.add('ActivateCheckpoint_sound', {
+            volume: 0.3,
+            loop: false
+        })
+        
+
         this.scene.input.keyboard.on('keydown', this._keydownHandler);
     }
 
@@ -99,6 +107,8 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
             if (anim.key === 'cp_transition') {
                 this.play('cp_idle_on');
             }
+
+            this?.activateSound?.play(); //reproducimos sonido activar
         });
 
         this.scene.tweens.add({
