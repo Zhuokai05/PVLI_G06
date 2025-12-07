@@ -32,7 +32,7 @@ import InvisibleTrigger from '../objects/Trigger.js';
 import BossRoom from '../objects/BossRoom.js';
 import FloorIsLava from '../objects/FloorIsLava.js';
 import CheatManager from '../managers/CheatManager.js';
-import TutorialPanel from '../objects/TutorialPanel.js'; 
+import TutorialPanel from '../objects/TutorialPanel.js';
 
 
 export default class TestPlayerScene extends Phaser.Scene {
@@ -78,7 +78,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             allowGravity: false,
             immovable: true
         });
-         this.finalbossdoors = this.physics.add.group({
+        this.finalbossdoors = this.physics.add.group({
             allowGravity: false,
             immovable: true
         });
@@ -293,10 +293,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.orbGroup.add(new BloodStealOrb(this, objeto.x, objeto.y));
                     break;
                 case "jumpdeorb":
-                   this.orbGroup.add(new JumpOrb(this, objeto.x, objeto.y));
+                    this.orbGroup.add(new JumpOrb(this, objeto.x, objeto.y));
                     break;
                 case "shieldorb":
-                   this.orbGroup.add(new ShieldOrb(this, objeto.x, objeto.y));
+                    this.orbGroup.add(new ShieldOrb(this, objeto.x, objeto.y));
                     break;
                 //checkPoint
                 case "checkpoint":
@@ -336,26 +336,29 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
                 case "room":
                     this.Bossrooms.add(new BossRoom(this, objeto.x, objeto.y, objeto.width, objeto.height));
-                    
+
 
                 //lava    
                 case "lava":
-                     this.lavatrigger = this.add.zone(objeto.x, objeto.y, objeto.width, objeto.height);
-                     this.physics.add.existing(this.lavatrigger);
-                     this.lavatrigger.body.setAllowGravity(false);
-                     this.lavatrigger.body.setImmovable(true);
+                    this.lavatrigger = this.add.zone(objeto.x, objeto.y, objeto.width, objeto.height);
+                    this.physics.add.existing(this.lavatrigger);
+                    this.lavatrigger.body.setAllowGravity(false);
+                    this.lavatrigger.body.setImmovable(true);
                     break;
                 // Paneles texto
                 case "tutorial_Move_Jump":
-                    this.tutorial_move_jump = new TutorialPanel(this, objeto.x, objeto.y, 'No hay','Presiona ESPACIO para saltar\nUsa WASD para mover');
+                    this.tutorial_move_jump = new TutorialPanel(this, objeto.x, objeto.y, 'No hay', 'Presiona ESPACIO para saltar\nUsa WASD para mover');
+                    break;
+                case "tutorial_attack":
+                    this.tutorial_attack = new TutorialPanel(this, objeto.x, objeto.y, 'No hay', 'Presiona 🡠🡡🡢🡣 para atacar');
                     break;
             }
         })
         this.cheatManager = new CheatManager(this, this.player);
-       
 
-         
-          
+
+
+
 
         //    //ira
         //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',
@@ -473,7 +476,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             door.abrirPuerta();
         });
 
-        
+
 
         if (this.feartrigger) this.feartrigger.getDoors(this.fearbossdoors);
 
@@ -483,7 +486,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             door.abrirPuerta();
         });
 
-       
+
 
 
         if (this.tutotrigger) this.tutotrigger.getDoors(this.tutobossdoors);
@@ -491,7 +494,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.tutotrigger && this.tutoboss) this.tutotrigger.getBoss(this.tutoboss);
 
 
-         this.finalbossdoors.getChildren().forEach(door => {
+        this.finalbossdoors.getChildren().forEach(door => {
             door.abrirPuerta();
         });
         if (this.finaltrigger) this.finaltrigger.getDoors(this.finalbossdoors);
@@ -534,17 +537,16 @@ export default class TestPlayerScene extends Phaser.Scene {
         //Overlaps
         //Evento de activación de la lava
         //------------------------------
-     
 
-      if (this.lavatrigger)
-        {
+
+        if (this.lavatrigger) {
             this.physics.add.overlap(this.player, this.lavatrigger, () => {
-            this.lava = new FloorIsLava(this, this.lavatrigger.y, 75, this.player);
-            this.lava.startLava();
-            this.lavatrigger.destroy();
-            this.cameras.main.shake(500, 0.01);
-        });
-        }     
+                this.lava = new FloorIsLava(this, this.lavatrigger.y, 75, this.player);
+                this.lava.startLava();
+                this.lavatrigger.destroy();
+                this.cameras.main.shake(500, 0.01);
+            });
+        }
         //------------------------------
         this.physics.add.overlap(this.player, this.orbGroup, (player, orb) => {
             orb.collect(player);
@@ -902,6 +904,10 @@ export default class TestPlayerScene extends Phaser.Scene {
         // Paneles de texto
         if (this.player && this.tutorial_move_jump) {
             this.tutorial_move_jump.update(this.player);
+        }
+
+        if (this.player && this.tutorial_attack) {
+            this.tutorial_attack.update(this.player);
         }
     }
     handleBossRoom(bossRoom) {
