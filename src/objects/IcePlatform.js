@@ -38,7 +38,7 @@ export default class IcePlatform extends BasePlatform {
         }
     }
 
-    accion() {
+    action() {
         if (this.congelado) {
             this._desactivarPlataforma();
         } else {

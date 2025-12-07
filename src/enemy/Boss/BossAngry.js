@@ -48,6 +48,8 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         this.fireballs = scene.physics.add.group();
         this.punches = scene.physics.add.group();
 
+        this.platforms = null;
+
         // Maquina de estados
         this.stateMachine = new StateMachine(this, 'boss');
 
@@ -125,6 +127,16 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
             null,
             this
         );
+        // Configurar colisión entre puños y plataformas de ira
+        if (this.platforms) {
+            this.punchPlatformOverlap = this.scene.physics.add.overlap(
+                this.punches,
+                this.platforms,
+                this.punchCollisionWithPlatform,
+                null,
+                this
+            );
+        }
     }
 
     startRandomState() {
@@ -268,5 +280,23 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
         // Iniciar cooldown antes del primer ataque
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
+    }
+
+    // Método para configurar las plataformas (llamado desde la escena)
+    setPlatforms(platforms) {
+        this.platforms = platforms;
+    }
+
+    // Método para manejar colisión de puño con plataforma
+    punchCollisionWithPlatform(punch, platform) {
+        if (!punch.active || !platform.active) return;
+        
+        // Llamar al método de desactivación de la plataforma
+        if (platform.deactivateByPunch) {
+            platform.deactivateByPunch();
+        }
+        
+        // Destruir el puño después de colisionar con la plataforma
+        punch.destroy();
     }
 }

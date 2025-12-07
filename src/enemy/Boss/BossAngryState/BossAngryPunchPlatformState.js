@@ -74,6 +74,9 @@ export default class BossAngryPunchPlatformState extends BaseState {
         punch.body.allowGravity = false;
         punch.setTint(0xff6b6b);
 
+        // Marcar este puño como "puño de plataforma" (opcional, para diferenciar)
+        punch.isPlatformPunch = true;
+
         this.cleanupPunch(punch);
     }
 
