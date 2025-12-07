@@ -57,4 +57,20 @@ export default class StateMachine {
     /**
      * ejecuta el estado actual cada frame
      */
+    step(time, delta) {
+        if (this.currentState && this.currentState.execute) {
+            this.currentState.execute(this.context, time, delta);
+        }
+    }
+
+    /**
+     * devuelve el nombre del estado activo actual
+     * @returns {string|null}
+     */
+    getStateName() {
+        for (let [name, state] of this.states.entries()) {
+            if (state === this.currentState) return name;
+        }
+        return null;
+    }
 }
