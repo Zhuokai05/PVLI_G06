@@ -78,14 +78,16 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
     }
 
     setupCollisions() {
-        // Colisión entre boss y player (para detectar golpe cuerpo a cuerpo)
-        this.bossPlayerOverlap = this.scene.physics.add.overlap(
-            this,
-            this.player,
-            this.onHitPlayer,
-            null,
-            this
-        );
+        // Configurar overlaps solo si no existen ya
+        if (!this.bossPlayerOverlap) {
+            this.bossPlayerOverlap = this.scene.physics.add.overlap(
+                this,
+                this.player,
+                this.onHitPlayer,
+                null,
+                this
+            );
+        }
     }
 
     startRandomState() {
@@ -128,13 +130,13 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
-        if (this.notdead) {
+        if (this.notdead && this.isActivated) { // Solo actualizar si está vivo y activado
             this.stateMachine.step(time, delta);
         }
     }
 
     takeDamage(damage) {
-        if (!this.isActivated) return;
+        if (!this.isActivated || !this.notdead) return; // No recibir daño si no está activado o ya está muerto
 
         this.health -= damage;
         this.setTint(0xff0000); // Rojo para tutorial
@@ -162,6 +164,15 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
 
         if (this.phase === 1) {
             console.log('BossTutorial entra en FASE 2');
+            
+            // LIMPIAR WARNINGS ANTES DE LA TRANSICIÓN
+            this.cleanupAllWarnings();
+            
+            // Cambiar a estado inactivo durante la transición
+            if (this.stateMachine) {
+                this.stateMachine.setState('inactive');
+            }
+
             this.phase = 2;
             this.health = this.maxHealth + 3; // Dar más vida para fase 2
 
@@ -175,29 +186,12 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
             this.scene.cameras.main.shake(600, 0.02);
             this.scene.cameras.main.flash(500, 255, 50, 50); // Rojo para tutorial
 
-            // DEBUG: Añadir texto para verificar
-            this.scene.add.text(400, 300, 'FASE 2', {
-                fontSize: '48px',
-                fill: '#ff0000',
-                fontStyle: 'bold'
-            }).setOrigin(0.5);
-
             // Esperar y revivir
             this.scene.time.delayedCall(2000, () => {
                 console.log('Reactivar BossTutorial para fase 2');
 
                 this.setActive(true);
                 this.setVisible(true);
-
-                // Volver a la posición original
-                this.setX(this.x);
-                this.setY(this.y);
-
-                // Asegurar que el cuerpo de física esté configurado
-                const spriteW = this.displayWidth;
-                const spriteH = this.displayHeight;
-                this.body.setSize(spriteW * 0.45, spriteH * 0.4);
-                this.body.setOffset(0, spriteH * 0.05);
 
                 // Efecto de aparición
                 this.scene.tweens.add({
@@ -207,6 +201,7 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
                     ease: 'Sine.easeInOut'
                 });
 
+                // Asegurar que las colisiones estén configuradas
                 this.setupCollisions();
 
                 // Iniciar cooldown antes del primer ataque
@@ -225,6 +220,20 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         console.log('BossTutorial muere');
+
+        // IMPORTANTE: Limpiar todos los warnings y estados activos
+        this.cleanupAllWarnings();
+        
+        // Desactivar el estado actual si existe
+        if (this.stateMachine && this.stateMachine.currentState && 
+            this.stateMachine.currentState.exit) {
+            this.stateMachine.currentState.exit(this);
+        }
+        
+        // Cambiar a estado inactivo
+        if (this.stateMachine) {
+            this.stateMachine.setState('inactive');
+        }
 
         // Desactivar completamente el cuerpo de física
         if (this.body) {
@@ -249,6 +258,9 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
         PlayerDataManager.killBoss('tutorial');
         this.scene.events.emit('bossDefeated');
 
+        // Destruir todos los objetos de ataque
+        this.destroyAllAttackObjects();
+        
         console.log('BossTutorial eliminado del registro');
     }
 
@@ -270,5 +282,41 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.setState('cooldown');
 
         console.log('BossTutorial activado, vida:', this.health);
+    }
+    
+    //PARA LIMPIAR WARNINGS
+    cleanupAllWarnings() {
+        // Si hay un estado actual activo, llamar a su método de limpieza
+        if (this.stateMachine && this.stateMachine.currentState) {
+            const currentState = this.stateMachine.currentState;
+            
+            // Llamar a métodos específicos de limpieza si existen
+            if (typeof currentState.destroyAllWarnings === 'function') {
+                currentState.destroyAllWarnings();
+            }
+            
+            // También intentar limpiar warnings directamente
+            if (currentState.warningRect && currentState.warningRect.destroy) {
+                currentState.warningRect.destroy();
+            }
+            
+            // Detener tweens si existen
+            if (currentState.tween && currentState.tween.stop) {
+                currentState.tween.stop();
+            }
+        }
+    }
+    
+    destroyAllAttackObjects() {
+        // Desactivar overlaps solo cuando muere definitivamente
+        this.removeAllColliders();
+    }
+    
+    removeAllColliders() {
+        // Solo eliminar overlaps cuando el boss muere definitivamente
+        if (this.bossPlayerOverlap) {
+            this.scene.physics.world.removeCollider(this.bossPlayerOverlap);
+            this.bossPlayerOverlap = null;
+        }
     }
 }

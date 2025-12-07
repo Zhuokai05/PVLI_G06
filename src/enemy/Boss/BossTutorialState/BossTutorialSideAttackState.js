@@ -74,7 +74,8 @@ export default class BossTutorialSideAttackState extends BaseState {
         this.currentPhase = 'attack';
         this.stateTime = 0;
 
-        if (this.warningRect && this.warningRect.active) this.warningRect.destroy();
+        // Destruir advertencia
+        this.destroyAllWarnings();
 
         // Obtener límites actualizados (por si la cámara se movió)
         const cam = this.scene.cameras.main;
@@ -125,12 +126,23 @@ export default class BossTutorialSideAttackState extends BaseState {
             }
         });
     }
+    
+    destroyAllWarnings() {
+        if (this.warningRect) {
+            this.warningRect.destroy();
+            this.warningRect = null;
+        }
+        
+        // Detener tween si existe
+        if (this.tween && this.tween.stop) {
+            this.tween.stop();
+            this.tween = null;
+        }
+    }
 
     exit(context) {
-        // Limpieza
-        if (this.warningRect && this.warningRect.active) this.warningRect.destroy();
-        if (this.tween) this.tween.stop();
-
+        this.destroyAllWarnings();
+        
         // Reset flag
         this.boss._hitPlayerThisSweep = false;
     }

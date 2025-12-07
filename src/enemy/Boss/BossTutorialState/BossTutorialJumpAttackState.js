@@ -49,7 +49,7 @@ export default class BossTutorialJumpAttackState extends BaseState {
         // Subir al cielo (fuera de cámara)
         const liftY = this.boss.y - 500; // Usar posición relativa al boss
 
-        this.scene.tweens.add({
+        this.liftTween = this.scene.tweens.add({
             targets: this.boss,
             y: liftY,
             duration: this.liftDuration,
@@ -88,7 +88,7 @@ export default class BossTutorialJumpAttackState extends BaseState {
         );
 
         // Tween para caer al target
-        this.scene.tweens.add({
+        this.fallTween = this.scene.tweens.add({
             targets: this.boss,
             x: targetX,
             y: targetY,
@@ -109,8 +109,26 @@ export default class BossTutorialJumpAttackState extends BaseState {
             }
         });
     }
+    
+    destroyAllWarnings() {
+        if (this.warningRect) {
+            this.warningRect.destroy();
+            this.warningRect = null;
+        }
+        
+        // Detener tweens si existen
+        if (this.liftTween && this.liftTween.stop) {
+            this.liftTween.stop();
+            this.liftTween = null;
+        }
+        
+        if (this.fallTween && this.fallTween.stop) {
+            this.fallTween.stop();
+            this.fallTween = null;
+        }
+    }
 
     exit(context) {
-        if (this.warningRect && this.warningRect.active) this.warningRect.destroy();
+        this.destroyAllWarnings();
     }
 }
