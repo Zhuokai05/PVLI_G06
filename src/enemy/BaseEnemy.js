@@ -119,7 +119,7 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     this.body.allowGravity = true; 
     this.setVelocityX(0);
 
-    if(this.player){
+    if(this.player && this.player.health < this.player.maxHealth){
       this.player.health +=this.player.bloodStealAmount;
       this.player.emit('updateHearts', this.player.health, false);
     }
