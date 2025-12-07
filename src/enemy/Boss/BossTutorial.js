@@ -122,8 +122,8 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
 
         // Pequeño cooldown en el player para evitar daño repetido instantáneo
         player._recentlyHitByBoss = true;
-        this.scene.time.delayedCall(300, () => { 
-            if (player) player._recentlyHitByBoss = false; 
+        this.scene.time.delayedCall(300, () => {
+            if (player) player._recentlyHitByBoss = false;
         });
     }
 
@@ -225,6 +225,16 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         console.log('BossTutorial muere');
+
+        // Desactivar completamente el cuerpo de física
+        if (this.body) {
+            this.body.enable = false; // Desactivar el cuerpo de física
+            this.body.checkCollision.none = true; // Desactivar todas las colisiones
+        }
+
+        // Desactivar el sprite
+        this.setVisible(false);
+        this.setActive(false);
 
         // Asegúrate de que las puertas existen
         if (this.Bossdoors) {
