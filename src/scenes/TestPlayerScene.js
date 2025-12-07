@@ -125,10 +125,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                 //Enemigos
 
                 case "ira":
-                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry'));
+                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move', 'basicEnemyAngry', 'basicEnemyAngry'));
                     break;
                 case "tristeza":
-                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad'));
+                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad', 0, 'Tristeza_BasicEnemy_Move', 'basicEnemySad', 'basicEnemySad'));
                     break;
 
                 case "alegria":
@@ -669,6 +669,20 @@ export default class TestPlayerScene extends Phaser.Scene {
             repeat: -1
         });
 
+        //enemigos basicos
+        this.anims.create({
+            key: 'Ira_BasicEnemy_Move',
+            frames: this.anims.generateFrameNumbers('basicEnemyAngry_move', { start: 0, end: 2 }),
+            frameRate: 8,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'Tristeza_BasicEnemy_Move',
+            frames: this.anims.generateFrameNumbers('basicEnemySad_move', { start: 0, end: 2 }),
+            frameRate: 8,
+            repeat: -1
+        });
 
         //enemigos voladores
         this.anims.create({
