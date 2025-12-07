@@ -121,6 +121,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             loop: false
         });
 
+        this.shieldSound = this.scene.sound.add('PlayerShield_Sound', {
+            volume: 0.3,
+            loop: false
+        });
+
+        this.shieldBlockSound = this.scene.sound.add('PlayerShieldBlock_Sound', {
+            volume: 0.3,
+            loop: false
+        });
+
         this.jumpEndSound = this.scene.sound.add('PlayerJumpEnd_Sound', {
             volume: 0.2,
             loop: false
@@ -130,6 +140,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             volume: 0.3,
             loop: false
         })
+
+        this.takeOrbSound = this.scene.sound.add('PlayerTakeOrb_sound', {
+            volume: 0.3,
+            loop: false
+        })
+
+        this.changeOrbSound = this.scene.sound.add('PlayerChangeOrb_sound', {
+            volume: 0.3,
+            loop: false
+        })
+
+        this.rangeAttackSound = this.scene.sound.add('PlayerRangeAttack_sound', {
+            volume: 1,
+            loop: false
+        })
+
+        this.dashSound = this.scene.sound.add('PlayerDash_sound', {
+            volume: 0.3,
+            loop: false
+        })
+
         //aura del escudo cuando tiene el escudo activado
         this.shieldAura = this.scene.add.image(this.x, this.y, 'playerShieldAura')
             .setDepth(this.depth + 1)           // delante del jugador
@@ -155,6 +186,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             else if (this.canShield && !this.hasShield && this.shieldCooldownTimer <= 0) {
                 this.shieldAura.setVisible(true);
                 this.hasShield = true;
+                this?.shieldSound?.play();
                 console.log("escudo activado")
             }
         }
@@ -191,8 +223,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (this.invulnerable) return;
 
-        this?.damagedSound?.play();
-
         this.setTint(0xff0000);
         this.safeDelay(this.invulnerableTime * 0.8, () => this.setTint(this.orbTint));
 
@@ -204,8 +234,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.hasShield = false;
             if (this.shieldAura) this.shieldAura.setVisible(false);
             console.log("daño bloqueado")
+            this?.shieldBlockSound?.play();
             return;
         }
+
+        this?.damagedSound?.play();
 
         this.health -= damage;
         this.emit('updateHearts', this.health, true);
@@ -233,8 +266,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.orbs.includes(orb)) {
             this.orbs.push(orb);
             console.log('orbe recogido: ' + orb.name);
+            this?.takeOrbSound?.play();
         }
-
 
         for (let i = 0; i < this.equippedOrbs.length; i++) { //si hay algun slot libre, se autoequipa el orbe recogido
             if (!this.equippedOrbs[i]) {
@@ -294,6 +327,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     switchActiveOrb() {
         let nextIndex = (this.activeOrbIndex + 1) % this.equippedOrbs.length;
         this.ActivateOrb(nextIndex);
+        this?.changeOrbSound?.play();
     }
 
     //cambiar orbe activo introduciendo manualmente el slot como parametro
@@ -458,6 +492,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     performRangeAttack() {
         if (!this.canRangeAttack) return;
         if (this.isAttacking) return;
+
+        this?.rangeAttackSound?.play();
 
         this.rangeAttackCooldownTimer = this.rangeAttackCooldown;
         this.isAttacking = true;

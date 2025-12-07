@@ -4,6 +4,7 @@ export default class PlayerDashState extends BaseState {
    
     enter(player) {
 
+        this?.dashSound?.play();
         this.dashSpawnShadowFrequency = 40; //frecuencia en la que invoca sombras que siguen al jugador cuando dashea
         this.dashShadowDuration = 250; //duracion de cada sombra
 
