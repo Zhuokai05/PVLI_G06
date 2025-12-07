@@ -35,7 +35,7 @@ export default class InvisibleTrigger extends Phaser.Physics.Arcade.Sprite {
             }
 
             this.doors.getChildren().forEach(door => {
-                door.cambiarAbrir();
+                door.cerrarPuerta();
             });
         }
         this.primer = false;

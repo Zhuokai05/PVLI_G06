@@ -483,7 +483,6 @@ export default class TestPlayerScene extends Phaser.Scene {
             door.abrirPuerta();
         });
         if (this.finaltrigger) this.finaltrigger.getDoors(this.finalbossdoors);
-
         if (this.finaltrigger && this.finalboss) this.finaltrigger.getBoss(this.finalboss);
         if (this.finaltrigger2) this.finaltrigger2.getDoors(this.finalbossdoors);
 
