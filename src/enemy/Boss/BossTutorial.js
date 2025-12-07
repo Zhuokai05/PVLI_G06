@@ -61,6 +61,8 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
         // Iniciar en cooldown para espaciar primera acción
         this.attackCooldown = this.startCooldown;
         this.stateMachine.setState('cooldown');
+
+         this.isActivated = false;
     }
 
     // Maneja colisión directa boss <-> player
@@ -149,13 +151,33 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    die() {
-        console.log('Boss Tutorial derrotado definitivamente');
-        this.scene.time.delayedCall(2000, () => {   
-            this.scene.scene.stop(); 
-            // Lanzar escena Win antes de destruir
-            this.scene.scene.launch('Win');
-            this.destroy();
-        });
+     die() {
+          console.log('BossFear derrotado definitivamente');
+  
+          // Similar a ira: abrir puertas
+          if (this.Bossdoors) {
+              this.Bossdoors.getChildren().forEach(door => {
+                  if (door.abrirPuerta) {
+                      door.abrirPuerta();
+                  }
+              });
+          }
+  
+      
+      }
+  
+    getDoors(iraDoors) {
+        this.Bossdoors = iraDoors;
+        
+    }
+    setLife() {
+        this.setVisible(true);
+        this.setActive(true);
+        this.isActivated = true; // Activar el boss
+        
+
+        // Iniciar cooldown antes del primer ataque
+        this.generateNewCooldown();
+        this.stateMachine.setState('cooldown');
     }
 }

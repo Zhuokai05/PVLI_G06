@@ -70,6 +70,10 @@ export default class TestPlayerScene extends Phaser.Scene {
             allowGravity: false,
             immovable: true
         });
+        this.tutobossdoors = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+        });
 
 
         this.iraPlatforms = this.physics.add.group({
@@ -170,6 +174,11 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "feardoor":
                     this.fearbossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
                     break;    
+                case "tutodoor":
+                    this.tutobossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    break;  
+
+                    //bossdoor
                 case "bossdoor":
                     this.irabossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertaira');
                     break;
@@ -233,6 +242,9 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "feartrigger":
                     this.feartrigger = new InvisibleTrigger(this, objeto.x, objeto.y);
                     break;
+                case "tutotrigger":
+                    this.tutotrigger = new InvisibleTrigger(this, objeto.x, objeto.y);
+                    break;
                 //orbes 
                 case "speedorb":
                     this.orbGroup.add(new MoveSpeedOrb(this, objeto.x, objeto.y));
@@ -282,6 +294,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "tutoboss":
                     this.tutoboss = new BossTutorial(this, objeto.x, objeto.y, this.player);
                     this.enemies.add(this.tutoboss);
+                    console.log("creado");
                     break;
                 case "finalboss":
                     this.finalboss = new FinalBoss(this, objeto.x, objeto.y, this.player);
@@ -391,6 +404,9 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.icebossdoors.getChildren().forEach(door => {
             door.abrirPuerta();
         });
+         this.icefloordoors.getChildren().forEach(door => {
+            door.cerrarPuerta();
+        });
         if (this.icetrigger) this.icetrigger.getDoors(this.icebossdoors);
         if (this.icetrigger && this.tristeboss) this.icetrigger.getBoss(this.tristeboss);
 
@@ -398,14 +414,24 @@ export default class TestPlayerScene extends Phaser.Scene {
             door.abrirPuerta();
         });
 
+          this.tutobossdoors.getChildren().forEach(door => {
+            door.abrirPuerta();
+        });
+
 
         if (this.feartrigger) this.feartrigger.getDoors(this.fearbossdoors);
 
         if (this.feartrigger && this.miedoboss) this.feartrigger.getBoss(this.miedoboss);
+        
+        if (this.tutotrigger) this.tutotrigger.getDoors(this.tutobossdoors);
+
+        if (this.tutotrigger && this.tutoboss) this.tutotrigger.getBoss(this.tutoboss);
+        
 
         if (this.iraboss) this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
         if (this.tristeboss) this.tristeboss.getDoors(this.icebossdoors, this.icefloordoors);
-
+        if (this.miedoboss) this.miedoboss.getDoors(this.fearbossdoors);
+        if (this.tutoboss) this.tutoboss.getDoors(this.tutobossdoors);
 
         //mapdoors
 
@@ -418,8 +444,12 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.irabossdoors);
         this.physics.add.collider(this.player, this.irafloordoors);
         this.physics.add.collider(this.player, this.icebossdoors);
-        this.physics.add.collider(this.player, this.fearbossdoors);
         this.physics.add.collider(this.player, this.icefloordoors);
+        this.physics.add.collider(this.player, this.fearbossdoors);
+        this.physics.add.collider(this.player, this.tutobossdoors);
+
+
+
         this.physics.add.collider(this.player, this.icePlatforms);
         this.physics.add.collider(this.player, this.iraPlatforms);
         this.physics.add.collider(layer, this.enemies);
@@ -465,6 +495,9 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
         this.physics.add.overlap(this.player, this.feartrigger, () => {
             this.feartrigger.llamar();
+        });
+         this.physics.add.overlap(this.player, this.tutotrigger, () => {
+            this.tutotrigger.llamar();
         });
 
         this.physics.add.overlap(this.player, this.blueButton, () => {

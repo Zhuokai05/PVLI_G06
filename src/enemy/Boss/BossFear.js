@@ -267,22 +267,14 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
             });
         }
 
-        if (this.floors) {
-            this.floors.getChildren().forEach(floor => {
-                if (floor.abrirPuerta) {
-                    floor.abrirPuerta();
-                }
-            });
-        }
-
         // Similar a ira: registrar muerte
         PlayerDataManager.killBoss('fear');
         this.scene.events.emit('bossDefeated');
     }
 
-    getDoors(doors, floors) {
+    getDoors(doors) {
         this.Bossdoors = doors;
-        this.floors = floors;
+        
     }
 
     setLife() {
