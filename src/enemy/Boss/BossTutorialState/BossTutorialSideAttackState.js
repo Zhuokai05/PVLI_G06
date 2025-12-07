@@ -9,39 +9,41 @@ export default class BossTutorialSideAttackState extends BaseState {
 
         // Duraciones en ms 
         this.warningDuration = 1000;
-        this.attackDuration = 1000; // duración del sweep tween
-        this.cooldownDuration = 1000; // Aumentado para total de ~3segundos
+        this.attackDuration = 1000;
+        this.cooldownDuration = 1000;
 
         // Reseteo flag
         this.boss._hitPlayerThisSweep = false;
 
-        // GUARDAR LA POSICIÓN Y INICIAL para mantenerla fija
+        // Guardar posición inicial
         this.initialY = this.boss.y;
+        this.initialX = this.boss.x;
 
-        // MODIFICACIÓN: La dirección siempre es del lado en el que está hacia el otro extremo
+        // Obtener los límites visibles de la cámara en coordenadas del mundo
         const cam = this.scene.cameras.main;
-        const leftX = 50;
-        const rightX = cam.width - 50;
+        const worldView = cam.worldView; // Esto da el rectángulo visible en coordenadas del mundo
         
-        // Determinar dirección basada en la posición actual
-        const bossCenterX = this.boss.x;
-        const camCenterX = cam.width / 2;
-        
-        // Si está en la izquierda, va a la derecha, y viceversa
-        this.direction = (bossCenterX < camCenterX) ? 'right' : 'left';
+        // Calcular márgenes dentro del área visible
+        const margin = 50;
+        this.leftBoundary = worldView.x + margin;
+        this.rightBoundary = worldView.x + worldView.width - margin;
+        this.centerX = worldView.x + worldView.width / 2;
 
-        // Crear rectángulo de advertencia horizontal (barrido) - USAR initialY
+        // Determinar dirección basada en la posición actual del boss
+        this.direction = (this.boss.x < this.centerX) ? 'right' : 'left';
+
+        // Crear rectángulo de advertencia en coordenadas del mundo
         const warningHeight = 120;
         this.warningRect = this.scene.add.rectangle(
-            cam.width / 2,
-            this.initialY, // Usar la Y inicial guardada
-            cam.width,
+            this.centerX, // Usar centro de la cámara en coordenadas del mundo
+            this.initialY,
+            worldView.width, // Ancho del área visible
             warningHeight,
             0xff0000,
             0.4
         );
 
-        // Aseguramos que el boss no se mueva hasta comenzar
+        // Asegurar que el boss no se mueva hasta comenzar
         if (this.boss.body) this.boss.body.moves = false;
     }
 
@@ -55,7 +57,7 @@ export default class BossTutorialSideAttackState extends BaseState {
                 }
                 break;
             case 'attack':
-                // FORZAR POSICIÓN Y FIJA durante el ataque
+                // Forzar posición Y fija durante el ataque
                 if (this.boss.body) {
                     this.boss.y = this.initialY;
                 }
@@ -74,30 +76,31 @@ export default class BossTutorialSideAttackState extends BaseState {
 
         if (this.warningRect && this.warningRect.active) this.warningRect.destroy();
 
-        // Determinar extremos en X según cámara
+        // Obtener límites actualizados (por si la cámara se movió)
         const cam = this.scene.cameras.main;
-        const leftX = 50; // margen (ajusta según tu layout)
-        const rightX = cam.width - 50;
+        const worldView = cam.worldView;
+        const margin = 50;
+        const leftBoundary = worldView.x + margin;
+        const rightBoundary = worldView.x + worldView.width - margin;
 
-        const fromX = (this.direction === 'right') ? leftX : rightX;
-        const toX = (this.direction === 'right') ? rightX : leftX;
+        const fromX = (this.direction === 'right') ? leftBoundary : rightBoundary;
+        const toX = (this.direction === 'right') ? rightBoundary : leftBoundary;
 
-        // Colocar boss en el extremo inicial - MANTENER Y INICIAL
+        // Colocar boss en el extremo inicial
         this.boss.x = fromX;
-        this.boss.y = this.initialY; // Usar la Y inicial guardada
+        this.boss.y = this.initialY;
 
-        // Orientar sprite: por defecto textura orientada a la izquierda
-        // Si se mueve a la derecha: flipX = true
+        // Orientar sprite
         this.boss.flipX = (this.direction === 'right');
 
-        // Permitir movimiento físico para detectar overlap continuo
+        // Permitir movimiento físico para detectar overlap
         if (this.boss.body) this.boss.body.moves = true;
 
         // Tween para mover SOLO en el eje X
         this.tween = this.scene.tweens.add({
             targets: this.boss,
             x: toX,
-            y: this.initialY, // FORZAR Y constante en el tween
+            y: this.initialY,
             ease: 'Sine.easeInOut',
             duration: this.attackDuration,
             onUpdate: () => {
@@ -116,7 +119,7 @@ export default class BossTutorialSideAttackState extends BaseState {
                     this.boss.body.moves = false;
                 }
 
-                // Pasar a fase finish y temporizador corto
+                // Pasar a fase finish
                 this.currentPhase = 'finish';
                 this.stateTime = 0;
             }
