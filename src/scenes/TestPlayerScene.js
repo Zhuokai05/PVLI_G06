@@ -14,6 +14,7 @@ import AttackRangeOrb from '../orbs/AttackRangeOrb.js';
 import BasePlatform from '../objects/Platform.js';
 import IcePlatform from '../objects/IcePlatform.js';
 import ShieldOrb from '../orbs/ShieldOrb.js';
+import JumpOrb from '../orbs/JumpOrb.js';
 import BloodStealOrb from '../orbs/BloodStealOrb.js';
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 import Checkpoint from '../objects/Checkpoint.js';
@@ -318,6 +319,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         this.lava = new FloorIsLava(this, this.player.y + 0, 25, this.player);
 
          this.orbGroup.add(new BloodStealOrb(this, 1450, 1550));
+          this.orbGroup.add(new JumpOrb(this, 1500, 1550));
 
         //    //ira
         //     this.enemies.add(new FlyingRangedEnemy(this, 1100, 1400, 'Ira_FlyingEnemy',0,'Ira_FlyingEnemy_Move',

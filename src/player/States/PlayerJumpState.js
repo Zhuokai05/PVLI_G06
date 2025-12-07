@@ -8,7 +8,7 @@ export default class PlayerJumpState extends BaseState {
             player.jumpSound.play();
         }
 
-        player.setVelocityY(-player.jumpSpeed);
+        player.setVelocityY(-player.jumpSpeed*player.jumpSpeedModifier);
         player.play('Player_jump', true);
     }
 
@@ -37,7 +37,7 @@ export default class PlayerJumpState extends BaseState {
 
         if (player.canPogoJump && player.jumpBufferTimer >0){
             player.canPogoJump = false;
-            player.setVelocityY(-player.pogoJumpSpeed);
+            player.setVelocityY(-player.pogoJumpSpeed*player.jumpSpeedModifier);
             player.play('jump', true);            
         }
         /*
