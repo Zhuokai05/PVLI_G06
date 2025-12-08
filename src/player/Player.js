@@ -441,28 +441,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.safeDelay(this.rangeAttackCooldown, () => this.isAttacking = false);
 
-        let projectile = this.scene.physics.add.sprite(this.x, this.y, 'plume');
-        projectile.setDepth(4);
-        projectile.body.allowGravity = false;
-
-        let direction = this.direction;
-
-        projectile.setVelocityX(this.rangeAttackSpeed * direction);
-        projectile.setFlipX(direction === -1);
-
-        this.safeDelay(this.rangeAttackDuration, () => {
-            if (projectile.active) projectile.destroy();
-        });
-
-        if (this.scene.ground) {
-            this.scene.physics.add.collider(projectile, this.scene.ground, () => {
-                projectile.destroy();
-            });
-        }
-
-        this.scene.physics.add.overlap(projectile, this.scene.enemies, (proj, enemy) => {
-            enemy.takeDamage(this.rangeDamage * this.damageMultiplier);
-            proj.destroy();
-        });
+        // Usar POOL
+        this.scene.playerProjectilePool.fire(
+            this.x, 
+            this.y, 
+            this.direction, 
+            this.rangeAttackDuration,
+            this.rangeAttackSpeed,
+            enemy => enemy.takeDamage(this.rangeDamage * this.damageMultiplier) //funcion de callback
+        );
     }
 }

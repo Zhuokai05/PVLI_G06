@@ -33,6 +33,7 @@ import BossRoom from '../objects/BossRoom.js';
 import FloorIsLava from '../objects/FloorIsLava.js';
 import CheatManager from '../managers/CheatManager.js';
 import TutorialPanel from '../objects/TutorialPanel.js';
+import PlayerProjectilePool from "../objects/PlayerProjectilePool.js";
 
 
 export default class TestPlayerScene extends Phaser.Scene {
@@ -105,6 +106,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         });
         this.orbGroup = this.physics.add.group();
         this.enemies = this.physics.add.group();
+        this.playerProjectilePool = new PlayerProjectilePool(this, "plume");
 
         this.createAnimations();
 
@@ -125,10 +127,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                 //Enemigos
 
                 case "ira":
-                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move', 'basicEnemyAngry', 'basicEnemyAngry'));
+                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move'));
                     break;
                 case "tristeza":
-                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad', 0, 'Tristeza_BasicEnemy_Move', 'basicEnemySad', 'basicEnemySad'));
+                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad', 0, 'Tristeza_BasicEnemy_Move'));
                     break;
 
                 case "alegria":
