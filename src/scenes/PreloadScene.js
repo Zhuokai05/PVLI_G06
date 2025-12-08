@@ -44,12 +44,12 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('orbSlot', './assets/sprites/UI/Orbes/OrbSlot.png');
     this.load.image('orbDamage', './assets/sprites/UI/Orbes/OrbeFuego.png');
     this.load.image('orbMoveSpeed', './assets/sprites/UI/Orbes/OrbeHielo.png');
-    this.load.image('orbRanged', './assets/sprites/UI/Orbes/orbWings.png');
-    this.load.image('orbDash', './assets/sprites/UI/Orbes/orbVoid.png');
-    this.load.image('orbBloodSteal', './assets/sprites/UI/Orbes/orbBloodSteal.png');
-    this.load.image('orbShield', './assets/sprites/UI/Orbes/orbShield.png');
-    this.load.image('orbJump', './assets/sprites/UI/Orbes/orbJump.png');
-    this.load.image('orbAttackRange', './assets/sprites/UI/Orbes/orbAttackRange.png');
+    this.load.image('orbRanged', './assets/sprites/UI/Orbes/OrbWings.png');
+    this.load.image('orbDash', './assets/sprites/UI/Orbes/OrbVoid.png');
+    this.load.image('orbBloodSteal', './assets/sprites/UI/Orbes/OrbBloodSteal.png');
+    this.load.image('orbShield', './assets/sprites/UI/Orbes/OrbShield.png');
+    this.load.image('orbJump', './assets/sprites/UI/Orbes/OrbJump.png');
+    this.load.image('orbAttackRange', './assets/sprites/UI/Orbes/OrbAttackRange.png');
 
     //Objetos de la escena
     this.load.image('lava_tex', './assets/sprites/Escena/Plataforma_Ira.png');
