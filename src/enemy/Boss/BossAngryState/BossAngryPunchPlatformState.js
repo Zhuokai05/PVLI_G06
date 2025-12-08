@@ -1,6 +1,10 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
 export default class BossAngryPunchPlatformState extends BaseState {
+    constructor(texture = 'punch') {
+        super(); 
+        this.texture = texture;
+    }
     enter(context) {
         this.boss = context;
         this.stateTime = 0;
@@ -8,8 +12,9 @@ export default class BossAngryPunchPlatformState extends BaseState {
         this.warningDuration = 1200;
         this.attackDuration = 500;
         this.cooldownDuration = 500;
-        
+
         this.startWarningPhase();
+        console.log("puño vertical")
     }
 
     startWarningPhase() {
@@ -20,10 +25,10 @@ export default class BossAngryPunchPlatformState extends BaseState {
         // Crear advertencia vertical
         const warningWidth = 120;
         this.spawnX = player.x;
-        
+
         this.warningRect = scene.add.rectangle(
             this.spawnX,
-            cam.height / 2,
+            this.boss.y,
             warningWidth,
             cam.height,
             0xff0000,
@@ -40,13 +45,13 @@ export default class BossAngryPunchPlatformState extends BaseState {
                     this.startAttackPhase();
                 }
                 break;
-                
+
             case 'attack':
                 if (this.stateTime >= this.attackDuration) {
                     this.startCooldownPhase();
                 }
                 break;
-                
+
             case 'cooldown':
                 if (this.stateTime >= this.cooldownDuration) {
                     this.boss.selectNextState();
@@ -58,7 +63,7 @@ export default class BossAngryPunchPlatformState extends BaseState {
     startAttackPhase() {
         this.currentPhase = 'attack';
         this.stateTime = 0;
-        
+
         this.warningRect.destroy();
         this.spawnPunch();
     }
@@ -66,12 +71,15 @@ export default class BossAngryPunchPlatformState extends BaseState {
     spawnPunch() {
         const { scene, punches } = this.boss;
         const Yspeed = this.boss.punchYSpeed;
-        
-        const punch = punches.create(this.spawnX, 0, 'punch');
+
+        const punch = punches.create(this.spawnX, this.boss.y - 300, this.texture);
         punch.setVelocityY(Yspeed);
         punch.setScale(2.5);
         punch.body.allowGravity = false;
-        punch.setTint(0xff6b6b);
+        //punch.setTint(0xff6b6b);
+
+        // Marcar este puño como puño de plataforma
+        punch.isPlatformPunch = true;
 
         this.cleanupPunch(punch);
     }
@@ -81,7 +89,7 @@ export default class BossAngryPunchPlatformState extends BaseState {
         scene.events.on('update', () => {
             if (!punch.active) return;
             const cam = scene.cameras.main;
-            if (punch.y > cam.height + 200) {
+            if (punch.y > this.boss.y + this.boss.distanceToFloor + 150) {
                 punch.destroy();
             }
         });
@@ -92,9 +100,14 @@ export default class BossAngryPunchPlatformState extends BaseState {
         this.stateTime = 0;
     }
 
-    exit(context) {
-        if (this.warningRect && this.warningRect.active) {
+    destroyAllWarnings() {
+        if (this.warningRect) {
             this.warningRect.destroy();
+            this.warningRect = null;
         }
+    }
+
+    exit(context) {
+        this.destroyAllWarnings();
     }
 }

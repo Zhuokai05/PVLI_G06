@@ -1,49 +1,72 @@
- //Clase base maquina de estados que controla que estado esta activo.
- 
+/**
+ * maquina de estados finita
+ * controla que estado esta activo y realiza enter/exit/execute
+ */
 export default class StateMachine {
+
+    /**
+     * @param {object} context objeto que usa la maquina (player, enemigo, etc)
+     * @param {string} id etiqueta de la maquina
+     */
     constructor(context, id) {
-        this.id = id;                 // identificador, la etiqueta
-        this.context = context;       // objeto que la usa, ej: player
-        this.states = new Map();      // todos los estados registrados
-        this.currentState = null;     // estado actual
-        this.previousState = null;    // estado anterior
+        this.id = id;                         // identificador del sistema
+        this.context = context;               // objeto dueno de la maquina
+        this.states = new Map();              // mapa de estados registrados
+        this.currentState = null;             // estado activo actual
+        this.previousState = null;            // estado previo
     }
 
+    /**
+     * registra un nuevo estado en la maquina
+     * @param {string} name nombre del estado
+     * @param {BaseState} state instancia del estado
+     */
     addState(name, state) {
-        this.states.set(name, state);
-        state.stateMachine = this; 
-        return this
+        this.states.set(name, state);         // guardar en el mapa
+        state.stateMachine = this;            // asignar referencia inversa
+        return this;                          // permite encadenar llamadas
     }
 
-    setState(name,data) {
-        let newState = this.states.get(name);
+    /**
+     * cambia el estado actual
+     * @param {string} name nombre del nuevo estado
+     * @param {*} data datos opcionales para enter
+     */
+    setState(name, data) {
+
+        let newState = this.states.get(name); // buscar estado
         if (!newState) {
             console.warn('estado no encontrado');
             return;
         }
 
-        // llama exit del estado actual
+        // salir del estado anterior
         if (this.currentState && this.currentState.exit) {
             this.currentState.exit(this.context);
         }
 
-        this.previousState = this.currentState;
-        this.currentState = newState;
+        this.previousState = this.currentState; // guardar referencia
+        this.currentState = newState;           // actualizar estado activo
 
-        // llamar enter del nuevo estado
+        // entrar en el nuevo estado
         if (this.currentState.enter) {
-            this.currentState.enter(this.context,data);
+            this.currentState.enter(this.context, data);
         }
-
-        console.log(`State of ${this.id}: ${name}`);
     }
 
+    /**
+     * ejecuta el estado actual cada frame
+     */
     step(time, delta) {
         if (this.currentState && this.currentState.execute) {
             this.currentState.execute(this.context, time, delta);
         }
     }
 
+    /**
+     * devuelve el nombre del estado activo actual
+     * @returns {string|null}
+     */
     getStateName() {
         for (let [name, state] of this.states.entries()) {
             if (state === this.currentState) return name;

@@ -7,6 +7,7 @@ export default class InputManager {
             right: Phaser.Input.Keyboard.KeyCodes.D,
             jump: Phaser.Input.Keyboard.KeyCodes.W,
             space: Phaser.Input.Keyboard.KeyCodes.SPACE,
+            interact: Phaser.Input.Keyboard.KeyCodes.E,
             useOrb: Phaser.Input.Keyboard.KeyCodes.C,
             pause: Phaser.Input.Keyboard.KeyCodes.ESC,
             upArrow: Phaser.Input.Keyboard.KeyCodes.UP,

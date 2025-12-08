@@ -1,20 +1,34 @@
 import BaseState from '../../stateMachine/BaseState.js';
 
+/**
+ * estado knockback del jugador
+ * cuando recibe dano y es empujado
+ */
 export default class PlayerKnockbackState extends BaseState {
-  enter(player,direction) {
 
-    //aplicar velocidad knockback
-    player.setVelocity(player.knockbackDistance * direction, -player.knockbackDistance);
+  /**
+   * entrar al estado knockback
+   */
+  enter(player, direction) {
 
-    //cambiar de estado tras tiempo knockback
+    player.setVelocity(
+        player.knockbackDistance * direction,   // empuje horizontal
+       -player.knockbackDistance                // empuje vertical
+    );
+
+    // tras tiempo de knockback -> volver a idle
     player.safeDelay(player.knockbackTime, () => {
         player.stateMachine.setState('idle');
     });
   }
 
-  execute(player, time, delta) {
-  }
+  /**
+   * logica por frame
+   */
+  execute(player, time, delta) {}
 
-  exit(player){
-  }
+  /**
+   * al salir del estado knockback
+   */
+  exit(player) {}
 }

@@ -1,3 +1,4 @@
+import MusicManager from '../managers/MusicManager.js';
 class PauseScene extends Phaser.Scene 
 {
     constructor() 

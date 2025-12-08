@@ -1,0 +1,102 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "map.json",
+    "automapping.whileDrawing": false,
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "Todos los archivos (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "#Ira": {
+            "scaleInDock": 1
+        },
+        "C:/assets/Maps/Ira.tsx": {
+            "scaleInDock": 1
+        },
+        "Ira.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "assets/Maps/Ira.tsx": {
+            "scaleInDock": 1
+        },
+        "iraboss.json": {
+            "scale": 0.0625,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 5128,
+                "y": 600
+            }
+        },
+        "iraboss.json#Ira": {
+            "scaleInDock": 1
+        },
+        "map.json": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.33,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 17271.21212121212,
+                "y": 8359.090909090908
+            }
+        },
+        "map.json#Ira": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "map2.json": {
+            "scale": 0.0625,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 5128,
+                "y": 600
+            }
+        },
+        "map2.json#Ira": {
+            "scaleInDock": 1
+        },
+        "mapa3.json": {
+            "scale": 0.015625,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 35168,
+                "y": 16000
+            }
+        },
+        "mapa3.json#Ira": {
+            "scaleInDock": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Users/javic/OneDrive/Escritorio/clon/PVLI_G06/assets/Maps",
+    "last.externalTilesetPath": "C:/Users/javic/OneDrive/Escritorio/clon/PVLI_G06/assets/Maps",
+    "last.imagePath": "C:/Users/javic/OneDrive/Escritorio/clon/PVLI_G06/assets/Escena",
+    "map.fixedSize": false,
+    "map.height": 250,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "json",
+    "map.width": 320,
+    "openFiles": [
+        "map.json"
+    ],
+    "project": "mapa1.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "map.json",
+        "iraboss.json",
+        "map2.json",
+        "mapa3.json",
+        "Ira.tsx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFormat": "tsx"
+}

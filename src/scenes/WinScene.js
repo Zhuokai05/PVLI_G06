@@ -18,7 +18,7 @@ class WinScene extends Phaser.Scene
 
         play.on('pointerdown', () => {
             this.scene.stop();
-            this.scene.start('TestPlayerScene');
+            this.scene.start('Loading');
             
         });
 
