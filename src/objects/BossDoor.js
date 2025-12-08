@@ -6,6 +6,12 @@ export default class DoorBoss extends Door {
 
         this.contrary = null;
         this.isOpening = false;
+        this.setScale(4);
+        this.body.setSize(this.width * 0.25, this.height * 0.9);
+        this.body.setOffset(
+            (this.width - this.body.width) / 2,
+            this.height - this.body.height
+        );
 
         // Sonidos
         this.tpSound = this.scene.sound.add('Teleport_sound', {
