@@ -191,13 +191,13 @@ export default class TestPlayerScene extends Phaser.Scene {
 
                 //bossdoor
                 case "bossdoor":
-                    this.irabossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertaira');
+                    this.irabossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertairaSheet');
                     break;
                 case "bossdoorcontrary":
-                    this.irabossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertaira');
+                    this.irabossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertairaSheet');
                     break;
                 case "bossdoorexit":
-                    this.irabossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertaira');
+                    this.irabossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertairaSheet');
                     break;
 
                 case "sadnessbossdoor":

@@ -53,6 +53,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.movementSpeed = 300;                              // velocidad movimiento
         this.maxVelocityX = 1000;                              // vmax x
         this.maxVelocityY = 1000;                              // vmax y
+        this.canMove = true;                                   // puede moverse
 
         // salto
         this.jumpSpeed = 800;                                  // velocidad salto
@@ -150,6 +151,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
      * update principal
      */
     update(time, delta) {
+
+        if (!this.canMove){
+            this.setVelocityX(0);
+            return;
+        } 
 
         this.stateMachine.step(time, delta);                  // avanzar estado
         this.attackDir = this.getAttackDirection();           // direccion ataque
