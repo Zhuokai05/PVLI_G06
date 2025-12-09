@@ -92,19 +92,18 @@ Cartas actuales:
 
 -   Personajes/Objetos: tristeza e ira.
 
--   Mecánicas: plataforma y bullet hell.
+-   Mecánicas: plataforma, discovery y bullet hell.
 
 -   Ambiente: infierno.
-
-Futuras cartas:
-
--   Personajes/Objetos: alegría y miedo
 
 Requisitos o bono extra que se realizará: meter "floor is lava",
 combinar la carta de emoción tristeza e ira
 
 Requisitos o bono extra que NO se realizará: no tener el teclado como
 control del juego.
+
+Efecto de carta recibido desde el grupo 10: somos obligamos a incluir personaje Miedo en nuestro juego
+Efecto de carta que aplicamos al grupo 10: son obligados a meter personaje Tristeza en el juego 
 
 # **Visión del juego**
 
@@ -209,21 +208,15 @@ En juego:
 
 -   Q: cambiar orbe activo
 
+-   E: interactuar
+
 -   C: usar habilidad del orbe activo
 
 -   ESC: menu de pausa
 
 En menú:
 
--   W: seleccionar hacia arriba
-
--   S: seleccionar hacia abajo
-
--   A: seleccionar a la izquierda
-
--   D: seleccionar a la derecha.
-
--   Space: confirmar selección.
+-   Se controla con el ratón.
 
 -   Esc: volver hacia atrás (el último menú que estabas, si estás ya en el menú principal no hace nada).
 
@@ -375,7 +368,7 @@ bloquea el siguiente ataque enemigo, ósea reduce el siguiente daño
 recibido a 0, este escudo no se destruye con el tiempo, solo se destruye
 si se recibe daño, y al destruirse se regenera en un cierto tiempo.
 
-***Parámetros*:** Tiempo de regeneración: Tiempo (s) que tarda en
+***Parámetros*** Tiempo de regeneración: Tiempo (s) que tarda en
 reaparecer el escudo al ser destruido.
 
 ![](images/bocetoEscudo.png)
@@ -398,23 +391,46 @@ un checkpoint.
 
 ![](images/bocetoOrbe.png)
 
-**Orbe de ira:** El jugador hará menos daño a los enemigos con sus
-ataques básicos, pero aplica quemado.
+**Orbe de daño:** El jugador hará mas daño a los enemigos con sus
+ataques básicos.
 
-***Parámetros*:** Daño disminuido: Cantidad de daño que disminuye el
+     ***Parámetros*** Daño aumentado: Cantidad de daño que aumenta el
 ataque básico del jugador.
 
-Daño prolongado: Durante X segundos, cantidad de daño por segundo.
 
-**Orbe de tristeza:** desbloquea el escudo de hielo (previamente
-especificado en [[sistema de combate]{.underline}](#sistema-de-combate))
+**Orbe de escudo:** desbloquea el escudo de hielo (previamente
+especificado en [[sistema de combate]](#sistema-de-combate))
 
-**Orbe de alegría:** desbloquea el ataque con plumas del jugador
+
+**Orbe de ataque a distancia:** desbloquea el ataque con plumas del jugador
 (previamente especificado en [[sistema de
 combate]{.underline}](#sistema-de-combate))
 
-**Orbe de miedo:** el jugador desbloquea el dash (previamente
-especificado en [[sistema de combate]{.underline}](#sistema-de-combate))
+
+**Orbe de dash:** el jugador desbloquea el dash (previamente
+especificado en [[sistema de combate]](#sistema-de-combate))
+
+
+**Orbe de velocidad movimiento:** aumenta la velocidad de movimiento del jugador
+
+     ***Parámetros*** Velocidad aumentado: Cantidad de velocidad que aumenta el jugador.
+
+
+**Orbe de salto:** aumenta la altura de salto del jugador
+
+     ***Parámetros*** Altura aumentado: Cantidad de altura que aumenta el saltod de jugador.
+
+
+**Orbe de rango de ataque:** aumenta rango de ataque melee del jugador
+
+     ***Parámetros*** Rango aumentado: Cantidad de rango que aumenta el
+ataque básico del jugador.
+
+
+**Orbe de robar vida:** cuando el jugador mata un enemigo, regenera vida
+
+     ***Parámetros*** Vida regenerada: cantidad de vida que recupera el jugador
+
 
 ### **Sistema de interactuar**
 
@@ -423,22 +439,25 @@ especificado en [[sistema de combate]{.underline}](#sistema-de-combate))
 El jugador puede colisionar (tocarlo con su personaje) con el objeto
 recogible para conseguir el efecto de ese objeto.
 
-**Npc:**
-
-Si el jugador está cerca de un npc, puede dar al botón de interactuar
-para hablar con él.
-
-Parámetro: radio de interactuar: distancia (u) de radio que forma la
-distancia circular como centro la posición del npc que permite el
-jugador interactuar.
-
 **Checkpoint:**
 
 El jugador puede interactuar(dar a la tecla de interactuar) con el
 checkpoint para regenerar su vida hasta máximo, y al colisionar con ese
 checkpoint, lo activa. A la hora de morir (ver detalle en [[sistema de
-vida]{.underline}](#sistema-de-vida)), reaparece en el último checkpoint
+vida]](#sistema-de-vida)), reaparece en el último checkpoint
 que ha activado.
+
+**Puerta con Botones**
+El jugador puedo interactuar con botones que se activa al pulsar E, se cambia la textura y envía señal a su puertas correspondiente,
+es usados especialmente en el puzzle de la TristezaBossDoor
+
+**Puerta sala boss**
+Son puertas que lleva el juagdor a una sala boss o volver al mapa desde sala boss.
+Se activan al interactuar y teletransportan al jugador.
+
+**Puerta boss final**
+Funciona como una puerta sala boss normal pero no se activa hasta que hayas matado a los 3 bosses.
+
 
 ### **Sistema de vida**
 
@@ -506,6 +525,8 @@ del mapa):
 
 ## **Enemigos principales**
 
+Todos los enemigos tienen dos formas: ira y tristeza, que solo se cambian en la textura y animacion, la logica es igual
+
 **Enemigo melé:** Se mueven en línea recta sobre las plataformas. Son
 fáciles de matar y solo tienen un tipo de ataque. Cuando detectan al
 jugador en un rango, lo persiguen. Atacan causando daño cuando el
@@ -561,6 +582,16 @@ enemigos sin causarles daño ni destruirse.
      lanzado.
 
 ![](images/enemigoD.png)
+
+**Enemigo a distancia voladores:** Enemigos a distancia que vuelan, 
+
+***Parámetros:***
+
+-  Todos los de enemigo a distancia normal
+
+-  Velocidad de movimiento vertical: Velocidad (u/s) a la que se desplaza el
+     enemigo en vertical.
+
 
 **Bosses** 
 
@@ -658,18 +689,24 @@ Los restos de bosses todavía están en proceso de creación.
 
 ## **Música y sonido**
 
-Todavía no está decidido, pero nos gustaría que sea algo similar a rock,
-electrónico, etc... Porque queremos que encaje con los combates tensos.
+Estilo musica rock, con sfx estilo 8 bits
 
 # **UI**
 
-## **Menús principales**
+## **Menús**
 
--   Menú Pausa
+-  Menu principal
+     Donde se situa el boton de jugagar para entrar al juego 
+
+-  Menú Pausa
+     El jugador puedo volver al menu principal o continuar el juego
 
 ![](images/bocetoPausa.png)
 
--   En juego (no es definitivo)
+-   En juego 
+     Donde el jugador controla al personaje y disfruta del juego 
+     (Se ha cambiado que el ui de orbes actuales se encuentra ahora debajo de la barra de vida)
+     CD representa la UI con los bosses matados actualmente, cuando se complete, el jugador podra acceder a la sala boss final
 
 ![](images/bocetoHUD.png)
 
@@ -679,7 +716,7 @@ electrónico, etc... Porque queremos que encaje con los combates tensos.
 
 ![](images/engranajes.png) 
 
--   Orbe de emociones: ira, tristeza, miedo, alegría.
+-   Algunos orbe de emociones: ira, tristeza
 
 ![](images/OrbeHielo.png) 
 ![](images/OrbeFuego.png)
