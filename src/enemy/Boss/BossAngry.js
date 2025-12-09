@@ -230,6 +230,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
             // Efecto visual y pausa
             this.setActive(false);
             this.setVisible(false);
+            this.isActivated = false;
             this.scene.cameras.main.shake(800, 0.02);
             this.scene.cameras.main.flash(500, 255, 50, 0);
 
@@ -237,6 +238,7 @@ export default class BossAngry extends Phaser.Physics.Arcade.Sprite {
             this.scene.time.delayedCall(2000, () => {
                 this.setActive(true);
                 this.setVisible(true);
+                this.isActivated = true;
 
                 this.scene.tweens.add({
                     targets: this,

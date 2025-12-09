@@ -183,6 +183,7 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
             // Efecto visual y pausa
             this.setActive(false);
             this.setVisible(false);
+            this.isActivated = false;
             this.scene.cameras.main.shake(600, 0.02);
             this.scene.cameras.main.flash(500, 255, 50, 50); // Rojo para tutorial
 
@@ -192,6 +193,7 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
 
                 this.setActive(true);
                 this.setVisible(true);
+                this.isActivated = true;
 
                 // Efecto de aparición
                 this.scene.tweens.add({

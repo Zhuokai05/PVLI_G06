@@ -284,6 +284,7 @@ export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
 
             this.setActive(false);
             this.setVisible(false);
+            this.isActivated = false;
 
             if (this.leftClaw) this.leftClaw.setVisible(false);
             if (this.rightClaw) this.rightClaw.setVisible(false);
@@ -294,6 +295,7 @@ export default class FinalBoss extends Phaser.Physics.Arcade.Sprite {
             this.scene.time.delayedCall(2500, () => {
                 this.setActive(true);
                 this.setVisible(true);
+                this.isActivated = true;
 
                 this.scene.tweens.add({
                     targets: this,

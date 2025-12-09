@@ -193,6 +193,7 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
             // Efecto visual y pausa (similar a ira)
             this.setActive(false);
             this.setVisible(false);
+            this.isActivated = false;
             if (this.bossMask) this.bossMask.setVisible(false);
 
             // Ocultar garras si están activas
@@ -206,6 +207,7 @@ export default class BossFear extends Phaser.Physics.Arcade.Sprite {
             this.scene.time.delayedCall(2000, () => {
                 this.setActive(true);
                 this.setVisible(true);
+                this.isActivated = true;
                 if (this.bossMask) this.bossMask.setVisible(true);
 
                 // Efecto de aparición
