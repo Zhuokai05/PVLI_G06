@@ -111,7 +111,7 @@ class NarrativeScene extends Phaser.Scene {
         this.instructionText = this.add.text(
             centerX,
             screenHeight - 50,
-            'Presiona ESC para saltar al juego',
+            'Presiona ESC o Click para saltar al juego',
             {
                 fontFamily: 'Arial, sans-serif',
                 fontSize: '28px',
