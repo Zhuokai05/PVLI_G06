@@ -86,8 +86,6 @@ Y...comienza la aventura.
 
 # **Cartas y Requisitos PVLI**
 
-**Provisional (ideas)**
-
 Cartas actuales:
 
 -   Personajes/Objetos: tristeza e ira.
@@ -133,8 +131,12 @@ Concept Art de las zonas bosses (ejemplo, no está en pixel art):
 ![](images/2.png)
 
 ## **Mundo**
-El juego se desarolla en el inframundo, que esta dividido en cinco zonas, zona central, zona ira, zona tristeza,
-zona alegria, zone miedo.
+El juego se desarolla en el inframundo, que esta dividido en 4 zonas, zona inicial (izquierda arriba), zona ira(roja), zona tristeza(azul), zona boss final(amarilla), en el que hay una sala boss por zona y una sala boss extra (boss miedo) que esta en zona tristeza.
+
+![](images/map.png)
+
+
+-------------------------------------------(Mapa principal)--------------------------------------------------------------------------------------------------------(Sala bosses y zona final)--------
 
 # **Mecánicas del juego**
 
@@ -182,8 +184,7 @@ no, habrá un último jefe final.
 
 ## **Controles**
 
-De momento será solo con teclado, si sobra tiempo, es posible que se
-añadiera la opción de jugar con mando.
+Los controles será solo con teclado.
 
 ![](images/controles.png)
 
@@ -525,7 +526,7 @@ del mapa):
 
 ## **Enemigos principales**
 
-Todos los enemigos tienen dos formas: ira y tristeza, que solo se cambian en la textura y animacion, la logica es igual
+Todos los enemigos tienen dos formas: ira y tristeza, que solo se cambian en la textura y animacion, la logica es igual.
 
 **Enemigo melé:** Se mueven en línea recta sobre las plataformas. Son
 fáciles de matar y solo tienen un tipo de ataque. Cuando detectan al
