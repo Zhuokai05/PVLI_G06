@@ -597,7 +597,7 @@ enemigos sin causarles daño ni destruirse.
      enemigo en vertical.
 
 
-##**Bosses** 
+## **Bosses** 
 
 **Boss 0: boss inicial/tutorial**: es un mini boss que enseña al player como esquivar y hacer ataques. Tiene dos fases.
 
