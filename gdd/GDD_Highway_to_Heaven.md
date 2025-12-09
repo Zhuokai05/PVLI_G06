@@ -599,14 +599,17 @@ enemigos sin causarles daño ni destruirse.
 
 **Bosses** 
 
-**Boss 0: boss inicial**: es un enemigo detecta al jugador si está en
-una misma plataforma que él, mismo nivel de altura sin obstáculos en
-medio. al detectar el jugador, corre en línea recta hacia la dirección
-del jugador hasta colisionar con el jugador o una plataforma o pared. Si
-se choca con el jugador, hace daño al jugador, y si se choca con una
-plataforma o pared, se baja él la vida. En ambos casos, se queda un
-tiempo inmovilizado, y al terminar el tiempo inmovilizado empieza otra
-vez a detectar el jugador.
+**Boss 0: boss inicial/tutorial**: es un mini boss que enseña al player como esquivar y hacer ataques. Tiene dos fases.
+
+Fase 1: solo hace un ataque en esta fase, el boss se mueve de lado a lado, y si choca al player le hace daño. Si de camino no ha dañado al player, entonces se hace daño a si mismo, como si hubiera chocado a la pared.
+
+Cuando se queda sin vida, pasa a la fase 2.
+
+Fase 2: se le añade un nuevo ataques más, el boss salta al aire y se lanza hacia el player, para hacerle daño.
+
+Antes de empezar el ataque, se avisa al jugador de este ataque enseñando
+su rango con cierto tiempo de antelación para que le de tiempo al
+jugador a reaccionar. 
 
 ***Parámetros:***
 
@@ -625,6 +628,8 @@ vez a detectar el jugador.
 
 -   Daño recibido: vida que se baja al colisionar con un obstáculo que
      no sea el jugador.
+
+![](images/bossTutorial.png)
 
 **Boss 1: Ira:** es un enemigo inmóvil que flota en el aire, tiene dos
 fases.
