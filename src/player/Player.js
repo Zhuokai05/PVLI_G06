@@ -135,37 +135,37 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     createSFX() {
 
         // sonido ataque melee
-        this.attackSound = this.scene.sound.add('PlayerAttack_sound', { volume: 0.2 });
+        this.attackSound = this.scene.sound.add('PlayerAttack_sound', { volume: 0.6 });
 
         // sonido impacto del ataque melee
-        this.attackHitSound = this.scene.sound.add('PlayerAttack_sound', { volume: 0.2 });
+        this.attackHitSound = this.scene.sound.add('PlayerAttack_sound', { volume: 0.6 });
 
         // sonido salto
-        this.jumpSound = this.scene.sound.add('PlayerJump_sound', { volume: 1 });
+        this.jumpSound = this.scene.sound.add('PlayerJump_sound', { volume: 3 });
 
         // sonido activacion del escudo
-        this.shieldSound = this.scene.sound.add('PlayerShield_sound', { volume: 0.3 });
+        this.shieldSound = this.scene.sound.add('PlayerShield_sound', { volume: 0.9 });
 
         // sonido cuando bloquea un golpe
-        this.shieldBlockSound = this.scene.sound.add('PlayerShieldBlock_sound', { volume: 0.3 });
+        this.shieldBlockSound = this.scene.sound.add('PlayerShieldBlock_sound', { volume: 0.9 });
 
         // sonido al terminar salto
-        this.jumpEndSound = this.scene.sound.add('PlayerJumpEnd_sound', { volume: 0.2 });
+        this.jumpEndSound = this.scene.sound.add('PlayerJumpEnd_sound', { volume: 0.6 });
 
         // sonido daño recibido
-        this.damagedSound = this.scene.sound.add('PlayerDamaged_sound', { volume: 0.3 });
+        this.damagedSound = this.scene.sound.add('PlayerDamaged_sound', { volume: 0.9 });
 
         // sonido recoger orbe
-        this.takeOrbSound = this.scene.sound.add('PlayerTakeOrb_sound', { volume: 0.3 });
+        this.takeOrbSound = this.scene.sound.add('PlayerTakeOrb_sound', { volume: 0.9 });
 
         // sonido cambiar orbe
-        this.changeOrbSound = this.scene.sound.add('PlayerChangeOrb_sound', { volume: 0.3 });
+        this.changeOrbSound = this.scene.sound.add('PlayerChangeOrb_sound', { volume: 0.9 });
 
         // sonido ataque rango
-        this.rangeAttackSound = this.scene.sound.add('PlayerRangeAttack_sound', { volume: 1 });
+        this.rangeAttackSound = this.scene.sound.add('PlayerRangeAttack_sound', { volume: 3 });
 
         // sonido dash
-        this.dashSound = this.scene.sound.add('PlayerDash_sound', { volume: 0.3 });
+        this.dashSound = this.scene.sound.add('PlayerDash_sound', { volume: 0.9 });
     }
 
 

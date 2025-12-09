@@ -20,7 +20,7 @@ class MainMenuScene extends Phaser.Scene {
             this.scene.start('Narrative');
         });
 
-        MusicManager.play(this, 'bg_Music', 0.1);
+        MusicManager.play(this, 'bg_Music', 0.5);
     }
 
     update(time, delta) {
