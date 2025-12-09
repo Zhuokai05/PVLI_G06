@@ -34,6 +34,7 @@ import FloorIsLava from '../objects/FloorIsLava.js';
 import CheatManager from '../managers/CheatManager.js';
 import TutorialPanel from '../objects/TutorialPanel.js';
 import PlayerProjectilePool from "../objects/PlayerProjectilePool.js";
+import StaticLava from '../objects/StaticLava.js';
 
 
 export default class TestPlayerScene extends Phaser.Scene {
@@ -359,6 +360,9 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.lavatrigger.body.setAllowGravity(false);
                     this.lavatrigger.body.setImmovable(true);
                     break;
+                case "staticlava":
+                    this.floorislava = new StaticLava(this, objeto.x, objeto.y, objeto.width, objeto.height, 'ground');
+                    break;
                 case "trap":
                     this.trap = new Trap(this, objeto.x, objeto.y, 'basicEnemyFear');
                     break;
@@ -526,8 +530,6 @@ export default class TestPlayerScene extends Phaser.Scene {
         //Overlaps
         //Evento de activación de la lava
         //------------------------------
-
-
         if (this.lavatrigger) {
             this.physics.add.overlap(this.player, this.lavatrigger, () => {
                 this.lava = new FloorIsLava(this, this.lavatrigger.y, 75, this.player);
@@ -537,6 +539,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             });
         }
         //------------------------------
+        this.physics.add.overlap(this.player, this.floorislava, () => this.player.die());
         this.physics.add.overlap(this.player, this.orbGroup, (player, orb) => {
             orb.collect(player);
         });
