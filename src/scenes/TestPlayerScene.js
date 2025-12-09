@@ -177,10 +177,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.icebossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
                 case "irabossdoor":
-                    this.irabossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'bloque'));
+                    this.irabossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
                 case "icebossdoor":
-                    this.icefloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
+                    this.icefloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'bloque'));
                     break;
                 case "feardoor":
                     this.fearbossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
