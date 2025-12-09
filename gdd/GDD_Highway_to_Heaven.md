@@ -88,20 +88,23 @@ Y...comienza la aventura.
 
 Cartas actuales:
 
--   Personajes/Objetos: tristeza e ira.
+-   Personajes/Objetos: tristeza e ira (1+1 de alcance).
 
--   Mecánicas: plataforma, discovery y bullet hell.
+-   Mecánicas: plataforma, discovery y bullet hell (1+2+3 de alcance).
 
--   Ambiente: infierno.
+-   Ambiente: infierno (1 de alcance).
 
-Requisitos o bono extra que se realizará: meter "floor is lava",
+Requisitos o bono extra que se realizará: meter "floor is lava" (1 de alcance),
 combinar la carta de emoción tristeza e ira
 
 Requisitos o bono extra que NO se realizará: no tener el teclado como
 control del juego.
 
-Efecto de carta recibido desde el grupo 10: somos obligamos a incluir personaje Miedo en nuestro juego
-Efecto de carta que aplicamos al grupo 10: son obligados a meter personaje Tristeza en el juego 
+Efecto de carta recibido desde el grupo 10: somos obligamos a incluir personaje Miedo en nuestro juego (1 de alcance)
+
+Efecto de carta que aplicamos al grupo 10: son obligados a meter personaje Tristeza en el juego  (1 de alcance)
+
+Alcance total: 12
 
 # **Visión del juego**
 
