@@ -1,200 +1,135 @@
-import StateMachine from '../../stateMachine/StateMachine.js';
+import BaseBoss from './BaseBoss.js';
 import BossTutorialSideAttackState from './BossTutorialState/BossTutorialSideAttackState.js';
 import BossTutorialJumpAttackState from './BossTutorialState/BossTutorialJumpAttackState.js';
 import BossTutorialCooldownState from './BossTutorialState/BossTutorialCooldownState.js';
 import PlayerDataManager from '../../managers/PlayerDataManager.js';
 
-export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
+export default class BossTutorial extends BaseBoss {
     constructor(scene, x, y, player) {
-        super(scene, x, y, 'tutorial');
-        this.scene = scene;
-        this.player = player;
+        const config = {
+            health: 6,
+            maxHealth: 6,
+            damage: 1,
+            startCooldown: 3000,
+            minCooldown: 3000,
+            maxCooldown: 3000,
+            availableStates: ['sideAttack']
+        };
+        
+        super(scene, x, y, 'tutorial', undefined, player, config);
+        
         this.x = x;
         this.y = y;
-
-        scene.add.existing(this);
-        scene.physics.add.existing(this);
-
+        
+        // Configuración específica de BossTutorial
+        this.setTutorialBody();
+        
+        // Flag para saber si golpeó al player durante un sweep
+        this._hitPlayerThisSweep = false;
+        
+        // Configurar estados específicos
+        this.setupStates();
+    }
+    
+    setTutorialBody() {
         // Escala y colisiones
         this.setScale(2);
         this.setCollideWorldBounds(true);
         this.setImmovable(true);
-
-        // Ajustes del body
+        
+        // Ajustes específicos del body para tutorial
         const spriteW = this.displayWidth;
         const spriteH = this.displayHeight;
         this.body.setSize(spriteW * 0.45, spriteH * 0.4);
         this.body.setOffset(0, spriteH * 0.05);
         this.body.moves = false;
-
-        // Stats
-        this.phase = 1;
-        this.health = 6;
-        this.maxHealth = 6;
-        this.damage = 1;
-
-        // Cooldown entre ataques
-        this.startCooldown = 3000;
-        this.attackCooldown = 0;
-        this.minCooldown = 3000;
-        this.maxCooldown = 3000;
-
-        // Máquina de estados
-        this.stateMachine = new StateMachine(this, 'bossTutorial');
-
-        // Registrar todos los estados
-        this.stateMachine.addState('sideAttack', new BossTutorialSideAttackState());
-        this.stateMachine.addState('jumpAttack', new BossTutorialJumpAttackState());
-
-        // Estados disponibles por fase - FASE 1: solo sideAttack
-        this.availableStates = ['sideAttack'];
-
-        // Estado especial para cooldown
-        this.stateMachine.addState('cooldown', new BossTutorialCooldownState());
-
-        // AÑADIR ESTADO INACTIVE
-        this.stateMachine.addState('inactive', {
-            enter: () => {
-                console.log('BossTutorial inactivo');
-            },
-            step: () => {
-                // No ejecutar lógica de estado
-            },
-            exit: () => { }
-        });
-
-        // Iniciar en estado inactivo
-        this.stateMachine.setState('inactive');
-
-        this.attackCooldown = this.startCooldown;
-        this.notdead = true;
-
-        this.setVisible(false);
-        this.setActive(false);
-        this.isActivated = false;
-
-        // Flag para saber si golpeó al player durante un sweep
-        this._hitPlayerThisSweep = false;
     }
-
+    
+    setupStates() {
+        // Registrar estados específicos
+        this.addState('sideAttack', new BossTutorialSideAttackState());
+        this.addState('jumpAttack', new BossTutorialJumpAttackState());
+        this.addState('cooldown', new BossTutorialCooldownState());
+    }
+    
     setupCollisions() {
         // Configurar overlaps solo si no existen ya
-        if (!this.bossPlayerOverlap) {
-            this.bossPlayerOverlap = this.scene.physics.add.overlap(
+        if (!this.colliders.bossPlayerOverlap) {
+            const bossPlayerOverlap = this.scene.physics.add.overlap(
                 this,
                 this.player,
                 this.onHitPlayer,
                 null,
                 this
             );
+            this.registerCollider('bossPlayerOverlap', bossPlayerOverlap);
         }
     }
-
-    startRandomState() {
-        if (!this.isActivated) return;
-        const randomState = Phaser.Math.RND.pick(this.availableStates);
-        this.stateMachine.setState(randomState);
-    }
-
-    selectNextState() {
-        if (!this.isActivated) {
-            this.stateMachine.setState('inactive');
-            return;
-        }
-        this.generateNewCooldown();
-        this.stateMachine.setState('cooldown');
-    }
-
-    generateNewCooldown() {
-        this.attackCooldown = Phaser.Math.Between(this.minCooldown, this.maxCooldown);
-    }
-
+    
     // Maneja colisión directa boss <-> player
     onHitPlayer(boss, player) {
         if (!boss.active || !player.active) return;
         // evitar múltiples triggers muy seguidos
         if (player._recentlyHitByBoss) return;
-
+        
         // Marca que el boss ha alcanzado al player en este sweep
         this._hitPlayerThisSweep = true;
-
+        
         // Estrella de dirección para knockback
         const dir = (player.x < boss.x) ? -1 : 1;
         player.takeDamage(this.damage, dir);
-
+        
         // Pequeño cooldown en el player para evitar daño repetido instantáneo
         player._recentlyHitByBoss = true;
         this.scene.time.delayedCall(300, () => {
             if (player) player._recentlyHitByBoss = false;
         });
     }
-
-    update(time, delta) {
-        if (this.notdead && this.isActivated) { // Solo actualizar si está vivo y activado
-            this.stateMachine.step(time, delta);
-        }
+    
+    getDamageTintColor() {
+        return 0xff0000; // Rojo para Tutorial
     }
-
-    takeDamage(damage) {
-        if (!this.isActivated || !this.notdead) return; // No recibir daño si no está activado o ya está muerto
-
-        this.health -= damage;
-        this.setTint(0xff0000); // Rojo para tutorial
-
-        // Efecto de parpadeo cuando recibe daño
-        this.scene.tweens.add({
-            targets: this,
-            alpha: 0.5,
-            duration: 100,
-            yoyo: true,
-            repeat: 2,
-            onComplete: () => {
-                this.clearTint();
-                this.setAlpha(1);
-            }
-        });
-
-        if (this.health <= 0) {
-            this.nextPhase();
-        }
-    }
-
+    
     nextPhase() {
         console.log(`BossTutorial fase actual: ${this.phase}, salud: ${this.health}`);
-
+        
         if (this.phase === 1) {
             console.log('BossTutorial entra en FASE 2');
             
-            // LIMPIAR WARNINGS ANTES DE LA TRANSICIÓN
+            // Limpiar antes de la transición
             this.cleanupAllWarnings();
+            this.destroyAllAttackObjects();
             
             // Cambiar a estado inactivo durante la transición
             if (this.stateMachine) {
                 this.stateMachine.setState('inactive');
             }
-
+            
             this.phase = 2;
-            this.health = this.maxHealth + 3; // Dar más vida para fase 2
-
-            // FASE 2: añadir el estado jumpAttack a los disponibles
+            this.health = this.maxHealth + 3;
+            
+            // Añadir nuevo estado en fase 2
             this.availableStates.push('jumpAttack');
             console.log('Estados disponibles en fase 2:', this.availableStates);
-
+            
             // Efecto visual y pausa
             this.setActive(false);
             this.setVisible(false);
             this.isActivated = false;
             this.scene.cameras.main.shake(600, 0.02);
             this.scene.cameras.main.flash(500, 255, 50, 50); // Rojo para tutorial
-
+            
             // Esperar y revivir
             this.scene.time.delayedCall(2000, () => {
                 console.log('Reactivar BossTutorial para fase 2');
-
+                
                 this.setActive(true);
                 this.setVisible(true);
                 this.isActivated = true;
-
+                
+                // CORRECCIÓN: Restablecer todas las colisiones
+                this.resetAllCollisions();
+                
                 // Efecto de aparición
                 this.scene.tweens.add({
                     targets: this,
@@ -202,14 +137,11 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
                     duration: 800,
                     ease: 'Sine.easeInOut'
                 });
-
-                // Asegurar que las colisiones estén configuradas
-                this.setupCollisions();
-
+                
                 // Iniciar cooldown antes del primer ataque
                 this.generateNewCooldown();
                 this.stateMachine.setState('cooldown');
-
+                
                 console.log('BossTutorial fase 2 activado y listo para atacar');
             });
         } else {
@@ -219,106 +151,92 @@ export default class BossTutorial extends Phaser.Physics.Arcade.Sprite {
             this.die();
         }
     }
-
+    
     die() {
         console.log('BossTutorial muere');
-
-        // IMPORTANTE: Limpiar todos los warnings y estados activos
-        this.cleanupAllWarnings();
         
-        // Desactivar el estado actual si existe
-        if (this.stateMachine && this.stateMachine.currentState && 
-            this.stateMachine.currentState.exit) {
-            this.stateMachine.currentState.exit(this);
-        }
-        
-        // Cambiar a estado inactivo
-        if (this.stateMachine) {
-            this.stateMachine.setState('inactive');
-        }
-
-        // Desactivar completamente el cuerpo de física
+        // Desactivar completamente el cuerpo de física (específico de tutorial)
         if (this.body) {
             this.body.enable = false; // Desactivar el cuerpo de física
             this.body.checkCollision.none = true; // Desactivar todas las colisiones
         }
-
-        // Desactivar el sprite
-        this.setVisible(false);
-        this.setActive(false);
-
-        // Asegúrate de que las puertas existen
-        if (this.Bossdoors) {
-            console.log('Abriendo puertas del BossTutorial');
-            this.Bossdoors.getChildren().forEach(door => {
-                if (door.abrirPuerta) {
-                    door.abrirPuerta();
-                }
-            });
-        }
-
+        
+        // Llama al método die de BaseBoss
+        super.die();
+        
+        // Completar acciones específicas de BossTutorial
         PlayerDataManager.killBoss('tutorial');
         this.scene.events.emit('bossDefeated');
-
-        // Destruir todos los objetos de ataque
-        this.destroyAllAttackObjects();
         
         console.log('BossTutorial eliminado del registro');
     }
-
-    getDoors(tutorialDoors) {
-        this.Bossdoors = tutorialDoors;
-        console.log('Puertas asignadas a BossTutorial');
-    }
-
-    setLife() {
-        console.log('Activando BossTutorial');
-        this.setVisible(true);
-        this.setActive(true);
-        this.isActivated = true;
-
-        this.setupCollisions();
-
-        // Iniciar cooldown antes del primer ataque
-        this.generateNewCooldown();
-        this.stateMachine.setState('cooldown');
-
-        console.log('BossTutorial activado, vida:', this.health);
-    }
     
-    //PARA LIMPIAR WARNINGS
+    // Métodos específicos para limpieza de advertencias de BossTutorial
     cleanupAllWarnings() {
-        // Si hay un estado actual activo, llamar a su método de limpieza
+        // Primero llama al método base
+        super.cleanupAllWarnings();
+        
+        // Luego añade limpieza específica para estados de BossTutorial
         if (this.stateMachine && this.stateMachine.currentState) {
             const currentState = this.stateMachine.currentState;
-            
-            // Llamar a métodos específicos de limpieza si existen
-            if (typeof currentState.destroyAllWarnings === 'function') {
-                currentState.destroyAllWarnings();
-            }
-            
-            // También intentar limpiar warnings directamente
-            if (currentState.warningRect && currentState.warningRect.destroy) {
-                currentState.warningRect.destroy();
-            }
             
             // Detener tweens si existen
             if (currentState.tween && currentState.tween.stop) {
                 currentState.tween.stop();
             }
+            
+            // Limpiar flag de sweep
+            this._hitPlayerThisSweep = false;
         }
     }
     
+    // Sobrescribir destroyAllAttackObjects (BossTutorial no tiene grupos de ataque)
     destroyAllAttackObjects() {
-        // Desactivar overlaps solo cuando muere definitivamente
-        this.removeAllColliders();
+        // BossTutorial no tiene grupos de ataque como los otros bosses,
+        // pero sí tiene colisiones directas que necesitan limpiarse
+        
+        // Primero limpia warnings
+        this.cleanupAllWarnings();
+        
+        // Luego llama al método base para limpiar colisiones
+        super.destroyAllAttackObjects();
     }
     
+    // Método específico para resetear el flag de hit
+    resetHitFlag() {
+        this._hitPlayerThisSweep = false;
+    }
+    
+    // Método específico para verificar si golpeó al player
+    didHitPlayerThisSweep() {
+        return this._hitPlayerThisSweep;
+    }
+    
+    // Método específico para asignar puertas
+    getDoors(tutorialDoors) {
+        this.Bossdoors = tutorialDoors;
+        console.log('Puertas asignadas a BossTutorial');
+    }
+    
+    // Sobrescribir setLife si necesitas personalización adicional
+    setLife() {
+        console.log('Activando BossTutorial');
+        
+        // Resetear flag de hit
+        this.resetHitFlag();
+        
+        // Llama al método base
+        super.setLife();
+        
+        console.log('BossTutorial activado, vida:', this.health);
+    }
+    
+    // Sobrescribir removeAllColliders para añadir limpieza específica
     removeAllColliders() {
-        // Solo eliminar overlaps cuando el boss muere definitivamente
-        if (this.bossPlayerOverlap) {
-            this.scene.physics.world.removeCollider(this.bossPlayerOverlap);
-            this.bossPlayerOverlap = null;
-        }
+        // Llama al método base primero
+        super.removeAllColliders();
+        
+        // Resetear referencias específicas si es necesario
+        this.colliders = {};
     }
 }
