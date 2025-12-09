@@ -30,7 +30,7 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
         this.body.enable = false;
 
         // Reactivar después de X segundos
-        this.scene.time.delayedCall(4000, () => {
+        this.scene.time.delayedCall(2500, () => {
             this.reactivate();
         });
     }
