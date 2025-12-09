@@ -597,7 +597,7 @@ enemigos sin causarles daño ni destruirse.
      enemigo en vertical.
 
 
-**Bosses** 
+##**Bosses** 
 
 **Boss 0: boss inicial/tutorial**: es un mini boss que enseña al player como esquivar y hacer ataques. Tiene dos fases.
 
@@ -689,7 +689,52 @@ jugador a reaccionar.
 
 ![](images/ira.png)
 
-Los restos de bosses todavía están en proceso de creación.
+**Boss 2: Tristeza:** es un enemigo inmóvil que se sitúa a la derecha, tiene dos fases.
+
+Fase 1: tiene dos tipos de ataque. Primero el boss lanza una bola de agua, que persigue al player durante unos segundos, si durante esos segundos no daña al player, crea un área de explosión como otra manera de dañar al player. Segundo, lanza un ataque círcular, que son carámbanos en forma círculo.
+
+Cuando se queda sin vida, pasa a la fase 2.
+
+***Parámetros:***
+
+-   Daño: Vida que quita al jugador al asestar un golpe.
+
+-   Tiempo de espera entre ataques: Tiempo que no hace nada entre
+     ataques.
+
+-   Vida: Vida máxima del enemigo.
+
+-   Tiempo de señal de ataque: Tiempo de antelación que indica al
+     jugador el rango de su siguiente ataque
+
+-   Rango de ataque: Área de la explosión que crea la bola de agua.
+
+-   Tiempo de seguimiento: Tiempo de la bola de agua que persigue la player.
+
+-   Cantidad de carámbanos: Números de carámbanos que lanza.
+
+Fase 2: se le añade un nuevo tipo de ataque, en esta fase, el boss tiene tres tipos de ataque. Los dos de la fase 1, más otro ataque, que desde el techo cae un carámbano que intenta dañar al player
+
+Antes de empezar el ataque, se avisa al jugador de este ataque enseñando
+su rango con cierto tiempo de antelación para que le de tiempo al
+jugador a reaccionar. 
+
+***Parámetros:***
+
+-   Daño: Vida que quita al jugador al asestar el proyectil.
+
+-   Tiempo de espera entre ataques: Tiempo que se espera entre ataques.
+
+-   Vida: Vida máxima del enemigo.
+
+-   Tiempo de señal de ataque: Tiempo de antelación que indica al
+     jugador el rango de su siguiente ataque
+
+-   Velocidad de proyectil: velocidad a la que caen los proyectiles
+     hacia el suelo.
+
+-   Radio de proyectil: unidad que mide el radio del proyectil que lanza
+     hacia el suelo.
 
 ![](images/tristeza.png)
 
