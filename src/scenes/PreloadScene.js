@@ -146,7 +146,8 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('puertatriste', './assets/sprites/Escena/Puertatristeza.png');
     this.load.image('puertamiedo', './assets/sprites/Escena/Puertamiedo.png');
     this.load.image('platform', './assets/sprites/Escena/platform.png');
-    this.load.image('platform', './assets/sprites/Escena/PuertaBoss.png');
+    this.load.image('PuertaBoss', './assets/sprites/Escena/PuertaBoss.png');
+    this.load.image('bloque', './assets/sprites/Escena/Bloque.png');
 
     //buttons
     this.load.image('rbutton', './assets/sprites/Escena/rbutton1.png');
