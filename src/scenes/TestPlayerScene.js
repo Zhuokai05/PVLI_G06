@@ -204,7 +204,7 @@ export default class TestPlayerScene extends Phaser.Scene {
 
                 case "sadnessbossdoor":
                     this.tristebossdoor = new SadnessBossDoor(this, objeto.x, objeto.y, 'puertatriste');
-                    this.bottones = new TutorialPanel(this, objeto.x + 15, objeto.y + 150, 'No hay','Esta puerta se abre con botones.');
+                    this.bottones = new TutorialPanel(this, objeto.x + 15, objeto.y + 150, 'No hay', 'Esta puerta se abre con botones.');
                     break;
                 case "sadnessbossdoorcontrary":
                     this.tristebossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste');
@@ -307,7 +307,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
                 case "jumporb":
                     this.orbGroup.add(new JumpOrb(this, objeto.x, objeto.y));
-                break;
+                    break;
                 //checkPoint
                 case "checkpoint":
                     this.checkpoints.add(new Checkpoint(this, objeto.x, objeto.y));
@@ -543,6 +543,9 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.physics.add.overlap(this.player, this.doors, (player, door) => {
             this.currentDoor = door;
+            if (door.prompt && !door.isOpening) {
+                door.prompt.setVisible(true);
+            }
         });
 
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
@@ -850,6 +853,16 @@ export default class TestPlayerScene extends Phaser.Scene {
         }
         if (this.finalboss && this.finalboss.active) {
             this.finalboss.update(time, delta);
+        }
+
+        if (this.currentDoor) {
+            if (!this.physics.overlap(this.player, this.currentDoor)) {
+
+                if (this.currentDoor.prompt) {
+                    this.currentDoor.prompt.setVisible(false);
+                }
+                this.currentDoor = null;
+            }
         }
 
         let doorUnderPlayer = null;

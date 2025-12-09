@@ -38,6 +38,14 @@ export default class DoorBoss extends Door {
         else {
             // CONFIGURACIÓN PARA PUERTAS NORMALES
         }
+
+        this.prompt = this.scene.add.text(this.x, this.y + (this.displayHeight/2) + 50, 'Presiona E para interactuar', {
+            font: '16px Arial',
+            fill: '#ffffff',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            padding: { x: 0, y: 4 }
+        }).setOrigin(0.5).setDepth(10).setVisible(false);
+
     }
 
     createAnimations(textureKey) {
@@ -76,13 +84,14 @@ export default class DoorBoss extends Door {
         if (!this.contrary) return;
         if (this.isOpening) return;
 
+        this.prompt.setVisible(false);
         this.isOpening = true;
         this.tpSound?.play();
 
         if (this.scene.player) {
-            this.scene.player.canMove = false;       
-            this.scene.player.setVelocity(0, 0);     
-            this.scene.player.play('Player_idle', true); 
+            this.scene.player.canMove = false;
+            this.scene.player.setVelocity(0, 0);
+            this.scene.player.play('Player_idle', true);
         }
 
         // Lógica de animación
@@ -107,7 +116,7 @@ export default class DoorBoss extends Door {
         const player = this.scene.player;
 
         if (player) {
-            player.setPosition(destino.x, destino.y);
+            player.setPosition(destino.x, destino.y + 210);
             player.canMove = true;
 
             // Solo reseteamos animación si es la puerta animada
