@@ -95,7 +95,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('piece_fear', './assets/sprites/UI/BossTracker/FearPiece.png');
 
     // Boss
-    this.load.spritesheet('IraSheet', 'assets/sprites/Bosses/IraSheet.png', {
+    this.load.spritesheet('IraSheet', 'assets/sprites/Bosses/IraAnimSheet.png', {
       frameWidth: 256,
       frameHeight: 256
     });
