@@ -626,17 +626,13 @@ vez a detectar el jugador.
 -   Daño recibido: vida que se baja al colisionar con un obstáculo que
      no sea el jugador.
 
-**Boss 1: Ira:** es un enemigo inmovil que flota en el aire, tiene dos
+**Boss 1: Ira:** es un enemigo inmóvil que flota en el aire, tiene dos
 fases.
 
-Fase 1: ataca desde arriba del jugador hacia la plataforma que está
-pisando el jugador con un rango rectangular de ataque, causa daño al
-jugador si se encuentra dentro de la distancia y rompe la plataforma que
-está el rango, la plataforma rota se regenera al pasar un cierto tiempo.
+Fase 1: tiene dos tipos de ataque. Primero desde los laterales salen puños del boss que intentan hacerte daño, puede venir de la derecha o izquierda.
+Segundo, desde el techo caen varios bolas de fuego, su rango es aleatorio por todo el eje horizontal de la sala boss.
 
-Antes de empezar el ataque, se avisa al jugador de este ataque enseñando
-su rango con cierto tiempo de antelación para que le de tiempo al
-jugador a reaccionar. Cuando se queda sin vida, pasa a la fase 2.
+Cuando se queda sin vida, pasa a la fase 2.
 
 ***Parámetros:***
 
@@ -656,9 +652,12 @@ jugador a reaccionar. Cuando se queda sin vida, pasa a la fase 2.
 -   Tiempo de regeneración de plataformas: tiempo que tarda la
      plataforma destruida por su ataque en reaparecer.
 
-Fase 2: mientras hace el ataque de fase 1, lanza proyectiles con forma
-de círculo que caen desde arriba de todo hacia el suelo cada cierto
-tiempo.
+Fase 2: se le añade un nuevo tipo de ataque, en esta fase, el boss tiene tres tipos de ataque. Los dos de la fase 1, más otro ataque, que es igual que las bolas de
+fuego, caen desde el techo el puño del boss, este puede hacer daño al player, y también puede hacer desaparecer la plataforma que colisiona, haciendo que tenga menos espacio para el player para moverse. Si el player cae de la plataforma, muere de inmediato.
+
+Antes de empezar el ataque, se avisa al jugador de este ataque enseñando
+su rango con cierto tiempo de antelación para que le de tiempo al
+jugador a reaccionar. 
 
 ***Parámetros:***
 
