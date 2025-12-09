@@ -510,7 +510,7 @@ checkpoint.
      de atacar. Entonces, después de superar el tutorial este mini boss
      dropeará una espada.
 
--   Zona Bosses: ira, tristeza, miedo, alegría...
+-   Zona Bosses: ira, tristeza, miedo, final...
 
 Ejemplo de bocetos de la zona de miedo (una zona, para mostrar el diseño
 del mapa):
@@ -737,6 +737,63 @@ jugador a reaccionar.
      hacia el suelo.
 
 ![](images/tristeza.png)
+
+**Boss 3 (oculto): Miedo:** es un enemigo oculto que flota en el aire, no tiene cuerpo, su cuerpo puede ser cualquier cosa, según nosotros en este mundo vemos un corazón. Tiene dos fases.
+
+Fase 1: tiene dos tipos de ataque. Primero el boss saca sus garras y hace un ataque en forma de X.
+
+Cuando se queda sin vida, pasa a la fase 2.
+
+***Parámetros:***
+
+-   Daño: Vida que quita al jugador al asestar un golpe.
+
+-   Tiempo de espera entre ataques: Tiempo que no hace nada entre
+     ataques.
+
+-   Vida: Vida máxima del enemigo.
+
+-   Tiempo de señal de ataque: Tiempo de antelación que indica al
+     jugador el rango de su siguiente ataque
+
+-   Eje X/Y inicial y final: Representan la posición incial y final de las garras para hacer el recorrido en X.
+
+Fase 2: se le añade un nuevo tipo de ataque, en esta fase, el boss tiene dos ataques. El nuevo ataque hace caer desde el techo, varios vasos que intentan hacer daño al player.
+
+Antes de empezar el ataque, se avisa al jugador de este ataque enseñando
+su rango con cierto tiempo de antelación para que le de tiempo al
+jugador a reaccionar. 
+
+***Parámetros:***
+
+-   Daño: Vida que quita al jugador al asestar el proyectil.
+
+-   Tiempo de espera entre ataques: Tiempo que se espera entre ataques.
+
+-   Vida: Vida máxima del enemigo.
+
+-   Tiempo de señal de ataque: Tiempo de antelación que indica al
+     jugador el rango de su siguiente ataque
+
+-   Velocidad de proyectil: velocidad a la que caen los proyectiles
+     hacia el suelo.
+
+-   Radio de proyectil: unidad que mide el radio del proyectil que lanza
+     hacia el suelo.
+
+![](images/Mascara.png)  ![](images/Corazon.png)
+
+**Boss final:** es un boss final que sabe todos los tipos de ataque de los otros bosses. Tiene dos fases.
+
+Tanto la fase 1 como la fase 2, este boss final lanza aleatoriamente uno de los ataques de los otros bosses.
+
+Cuando se queda sin vida, pasa a la fase 2.
+
+Antes de empezar el ataque, se avisa al jugador de este ataque enseñando
+su rango con cierto tiempo de antelación para que le de tiempo al
+jugador a reaccionar. 
+
+![](images/final.png)
 
 ##  
 
