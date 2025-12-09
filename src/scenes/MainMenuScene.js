@@ -3,7 +3,6 @@ import MusicManager from '../managers/MusicManager.js';
 class MainMenuScene extends Phaser.Scene {
     constructor() {
         super('MainMenu');
-
     }
 
     create() {
@@ -17,21 +16,14 @@ class MainMenuScene extends Phaser.Scene {
 
         play.on('pointerdown', () => {
             this.scene.stop();
-            this.scene.start('Loading');
-            //this.scene.start('BossScene');
+            //this.scene.start('Loading');
+            this.scene.start('Narrative');
         });
 
         MusicManager.play(this, 'bg_Music', 0.1);
     }
 
-
-
     update(time, delta) {
-
-
     }
-
-
-
 }
 export { MainMenuScene }
