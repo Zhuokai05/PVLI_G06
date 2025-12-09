@@ -136,7 +136,8 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 32
     });
     this.load.image('iceplatform', './assets/sprites/Escena/iceplatform.png');
-    // Ira
+
+    // Puertas
     this.load.image('puertaira', './assets/sprites/Escena/PuertaIra.png');
     this.load.spritesheet('puertairaSheet', './assets/sprites/Escena/PuertaIraSheet.png', {
       frameWidth: 128,
@@ -145,6 +146,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('puertatriste', './assets/sprites/Escena/Puertatristeza.png');
     this.load.image('puertamiedo', './assets/sprites/Escena/Puertamiedo.png');
     this.load.image('platform', './assets/sprites/Escena/platform.png');
+    this.load.image('platform', './assets/sprites/Escena/PuertaBoss.png');
 
     //buttons
     this.load.image('rbutton', './assets/sprites/Escena/rbutton1.png');

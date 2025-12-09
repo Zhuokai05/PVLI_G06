@@ -171,25 +171,25 @@ export default class TestPlayerScene extends Phaser.Scene {
 
                 //puertas
                 case "iradoor":
-                    this.irafloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.irafloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
                 case "icedoor":
-                    this.icebossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.icebossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
                 case "irabossdoor":
-                    this.irabossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.irabossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
                 case "icebossdoor":
-                    this.icefloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.icefloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
                 case "feardoor":
-                    this.fearbossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.fearbossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
                 case "tutodoor":
-                    this.tutobossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.tutobossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
                 case "finaldoor":
-                    this.finalbossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'basicEnemyFear'));
+                    this.finalbossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
 
                 //bossdoor
