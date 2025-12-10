@@ -27,6 +27,7 @@ export default class BossTutorial extends BaseBoss {
         this.body.setOffset(this.displayWidth * offsetX, this.displayHeight * offsetY);
     }
 
+    // De momento no se usa, para futuro
     playIntro() {
         this.setVisible(true);
         this.setActive(true);
@@ -41,16 +42,6 @@ export default class BossTutorial extends BaseBoss {
         this.addState('sideAttack', new BossTutorialSideAttackState());
         this.addState('jumpAttack', new BossTutorialJumpAttackState());
         this.addState('cooldown', new BossTutorialCooldownState());
-    }
-
-    playIntro() {
-        this.setVisible(true).setActive(true);
-        this.scene.cameras.main.shake(3000, 0.05);
-        
-        this.scene.time.delayedCall(1500, () => {
-            this.setLife();
-            this.scene.events.emit('bossIntroFinished');
-        });
     }
 
     // Configurar colisiones adicionales (colisión directa con el boss)
