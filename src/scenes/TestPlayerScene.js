@@ -206,7 +206,7 @@ export default class TestPlayerScene extends Phaser.Scene {
 
                 case "sadnessbossdoor":
                     this.tristebossdoor = new SadnessBossDoor(this, objeto.x, objeto.y, 'puertatriste');
-                    this.bottones = new TutorialPanel(this, objeto.x + 15, objeto.y + 150, 'No hay', 'Esta puerta se abre con botones.');
+                    this.bottones = new TutorialPanel(this, objeto.x + 15, objeto.y + 150, 'No hay', 'Esta puerta se abre con botones');
                     break;
                 case "sadnessbossdoorcontrary":
                     this.tristebossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste');
