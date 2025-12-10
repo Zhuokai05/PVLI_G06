@@ -437,7 +437,7 @@ this.deadtexture = 'defeat_player';
     this.timeline.play();
     
     // Retrasar lo siguiente 3 segundos (3000 ms)
-    this.scene.time.delayedCall(3000, () => {
+    this.scene.time.delayedCall(1500, () => {
         this.scene.scene.stop();
         this.scene.scene.launch('GameOver');
 
