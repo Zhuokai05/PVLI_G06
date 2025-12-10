@@ -216,10 +216,111 @@ export default class BossSad extends BaseBoss {
     }
     
     // Método específico para asignar puertas
+
+    die() {
+        console.log('BossSad muere');
+
+        // IMPORTANTE: Limpiar todos los warnings y estados activos
+        this.cleanupAllWarnings();
+        
+        // Desactivar el estado actual si existe
+        if (this.stateMachine && this.stateMachine.currentState && 
+            this.stateMachine.currentState.exit) {
+            this.stateMachine.currentState.exit(this);
+        }
+        
+        // Cambiar a estado inactivo
+        if (this.stateMachine) {
+            this.stateMachine.setState('inactive');
+        }
+
+        // Asegúrate de que las puertas y pisos existen
+        if (this.Bossdoors) {
+            console.log('Abriendo puertas del BossSad');
+            this.Bossdoors.getChildren().forEach(door => {
+                if (door.abrirPuerta) {
+                    door.abrirPuerta();
+                }
+            });
+        }
+
+        if (this.floors) {
+            console.log('Abriendo pisos del BossSad');
+            this.floors.getChildren().forEach(floor => {
+                if (floor.abrirPuerta) {
+                    floor.abrirPuerta();
+                }
+            });
+        }
+
+        if(this.finaldoor) 
+            {
+                this.finaldoor.activarTriste();
+            }
+
+        PlayerDataManager.killBoss('sadness');
+        this.scene.events.emit('bossDefeated');
+
+        // Desactivar físicas
+        this.setActive(false);
+        this.setVisible(false);
+        
+        // IMPORTANTE: Destruir todos los objetos de ataque
+        this.destroyAllAttackObjects();
+        
+        console.log('BossSad eliminado del registro');
+    }
+
     getDoors(iceDoors, iceFloors) {
         this.Bossdoors = iceDoors;
         this.floors = iceFloors;
         console.log('Puertas y pisos asignados a BossSad');
+    }
+
+    setLife() {
+        console.log('Activando BossSad');
+        this.setVisible(true);
+        this.setActive(true);
+        this.isActivated = true;
+
+        this.setupCollisions();
+
+        // Iniciar cooldown antes del primer ataque
+        this.generateNewCooldown();
+        this.stateMachine.setState('cooldown');
+
+        console.log('BossSad activado, vida:', this.health);
+    }
+    setFinalDoor(finaldoor)
+    {
+       this.finaldoor = finaldoor
+    }
+    
+    // NUEVOS MÉTODOS PARA LIMPIAR WARNINGS
+    cleanupAllWarnings() {
+        // Si hay un estado actual activo, llamar a su método de limpieza
+        if (this.stateMachine && this.stateMachine.currentState) {
+            const currentState = this.stateMachine.currentState;
+            
+            // Llamar a métodos específicos de limpieza si existen
+            if (typeof currentState.destroyAllWarnings === 'function') {
+                currentState.destroyAllWarnings();
+            }
+            
+            // También intentar limpiar warnings directamente
+            if (currentState.warningRect && currentState.warningRect.destroy) {
+                currentState.warningRect.destroy();
+            }
+            if (currentState.warningCircle && currentState.warningCircle.destroy) {
+                currentState.warningCircle.destroy();
+            }
+            if (currentState.warningBorder && currentState.warningBorder.destroy) {
+                currentState.warningBorder.destroy();
+            }
+            if (currentState.waterBall && currentState.waterBall.destroy) {
+                currentState.waterBall.destroy();
+            }
+        }
     }
     
     // Método para limpiar objetos de ataque activos

@@ -186,14 +186,70 @@ export default class BossAngry extends BaseBoss {
         console.log('Boss derrotado definitivamente');
         
         // Llama al método die de BaseBoss primero
-        super.die();
+        
         
         // Completar acciones específicas de BossAngry
+
+        // IMPORTANTE: Limpiar todos los warnings y estados activos
+        this.cleanupAllWarnings();
+
+        // Desactivar el estado actual si existe
+        if (this.stateMachine && this.stateMachine.currentState &&
+            this.stateMachine.currentState.exit) {
+            this.stateMachine.currentState.exit(this);
+        }
+
+        // Cambiar a estado inactivo
+        if (this.stateMachine) {
+            this.stateMachine.setState('inactive');
+        }
+
+        // Código existente...
+        this.Bossdoors.getChildren().forEach(door => {
+            if (door.abrirPuerta) {
+                door.abrirPuerta();
+            }
+        });
+
+        this.floors.getChildren().forEach(floor => {
+            if (floor.abrirPuerta) {
+                floor.abrirPuerta();
+            }
+        });
+
+            if(this.finaldoor) 
+            {
+                this.finaldoor.activarIra();
+            }
+        super.die();
+
         PlayerDataManager.killBoss('anger');
         this.scene.events.emit('bossDefeated');
     }
-    
-    // Método específico para BossAngry
+    getDoors(iraDoors, iraFloors) {
+        this.Bossdoors = iraDoors;
+        this.floors = iraFloors;
+    }
+    setLife() {
+        this.setVisible(true);
+        this.setActive(true);
+        this.isActivated = true; // Activar el boss
+        this.setupCollisions();
+
+        // Iniciar cooldown antes del primer ataque
+        this.generateNewCooldown();
+        this.stateMachine.setState('cooldown');
+    }
+    setFinalDoor(finaldoor)
+    {
+       this.finaldoor = finaldoor
+    }
+    // Método para configurar las plataformas (llamado desde la escena)
+    setPlatforms(platforms) {
+        this.platforms = platforms;
+    }
+
+    // Método para manejar colisión de puño con plataforma
     punchCollisionWithPlatform(punch, platform) {
         if (!punch.active || !platform.active) return;
         
