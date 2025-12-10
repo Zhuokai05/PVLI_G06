@@ -11,9 +11,9 @@ export default class BossSad extends BaseBoss {
             health: 10,
             maxHealth: 10,
             damage: 1,
-            startCooldown: 2000,
-            minCooldown: 1000,
-            maxCooldown: 1500,
+            startCooldown: 3000,
+            minCooldown: 2500,
+            maxCooldown: 3000,
             availableStates: ['radial', 'waterball'],
             bossName: 'sadness'
         };
@@ -252,10 +252,6 @@ export default class BossSad extends BaseBoss {
                     floor.abrirPuerta();
                 }
             });
-        }
-
-        if (this.finaldoor) {
-            this.finaldoor.activarTriste();
         }
 
         PlayerDataManager.killBoss('sadness');

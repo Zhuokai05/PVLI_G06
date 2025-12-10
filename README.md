@@ -9,8 +9,8 @@ Un proyecto universitario desarrollado por **Rocky Games**
 
 **Highway to Heaven** es un juego de **plataformas y acción 2D en pixel art**, inspirado en juegos como *Hollow Knight*, *Cuphead* y *Hades*.
 
-El jugador controla a un **ángel caído en el infierno**, que deberá derrotar a los **cuatro jefes emocionales** (Ira, Tristeza, Miedo y Alegría) para recuperar su poder y ascender de nuevo al cielo.  
-El juego combina combates ágiles, secciones de plataformas precisas y un ambiente oscuro con fuerte carga simbólica.
+El jugador controla a un **ángel caído en el infierno**, que deberá derrotar a **jefes emocionales** (Ira, Tristeza y Miedo) para recuperar su poder y ascender de nuevo al cielo.  
+El juego combina combates ágiles, secciones de plataformas y power up precisas y un ambiente oscuro con fuerte carga simbólica.
 
 **Todos los Assets de este proyecto son de creación propia y su licencia es exclusiva para este proyecto**
 

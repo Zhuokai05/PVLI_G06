@@ -1,3 +1,5 @@
+import PlayerDataManager from "../managers/PlayerDataManager.js";
+
 export default class InvisibleTrigger extends Phaser.GameObjects.Zone {
 
     constructor(scene, x, y) {
@@ -26,7 +28,7 @@ export default class InvisibleTrigger extends Phaser.GameObjects.Zone {
     }
 
     llamar() {
-        if (this.boss) {
+        if (this.boss && !PlayerDataManager.data.bossStatus[this.boss.bossName]) {
             console.log("EL BOSS DE LA PUERTA REGISTRADO ES", this.boss);
             this.boss.setLife();
 

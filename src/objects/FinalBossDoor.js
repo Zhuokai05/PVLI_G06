@@ -1,25 +1,13 @@
 import DoorBoss from '../objects/BossDoor.js';
+import PlayerDataManager from '../managers/PlayerDataManager.js';
 
 export default class FinalBossDoor extends DoorBoss {
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
-
- this.iraboss = false;
- this.tristeboss = false;
     }
 
-    activarIra() {
-        this.iraboss = true;
-    }
-
-    activarTriste() {
-        this.tristeboss = true;
-    }
-
-   
     abrirPuerta() {
-        if (!this.tristeboss|| !this.iraboss) 
-        {
+        if (!PlayerDataManager.data.bossStatus.sadness || !PlayerDataManager.data.bossStatus.anger) {
             console.log("No se puede abrir la puerta: faltan botones");
             return;
         }
