@@ -1,117 +1,89 @@
-import BaseState from '../../../stateMachine/BaseState.js';
+import BaseBossAttackState from '../BaseBossAttackState.js';
 
-export default class BossSadIcicleState extends BaseState {
-   constructor(texture = 'icicle') {
-        super(); 
-        this.texture = texture;
-    }
-   
-    enter(context) {
-        this.boss = context;
-        this.stateTime = 0;
-        this.currentPhase = 'warning'; // warning -> attack -> cooldown
-        this.warningDuration = 1200;
-        this.attackDuration = 500;
-        this.cooldownDuration = 500;
+export default class BossSadIcicleState extends BaseBossAttackState {
+    constructor(texture = 'icicle') {
+        super({
+            texture: texture,
+            attackName: 'Carámbanos Verticales',
+            phases: ['warning', 'attack', 'cooldown'],
+            warningDuration: 1200,
+            attackDuration: 500,
+            cooldownDuration: 500
+        });
         
-        this.startWarningPhase();
-        
-        console.log("Carámbanos verticales");
+        this.spawnX = 0;
     }
-
-    startWarningPhase() {
-        const { scene } = this.boss;
-        const player = this.boss.player;
-        const cam = scene.cameras.main;
-
-        // Crear advertencia vertical
+    
+    createWarning() {
+        const cam = this.scene.cameras.main;
+        this.spawnX = this.player.x;
         const warningWidth = 120;
-        this.spawnX = player.x;
         
-        this.warningRect = scene.add.rectangle(
+        this.createWarningRectangle(
             this.spawnX,
             this.boss.y,
             warningWidth,
             cam.height,
-            0x4169e1, // Azul en lugar de rojo
+            0x4169e1,
             0.5
         );
     }
-
-    execute(context, time, delta) {
-        this.stateTime += delta;
-
-        switch (this.currentPhase) {
-            case 'warning':
-                if (this.stateTime >= this.warningDuration) {
-                    this.startAttackPhase();
-                }
-                break;
-                
-            case 'attack':
-                if (this.stateTime >= this.attackDuration) {
-                    this.startCooldownPhase();
-                }
-                break;
-                
-            case 'cooldown':
-                if (this.stateTime >= this.cooldownDuration) {
-                    this.boss.selectNextState();
-                }
-                break;
-        }
-    }
-
-    startAttackPhase() {
-        this.currentPhase = 'attack';
-        this.stateTime = 0;
-        
-        this.destroyAllWarnings();
+    
+    executeAttack() {
         this.spawnIcicle();
     }
-
+    
     spawnIcicle() {
-        const { scene, icicles } = this.boss;
         const Yspeed = this.boss.icicleSpeed;
         
-        const icicle = icicles.create(this.spawnX, this.boss.y - 400, this.texture);
+        const icicle = this.boss.icicles.create(
+            this.spawnX,
+            this.boss.y - 400,
+            this.config.texture
+        );
+        
         icicle.setVelocityY(Yspeed);
         icicle.setScale(1.5);
         icicle.body.allowGravity = false;
-        //icicle.setTint(0x4169e1); // Azul en lugar de rojo
+        icicle.setRotation(Math.PI / 2); // Apuntar hacia abajo
         
-        // Rotar 90 grados para que apunte hacia abajo
-        icicle.setRotation(Math.PI / 2);
-
         this.cleanupIcicle(icicle);
     }
-
+    
     cleanupIcicle(icicle) {
-        const scene = this.boss.scene;
-
-        scene.events.on('update', () => {
-            if (!icicle.active) return;
-            const cam = scene.cameras.main;
-            if (icicle.y > this.boss.y + this.boss.distanceToFloor) {
-                icicle.destroy();
-            }
+        const cleanupEvent = this.scene.time.addEvent({
+            delay: 50,
+            callback: () => {
+                if (!icicle.active) {
+                    cleanupEvent.remove(false);
+                    return;
+                }
+                
+                if (icicle.y > this.boss.y + this.boss.distanceToFloor) {
+                    icicle.destroy();
+                    cleanupEvent.remove(false);
+                }
+            },
+            callbackScope: this,
+            loop: true
         });
-    }
-
-    startCooldownPhase() {
-        this.currentPhase = 'cooldown';
-        this.stateTime = 0;
+        
+        // Registrar evento para limpieza
+        if (!this.cleanupEvents) {
+            this.cleanupEvents = [];
+        }
+        this.cleanupEvents.push(cleanupEvent);
     }
     
-    // NUEVO MÉTODO
     destroyAllWarnings() {
-        if (this.warningRect) {
-            this.warningRect.destroy();
-            this.warningRect = null;
+        super.destroyAllWarnings();
+        
+        // Limpiar eventos de cleanup
+        if (this.cleanupEvents) {
+            this.cleanupEvents.forEach(event => {
+                if (event) event.remove(false);
+            });
+            this.cleanupEvents = null;
         }
-    }
-
-    exit(context) {
-        this.destroyAllWarnings();
     }
 }

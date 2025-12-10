@@ -785,9 +785,11 @@ jugador a reaccionar.
 
 **Boss final:** es un boss final que sabe todos los tipos de ataque de los otros bosses. Tiene dos fases.
 
-Tanto la fase 1 como la fase 2, este boss final lanza aleatoriamente uno de los ataques de los otros bosses.
+Fase 1: hace un random de todos los ataque de otros bosses, y elige tres de ellos, eso quiere decir en cada partida el boss final en la primera fase, tiene ataques diferentes.
 
 Cuando se queda sin vida, pasa a la fase 2.
+
+Fase 2: en esta fase, el boss final coge todos los ataques que existe de otros bosses.
 
 Antes de empezar el ataque, se avisa al jugador de este ataque enseñando
 su rango con cierto tiempo de antelación para que le de tiempo al

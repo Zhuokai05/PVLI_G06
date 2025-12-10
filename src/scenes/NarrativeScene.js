@@ -328,9 +328,6 @@ class NarrativeScene extends Phaser.Scene {
         // Efecto de desvanecimiento
         this.cameras.main.fadeOut(600, 0, 0, 0);
         
-        // Detener música
-        MusicManager.stop(this);
-        
         // Cambiar a la escena de carga
         this.time.delayedCall(600, () => {
             this.scene.start('Loading');

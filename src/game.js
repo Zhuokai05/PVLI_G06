@@ -1,4 +1,4 @@
-import TestPlayerScene from './scenes/TestPlayerScene.js';
+import TestPlayerScene from './scenes/testPlayerScene.js';
 import { PreloadScene } from './scenes/PreloadScene.js';
 import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
@@ -29,14 +29,14 @@ const config = {
         default: 'arcade',
         arcade: {
         gravity: { y: 600 },
-        debug: true,
-        debugShowBody: true,
-        debugShowVelocity: true,
+        debug: false,
+        debugShowBody: false,
+        debugShowVelocity: false,
     },
     
     },
     scene: [PreloadScene,MainMenuScene, TestPlayerScene,LoadingScene,BossTestScene, PauseScene, GameOverScene,WinScene, OrbSelectScene, NarrativeScene],
-    title: "Highway To Hell",
+    title: "Highway To Heaven",
     version: "1.0.0"
 };
 

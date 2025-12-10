@@ -1,32 +1,27 @@
-import BaseState from '../../../stateMachine/BaseState.js';
+import BaseBossAttackState from '../BaseBossAttackState.js';
 
-export default class BossAngryPunchPlatformState extends BaseState {
+export default class BossAngryPunchPlatformState extends BaseBossAttackState {
     constructor(texture = 'punch') {
-        super(); 
-        this.texture = texture;
+        super({
+            texture: texture,
+            attackName: 'Puño Vertical',
+            phases: ['warning', 'attack', 'cooldown'],
+            warningDuration: 1200,
+            attackDuration: 500,
+            cooldownDuration: 500
+        });
+        
+        this.spawnX = 0;
     }
-    enter(context) {
-        this.boss = context;
-        this.stateTime = 0;
-        this.currentPhase = 'warning'; // warning -> attack -> cooldown
-        this.warningDuration = 1200;
-        this.attackDuration = 500;
-        this.cooldownDuration = 500;
-
-        this.startWarningPhase();
-        console.log("puño vertical")
-    }
-
-    startWarningPhase() {
-        const { scene } = this.boss;
-        const player = this.boss.player;
-        const cam = scene.cameras.main;
-
-        // Crear advertencia vertical
+    
+    createWarning() {
+        const cam = this.scene.cameras.main;
+        
+        // Crear advertencia vertical en la posición del jugador
+        this.spawnX = this.player.x;
         const warningWidth = 120;
-        this.spawnX = player.x;
-
-        this.warningRect = scene.add.rectangle(
+        
+        this.createWarningRectangle(
             this.spawnX,
             this.boss.y,
             warningWidth,
@@ -35,79 +30,36 @@ export default class BossAngryPunchPlatformState extends BaseState {
             0.5
         );
     }
-
-    execute(context, time, delta) {
-        this.stateTime += delta;
-
-        switch (this.currentPhase) {
-            case 'warning':
-                if (this.stateTime >= this.warningDuration) {
-                    this.startAttackPhase();
-                }
-                break;
-
-            case 'attack':
-                if (this.stateTime >= this.attackDuration) {
-                    this.startCooldownPhase();
-                }
-                break;
-
-            case 'cooldown':
-                if (this.stateTime >= this.cooldownDuration) {
-                    this.boss.selectNextState();
-                }
-                break;
-        }
-    }
-
-    startAttackPhase() {
-        this.currentPhase = 'attack';
-        this.stateTime = 0;
-
-        this.warningRect.destroy();
+    
+    executeAttack() {
         this.spawnPunch();
     }
-
+    
     spawnPunch() {
-        const { scene, punches } = this.boss;
         const Yspeed = this.boss.punchYSpeed;
-
-        const punch = punches.create(this.spawnX, this.boss.y - 300, this.texture);
+        
+        const punch = this.boss.punches.create(
+            this.spawnX,
+            this.boss.y - 300,
+            this.config.texture
+        );
+        
         punch.setVelocityY(Yspeed);
         punch.setScale(2.5);
         punch.body.allowGravity = false;
-        //punch.setTint(0xff6b6b);
-
-        // Marcar este puño como puño de plataforma
-        punch.isPlatformPunch = true;
-
+        punch.isPlatformPunch = true; // Marcar como puño de plataforma
+        
+        // Auto-destrucción
         this.cleanupPunch(punch);
     }
-
+    
     cleanupPunch(punch) {
-        const scene = this.boss.scene;
+        const scene = this.scene;
         scene.events.on('update', () => {
             if (!punch.active) return;
-            const cam = scene.cameras.main;
             if (punch.y > this.boss.y + this.boss.distanceToFloor + 150) {
                 punch.destroy();
             }
         });
-    }
-
-    startCooldownPhase() {
-        this.currentPhase = 'cooldown';
-        this.stateTime = 0;
-    }
-
-    destroyAllWarnings() {
-        if (this.warningRect) {
-            this.warningRect.destroy();
-            this.warningRect = null;
-        }
-    }
-
-    exit(context) {
-        this.destroyAllWarnings();
     }
 }

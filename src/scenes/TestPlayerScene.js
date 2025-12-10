@@ -360,6 +360,12 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.lavatrigger.body.setAllowGravity(false);
                     this.lavatrigger.body.setImmovable(true);
                     break;
+                case "lavastop":
+                    this.lavastoptrigger = this.add.zone(objeto.x, objeto.y, objeto.width, objeto.height);
+                    this.physics.add.existing(this.lavastoptrigger);
+                    this.lavastoptrigger.body.setAllowGravity(false);
+                    this.lavastoptrigger.body.setImmovable(true);
+                    break;
                 case "staticlava":
                     this.floorislava = new StaticLava(this, objeto.x, objeto.y, objeto.width, objeto.height, 'ground');
                     break;
@@ -538,6 +544,13 @@ export default class TestPlayerScene extends Phaser.Scene {
                 this.cameras.main.shake(500, 0.01);
             });
         }
+        this.physics.add.overlap(this.player, this.lavastoptrigger, () => {
+            if (this.lava) {
+                this.lava.stopLava();
+            }
+            this.lavastoptrigger.destroy();
+            this.cameras.main.shake(500, 0.01);
+        });
         //------------------------------
         this.physics.add.overlap(this.player, this.floorislava, () => this.player.die());
         this.physics.add.overlap(this.player, this.orbGroup, (player, orb) => {

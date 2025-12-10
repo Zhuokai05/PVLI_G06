@@ -1,7 +1,7 @@
 export default class MusicManager {
     static music = null;
 
-    static play(scene, key, volume = 0.5) {
+    static play(scene, key, volume = 1) {
         if (this.music) return; // ya está sonando
 
         this.music = scene.sound.add(key, {

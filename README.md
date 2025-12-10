@@ -41,4 +41,8 @@ El juego combina combates ágiles, secciones de plataformas precisas y un ambien
 | Mover izquierda / derecha | **A / D** |
 | Saltar | **Espacio / W** |
 | Ataque cuerpo a cuerpo | **↑ ↓ → ←** |
+| Usar orbe activo | **C** |
+| Cambiar orbe activo | **Q** |
+| Interactuar | **E** |
+| Menu pausa | **ESC** |
 

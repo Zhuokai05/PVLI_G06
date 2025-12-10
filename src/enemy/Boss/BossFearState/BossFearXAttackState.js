@@ -1,102 +1,92 @@
-import BaseState from '../../../stateMachine/BaseState.js';
+import BaseBossAttackState from '../BaseBossAttackState.js';
 
-export default class BossFearXAttackState extends BaseState {
-    constructor(texture = 'punch') {
-        super(); 
-        this.texture = texture;
+export default class BossFearXAttackState extends BaseBossAttackState {
+    constructor(texture = 'garra') {
+        super({
+            texture: texture,
+            attackName: 'Ataque en X',
+            phases: ['warning', 'attack', 'cooldown'],
+            warningDuration: 1000,
+            attackDuration: 2000,
+            cooldownDuration: 1000,
+            logOnEnter: true
+        });
     }
     
     enter(context) {
-        this.boss = context;
-        this.stateTime = 0;
-        this.currentPhase = 'warning'; // warning -> attack -> cooldown
-        this.warningDuration = 1000;
-        this.attackDuration = 2000;
-        this.cooldownDuration = 1000;
+        super.enter(context);
         
         // Crear garras para el ataque
         this.boss.createClaws();
-        
-        this.startWarningPhase();
     }
-
-    startWarningPhase() {
-        const { scene } = this.boss;
+    
+    createWarning() {
         const bossX = this.boss.x;
         const bossY = this.boss.y;
-
-        // Crear indicadores de trayectoria usando coordenadas del mundo
-        this.leftWarning = scene.add.rectangle(
-            bossX - 300, 
-            bossY + 100,
-            300, 
-            60, 
-            0xff0000, 
+        
+        // Crear indicadores de trayectoria en forma de X
+        this.createXPatternWarning(bossX, bossY);
+        
+        // Iniciar efecto de parpadeo
+        this.startWarningFlash();
+    }
+    
+    createXPatternWarning(x, y) {
+        // Rectángulo izquierdo (45 grados)
+        const leftWarning = this.scene.add.rectangle(
+            x - 300,
+            y + 100,
+            300,
+            60,
+            0xff0000,
             0.5
         );
-        this.leftWarning.setAngle(45);
+        leftWarning.setAngle(45);
         
-        this.rightWarning = scene.add.rectangle(
-            bossX + 300, 
-            bossY + 100,
-            300, 
-            60, 
-            0xff0000, 
+        // Rectángulo derecho (-45 grados)
+        const rightWarning = this.scene.add.rectangle(
+            x + 300,
+            y + 100,
+            300,
+            60,
+            0xff0000,
             0.5
         );
-        this.rightWarning.setAngle(-45);
-    }
-
-    execute(context, time, delta) {
-        this.stateTime += delta;
-
-        switch (this.currentPhase) {
-            case 'warning':
-                // Parpadeo de advertencia
-                if (Math.floor(this.stateTime / 200) % 2 === 0) {
-                    this.leftWarning.setAlpha(0.3);
-                    this.rightWarning.setAlpha(0.3);
-                } else {
-                    this.leftWarning.setAlpha(0.7);
-                    this.rightWarning.setAlpha(0.7);
-                }
-
-                if (this.stateTime >= this.warningDuration) {
-                    this.startAttackPhase();
-                }
-                break;
-                
-            case 'attack':
-                if (this.stateTime >= this.attackDuration) {
-                    this.startCooldownPhase();
-                }
-                break;
-                
-            case 'cooldown':
-                if (this.stateTime >= this.cooldownDuration) {
-                    this.boss.selectNextState();
-                }
-                break;
-        }
-    }
-
-    startAttackPhase() {
-        this.currentPhase = 'attack';
-        this.stateTime = 0;
+        rightWarning.setAngle(-45);
         
-        // Destruir advertencias
-        this.destroyAllWarnings();
+        // Registrar elementos para limpieza
+        this.registerWarningElement('leftWarning', leftWarning);
+        this.registerWarningElement('rightWarning', rightWarning);
+    }
+    
+    startWarningFlash() {
+        // Crear efecto de parpadeo
+        this.flashTween = this.scene.tweens.add({
+            targets: [this.getWarningElement('leftWarning'), this.getWarningElement('rightWarning')],
+            alpha: { from: 0.3, to: 0.7 },
+            duration: 200,
+            yoyo: true,
+            repeat: -1
+        });
         
+        this.registerWarningElement('flashTween', this.flashTween);
+    }
+    
+    executeAttack() {
         // Mover garras en forma de X
         this.moveClawsInXPattern();
     }
-
+    
     moveClawsInXPattern() {
-        const { scene } = this.boss;
         const bossX = this.boss.x;
         const bossY = this.boss.y;
         
-        // Posiciones iniciales y finales (coordenadas del mundo)
+        if (!this.boss.leftClaw || !this.boss.rightClaw) {
+            console.error('Garras no creadas correctamente');
+            return;
+        }
+        
+        // Posiciones iniciales y finales
         const startLeftX = bossX - 380;
         const startRightX = bossX + 380;
         const startY = bossY - 100;
@@ -104,12 +94,12 @@ export default class BossFearXAttackState extends BaseState {
         const endRightX = bossX - 300;
         const endY = bossY + 400;
         
-        // Garra izquierda: va hacia abajo-derecha
-        scene.tweens.add({
+        // Animación de la garra izquierda (hacia abajo-derecha)
+        this.leftClawTween = this.scene.tweens.add({
             targets: this.boss.leftClaw,
             x: endLeftX,
             y: endY,
-            duration: this.attackDuration,
+            duration: this.config.attackDuration,
             ease: 'Power2',
             onUpdate: (tween, target) => {
                 const progress = tween.progress;
@@ -117,44 +107,39 @@ export default class BossFearXAttackState extends BaseState {
             }
         });
         
-        // Garra derecha: va hacia abajo-izquierda
-        scene.tweens.add({
+        // Animación de la garra derecha (hacia abajo-izquierda)
+        this.rightClawTween = this.scene.tweens.add({
             targets: this.boss.rightClaw,
             x: endRightX,
             y: endY,
-            duration: this.attackDuration,
+            duration: this.config.attackDuration,
             ease: 'Power2',
             onUpdate: (tween, target) => {
                 const progress = tween.progress;
                 target.y = startY + (endY - startY) * progress + Math.sin(progress * Math.PI * 2) * 20;
             }
         });
-    }
-
-    startCooldownPhase() {
-        this.currentPhase = 'cooldown';
-        this.stateTime = 0;
         
-        // Destruir garras al terminar el ataque
-        this.boss.destroyClaws();
+        // Registrar tweens para limpieza
+        this.registerWarningElement('leftClawTween', this.leftClawTween);
+        this.registerWarningElement('rightClawTween', this.rightClawTween);
     }
     
-    // NUEVO MÉTODO
     destroyAllWarnings() {
-        if (this.leftWarning) {
-            this.leftWarning.destroy();
-            this.leftWarning = null;
-        }
-        if (this.rightWarning) {
-            this.rightWarning.destroy();
-            this.rightWarning = null;
+        super.destroyAllWarnings();
+        
+        // Detener efecto de parpadeo si existe
+        if (this.flashTween && this.flashTween.stop) {
+            this.flashTween.stop();
         }
     }
-
+    
     exit(context) {
         this.destroyAllWarnings();
         
         // Asegurarse de que las garras se destruyan
-        this.boss.destroyClaws();
+        if (this.boss && this.boss.destroyClaws) {
+            this.boss.destroyClaws();
+        }
     }
 }
