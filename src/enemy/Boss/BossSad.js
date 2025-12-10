@@ -271,6 +271,7 @@ export default class BossSad extends BaseBoss {
         console.log('BossSad eliminado del registro');
     }
 
+
     getDoors(iceDoors, iceFloors) {
         this.Bossdoors = iceDoors;
         this.floors = iceFloors;
