@@ -1,4 +1,4 @@
-import StateMachine from '../../stateMachine/StateMachine.js';
+import StateMachine from '../../../stateMachine/StateMachine.js';
 
 export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame, player, config) {

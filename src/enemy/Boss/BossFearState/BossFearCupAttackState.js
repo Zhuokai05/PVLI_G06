@@ -1,4 +1,4 @@
-import BaseBossAttackState from '../BaseBossAttackState.js';
+import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
 export default class BossFearCupAttackState extends BaseBossAttackState {
     constructor(texture = 'vaso') {

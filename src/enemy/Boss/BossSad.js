@@ -1,4 +1,4 @@
-import BaseBoss from './BaseBoss.js';
+import BaseBoss from './BaseBoss/BaseBoss.js';
 import BossSadIcicleState from './BossSadState/BossSadIcicleState.js';
 import BossSadRadialState from './BossSadState/BossSadRadialState.js';
 import BossSadWaterBallState from './BossSadState/BossSadWaterBallState.js';

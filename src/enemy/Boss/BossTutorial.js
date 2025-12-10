@@ -1,4 +1,4 @@
-import BaseBoss from './BaseBoss.js';
+import BaseBoss from './BaseBoss/BaseBoss.js';
 import BossTutorialSideAttackState from './BossTutorialState/BossTutorialSideAttackState.js';
 import BossTutorialJumpAttackState from './BossTutorialState/BossTutorialJumpAttackState.js';
 import BossTutorialCooldownState from './BossTutorialState/BossTutorialCooldownState.js';

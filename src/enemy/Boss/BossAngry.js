@@ -1,4 +1,4 @@
-import BaseBoss from './BaseBoss.js';
+import BaseBoss from './BaseBoss/BaseBoss.js';
 import BossAngryFireBallState from './BossAngryState/BossAngryFireBallState.js';
 import BossAngryPunchState from './BossAngryState/BossAngryPunchState.js';
 import BossAngryPunchPlatformState from './BossAngryState/BossAngryPunchPlatformState.js';

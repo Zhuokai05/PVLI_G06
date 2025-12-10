@@ -1,4 +1,4 @@
-import BaseState from '../../stateMachine/BaseState.js';
+import BaseState from '../../../stateMachine/BaseState.js';
 
 export default class BaseCooldownState extends BaseState {
     constructor(config = {}) {

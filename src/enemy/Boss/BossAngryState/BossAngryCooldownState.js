@@ -1,4 +1,4 @@
-import BaseCooldownState from '../BaseCooldownState.js';
+import BaseCooldownState from '../BaseBoss/BaseCooldownState.js';
 
 export default class BossAngryCooldownState extends BaseCooldownState {
     constructor() {
