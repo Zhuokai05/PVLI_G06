@@ -11,7 +11,7 @@
   Plataform                           PC - Window 10 o mayor
   -----------------------------------------------------------------------
 
-![](images/tit.png)
+![](gdd_images/MainMenu.png)
 
 # **Índice**
 
@@ -129,16 +129,16 @@ combinando con el negro.
 
 Ejemplo de arte de la zona boss ira:
 
-![](images/1.png)
+![](gdd_images/1.png)
 
 
 ## **Mundo**
 El juego se desarolla en el inframundo, que esta dividido en 4 zonas, zona inicial (izquierda arriba), zona ira(roja), zona tristeza(azul), zona boss final(amarilla), en el que hay una sala boss por zona y una sala boss extra (boss miedo) que esta en zona tristeza.
 
-![](images/map.png)
+![](gdd_images/map.png)
 
 
--------------------------------------------(Mapa principal)--------------------------------------------------------------------------------------------------------(Sala bosses y zona final)--------
+-------------------------------------------(Mapa principal)-------------------------------------------------------------(Sala bosses y zona final)--------
 
 # **Mecánicas del juego**
 
@@ -160,7 +160,7 @@ El ciclo de juego consiste en:
 
 5.  Derrotar al jefe final.
 
-![](images/loop.png)
+![](gdd_images/loop.png)
 
 Al principio el jugador aparecerá en el centro del mapa, lugar donde
 será el inicio y el fin del juego, ya que aquí es el lugar donde se
@@ -188,7 +188,7 @@ no, habrá un último jefe final.
 
 Los controles será solo con teclado.
 
-![](images/controles.png)
+![](gdd_images/controles.png)
 
 Los controles son muy parecidos a Hollow Knight, es decir no habrá ratón
 para apuntar, es totalmente controlado con el teclado.
@@ -264,7 +264,7 @@ dejar de estar en contacto con una plataforma.
 Si el jugador pulsa el boton de salto mientras ha dañado a un enemigo
 atacando hacia abajo (con down-arrow), puede hacer un pogo Jump, que
 
-![](images/bocetoMover.png)
+![](gdd_images/bocetoMover.png)
 
 ***Parámetros:***
 
@@ -293,7 +293,7 @@ atacando hacia abajo (con down-arrow), puede hacer un pogo Jump, que
 -   Tiempo del ápex (retención en el aire): Segundos (s) que el jugador
      se mantiene en la altura máxima del salto.
 
-![](images/bocetoSaltar.png)
+![](gdd_images/bocetoSaltar.png)
 
 **Dash**: Permite al jugador trasladarse rápidamente horizontalmente en
 la dirección en la que mire el personaje. Este se recargará con un
@@ -339,7 +339,7 @@ básico será rápida.
 -   Radio de ataque: Distancia (u) del radio de la circunferencia que
      representa el impacto del arma.
 
-![](images/bocetoAtacar.png)
+![](gdd_images/bocetoAtacar.png)
 
 **Ataque a distancia (ataque con pluma)**: El jugador lanza un ataque a
 distancia hacia la dirección horizontal que mira el jugador. solo se
@@ -364,7 +364,7 @@ al superar una distancia o si se choca con un enemigo o plataforma.
 -   Distancia de ataque: Distancia (u) que recorre el ataque lanzado
      hasta autodestruirse.
 
-![](images/bocetoEnemigoD.png)
+![](gdd_images/bocetoEnemigoD.png)
 
 **Escudo de hielo:** El jugador consiste en un escudo de hielo que le
 bloquea el siguiente ataque enemigo, ósea reduce el siguiente daño
@@ -374,7 +374,7 @@ si se recibe daño, y al destruirse se regenera en un cierto tiempo.
 ***Parámetros*** Tiempo de regeneración: Tiempo (s) que tarda en
 reaparecer el escudo al ser destruido.
 
-![](images/bocetoEscudo.png)
+![](gdd_images/bocetoEscudo.png)
 
 ### **Sistema de habilidades**
 
@@ -392,7 +392,7 @@ habilidad del nuevo orbe activado.
 El jugador solo puede cambiar los orbes equipados cuando se encuentra en
 un checkpoint.
 
-![](images/bocetoOrbe.png)
+![](gdd_images/bocetoOrbe.png)
 
 **Orbe de daño:** El jugador hará mas daño a los enemigos con sus
 ataques básicos.
@@ -450,8 +450,8 @@ checkpoint, lo activa. A la hora de morir (ver detalle en [[sistema de
 vida]](#sistema-de-vida)), reaparece en el último checkpoint
 que ha activado.
 
-![](images/Checkpoint1.png)
-![](images/Checkpoint2.png)
+![](gdd_images/Checkpoint1.png)
+![](gdd_images/Checkpoint2.png)
 
 
 **Puerta con Botones**
@@ -527,7 +527,7 @@ del mapa):
 Ejemplo de bocetos de la zona de miedo (una zona, para mostrar el diseño
 del mapa):
 
-![](images/bocetoTrampas.png) 
+![](gdd_images/bocetoTrampas.png) 
 ##  
 
 ## **Enemigos principales**
@@ -557,8 +557,8 @@ Y,
 
 -   Distancia de detección del jugador: Radio (u) de la circunferencia que representa el área de detección del jugador.
 
-![](images/fire.png)
-![](images/water.png)
+![](gdd_images/fire.png)
+![](gdd_images/water.png)
 
 **Enemigo a distancia:** Enemigo que pueden atacar disparando
 proyectiles.
@@ -588,7 +588,7 @@ enemigos sin causarles daño ni destruirse.
 -   Velocidad de proyectil: la velocidad en la que avanza su ataque
      lanzado.
 
-![](images/enemigoD.png)
+![](gdd_images/enemigoD.png)
 
 **Enemigo a distancia voladores:** Enemigos a distancia que vuelan, 
 
@@ -632,7 +632,7 @@ jugador a reaccionar.
 -   Daño recibido: vida que se baja al colisionar con un obstáculo que
      no sea el jugador.
 
-![](images/bossTutorial.png)
+![](gdd_images/bossTutorial.png)
 
 **Boss 1: Ira:** es un enemigo inmóvil que flota en el aire, tiene dos
 fases.
@@ -690,7 +690,7 @@ jugador a reaccionar.
 -   Radio de proyectil: unidad que mide el radio del proyectil que lanza
      hacia el suelo.
 
-![](images/ira.png)
+![](gdd_images/ira.png)
 
 **Boss 2: Tristeza:** es un enemigo inmóvil que se sitúa a la derecha, tiene dos fases.
 
@@ -739,7 +739,7 @@ jugador a reaccionar.
 -   Radio de proyectil: unidad que mide el radio del proyectil que lanza
      hacia el suelo.
 
-![](images/tristeza.png)
+![](gdd_images/tristeza.png)
 
 **Boss 3 (oculto): Miedo:** es un enemigo oculto que flota en el aire, no tiene cuerpo, su cuerpo puede ser cualquier cosa, según nosotros en este mundo vemos un corazón. Tiene dos fases.
 
@@ -784,7 +784,7 @@ jugador a reaccionar.
 -   Radio de proyectil: unidad que mide el radio del proyectil que lanza
      hacia el suelo.
 
-![](images/Mascara.png)  ![](images/Corazon.png)
+![](gdd_images/Mascara.png)  ![](gdd_images/Corazon.png)
 
 **Boss final:** es un boss final que sabe todos los tipos de ataque de los otros bosses. Tiene dos fases.
 
@@ -798,7 +798,7 @@ Antes de empezar el ataque, se avisa al jugador de este ataque enseñando
 su rango con cierto tiempo de antelación para que le de tiempo al
 jugador a reaccionar. 
 
-![](images/final.png)
+![](gdd_images/final.png)
 
 ##  
 
@@ -816,14 +816,14 @@ Estilo musica rock, con sfx estilo 8 bits
 -  Menú Pausa
      El jugador puedo volver al menu principal o continuar el juego
 
-![](images/bocetoPausa.png)
+![](gdd_images/bocetoPausa.png)
 
 -   En juego 
      Donde el jugador controla al personaje y disfruta del juego 
      (Se ha cambiado que el ui de orbes actuales se encuentra ahora debajo de la barra de vida)
      CD representa la UI con los bosses matados actualmente, cuando se complete, el jugador podra acceder a la sala boss final
 
-![](images/bocetoHUD.png)
+![](gdd_images/bocetoHUD.png)
 
 ## **HUD**
 Algunos ejemplos de arte UI
@@ -831,12 +831,12 @@ Algunos ejemplos de arte UI
 
 -   Algunos orbe de emociones: ira, tristeza
 
-![](images/OrbeHielo.png) 
-![](images/OrbeFuego.png)
+![](gdd_images/OrbeHielo.png) 
+![](gdd_images/OrbeFuego.png)
 
 -   Corazones de vida: marca la vida total y vida restante del personaje.
 
-![](images/vida.png)
+![](gdd_images/vida.png)
 
 ##  
 
@@ -870,17 +870,17 @@ mapa.
 
 -   El ambiente está inspirado en Hades, temática inframundo.
 
-![](images/hades.png)
+![](gdd_images/hades.png)
 
 -   Los movimientos del personaje como la cámara, está inspirado en
      Hollow Knight.
 
-![](images/Hollow.png)
+![](gdd_images/Hollow.png)
 
 -   La mecánica en general está inspirada en Cup Head.
 
-![](images/Cuphead.png)
+![](gdd_images/Cuphead.png)
 
 -   El diseño de las plataformas está inspirado sobre todo en Mario.
 
-![](images/mario.png)
+![](gdd_images/mario.png)

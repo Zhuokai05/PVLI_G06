@@ -46,3 +46,7 @@ El juego combina combates ágiles, secciones de plataformas precisas y un ambien
 | Interactuar | **E** |
 | Menu pausa | **ESC** |
 
+## Capturas del juego
+
+![](gdd_images/Captura1.png)
+![](gdd_images/Captura2.png)
