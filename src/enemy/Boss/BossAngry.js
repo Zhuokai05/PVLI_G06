@@ -54,6 +54,8 @@ export default class BossAngry extends BaseBoss {
 
         // Iniciar animación
         this.play('bossira_idle');
+
+
     }
 
     /**
@@ -65,8 +67,7 @@ export default class BossAngry extends BaseBoss {
             // Animación IDLE
             this.scene.anims.create({
                 key: 'bossira_idle',
-                // Usamos la key que cargaste en el preload ('IraSheet')
-                frames: this.scene.anims.generateFrameNumbers('IraSheet', { start: 0, end: 5 }),
+                frames: this.scene.anims.generateFrameNumbers('IraSheet', { start: 0, end: 6 }),
                 frameRate: 8,
                 repeat: -1
             });
@@ -76,7 +77,7 @@ export default class BossAngry extends BaseBoss {
             // Animación ATAQUE (Ejemplo con frames específicos salteados)
             this.scene.anims.create({
                 key: 'bossira_attack',
-                frames: this.scene.anims.generateFrameNumbers('IraSheet', { frames: [3, 4, 5, 0] }),
+                frames: this.scene.anims.generateFrameNumbers('IraSheet', { start: 7, end: 14 }),
                 frameRate: 12,
                 repeat: 0
             });
@@ -84,12 +85,31 @@ export default class BossAngry extends BaseBoss {
         if (!this.scene.anims.exists('fireball_move')) {
             this.scene.anims.create({
                 key: 'fireball_move',
-                // Asegúrate que 'fireball_sheet' es el nombre que usaste en el PRELOAD
                 frames: this.scene.anims.generateFrameNumbers('fireballsheet', { start: 0, end: 31 }),
                 frameRate: 20,
                 repeat: -1
             });
         }
+    }
+
+    playIntro() {
+        this.setVisible(true);
+        this.setActive(true);
+
+        // Animacion empiece pelea
+        this.play({ key: 'bossira_idle', repeat: 3 });
+        this.once('animationcomplete', () => {
+            this.scene.cameras.main.shake(3000, 0.05);
+            this.play({ key: 'bossira_attack', repeat: 3 });
+
+            // Activamos boss
+            this.once('animationcomplete', () => {
+                this.setLife(); // Activa la vida, hitbox y máquina de estados
+
+                // Avisamos a la escena para que devuelva el control al jugador
+                this.scene.events.emit('bossIntroFinished');
+            });
+        });
     }
 
     /**
@@ -171,7 +191,6 @@ export default class BossAngry extends BaseBoss {
      */
     nextPhase() {
         if (this.phase === 1) {
-            console.log('Boss entra en FASE 2');
 
             // Limpiar antes de la transición
             this.cleanupAllWarnings();
@@ -183,7 +202,7 @@ export default class BossAngry extends BaseBoss {
             }
 
             this.phase = 2;
-            this.health = this.maxHealth + 3;
+            this.health = this.maxHealth * 1.5;
 
             // Añadir nuevo estado en fase 2
             this.availableStates.push('punchPlatform');
@@ -197,11 +216,9 @@ export default class BossAngry extends BaseBoss {
 
             // Esperar y revivir
             this.scene.time.delayedCall(2000, () => {
-                this.setActive(true);
                 this.setVisible(true);
-                this.isActivated = true;
+                this.setActive(true);
 
-                // CORRECCIÓN: Restablecer las colisiones con las plataformas
                 this.resetAllCollisions();
 
                 this.scene.tweens.add({
@@ -211,12 +228,17 @@ export default class BossAngry extends BaseBoss {
                     ease: 'Sine.easeInOut'
                 });
 
-                // Reanudar animación
-                this.play('bossira_idle');
-
-                // Iniciar cooldown antes del primer ataque
-                this.generateNewCooldown();
-                this.stateMachine.setState('cooldown');
+                // Animacion 2nda fase pelea
+                this.play({ key: 'bossira_idle', repeat: 3 });
+                this.once('animationcomplete', () => {
+                    this.scene.cameras.main.shake(3000, 0.1);
+                    this.play({ key: 'bossira_attack', repeat: 3 });
+                    this.once('animationcomplete', () => {
+                        this.isActivated = true;
+                        this.generateNewCooldown();
+                        this.stateMachine.setState('cooldown');
+                    });
+                });
             });
         } else {
             this.notdead = false;
@@ -229,7 +251,7 @@ export default class BossAngry extends BaseBoss {
      * Maneja la muerte definitiva del jefe Ira
      */
     die() {
-        console.log('Boss derrotado definitivamente');
+        //console.log('Boss derrotado definitivamente');
 
         // Llama al método die de BaseBoss primero
         super.die();
@@ -285,7 +307,7 @@ export default class BossAngry extends BaseBoss {
     setLife() {
         // Verificar si el boss ya fue derrotado
         if (PlayerDataManager.data.bossStatus.anger) {
-            console.log('Boss Anger ya derrotado, no se activará');
+            //console.log('Boss Anger ya derrotado, no se activará');
             this.setVisible(false);
             this.setActive(false);
             this.isActivated = false;
@@ -311,8 +333,8 @@ export default class BossAngry extends BaseBoss {
         }
 
         // Si no ha sido derrotado, activar normalmente
-        this.setVisible(true);
-        this.setActive(true);
+        //this.setVisible(true);
+        //this.setActive(true);
         this.isActivated = true;
         this.setupCollisions();
 
@@ -347,14 +369,14 @@ export default class BossAngry extends BaseBoss {
 
         // SOLO los puños marcados como platformPunch pueden desactivar plataformas
         if (punch.isPlatformPunch) {
-            console.log("Puño vertical detectado - desactivando plataforma");
+            //console.log("Puño vertical detectado - desactivando plataforma");
             if (platform.deactivateByPunch) {
                 platform.deactivateByPunch();
             }
             punch.destroy();
         } else {
             // Para puños laterales, solo destruir el puño pero NO desactivar la plataforma
-            console.log("Puño lateral detectado - solo destruyendo puño");
+            //console.log("Puño lateral detectado - solo destruyendo puño");
         }
     }
 

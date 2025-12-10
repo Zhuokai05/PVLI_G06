@@ -38,7 +38,6 @@ export default class BossAngryPunchState extends BaseBossAttackState {
      */
     createWarning() {
         const cam = this.scene.cameras.main;
-        
         // Solo ataques laterales
         this.attackDirection = Phaser.Math.Between(0, 1) === 0 ? 'left' : 'right';
         
@@ -199,6 +198,7 @@ export default class BossAngryPunchState extends BaseBossAttackState {
      * Ejecuta el ataque de puño horizontal
      */
     executeAttack() {
+        this.boss.play('bossira_attack');
         this.spawnPunch();
     }
     

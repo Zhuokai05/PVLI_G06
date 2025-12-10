@@ -28,8 +28,10 @@ export default class BossAngryFireBallState extends BaseBossAttackState {
      * @param {Object} context - Contexto del boss
      */
     enter(context) {
+        this.boss = context;
         super.enter(context);
         this.columns = this.generateColumns();
+        this.boss.play({ key: 'bossira_attack', repeat: 5 });
     }
 
     /**

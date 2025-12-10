@@ -448,7 +448,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.finalbossdoor) this.doors.add(this.finalbossdoor);
         if (this.finalbossdoorcontrary) this.doors.add(this.finalbossdoorcontrary);
         if (this.finalbossdoorexit) this.doors.add(this.finalbossdoorexit);
-        if (this.finalbossdoor && this.tristeboss) this.tristeboss.setFinalDoor(this.finalbossdoor); 
+        if (this.finalbossdoor && this.tristeboss) this.tristeboss.setFinalDoor(this.finalbossdoor);
         if (this.finalbossdoor && this.iraboss) this.iraboss.setFinalDoor(this.finalbossdoor);
         //bossdoors y triggers
 
@@ -641,7 +641,7 @@ export default class TestPlayerScene extends Phaser.Scene {
             frames: [
                 { key: 'final' },
                 { key: 'final2' },
-                
+
             ],
             frameRate: 2,
             repeat: -1
@@ -974,5 +974,39 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.cameras.main.centerOn(bossRoom.x, bossRoom.y);
 
+    }
+
+    // Cinematic boss intro sequence
+    startBossSequence(boss) {
+        // Bloquear al jugador y físicas
+        if (this.player) {
+            this.player.canMove = false;
+            this.player.setVelocity(0, 0);
+            this.player.play('Player_idle');
+        }
+
+        // Fade Out
+        this.cameras.main.fadeOut(1000, 0, 0, 0);
+        // Cuando termina el Fade Out
+        this.cameras.main.once('camerafadeoutcomplete', () => {
+
+            // Teletransportar al jugador a la posicion frente al boss
+            this.player.setPosition(boss.x, boss.y + 200);
+
+            boss.setVisible(true);
+
+            // Fade In
+            this.cameras.main.fadeIn(1000, 0, 0, 0);
+
+        });
+
+
+        this.cameras.main.once('camerafadeincomplete', () => {
+
+            boss.playIntro();
+        });
+        this.events.once('bossIntroFinished', () => {
+            if (this.player) this.player.canMove = true;
+        });
     }
 }

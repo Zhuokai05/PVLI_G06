@@ -43,6 +43,7 @@ export default class BossAngryPunchPlatformState extends BaseBossAttackState {
      * Ejecuta el ataque de puño vertical
      */
     executeAttack() {
+        this.boss.play('bossira_attack');
         this.spawnPunch();
     }
     

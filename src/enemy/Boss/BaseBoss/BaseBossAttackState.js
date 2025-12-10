@@ -39,9 +39,9 @@ export default class BaseBossAttackState extends BaseState {
         this.stateTime = 0;
         this.currentPhase = this.config.phases[0];
         
-        if (this.config.logOnEnter) {
+        /*if (this.config.logOnEnter) {
             console.log(`${this.boss.constructor.name}: ${this.config.attackName}`);
-        }
+        }*/
         
         // Iniciar fase según configuración
         if (this.currentPhase === 'warning') {
@@ -98,6 +98,7 @@ export default class BaseBossAttackState extends BaseState {
     startAttackPhase() {
         this.currentPhase = 'attack';
         this.stateTime = 0;
+        
         
         // Limpiar advertencias
         this.destroyAllWarnings();

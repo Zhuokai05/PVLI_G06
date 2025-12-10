@@ -1,4 +1,4 @@
-import TestPlayerScene from './scenes/TestPlayerScene.js';
+import TestPlayerScene from './scenes/testPlayerScene.js';
 import { PreloadScene } from './scenes/PreloadScene.js';
 import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
@@ -29,9 +29,9 @@ const config = {
         default: 'arcade',
         arcade: {
         gravity: { y: 600 },
-        debug: false,
-        debugShowBody: false,
-        debugShowVelocity: false,
+        debug: true,
+        debugShowBody: true,
+        debugShowVelocity: true,
     },
     
     },
