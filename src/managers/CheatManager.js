@@ -9,6 +9,7 @@ export default class CheatManager {
         // Definir las ubicaciones de teletransporte
         this.locations = [
             { name: "Spawn Inicial", x: 950, y: 900 },
+            { name: "Boss tutorial", x: 3700, y: 1554 },
             { name: "Boss Ira", x: 6000, y: 4500 },
             { name: "Boss Tristeza", x: 16800, y: 3750 },
             { name: "Floor is lava", x: 18111, y: 11876 },
