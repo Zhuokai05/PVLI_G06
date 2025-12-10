@@ -29,15 +29,15 @@ export default class BossSad extends BaseBoss {
     }
 
     playIntro() {
-        this.setVisible(true).setActive(true);
-        this.scene.cameras.main.shake(3000, 0.05);
-        
-        this.scene.time.delayedCall(1500, () => {
-            this.setLife();
-            this.scene.events.emit('bossIntroFinished');
-        });
+        this.setVisible(true);
+        this.setActive(true);
+        this.setLife();
+        this.scene.events.emit('bossIntroFinished');
     }
 
+    /**
+     * Configura los estados específicos del jefe Tristeza
+     */
     setupStates() {
         this.addState('icicle', new BossSadIcicleState());
         this.addState('radial', new BossSadRadialState());

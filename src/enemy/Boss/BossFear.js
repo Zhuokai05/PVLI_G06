@@ -24,6 +24,7 @@ export default class BossFear extends BaseBoss {
             .setScale(4.3).setDepth(6).setVisible(false);
         
         this.setupStates();
+
     }
 
     setupStates() {

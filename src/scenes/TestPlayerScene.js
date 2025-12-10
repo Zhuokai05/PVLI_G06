@@ -47,6 +47,7 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         this.inputManager = new InputManager(this);
         this.physics.world.setBounds(-200, 0, 140000, 100000);
+        this.PlayerDataManager = PlayerDataManager;
 
         const map = this.make.tilemap({ key: 'mappy' });
         const tileset = map.addTilesetImage('Ira', 'tiles');

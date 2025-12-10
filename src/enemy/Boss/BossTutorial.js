@@ -27,6 +27,16 @@ export default class BossTutorial extends BaseBoss {
         this.body.setOffset(this.displayWidth * offsetX, this.displayHeight * offsetY);
     }
 
+    playIntro() {
+        this.setVisible(true);
+        this.setActive(true);
+        this.setLife();
+        this.scene.events.emit('bossIntroFinished');
+    }
+
+    /**
+     * Configura los estados específicos del jefe Tutorial
+     */
     setupStates() {
         this.addState('sideAttack', new BossTutorialSideAttackState());
         this.addState('jumpAttack', new BossTutorialJumpAttackState());

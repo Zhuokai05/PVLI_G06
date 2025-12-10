@@ -15,14 +15,14 @@ export default class BossAngryPunchState extends BaseBossAttackState {
             attackDuration: 500,
             cooldownDuration: 500
         });
-        
+
         this.fixedSpawnY = 0;
         this.attackDirection = '';
         this.spawnY = 0;
         this.spawnX = 0;
         this.arrows = [];
     }
-    
+
     /**
      * Entra al estado de puño horizontal
      * @param {Object} context - Contexto del boss
@@ -32,7 +32,7 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         this.fixedSpawnY = context.y + context.distanceToFloor;
         super.enter(context);
     }
-    
+
     /**
      * Crea las advertencias visuales para el puño horizontal
      */
@@ -40,14 +40,14 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         const cam = this.scene.cameras.main;
         // Solo ataques laterales
         this.attackDirection = Phaser.Math.Between(0, 1) === 0 ? 'left' : 'right';
-        
+
         // Rectangulo horizontal de advertencia
         const warningHeight = 120;
         this.spawnY = this.fixedSpawnY;
-        this.spawnX = this.attackDirection === 'left' ? 
-            this.boss.x - cam.width / 2 : 
+        this.spawnX = this.attackDirection === 'left' ?
+            this.boss.x - cam.width / 2 :
             this.boss.x + cam.width / 2;
-        
+
         // Crear elementos de advertencia usando métodos de utilidad
         const warningRect = this.createWarningRectangle(
             this.boss.x,
@@ -57,7 +57,7 @@ export default class BossAngryPunchState extends BaseBossAttackState {
             0xff0000,
             0.3
         );
-        
+
         const warningBorder = this.createWarningBorder(
             this.boss.x,
             this.spawnY,
@@ -65,13 +65,13 @@ export default class BossAngryPunchState extends BaseBossAttackState {
             warningHeight,
             { width: 4, color: 0xff4444, alpha: 0.8 }
         );
-        
+
         // Crear flechas direccionales
         this.createDirectionArrows();
-        
+
         // Efecto de pulso
         this.createPulseEffect([warningRect, warningBorder], 300, 0.5, 0.8);
-        
+
         // Texto de advertencia
         const warningText = this.createFloatingText(
             this.boss.x,
@@ -79,11 +79,11 @@ export default class BossAngryPunchState extends BaseBossAttackState {
             '¡PUÑO INMINENTE!',
             { fill: '#ff4444' }
         );
-        
+
         // Efecto de texto parpadeante
         this.createPulseEffect(warningText, 200, 0.3, 1);
     }
-    
+
     /**
      * Crea flechas direccionales para indicar la dirección del ataque
      */
@@ -93,12 +93,12 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         const arrowSize = 40;
         const arrowSpacing = 80;
         const numArrows = 5;
-        
+
         this.arrows = [];
-        
+
         for (let i = 0; i < numArrows; i++) {
             let arrowX, arrowY;
-            
+
             if (this.attackDirection === 'left') {
                 // Flechas apuntando a la derecha (←)
                 arrowX = this.boss.x + (cam.width / 2) - (i * arrowSpacing) - 100;
@@ -108,15 +108,15 @@ export default class BossAngryPunchState extends BaseBossAttackState {
                 arrowX = this.boss.x - (cam.width / 2) + (i * arrowSpacing) + 100;
                 arrowY = this.spawnY;
             }
-            
+
             // Crear flecha como polígono
             const arrow = this.scene.add.graphics();
             arrow.fillStyle(0xff4444, 0.8);
-            
+
             // Dibujar triángulo (flecha)
             arrow.beginPath();
             arrow.moveTo(arrowX, arrowY);
-            
+
             if (this.attackDirection === 'left') {
                 arrow.lineTo(arrowX - arrowSize, arrowY - arrowSize / 2);
                 arrow.lineTo(arrowX - arrowSize, arrowY + arrowSize / 2);
@@ -124,10 +124,10 @@ export default class BossAngryPunchState extends BaseBossAttackState {
                 arrow.lineTo(arrowX + arrowSize, arrowY - arrowSize / 2);
                 arrow.lineTo(arrowX + arrowSize, arrowY + arrowSize / 2);
             }
-            
+
             arrow.closePath();
             arrow.fillPath();
-            
+
             // Efecto de movimiento en las flechas
             this.scene.tweens.add({
                 targets: arrow,
@@ -137,18 +137,18 @@ export default class BossAngryPunchState extends BaseBossAttackState {
                 repeat: -1,
                 delay: i * 50
             });
-            
+
             this.arrows.push(arrow);
         }
-        
+
         // Flecha grande central
         const bigArrow = this.createBigDirectionArrow();
         this.arrows.push(bigArrow);
-        
+
         // Registrar flechas para limpieza
         this.warningElements.arrows = this.arrows;
     }
-    
+
     /**
      * Crea una flecha grande central para destacar la dirección
      * @returns {Phaser.GameObjects.Graphics} - Flecha grande creada
@@ -156,19 +156,19 @@ export default class BossAngryPunchState extends BaseBossAttackState {
     createBigDirectionArrow() {
         const cam = this.scene.cameras.main;
         const bigArrowSize = 60;
-        
+
         const bigArrowX = this.attackDirection === 'left' ?
             this.boss.x + (cam.width / 2) - 50 :
             this.boss.x - (cam.width / 2) + 50;
         const bigArrowY = this.spawnY;
-        
+
         const bigArrow = this.scene.add.graphics();
         bigArrow.fillStyle(0xff0000, 0.9);
         bigArrow.lineStyle(3, 0xffffff, 1);
-        
+
         bigArrow.beginPath();
         bigArrow.moveTo(bigArrowX, bigArrowY);
-        
+
         if (this.attackDirection === 'left') {
             bigArrow.lineTo(bigArrowX - bigArrowSize, bigArrowY - bigArrowSize / 1.5);
             bigArrow.lineTo(bigArrowX - bigArrowSize, bigArrowY + bigArrowSize / 1.5);
@@ -176,11 +176,11 @@ export default class BossAngryPunchState extends BaseBossAttackState {
             bigArrow.lineTo(bigArrowX + bigArrowSize, bigArrowY - bigArrowSize / 1.5);
             bigArrow.lineTo(bigArrowX + bigArrowSize, bigArrowY + bigArrowSize / 1.5);
         }
-        
+
         bigArrow.closePath();
         bigArrow.fillPath();
         bigArrow.strokePath();
-        
+
         // Efecto de escala en flecha grande
         this.scene.tweens.add({
             targets: bigArrow,
@@ -190,10 +190,10 @@ export default class BossAngryPunchState extends BaseBossAttackState {
             yoyo: true,
             repeat: -1
         });
-        
+
         return bigArrow;
     }
-    
+
     /**
      * Ejecuta el ataque de puño horizontal
      */
@@ -201,7 +201,7 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         this.boss.play('bossira_attack');
         this.spawnPunch();
     }
-    
+
     /**
      * Genera un puño horizontal
      */
@@ -225,7 +225,7 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         punch.setScale(2.5);
         punch.body.allowGravity = false;
         punch.isPlatformPunch = false; // Puños laterales NO son platformPunch
-        
+
         // Efecto de aparición
         punch.setAlpha(0);
         this.scene.tweens.add({
@@ -235,11 +235,11 @@ export default class BossAngryPunchState extends BaseBossAttackState {
             duration: 100,
             ease: 'Power2'
         });
-        
+
         // Auto-destrucción
         this.cleanupPunch(punch);
     }
-    
+
     /**
      * Configura la auto-destrucción del puño
      * @param {Phaser.GameObjects.Sprite} punch - Puño a limpiar
@@ -256,13 +256,13 @@ export default class BossAngryPunchState extends BaseBossAttackState {
             }
         });
     }
-    
+
     /**
      * Destruye todas las advertencias visuales
      */
     destroyAllWarnings() {
         super.destroyAllWarnings();
-        
+
         // Limpiar flechas específicas
         if (this.arrows) {
             this.arrows.forEach(arrow => {
