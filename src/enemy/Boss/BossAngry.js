@@ -235,9 +235,6 @@ export default class BossAngry extends BaseBoss {
             }
         });
 
-        if (this.finaldoor) {
-            this.finaldoor.activarIra();
-        }
         super.die();
 
         PlayerDataManager.killBoss('anger');

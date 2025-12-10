@@ -254,10 +254,6 @@ export default class BossSad extends BaseBoss {
             });
         }
 
-        if (this.finaldoor) {
-            this.finaldoor.activarTriste();
-        }
-
         PlayerDataManager.killBoss('sadness');
         this.scene.events.emit('bossDefeated');
 
