@@ -10,7 +10,7 @@ import MeleeEnemyAttackState from './enemyAttack/MeleeEnemyAttackState.js';
 export default class MeleeEnemy extends BaseEnemy {
 
   constructor(scene, x, y, texture='basicEnemyAngry', frame=0, 
-    moveAnimationKey, attackAnimationKey='', deathAnimationKey='')
+    moveAnimationKey, attackAnimationKey, deathAnimationKey)
   {
     // Pasar todos los parámetros al constructor padre
     super(scene, x, y, texture, frame, moveAnimationKey, attackAnimationKey, deathAnimationKey);
@@ -18,12 +18,13 @@ export default class MeleeEnemy extends BaseEnemy {
     // stats
     this.speed = 70;                                    // velocidad
     this.attackRange = 80;                              // rango ataque
+    this.attackDuration = 1000;                           
     this.meleeAttackWidge = 60;                         // ancho hitbox
     this.meleeAttackHeight = 60;                        // alto hitbox
     this.meleeAttackDist = 40;                          // distancia ataque
 
-    // Guardar la clave de animación de ataque específica
-    this.meleeAttackAnimationKey = this.getMeleeAttackKey();
+    this.detectPlayerRangeX = 500;                    // rango x de deteccion
+    this.detectPlayerRangeY = 50;                     // rango y de deteccion
 
     // estados
     this.stateMachine
@@ -33,15 +34,10 @@ export default class MeleeEnemy extends BaseEnemy {
   }
 
   /**
-   * Obtiene la clave de animación de ataque según el tipo de enemigo
-   * @returns {string} - Clave de la animación de ataque
+   * Metodo vacio ta que su animacion de ataque es un sprite aparte
    */
-  getMeleeAttackKey() {
-    if (this.texture.key === 'basicEnemyAngry') {
-      return 'basicEnemyAngry_melee_anim';
-    } else if (this.texture.key === 'basicEnemySad') {
-      return 'basicEnemySad_melee_anim';
-    }
-    return 'basicEnemyAngry_melee_anim'; // default
+  playAttackAnimation() {
+    
   }
+
 }

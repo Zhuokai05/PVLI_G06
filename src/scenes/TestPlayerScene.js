@@ -130,10 +130,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                 //Enemigos
 
                 case "ira":
-                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move', 'basicEnemyAngry_melee_anim'));
+                    //this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move', 'basicEnemyAngry_melee_anim'));
                     break;
                 case "tristeza":
-                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad', 0, 'Tristeza_BasicEnemy_Move', 'basicEnemySad_melee_anim'));
+                    //this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad', 0, 'Tristeza_BasicEnemy_Move', 'basicEnemySad_melee_anim'));
                     break;
 
                 case "alegria":
@@ -148,7 +148,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                     this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Ira_RangedEnemy', 0, 'Ira_RangedEnemy_Move', 'Ira_RangedEnemy_Attack', 'Ira_RangedEnemy_Death', 'Ira_FlyingEnemy', 83));
                     break;
                 case "tristeranged":
-                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Tristeza_RangedEnemy', 0, 'Tristeza_RangedEnemy_Move', 'Tristeza_RangedEnemy_Attack', 'Tristeza_RangedEnemy_Death', 'Tristeza_RangedEnemy', 83));
+                    this.enemies.add(new RangedEnemy(this, objeto.x, objeto.y, 'Tristeza_RangedEnemy', 0, 'Tristeza_RangedEnemy_Move', 'Tristeza_RangedEnemy_Attack', 'Tristeza_RangedEnemy_Death', 'Tristeza_FlyingEnemy', 83));
                     break;
 
                 case "iraflying":
@@ -383,6 +383,9 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
             }
         })
+
+        this.enemies.add(new BasicMeleeEnemy(this, 1450, 1550, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move', 'basicEnemyAngry_melee_anim'));
+
         this.cheatManager = new CheatManager(this, this.player);
 
         //puertas conectadas
