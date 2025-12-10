@@ -83,6 +83,13 @@ export default class FinalBoss extends BaseBoss {
         this.body.setOffset(spriteWidth / 6, spriteHeight / 6.5);
         this.body.moves = false;
     }
+
+    playIntro(){
+        this.setVisible(true);
+        this.setActive(true);
+        this.setLife();
+        this.scene.events.emit('bossIntroFinished');
+    }
     
     /**
      * Inicializa todos los grupos de ataque de todos los bosses

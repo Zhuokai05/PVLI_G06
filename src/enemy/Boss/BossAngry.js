@@ -68,7 +68,7 @@ export default class BossAngry extends BaseBoss {
             this.scene.anims.create({
                 key: 'bossira_idle',
                 frames: this.scene.anims.generateFrameNumbers('IraSheet', { start: 0, end: 6 }),
-                frameRate: 8,
+                frameRate: 12,
                 repeat: -1
             });
         }
@@ -99,12 +99,12 @@ export default class BossAngry extends BaseBoss {
         // Animacion empiece pelea
         this.play({ key: 'bossira_idle', repeat: 3 });
         this.once('animationcomplete', () => {
-            this.scene.cameras.main.shake(3000, 0.05);
+            this.scene.cameras.main.shake(2500, 0.05);
             this.play({ key: 'bossira_attack', repeat: 3 });
 
             // Activamos boss
             this.once('animationcomplete', () => {
-                this.setLife(); // Activa la vida, hitbox y máquina de estados
+                super.setLife(); // Activa la vida, hitbox y máquina de estados
 
                 // Avisamos a la escena para que devuelva el control al jugador
                 this.scene.events.emit('bossIntroFinished');
@@ -287,7 +287,7 @@ export default class BossAngry extends BaseBoss {
 
         super.die();
 
-        PlayerDataManager.killBoss('anger');
+        this.scene.PlayerDataManager.killBoss('anger');
         this.scene.events.emit('bossDefeated');
     }
 
@@ -300,48 +300,7 @@ export default class BossAngry extends BaseBoss {
         this.Bossdoors = iraDoors;
         this.floors = iraFloors;
     }
-
-    /**
-     * Activa el jefe Ira y verifica si ya fue derrotado
-     */
-    setLife() {
-        // Verificar si el boss ya fue derrotado
-        if (PlayerDataManager.data.bossStatus.anger) {
-            //console.log('Boss Anger ya derrotado, no se activará');
-            this.setVisible(false);
-            this.setActive(false);
-            this.isActivated = false;
-
-            // Abrir puertas automáticamente si ya fue derrotado
-            if (this.Bossdoors) {
-                this.Bossdoors.getChildren().forEach(door => {
-                    if (door.abrirPuerta) {
-                        door.abrirPuerta();
-                    }
-                });
-            }
-
-            if (this.floors) {
-                this.floors.getChildren().forEach(floor => {
-                    if (floor.abrirPuerta) {
-                        floor.abrirPuerta();
-                    }
-                });
-            }
-
-            return;
-        }
-
-        // Si no ha sido derrotado, activar normalmente
-        //this.setVisible(true);
-        //this.setActive(true);
-        this.isActivated = true;
-        this.setupCollisions();
-
-        // Iniciar cooldown antes del primer ataque
-        this.generateNewCooldown();
-        this.stateMachine.setState('cooldown');
-    }
+    
 
     /**
      * Asigna la puerta final

@@ -54,6 +54,13 @@ export default class BossTutorial extends BaseBoss {
         this.body.moves = false;
     }
 
+    playIntro() {
+        this.setVisible(true);
+        this.setActive(true);
+        this.setLife();
+        this.scene.events.emit('bossIntroFinished');
+    }
+
     /**
      * Configura los estados específicos del jefe Tutorial
      */
@@ -194,7 +201,7 @@ export default class BossTutorial extends BaseBoss {
         super.die();
 
         // Completar acciones específicas de BossTutorial
-        PlayerDataManager.killBoss('tutorial');
+        this.scene.PlayerDataManager.killBoss('tutorial');
         this.scene.events.emit('bossDefeated');
 
         console.log('BossTutorial eliminado del registro');
@@ -266,7 +273,7 @@ export default class BossTutorial extends BaseBoss {
         console.log('Activando BossTutorial');
 
         // Verificar si el boss ya fue derrotado
-        if (PlayerDataManager.data.bossStatus.tutorial) {
+        if (this.scene.PlayerDataManager.data.bossStatus.tutorial) {
             console.log('Boss Tutorial ya derrotado, no se activará');
             this.setVisible(false);
             this.setActive(false);

@@ -47,6 +47,7 @@ export default class BossFear extends BaseBoss {
 
         // Configurar estados específicos
         this.setupStates();
+
     }
 
     /**
@@ -74,6 +75,13 @@ export default class BossFear extends BaseBoss {
         this.bossMask.setScale(4.3);
         this.bossMask.setDepth(6);
         this.bossMask.setVisible(false);
+    }
+
+    playIntro() {
+        this.setVisible(true);
+        this.setActive(true);
+        this.setLife();
+        this.scene.events.emit('bossIntroFinished');
     }
 
     /**
@@ -245,7 +253,9 @@ export default class BossFear extends BaseBoss {
         super.die();
 
         // Completar acciones específicas de BossFear
-        PlayerDataManager.killBoss('fear');
+        if (this.scene.PlayerDataManager) {
+            this.scene.PlayerDataManager.killBoss('fear');
+        }
         this.scene.events.emit('bossDefeated');
     }
 
@@ -364,32 +374,7 @@ export default class BossFear extends BaseBoss {
      */
     setLife() {
         console.log('Activando BossFear');
-
-        // Verificar si el boss ya fue derrotado
-        if (PlayerDataManager.data.bossStatus.fear) {
-            console.log('Boss Fear ya derrotado, no se activará');
-            this.setVisible(false);
-            this.setActive(false);
-            this.isActivated = false;
-
-            // Ocultar máscara también
-            if (this.bossMask) {
-                this.bossMask.setVisible(false);
-                this.bossMask.setActive(false);
-            }
-
-            // Abrir puertas automáticamente si ya fue derrotado
-            if (this.Bossdoors) {
-                this.Bossdoors.getChildren().forEach(door => {
-                    if (door.abrirPuerta) {
-                        door.abrirPuerta();
-                    }
-                });
-            }
-
-            return;
-        }
-
+        
         // Si no ha sido derrotado, activar normalmente
         super.setLife();
 

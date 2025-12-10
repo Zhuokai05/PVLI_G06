@@ -50,6 +50,13 @@ export default class BossSad extends BaseBoss {
         this.setupStates();
     }
 
+    playIntro() {
+        this.setVisible(true);
+        this.setActive(true);
+        this.setLife();
+        this.scene.events.emit('bossIntroFinished');
+    }
+
     /**
      * Configura los estados específicos del jefe Tristeza
      */
@@ -219,7 +226,9 @@ export default class BossSad extends BaseBoss {
         super.die();
 
         // Completar acciones específicas de BossSad
-        PlayerDataManager.killBoss('sadness');
+        if (this.scene.PlayerDataManager) {
+            this.scene.PlayerDataManager.killBoss('sadness');
+        }
         this.scene.events.emit('bossDefeated');
 
         console.log('BossSad eliminado del registro');
@@ -240,7 +249,22 @@ export default class BossSad extends BaseBoss {
      * Activa el jefe Tristeza y verifica si ya fue derrotado
      */
     setLife() {
-        console.log('Activando BossSad');
+        if (this.scene.PlayerDataManager.data.bossStatus && this.scene.PlayerDataManager.data.bossStatus.sadness) {
+            this.setVisible(false);
+            this.setActive(false);
+            this.isActivated = false;
+
+            if (this.Bossdoors) {
+                this.Bossdoors.getChildren().forEach(door => {
+                    if (door.abrirPuerta) {
+                        door.abrirPuerta();
+                    }
+                });
+            }
+
+            return;
+        }
+        console
         this.setVisible(true);
         this.setActive(true);
         this.isActivated = true;

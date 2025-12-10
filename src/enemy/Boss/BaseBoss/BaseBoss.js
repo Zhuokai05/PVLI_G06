@@ -242,7 +242,7 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
      */
     setLife() {
         // Verificar si el boss ya fue derrotado antes de activarlo
-        if (this.bossName && PlayerDataManager.data.bossStatus[this.bossName]) {
+        if (this.bossName && this.scene.PlayerDataManager.data.bossStatus[this.bossName]) {
             console.log(`${this.bossName} ya fue derrotado, no se activará`);
             this.setVisible(false);
             this.setActive(false);

@@ -12,6 +12,7 @@ export default class CheatManager {
             { name: "Boss tutorial", x: 3700, y: 1554 },
             { name: "Boss Ira", x: 6000, y: 4500 },
             { name: "Boss Tristeza", x: 16800, y: 3750 },
+            { name: "Boss Miedo", x: 3454, y: 2235 },
             { name: "Floor is lava", x: 18111, y: 11876 },
             { name: "Boss final", x: 17233, y: 8351 },
             { name: "Ejemplo", x: 950, y: 900 }
