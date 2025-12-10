@@ -35,6 +35,7 @@ export default class InvisibleTrigger extends Phaser.GameObjects.Zone {
             this.doors.getChildren().forEach(door => {
                 door.cerrarPuerta();
             });
+            this.destroy();
         }
     }
 }
