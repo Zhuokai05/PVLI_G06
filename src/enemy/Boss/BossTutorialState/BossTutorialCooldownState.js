@@ -1,24 +1,12 @@
-import BaseState from '../../../stateMachine/BaseState.js';
+import BaseCooldownState from '../BaseCooldownState.js';
 
-export default class BossTutorialCooldownState extends BaseState {
-    enter(context) {
-        this.boss = context;
-        this.elapsed = 0;
-        // asegurar que no se mueva en cooldown
-        if (this.boss.body) {
-            this.boss.body.setVelocity(0,0);
-            this.boss.body.moves = false;
-        }
-    }
-
-    execute(context, time, delta) {
-        this.elapsed += delta;
-        if (this.elapsed >= this.boss.attackCooldown) {
-            this.boss.startRandomState();
-        }
-    }
-
-    exit(context) {
-        this.elapsed = 0;
+export default class BossTutorialCooldownState extends BaseCooldownState {
+    constructor() {
+        super({
+            idleAnimation: null,
+            logPrefix: 'BossTutorial',
+            resetVelocity: true,     // Resetear velocidad a 0
+            disableMovement: false   // NO desactivar movimiento - ¡IMPORTANTE!
+        });
     }
 }
