@@ -31,7 +31,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.dead = false;                                     // estado muerto
 
         // ataque
-        this.damage = 3;                                      // daño melee
+        this.damage = 10;                                      // daño melee
         this.rangeDamage = 1;                                  // daño a distancia
         this.meleeAttackDist = 100;                            // distancia hitbox
         this.meleeAttackWidge = 120;                           // ancho hitbox
