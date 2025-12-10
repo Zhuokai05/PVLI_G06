@@ -28,16 +28,17 @@ export default class InvisibleTrigger extends Phaser.Physics.Arcade.Sprite {
     }
     llamar() {
 
-        if (this.primer) {
+       
             if (this.boss) {
                 console.log("EL BOSS DE LA PUERTA REGISTRADO ES " + this.boss);
                 this.boss.setLife();
-            }
-
-            this.doors.getChildren().forEach(door => {
+                  this.doors.getChildren().forEach(door => {
                 door.cerrarPuerta();
             });
-        }
-        this.primer = false;
+        
+            }
+
+          
+        
     }
 }

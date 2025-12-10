@@ -94,7 +94,9 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('piece_sadness', './assets/sprites/UI/BossTracker/SadnessPiece.png');
     this.load.image('piece_fear', './assets/sprites/UI/BossTracker/FearPiece.png');
 
-    // Boss
+    // Bosses
+    // Ira
+    //----------------------------------------------------------------------------------------
     this.load.spritesheet('IraSheet', 'assets/sprites/Bosses/IraAnimSheet.png', {
       frameWidth: 256,
       frameHeight: 256
@@ -103,9 +105,13 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('ira_flap_2', './assets/sprites/Bosses/ira2.png');
     this.load.image('ira_flap_3', './assets/sprites/Bosses/ira3.png');
     this.load.image('ira_flap_4', './assets/sprites/Bosses/ira4.png');
+    this.load.spritesheet('fireballsheet', 'assets/sprites/Bosses/FireballAnimSheet.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    });
     this.load.image('fire_ball', 'assets/sprites/Bosses/Fire_ball.png');
     this.load.image('punch', 'assets/sprites/Bosses/Angry_punch.png');
-
+//----------------------------------------------------------------------------------------
     this.load.image('tristeza', './assets/sprites/Bosses/tristeza.png');
     this.load.image('icicle', './assets/sprites/Bosses/Sad_ice.png');
     this.load.image('water_ball', './assets/sprites/Bosses/Water_ball.png');

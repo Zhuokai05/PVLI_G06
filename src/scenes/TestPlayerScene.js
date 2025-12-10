@@ -35,6 +35,7 @@ import CheatManager from '../managers/CheatManager.js';
 import TutorialPanel from '../objects/TutorialPanel.js';
 import PlayerProjectilePool from "../objects/PlayerProjectilePool.js";
 import StaticLava from '../objects/StaticLava.js';
+import FinalBossDoor from '../objects/FinalBossDoor.js';
 
 
 export default class TestPlayerScene extends Phaser.Scene {
@@ -225,13 +226,13 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
 
                 case "finalbossdoor":
-                    this.finalbossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertamiedo');
+                    this.finalbossdoor = new FinalBossDoor(this, objeto.x, objeto.y, 'puertamiedo');
                     break;
                 case "finalbossdoorcontrary":
-                    this.finalbossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertamiedo');
+                    this.finalbossdoorcontrary = new FinalBossDoor(this, objeto.x, objeto.y, 'puertamiedo');
                     break;
                 case "finalbossdoorexit":
-                    this.finalbossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertamiedo');
+                    this.finalbossdoorexit = new FinalBossDoor(this, objeto.x, objeto.y, 'puertamiedo');
                     break;
 
                 //buttons
@@ -447,7 +448,8 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.finalbossdoor) this.doors.add(this.finalbossdoor);
         if (this.finalbossdoorcontrary) this.doors.add(this.finalbossdoorcontrary);
         if (this.finalbossdoorexit) this.doors.add(this.finalbossdoorexit);
-
+        if (this.finalbossdoor && this.tristeboss) this.tristeboss.setFinalDoor(this.finalbossdoor); 
+        if (this.finalbossdoor && this.iraboss) this.iraboss.setFinalDoor(this.finalbossdoor);
         //bossdoors y triggers
 
         this.irafloordoors.getChildren().forEach(door => {
