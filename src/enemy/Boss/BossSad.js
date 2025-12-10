@@ -5,6 +5,11 @@ import BossSadWaterBallState from './BossSadState/BossSadWaterBallState.js';
 import BossSadCooldownState from './BossSadState/BossSadCooldownState.js';
 import PlayerDataManager from '../../managers/PlayerDataManager.js';
 
+/**
+ * Jefe de la emoción Tristeza
+ * @class BossSad
+ * @extends BaseBoss
+ */
 export default class BossSad extends BaseBoss {
     constructor(scene, x, y, player) {
         const config = {
@@ -45,6 +50,9 @@ export default class BossSad extends BaseBoss {
         this.setupStates();
     }
 
+    /**
+     * Configura los estados específicos del jefe Tristeza
+     */
     setupStates() {
         // Registrar estados específicos
         this.addState('icicle', new BossSadIcicleState());
@@ -53,6 +61,9 @@ export default class BossSad extends BaseBoss {
         this.addState('cooldown', new BossSadCooldownState());
     }
 
+    /**
+     * Configura las colisiones específicas del jefe Tristeza
+     */
     setupCollisions() {
         // Configurar overlaps solo si no existen ya
         if (!this.colliders.icicleOverlap) {
@@ -89,6 +100,11 @@ export default class BossSad extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la colisión de icicle con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} icicle - Icicle
+     */
     icicleCollisionWithPlayer(player, icicle) {
         if (!icicle.active || !player.active) return;
         const dir = player.x < icicle.x ? -1 : 1;
@@ -96,6 +112,11 @@ export default class BossSad extends BaseBoss {
         icicle.destroy();
     }
 
+    /**
+     * Maneja la colisión de water ball con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} waterBall - Water ball
+     */
     waterBallCollisionWithPlayer(player, waterBall) {
         if (!waterBall.active || !player.active) return;
         const dir = player.x < waterBall.x ? -1 : 1;
@@ -103,6 +124,11 @@ export default class BossSad extends BaseBoss {
         waterBall.destroy();
     }
 
+    /**
+     * Maneja la colisión de icicle radial con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} icicle - Icicle radial
+     */
     radialIcicleCollisionWithPlayer(player, icicle) {
         if (!icicle.active || !player.active) return;
         const dir = player.x < icicle.x ? -1 : 1;
@@ -110,10 +136,17 @@ export default class BossSad extends BaseBoss {
         icicle.destroy();
     }
 
+    /**
+     * Obtiene el color del tint para el daño de Tristeza
+     * @returns {number} - Color azul
+     */
     getDamageTintColor() {
         return 0x0000ff; // Azul para Tristeza
     }
 
+    /**
+     * Avanza a la siguiente fase del jefe Tristeza
+     */
     nextPhase() {
         console.log(`BossSad fase actual: ${this.phase}, salud: ${this.health}`);
 
@@ -176,6 +209,9 @@ export default class BossSad extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la muerte definitiva del jefe Tristeza
+     */
     die() {
         console.log('BossSad muere');
 
@@ -189,91 +225,20 @@ export default class BossSad extends BaseBoss {
         console.log('BossSad eliminado del registro');
     }
 
-    // Métodos específicos para limpieza de advertencias de BossSad
-    cleanupAllWarnings() {
-        // Primero llama al método base
-        super.cleanupAllWarnings();
-
-        // Luego añade limpieza específica para estados de BossSad
-        if (this.stateMachine && this.stateMachine.currentState) {
-            const currentState = this.stateMachine.currentState;
-
-            // Limpiar elementos específicos de BossSad
-            const bossSadElements = ['warningCircle', 'waterBall'];
-
-            bossSadElements.forEach(element => {
-                if (currentState[element] && currentState[element].destroy) {
-                    currentState[element].destroy();
-                }
-            });
-        }
-    }
-
-    // Método específico para destruir water balls
-    destroyWaterBall(waterBall) {
-        if (waterBall && waterBall.active) {
-            waterBall.destroy();
-        }
-    }
-
-    // Método específico para asignar puertas
-
-    die() {
-        console.log('BossSad muere');
-
-        // IMPORTANTE: Limpiar todos los warnings y estados activos
-        this.cleanupAllWarnings();
-
-        // Desactivar el estado actual si existe
-        if (this.stateMachine && this.stateMachine.currentState &&
-            this.stateMachine.currentState.exit) {
-            this.stateMachine.currentState.exit(this);
-        }
-
-        // Cambiar a estado inactivo
-        if (this.stateMachine) {
-            this.stateMachine.setState('inactive');
-        }
-
-        // Asegúrate de que las puertas y pisos existen
-        if (this.Bossdoors) {
-            console.log('Abriendo puertas del BossSad');
-            this.Bossdoors.getChildren().forEach(door => {
-                if (door.abrirPuerta) {
-                    door.abrirPuerta();
-                }
-            });
-        }
-
-        if (this.floors) {
-            console.log('Abriendo pisos del BossSad');
-            this.floors.getChildren().forEach(floor => {
-                if (floor.abrirPuerta) {
-                    floor.abrirPuerta();
-                }
-            });
-        }
-
-        PlayerDataManager.killBoss('sadness');
-        this.scene.events.emit('bossDefeated');
-
-        // Desactivar físicas
-        this.setActive(false);
-        this.setVisible(false);
-
-        // IMPORTANTE: Destruir todos los objetos de ataque
-        this.destroyAllAttackObjects();
-
-        console.log('BossSad eliminado del registro');
-    }
-
-
+    /**
+     * Asigna puertas y pisos específicos para Tristeza
+     * @param {Phaser.GameObjects.Group} iceDoors - Puertas de hielo
+     * @param {Phaser.GameObjects.Group} iceFloors - Pisos de hielo
+     */
     getDoors(iceDoors, iceFloors) {
         this.Bossdoors = iceDoors;
         this.floors = iceFloors;
         console.log('Puertas y pisos asignados a BossSad');
     }
 
+    /**
+     * Activa el jefe Tristeza y verifica si ya fue derrotado
+     */
     setLife() {
         console.log('Activando BossSad');
         this.setVisible(true);
@@ -288,11 +253,18 @@ export default class BossSad extends BaseBoss {
 
         console.log('BossSad activado, vida:', this.health);
     }
+
+    /**
+     * Asigna la puerta final
+     * @param {Object} finaldoor - Puerta final
+     */
     setFinalDoor(finaldoor) {
         this.finaldoor = finaldoor
     }
 
-    // NUEVOS MÉTODOS PARA LIMPIAR WARNINGS
+    /**
+     * Limpia todas las advertencias visuales específicas de Tristeza
+     */
     cleanupAllWarnings() {
         // Si hay un estado actual activo, llamar a su método de limpieza
         if (this.stateMachine && this.stateMachine.currentState) {
@@ -319,7 +291,9 @@ export default class BossSad extends BaseBoss {
         }
     }
 
-    // Método para limpiar objetos de ataque activos
+    /**
+     * Limpia los objetos de ataque activos de Tristeza
+     */
     clearActiveAttackObjects() {
         // Solo limpiar objetos activos, mantener los grupos
         if (this.icicles) {
@@ -335,7 +309,9 @@ export default class BossSad extends BaseBoss {
         }
     }
 
-    // Sobrescribir destroyAllAttackObjects para incluir limpieza específica
+    /**
+     * Destruye todos los objetos de ataque específicos de Tristeza
+     */
     destroyAllAttackObjects() {
         // Limpiar objetos activos primero
         this.clearActiveAttackObjects();
@@ -344,7 +320,9 @@ export default class BossSad extends BaseBoss {
         super.destroyAllAttackObjects();
     }
 
-    // Sobrescribir removeAllColliders para añadir limpieza específica
+    /**
+     * Elimina todos los colliders específicos de Tristeza
+     */
     removeAllColliders() {
         // Llama al método base primero
         super.removeAllColliders();
@@ -353,59 +331,13 @@ export default class BossSad extends BaseBoss {
         this.colliders = {};
     }
 
-    // Sobrescribir takeDamage si necesitas personalización adicional
-    takeDamage(damage) {
-        // Primero llama al método base
-        super.takeDamage(damage);
-
-        // Puedes añadir lógica específica aquí si es necesario
-        // El método base ya maneja el efecto visual y la reducción de salud
-    }
-
-    // Método específico para BossSad si necesitas algo especial en setLife
-    setLife() {
-        console.log('Activando BossSad');
-
-        // Verificar si el boss ya fue derrotado
-        if (PlayerDataManager.data.bossStatus.sadness) {
-            console.log('Boss Sad ya derrotado, no se activará');
-            this.setVisible(false);
-            this.setActive(false);
-            this.isActivated = false;
-
-            // Abrir puertas automáticamente si ya fue derrotado
-            if (this.Bossdoors) {
-                console.log('Abriendo puertas del BossSad (ya derrotado)');
-                this.Bossdoors.getChildren().forEach(door => {
-                    if (door.abrirPuerta) {
-                        door.abrirPuerta();
-                    }
-                });
-            }
-
-            if (this.floors) {
-                console.log('Abriendo pisos del BossSad (ya derrotado)');
-                this.floors.getChildren().forEach(floor => {
-                    if (floor.abrirPuerta) {
-                        floor.abrirPuerta();
-                    }
-                });
-            }
-
-            return;
+    /**
+     * Destruye una water ball específica
+     * @param {Phaser.GameObjects.Sprite} waterBall - Water ball a destruir
+     */
+    destroyWaterBall(waterBall) {
+        if (waterBall && waterBall.active) {
+            waterBall.destroy();
         }
-
-        // Si no ha sido derrotado, activar normalmente
-        this.setVisible(true);
-        this.setActive(true);
-        this.isActivated = true;
-
-        this.setupCollisions();
-
-        // Iniciar cooldown antes del primer ataque
-        this.generateNewCooldown();
-        this.stateMachine.setState('cooldown');
-
-        console.log('BossSad activado, vida:', this.health);
     }
 }

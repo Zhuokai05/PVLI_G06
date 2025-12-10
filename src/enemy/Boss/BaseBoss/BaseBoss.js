@@ -1,7 +1,10 @@
 import StateMachine from '../../../stateMachine/StateMachine.js';
 
-
-
+/**
+ * Clase base para todos los jefes del juego
+ * @class BaseBoss
+ * @extends Phaser.Physics.Arcade.Sprite
+ */
 export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame, player, config) {
         super(scene, x, y, texture, frame);
@@ -62,6 +65,9 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.setActive(false);
     }
 
+    /**
+     * Configura la física por defecto del jefe
+     */
     setupDefaultPhysics() {
         this.setCollideWorldBounds(true);
         this.setImmovable(true);
@@ -75,6 +81,9 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.body.moves = false;
     }
 
+    /**
+     * Configura el estado inactivo del jefe
+     */
     setupInactiveState() {
         this.stateMachine.addState('inactive', {
             enter: () => {
@@ -87,12 +96,21 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
+    /**
+     * Actualiza el jefe en cada frame
+     * @param {number} time - Tiempo actual
+     * @param {number} delta - Delta time desde la última actualización
+     */
     update(time, delta) {
         if (this.notdead && this.isActivated) {
             this.stateMachine.step(time, delta);
         }
     }
 
+    /**
+     * Aplica daño al jefe
+     * @param {number} damage - Cantidad de daño a aplicar
+     */
     takeDamage(damage) {
         if (!this.isActivated || !this.notdead) return;
 
@@ -118,22 +136,35 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    /**
+     * Obtiene el color del tint al recibir daño
+     * @returns {number} - Color del tint
+     */
     getDamageTintColor() {
         // Sobrescribir en clases hijas para diferentes colores
         return 0xff0000;
     }
 
+    /**
+     * Avanza a la siguiente fase del jefe
+     */
     nextPhase() {
         // Método abstracto - debe ser implementado por clases hijas
         throw new Error('nextPhase() debe ser implementado por la clase hija');
     }
 
+    /**
+     * Inicia un estado aleatorio de los disponibles
+     */
     startRandomState() {
         if (!this.isActivated) return;
         const randomState = Phaser.Math.RND.pick(this.availableStates);
         this.stateMachine.setState(randomState);
     }
 
+    /**
+     * Selecciona el siguiente estado del jefe
+     */
     selectNextState() {
         if (!this.isActivated) {
             this.stateMachine.setState('inactive');
@@ -143,10 +174,16 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.setState('cooldown');
     }
 
+    /**
+     * Genera un nuevo tiempo de cooldown aleatorio
+     */
     generateNewCooldown() {
         this.attackCooldown = Phaser.Math.Between(this.minCooldown, this.maxCooldown);
     }
 
+    /**
+     * Maneja la muerte del jefe
+     */
     die() {
         this.notdead = false;
         this.isActivated = false;
@@ -190,11 +227,19 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.destroyAllAttackObjects();
     }
 
+    /**
+     * Asigna las puertas y pisos del boss
+     * @param {Phaser.GameObjects.Group} doors - Grupo de puertas
+     * @param {Phaser.GameObjects.Group} floors - Grupo de pisos
+     */
     getDoors(doors, floors = null) {
         this.Bossdoors = doors;
         this.floors = floors;
     }
 
+    /**
+     * Activa el jefe y establece su vida
+     */
     setLife() {
         // Verificar si el boss ya fue derrotado antes de activarlo
         if (this.bossName && PlayerDataManager.data.bossStatus[this.bossName]) {
@@ -217,17 +262,25 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.stateMachine.setState('cooldown');
     }
 
+    /**
+     * Configura las colisiones del jefe
+     */
     setupCollisions() {
         // Método abstracto - debe ser implementado por clases hijas
         throw new Error('setupCollisions() debe ser implementado por la clase hija');
     }
 
-    // NUEVO MÉTODO: Resetear todas las colisiones
+    /**
+     * Resetea todas las colisiones del jefe
+     */
     resetAllCollisions() {
         this.removeAllColliders();
         this.setupCollisions();
     }
 
+    /**
+     * Limpia todas las advertencias visuales
+     */
     cleanupAllWarnings() {
         if (this.stateMachine && this.stateMachine.currentState) {
             const currentState = this.stateMachine.currentState;
@@ -258,6 +311,9 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    /**
+     * Destruye todos los objetos de ataque
+     */
     destroyAllAttackObjects() {
         // Limpiar todos los grupos de ataque
         Object.values(this.attackGroups).forEach(group => {
@@ -270,6 +326,9 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.removeAllColliders();
     }
 
+    /**
+     * Elimina todos los colliders registrados
+     */
     removeAllColliders() {
         // Eliminar todas las colisiones registradas
         Object.values(this.colliders).forEach(collider => {
@@ -280,24 +339,50 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.colliders = {};
     }
 
-    // NUEVO MÉTODO: Registrar colisión para poder gestionarla
+    /**
+     * Registra un collider para gestión posterior
+     * @param {string} name - Nombre del collider
+     * @param {Phaser.Physics.Arcade.Collider} collider - Collider a registrar
+     */
     registerCollider(name, collider) {
         this.colliders[name] = collider;
     }
 
-    // Métodos de utilidad para clases hijas
+    /**
+     * Agrega un grupo de ataque
+     * @param {string} name - Nombre del grupo
+     * @param {Phaser.Physics.Arcade.Group} group - Grupo a agregar
+     */
     addAttackGroup(name, group) {
         this.attackGroups[name] = group;
     }
 
+    /**
+     * Obtiene un grupo de ataque por nombre
+     * @param {string} name - Nombre del grupo
+     * @returns {Phaser.Physics.Arcade.Group} - Grupo de ataque
+     */
     getAttackGroup(name) {
         return this.attackGroups[name];
     }
 
+    /**
+     * Agrega un estado a la máquina de estados
+     * @param {string} name - Nombre del estado
+     * @param {Object} state - Objeto de estado
+     */
     addState(name, state) {
         this.stateMachine.addState(name, state);
     }
 
+    /**
+     * Establece escala y configuración del body
+     * @param {number} scale - Escala del sprite
+     * @param {number} widthDivisor - Divisor para el ancho del body
+     * @param {number} heightDivisor - Divisor para el alto del body
+     * @param {number} offsetXDivisor - Divisor para el offset X
+     * @param {number} offsetYDivisor - Divisor para el offset Y
+     */
     setScaleAndBody(scale, widthDivisor = 35, heightDivisor = 35,
         offsetXDivisor = 9.9, offsetYDivisor = 10.5) {
         this.setScale(scale);

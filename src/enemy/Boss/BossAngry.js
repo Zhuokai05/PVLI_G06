@@ -5,6 +5,11 @@ import BossAngryPunchPlatformState from './BossAngryState/BossAngryPunchPlatform
 import BossAngryCooldownState from './BossAngryState/BossAngryCooldownState.js';
 import PlayerDataManager from '../../managers/PlayerDataManager.js';
 
+/**
+ * Jefe de la emoción Ira
+ * @class BossAngry
+ * @extends BaseBoss
+ */
 export default class BossAngry extends BaseBoss {
     constructor(scene, x, y, player) {
         const config = {
@@ -51,6 +56,9 @@ export default class BossAngry extends BaseBoss {
         this.play('bossira_idle');
     }
 
+    /**
+     * Crea las animaciones del jefe Ira
+     */
     createAnimations() {
         // Animación IDLE
         if (!this.scene.anims.exists('bossira_idle')) {
@@ -84,6 +92,9 @@ export default class BossAngry extends BaseBoss {
         }
     }
 
+    /**
+     * Configura los estados específicos del jefe Ira
+     */
     setupStates() {
         // Registrar estados específicos
         this.addState('punch', new BossAngryPunchState());
@@ -92,6 +103,9 @@ export default class BossAngry extends BaseBoss {
         this.addState('cooldown', new BossAngryCooldownState());
     }
 
+    /**
+     * Configura las colisiones específicas del jefe Ira
+     */
     setupCollisions() {
         // Configurar overlaps solo si no existen ya
         if (!this.colliders.fireballOverlap) {
@@ -129,6 +143,11 @@ export default class BossAngry extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la colisión de fireball con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} fireball - Fireball
+     */
     FireballCollisionWithPlayer(player, fireball) {
         if (!fireball.active || !player.active) return;
         const dir = player.x < fireball.x ? -1 : 1;
@@ -136,12 +155,20 @@ export default class BossAngry extends BaseBoss {
         fireball.destroy();
     }
 
+    /**
+     * Maneja la colisión de puño con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} punch - Puño
+     */
     PunchCollisionWithPlayer(player, punch) {
         if (!punch.active || !player.active) return;
         const dir = player.x < punch.x ? -1 : 1;
         player.takeDamage(this.damage, dir);
     }
 
+    /**
+     * Avanza a la siguiente fase del jefe Ira
+     */
     nextPhase() {
         if (this.phase === 1) {
             console.log('Boss entra en FASE 2');
@@ -198,12 +225,13 @@ export default class BossAngry extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la muerte definitiva del jefe Ira
+     */
     die() {
         console.log('Boss derrotado definitivamente');
 
         // Llama al método die de BaseBoss primero
-
-
         super.die();
 
         // Completar acciones específicas de BossAngry
@@ -240,10 +268,20 @@ export default class BossAngry extends BaseBoss {
         PlayerDataManager.killBoss('anger');
         this.scene.events.emit('bossDefeated');
     }
+
+    /**
+     * Asigna puertas y pisos específicos para Ira
+     * @param {Phaser.GameObjects.Group} iraDoors - Puertas de ira
+     * @param {Phaser.GameObjects.Group} iraFloors - Pisos de ira
+     */
     getDoors(iraDoors, iraFloors) {
         this.Bossdoors = iraDoors;
         this.floors = iraFloors;
     }
+
+    /**
+     * Activa el jefe Ira y verifica si ya fue derrotado
+     */
     setLife() {
         // Verificar si el boss ya fue derrotado
         if (PlayerDataManager.data.bossStatus.anger) {
@@ -282,17 +320,28 @@ export default class BossAngry extends BaseBoss {
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
     }
+
+    /**
+     * Asigna la puerta final
+     * @param {Object} finaldoor - Puerta final
+     */
     setFinalDoor(finaldoor) {
         this.finaldoor = finaldoor
     }
-    // Método para configurar las plataformas (llamado desde la escena)
+
+    /**
+     * Configura las plataformas específicas para Ira
+     * @param {Phaser.GameObjects.Group} platforms - Plataformas
+     */
     setPlatforms(platforms) {
         this.platforms = platforms;
     }
 
-    // Método para manejar colisión de puño con plataforma
-
-    // Método específico para BossAngry
+    /**
+     * Maneja la colisión de puño con plataforma
+     * @param {Phaser.GameObjects.Sprite} punch - Puño
+     * @param {Phaser.GameObjects.Sprite} platform - Plataforma
+     */
     punchCollisionWithPlatform(punch, platform) {
         if (!punch.active || !platform.active) return;
 
@@ -309,23 +358,9 @@ export default class BossAngry extends BaseBoss {
         }
     }
 
-    // Setter específico para plataformas
-    setPlatforms(platforms) {
-        this.platforms = platforms;
-
-        // Si el boss ya está activo, establecer la colisión inmediatamente
-        if (this.isActivated && this.platforms && !this.colliders.punchPlatformOverlap) {
-            const punchPlatformOverlap = this.scene.physics.add.overlap(
-                this.punches,
-                this.platforms,
-                this.punchCollisionWithPlatform,
-                null,
-                this
-            );
-            this.registerCollider('punchPlatformOverlap', punchPlatformOverlap);
-        }
-    }
-
+    /**
+     * Elimina todos los colliders específicos de Ira
+     */
     removeAllColliders() {
         // Llama al método base para eliminar colisiones registradas
         super.removeAllColliders();
@@ -334,6 +369,10 @@ export default class BossAngry extends BaseBoss {
         this.colliders = {};
     }
 
+    /**
+     * Obtiene el color del tint para el daño de Ira
+     * @returns {number} - Color rojo
+     */
     getDamageTintColor() {
         return 0xff0000; // Rojo para Ira
     }

@@ -9,6 +9,11 @@ import BossSadRadialState from './BossSadState/BossSadRadialState.js';
 import BossSadWaterBallState from './BossSadState/BossSadWaterBallState.js';
 import FinalBossCooldownState from './BossFinalState/BossFinalCooldownState.js';
 
+/**
+ * Jefe final que combina todos los ataques de los bosses anteriores
+ * @class FinalBoss
+ * @extends BaseBoss
+ */
 export default class FinalBoss extends BaseBoss {
     constructor(scene, x, y, player) {
         const config = {
@@ -64,6 +69,9 @@ export default class FinalBoss extends BaseBoss {
         this.play('Final')
     }
     
+    /**
+     * Configura el cuerpo específico para el jefe final
+     */
     setFinalBody() {
         this.setScale(2.5);
         this.setCollideWorldBounds(true);
@@ -76,6 +84,9 @@ export default class FinalBoss extends BaseBoss {
         this.body.moves = false;
     }
     
+    /**
+     * Inicializa todos los grupos de ataque de todos los bosses
+     */
     initAllAttackGroups() {
         // Inicializar todos los grupos de ataque de todos los bosses
         this.fireballs = this.scene.physics.add.group();
@@ -94,6 +105,9 @@ export default class FinalBoss extends BaseBoss {
         this.addAttackGroup('radialIcicles', this.radialIcicles);
     }
     
+    /**
+     * Configura todos los estados de todos los bosses
+     */
     setupStates() {
         // Registrar todos los estados de todos los bosses
         // IMPORTANTE: Pasar las texturas correctas para FinalBoss
@@ -108,6 +122,11 @@ export default class FinalBoss extends BaseBoss {
         this.addState('cooldown', new FinalBossCooldownState());
     }
     
+    /**
+     * Selecciona estados aleatorios para el jefe final
+     * @param {number} count - Número de estados a seleccionar
+     * @returns {Array} - Array de estados seleccionados
+     */
     selectRandomStates(count) {
         const shuffled = [...this.allStates];
         
@@ -118,6 +137,9 @@ export default class FinalBoss extends BaseBoss {
         return shuffled.slice(0, count);
     }
     
+    /**
+     * Configura todas las colisiones de todos los tipos de ataque
+     */
     setupCollisions() {
         // Configurar todas las colisiones de todos los tipos de ataque
         this.setupFireballCollision();
@@ -128,6 +150,9 @@ export default class FinalBoss extends BaseBoss {
         this.setupRadialIcicleCollision();
     }
     
+    /**
+     * Configura las colisiones de fireball
+     */
     setupFireballCollision() {
         if (!this.colliders.fireballOverlap) {
             const fireballOverlap = this.scene.physics.add.overlap(
@@ -141,6 +166,9 @@ export default class FinalBoss extends BaseBoss {
         }
     }
     
+    /**
+     * Configura las colisiones de puño
+     */
     setupPunchCollision() {
         if (!this.colliders.punchOverlap) {
             const punchOverlap = this.scene.physics.add.overlap(
@@ -154,6 +182,9 @@ export default class FinalBoss extends BaseBoss {
         }
     }
     
+    /**
+     * Configura las colisiones de copa
+     */
     setupCupCollision() {
         if (!this.colliders.cupOverlap) {
             const cupOverlap = this.scene.physics.add.overlap(
@@ -167,6 +198,9 @@ export default class FinalBoss extends BaseBoss {
         }
     }
     
+    /**
+     * Configura las colisiones de icicle
+     */
     setupIcicleCollision() {
         if (!this.colliders.icicleOverlap) {
             const icicleOverlap = this.scene.physics.add.overlap(
@@ -180,6 +214,9 @@ export default class FinalBoss extends BaseBoss {
         }
     }
     
+    /**
+     * Configura las colisiones de water ball
+     */
     setupWaterBallCollision() {
         if (!this.colliders.waterBallOverlap) {
             const waterBallOverlap = this.scene.physics.add.overlap(
@@ -193,6 +230,9 @@ export default class FinalBoss extends BaseBoss {
         }
     }
     
+    /**
+     * Configura las colisiones de icicle radial
+     */
     setupRadialIcicleCollision() {
         if (!this.colliders.radialIcicleOverlap) {
             const radialIcicleOverlap = this.scene.physics.add.overlap(
@@ -206,7 +246,11 @@ export default class FinalBoss extends BaseBoss {
         }
     }
     
-    // Métodos de colisión
+    /**
+     * Maneja la colisión de fireball con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} fireball - Fireball
+     */
     fireballCollisionWithPlayer(player, fireball) {
         if (!fireball.active || !player.active) return;
         const dir = player.x < fireball.x ? -1 : 1;
@@ -214,12 +258,22 @@ export default class FinalBoss extends BaseBoss {
         fireball.destroy();
     }
     
+    /**
+     * Maneja la colisión de puño con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} punch - Puño
+     */
     punchCollisionWithPlayer(player, punch) {
         if (!punch.active || !player.active) return;
         const dir = player.x < punch.x ? -1 : 1;
         player.takeDamage(this.damage, dir);
     }
     
+    /**
+     * Maneja la colisión de copa con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} cup - Copa
+     */
     cupCollisionWithPlayer(player, cup) {
         if (!cup.active || !player.active) return;
         const dir = player.x < cup.x ? -1 : 1;
@@ -227,6 +281,11 @@ export default class FinalBoss extends BaseBoss {
         cup.destroy();
     }
     
+    /**
+     * Maneja la colisión de icicle con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} icicle - Icicle
+     */
     icicleCollisionWithPlayer(player, icicle) {
         if (!icicle.active || !player.active) return;
         const dir = player.x < icicle.x ? -1 : 1;
@@ -234,6 +293,11 @@ export default class FinalBoss extends BaseBoss {
         icicle.destroy();
     }
     
+    /**
+     * Maneja la colisión de water ball con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} waterBall - Water ball
+     */
     waterBallCollisionWithPlayer(player, waterBall) {
         if (!waterBall.active || !player.active) return;
         const dir = player.x < waterBall.x ? -1 : 1;
@@ -241,6 +305,11 @@ export default class FinalBoss extends BaseBoss {
         waterBall.destroy();
     }
     
+    /**
+     * Maneja la colisión de icicle radial con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} icicle - Icicle radial
+     */
     radialIcicleCollisionWithPlayer(player, icicle) {
         if (!icicle.active || !player.active) return;
         const dir = player.x < icicle.x ? -1 : 1;
@@ -248,7 +317,9 @@ export default class FinalBoss extends BaseBoss {
         icicle.destroy();
     }
     
-    // Sobrescribir startRandomState para logging
+    /**
+     * Inicia un estado aleatorio con logging
+     */
     startRandomState() {
         if (!this.isActivated) return;
         const randomState = Phaser.Math.RND.pick(this.availableStates);
@@ -256,10 +327,17 @@ export default class FinalBoss extends BaseBoss {
         this.stateMachine.setState(randomState);
     }
     
+    /**
+     * Obtiene el color del tint para el daño del jefe final
+     * @returns {number} - Color magenta
+     */
     getDamageTintColor() {
         return 0xff00ff; // Magenta para FinalBoss
     }
     
+    /**
+     * Avanza a la siguiente fase del jefe final
+     */
     nextPhase() {
         if (this.phase === 1) {
             console.log('FinalBoss entra en FASE 2 - ¡TODOS LOS ATAQUES DESBLOQUEADOS!');
@@ -324,6 +402,9 @@ export default class FinalBoss extends BaseBoss {
         }
     }
     
+    /**
+     * Maneja la muerte definitiva del jefe final
+     */
     die() {
         console.log('¡FinalBoss DERROTADO! ¡VICTORIA TOTAL!');
         
@@ -342,7 +423,9 @@ export default class FinalBoss extends BaseBoss {
         });
     }
     
-    // Métodos específicos para garras
+    /**
+     * Crea las garras del jefe final
+     */
     createClaws() {
         // Crear garras usando coordenadas del mundo
         this.leftClaw = this.scene.physics.add.sprite(this.x - 380, this.y - 50, 'fgarra');
@@ -369,6 +452,9 @@ export default class FinalBoss extends BaseBoss {
         this.setupClawCollisions();
     }
     
+    /**
+     * Configura las colisiones de las garras
+     */
     setupClawCollisions() {
         // Configurar colisiones para las garras con el jugador
         if (this.leftClaw && !this.colliders.leftClawOverlap) {
@@ -398,6 +484,11 @@ export default class FinalBoss extends BaseBoss {
         }
     }
     
+    /**
+     * Maneja la colisión de garra con el jugador
+     * @param {Phaser.GameObjects.Sprite} claw - Garra
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     */
     onClawHitPlayer(claw, player) {
         if (!claw.active || !player.active) return;
         
@@ -414,6 +505,9 @@ export default class FinalBoss extends BaseBoss {
         });
     }
     
+    /**
+     * Destruye las garras del jefe final
+     */
     destroyClaws() {
         // Limpiar colisiones de garras
         if (this.colliders.leftClawOverlap) {
@@ -438,12 +532,17 @@ export default class FinalBoss extends BaseBoss {
         this.clawsActive = false;
     }
     
-    // Método específico para asignar puertas
+    /**
+     * Asigna puertas específicas para el jefe final
+     * @param {Phaser.GameObjects.Group} iraDoors - Puertas de ira
+     */
     getDoors(iraDoors) {
         this.Bossdoors = iraDoors;
     }
     
-    // Métodos específicos para limpieza de advertencias de FinalBoss
+    /**
+     * Limpia todas las advertencias visuales específicas del jefe final
+     */
     cleanupAllWarnings() {
         // Primero llama al método base
         super.cleanupAllWarnings();
@@ -476,7 +575,9 @@ export default class FinalBoss extends BaseBoss {
         }
     }
     
-    // Método específico para limpiar objetos de ataque activos
+    /**
+     * Limpia los objetos de ataque activos del jefe final
+     */
     clearActiveAttackObjects() {
         // Limpiar todos los grupos de ataque
         Object.values(this.attackGroups).forEach(group => {
@@ -489,7 +590,9 @@ export default class FinalBoss extends BaseBoss {
         this.destroyClaws();
     }
     
-    // Sobrescribir destroyAllAttackObjects para incluir limpieza específica
+    /**
+     * Destruye todos los objetos de ataque específicos del jefe final
+     */
     destroyAllAttackObjects() {
         // Limpiar objetos activos primero
         this.clearActiveAttackObjects();
@@ -498,7 +601,9 @@ export default class FinalBoss extends BaseBoss {
         super.destroyAllAttackObjects();
     }
     
-    // Sobrescribir removeAllColliders para añadir limpieza específica
+    /**
+     * Elimina todos los colliders específicos del jefe final
+     */
     removeAllColliders() {
         // Llama al método base primero
         super.removeAllColliders();
@@ -510,7 +615,9 @@ export default class FinalBoss extends BaseBoss {
         this.destroyClaws();
     }
     
-    // Sobrescribir setLife para logging
+    /**
+     * Activa el jefe final con logging
+     */
     setLife() {
         console.log('Activando FinalBoss');
         

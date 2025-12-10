@@ -4,6 +4,11 @@ import BossFearCupAttackState from './BossFearState/BossFearCupAttackState.js';
 import BossFearCooldownState from './BossFearState/BossFearCooldownState.js';
 import PlayerDataManager from '../../managers/PlayerDataManager.js';
 
+/**
+ * Jefe de la emoción Miedo
+ * @class BossFear
+ * @extends BaseBoss
+ */
 export default class BossFear extends BaseBoss {
     constructor(scene, x, y, player) {
         const config = {
@@ -44,7 +49,10 @@ export default class BossFear extends BaseBoss {
         this.setupStates();
     }
 
-    // Método específico para configuración del cuerpo
+    /**
+     * Configura el tamaño personalizado del cuerpo para BossFear
+     * @param {number} scale - Escala del sprite
+     */
     setCustomBodySize(scale) {
         this.setScale(scale);
         this.setCollideWorldBounds(true);
@@ -57,6 +65,9 @@ export default class BossFear extends BaseBoss {
         this.body.moves = false;
     }
 
+    /**
+     * Crea las partes adicionales del boss (máscara)
+     */
     createBossParts() {
         // Crear máscara (sin colisión, arriba del corazón)
         this.bossMask = this.scene.add.image(this.x, this.y - 200, 'mascara');
@@ -65,6 +76,9 @@ export default class BossFear extends BaseBoss {
         this.bossMask.setVisible(false);
     }
 
+    /**
+     * Configura los estados específicos del jefe Miedo
+     */
     setupStates() {
         // Registrar estados específicos
         this.addState('xAttack', new BossFearXAttackState());
@@ -72,6 +86,9 @@ export default class BossFear extends BaseBoss {
         this.addState('cooldown', new BossFearCooldownState());
     }
 
+    /**
+     * Configura las colisiones específicas del jefe Miedo
+     */
     setupCollisions() {
         // Configurar overlaps solo si no existen ya
         if (!this.colliders.cupOverlap) {
@@ -86,6 +103,11 @@ export default class BossFear extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la colisión de copa con el jugador
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     * @param {Phaser.GameObjects.Sprite} cup - Copa
+     */
     cupCollisionWithPlayer(player, cup) {
         if (!cup.active || !player.active) return;
         const dir = player.x < cup.x ? -1 : 1;
@@ -93,7 +115,11 @@ export default class BossFear extends BaseBoss {
         cup.destroy();
     }
 
-    // Sobrescribir update para manejar partes adicionales
+    /**
+     * Actualiza la posición de las partes del boss
+     * @param {number} time - Tiempo actual
+     * @param {number} delta - Delta time
+     */
     update(time, delta) {
         // Llama al update base
         super.update(time, delta);
@@ -104,11 +130,18 @@ export default class BossFear extends BaseBoss {
         }
     }
 
+    /**
+     * Obtiene el color del tint para el daño de Miedo
+     * @returns {number} - Color rojo
+     */
     getDamageTintColor() {
         return 0xff0000; // Rojo para Miedo
     }
 
-    // Sobrescribir takeDamage para incluir la máscara
+    /**
+     * Aplica daño al jefe incluyendo la máscara
+     * @param {number} damage - Cantidad de daño
+     */
     takeDamage(damage) {
         if (!this.isActivated || !this.notdead) return;
 
@@ -137,6 +170,9 @@ export default class BossFear extends BaseBoss {
         }
     }
 
+    /**
+     * Avanza a la siguiente fase del jefe Miedo
+     */
     nextPhase() {
         if (this.phase === 1) {
             console.log('BossFear entra en FASE 2');
@@ -199,6 +235,9 @@ export default class BossFear extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la muerte definitiva del jefe Miedo
+     */
     die() {
         console.log('BossFear derrotado definitivamente');
 
@@ -210,7 +249,9 @@ export default class BossFear extends BaseBoss {
         this.scene.events.emit('bossDefeated');
     }
 
-    // Métodos específicos para manejar garras
+    /**
+     * Crea las garras del jefe Miedo
+     */
     createClaws() {
         // Crear garras izquierda y derecha usando coordenadas del mundo
         this.leftClaw = this.scene.physics.add.sprite(this.x - 380, this.y - 50, 'garra');
@@ -235,6 +276,9 @@ export default class BossFear extends BaseBoss {
         console.log(`Garras creadas en: left(${this.leftClaw.x}, ${this.leftClaw.y}), right(${this.rightClaw.x}, ${this.rightClaw.y})`);
     }
 
+    /**
+     * Destruye las garras del jefe
+     */
     destroyClaws() {
         if (this.leftClaw) {
             this.leftClaw.destroy();
@@ -247,7 +291,9 @@ export default class BossFear extends BaseBoss {
         this.clawsActive = false;
     }
 
-    // Métodos específicos para limpieza de advertencias de BossFear
+    /**
+     * Limpia todas las advertencias visuales específicas de Miedo
+     */
     cleanupAllWarnings() {
         // Primero llama al método base
         super.cleanupAllWarnings();
@@ -270,7 +316,9 @@ export default class BossFear extends BaseBoss {
         }
     }
 
-    // Método específico para limpiar objetos de ataque activos
+    /**
+     * Limpia los objetos de ataque activos de Miedo
+     */
     clearActiveAttackObjects() {
         // Solo limpiar objetos activos, mantener los grupos
         if (this.cups) {
@@ -281,7 +329,9 @@ export default class BossFear extends BaseBoss {
         this.destroyClaws();
     }
 
-    // Sobrescribir destroyAllAttackObjects para incluir limpieza específica
+    /**
+     * Destruye todos los objetos de ataque específicos de Miedo
+     */
     destroyAllAttackObjects() {
         // Limpiar objetos activos primero
         this.clearActiveAttackObjects();
@@ -290,7 +340,9 @@ export default class BossFear extends BaseBoss {
         super.destroyAllAttackObjects();
     }
 
-    // Sobrescribir removeAllColliders para añadir limpieza específica
+    /**
+     * Elimina todos los colliders específicos de Miedo
+     */
     removeAllColliders() {
         // Llama al método base primero
         super.removeAllColliders();
@@ -299,12 +351,17 @@ export default class BossFear extends BaseBoss {
         this.colliders = {};
     }
 
-    // Método específico para asignar puertas
+    /**
+     * Asigna puertas específicas para Miedo
+     * @param {Phaser.GameObjects.Group} doors - Puertas del boss
+     */
     getDoors(doors) {
         this.Bossdoors = doors;
     }
 
-    // Sobrescribir setLife para manejar la máscara
+    /**
+     * Activa el jefe Miedo y maneja la máscara
+     */
     setLife() {
         console.log('Activando BossFear');
 
@@ -342,7 +399,10 @@ export default class BossFear extends BaseBoss {
         }
     }
 
-    // Sobrescribir setVisible para incluir la máscara
+    /**
+     * Establece la visibilidad del jefe y su máscara
+     * @param {boolean} value - Valor de visibilidad
+     */
     setVisible(value) {
         super.setVisible(value);
         if (this.bossMask) {
@@ -350,7 +410,10 @@ export default class BossFear extends BaseBoss {
         }
     }
 
-    // Sobrescribir setActive para incluir la máscara
+    /**
+     * Establece la actividad del jefe y su máscara
+     * @param {boolean} value - Valor de actividad
+     */
     setActive(value) {
         super.setActive(value);
         if (this.bossMask) {

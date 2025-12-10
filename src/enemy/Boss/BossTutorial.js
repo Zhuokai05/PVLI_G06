@@ -4,6 +4,11 @@ import BossTutorialJumpAttackState from './BossTutorialState/BossTutorialJumpAtt
 import BossTutorialCooldownState from './BossTutorialState/BossTutorialCooldownState.js';
 import PlayerDataManager from '../../managers/PlayerDataManager.js';
 
+/**
+ * Jefe del tutorial
+ * @class BossTutorial
+ * @extends BaseBoss
+ */
 export default class BossTutorial extends BaseBoss {
     constructor(scene, x, y, player) {
         const config = {
@@ -32,6 +37,9 @@ export default class BossTutorial extends BaseBoss {
         this.setupStates();
     }
 
+    /**
+     * Configura el cuerpo específico para el tutorial
+     */
     setTutorialBody() {
         // Escala y colisiones
         this.setScale(2);
@@ -46,6 +54,9 @@ export default class BossTutorial extends BaseBoss {
         this.body.moves = false;
     }
 
+    /**
+     * Configura los estados específicos del jefe Tutorial
+     */
     setupStates() {
         // Registrar estados específicos
         this.addState('sideAttack', new BossTutorialSideAttackState());
@@ -53,6 +64,9 @@ export default class BossTutorial extends BaseBoss {
         this.addState('cooldown', new BossTutorialCooldownState());
     }
 
+    /**
+     * Configura las colisiones específicas del jefe Tutorial
+     */
     setupCollisions() {
         // Configurar overlaps solo si no existen ya
         if (!this.colliders.bossPlayerOverlap) {
@@ -67,7 +81,11 @@ export default class BossTutorial extends BaseBoss {
         }
     }
 
-    // Maneja colisión directa boss <-> player
+    /**
+     * Maneja colisión directa boss <-> player
+     * @param {Phaser.GameObjects.Sprite} boss - Boss
+     * @param {Phaser.GameObjects.Sprite} player - Jugador
+     */
     onHitPlayer(boss, player) {
         if (!boss.active || !player.active) return;
         // evitar múltiples triggers muy seguidos
@@ -87,10 +105,17 @@ export default class BossTutorial extends BaseBoss {
         });
     }
 
+    /**
+     * Obtiene el color del tint para el daño de Tutorial
+     * @returns {number} - Color rojo
+     */
     getDamageTintColor() {
         return 0xff0000; // Rojo para Tutorial
     }
 
+    /**
+     * Avanza a la siguiente fase del jefe Tutorial
+     */
     nextPhase() {
         console.log(`BossTutorial fase actual: ${this.phase}, salud: ${this.health}`);
 
@@ -153,6 +178,9 @@ export default class BossTutorial extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la muerte definitiva del jefe Tutorial
+     */
     die() {
         console.log('BossTutorial muere');
 
@@ -172,7 +200,9 @@ export default class BossTutorial extends BaseBoss {
         console.log('BossTutorial eliminado del registro');
     }
 
-    // Métodos específicos para limpieza de advertencias de BossTutorial
+    /**
+     * Limpia todas las advertencias visuales específicas de Tutorial
+     */
     cleanupAllWarnings() {
         // Primero llama al método base
         super.cleanupAllWarnings();
@@ -191,7 +221,9 @@ export default class BossTutorial extends BaseBoss {
         }
     }
 
-    // Sobrescribir destroyAllAttackObjects (BossTutorial no tiene grupos de ataque)
+    /**
+     * Destruye todos los objetos de ataque específicos de Tutorial
+     */
     destroyAllAttackObjects() {
         // BossTutorial no tiene grupos de ataque como los otros bosses,
         // pero sí tiene colisiones directas que necesitan limpiarse
@@ -203,23 +235,33 @@ export default class BossTutorial extends BaseBoss {
         super.destroyAllAttackObjects();
     }
 
-    // Método específico para resetear el flag de hit
+    /**
+     * Resetea el flag de golpe al jugador
+     */
     resetHitFlag() {
         this._hitPlayerThisSweep = false;
     }
 
-    // Método específico para verificar si golpeó al player
+    /**
+     * Verifica si golpeó al jugador en este sweep
+     * @returns {boolean} - True si golpeó al jugador
+     */
     didHitPlayerThisSweep() {
         return this._hitPlayerThisSweep;
     }
 
-    // Método específico para asignar puertas
+    /**
+     * Asigna puertas específicas para Tutorial
+     * @param {Phaser.GameObjects.Group} tutorialDoors - Puertas del tutorial
+     */
     getDoors(tutorialDoors) {
         this.Bossdoors = tutorialDoors;
         console.log('Puertas asignadas a BossTutorial');
     }
 
-    // Sobrescribir setLife si necesitas personalización adicional
+    /**
+     * Activa el jefe Tutorial y verifica si ya fue derrotado
+     */
     setLife() {
         console.log('Activando BossTutorial');
 
@@ -261,7 +303,9 @@ export default class BossTutorial extends BaseBoss {
         console.log('BossTutorial activado, vida:', this.health);
     }
 
-    // Sobrescribir removeAllColliders para añadir limpieza específica
+    /**
+     * Elimina todos los colliders específicos de Tutorial
+     */
     removeAllColliders() {
         // Llama al método base primero
         super.removeAllColliders();
