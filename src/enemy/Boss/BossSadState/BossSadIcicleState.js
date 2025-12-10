@@ -15,10 +15,10 @@ export default class BossSadIcicleState extends BaseBossAttackState {
             attackDuration: 500,
             cooldownDuration: 500
         });
-        
+
         this.spawnX = 0;
     }
-    
+
     /**
      * Crea las advertencias visuales para los carámbanos verticales
      */
@@ -26,7 +26,7 @@ export default class BossSadIcicleState extends BaseBossAttackState {
         const cam = this.scene.cameras.main;
         this.spawnX = this.player.x;
         const warningWidth = 120;
-        
+
         this.createWarningRectangle(
             this.spawnX,
             this.boss.y,
@@ -36,39 +36,44 @@ export default class BossSadIcicleState extends BaseBossAttackState {
             0.5
         );
     }
-    
+
     /**
      * Ejecuta el ataque de carámbanos verticales
      */
     executeAttack() {
         this.spawnIcicle();
     }
-    
+
     /**
      * Genera un carámbano vertical
      */
     spawnIcicle() {
         const Yspeed = this.boss.icicleSpeed;
-        
+
         // Crear sprite con Phaser
         const icicle = this.scene.physics.add.sprite(
             this.spawnX,
             this.boss.y - 400,
             this.config.texture
         );
-        
+
         // Añadir al grupo unificado de ataques
         this.boss.addAttack(icicle);
-        
+
         icicle.setVelocityY(Yspeed);
         icicle.setScale(1.5);
         icicle.body.allowGravity = false;
         icicle.setRotation(Math.PI / 2); // Apuntar hacia abajo
         icicle.isProjectile = true;
-        
-        this.cleanupIcicle(icicle);
+
+        // Auto-destrucción por tiempo (2 segundos)
+        this.scene.time.delayedCall(2000, () => {
+            if (icicle && icicle.active) {
+                icicle.destroy();
+            }
+        });
     }
-    
+
     /**
      * Configura la auto-destrucción de un carámbano
      * @param {Phaser.GameObjects.Sprite} icicle - Carámbano a limpiar
@@ -81,7 +86,7 @@ export default class BossSadIcicleState extends BaseBossAttackState {
                     cleanupEvent.remove(false);
                     return;
                 }
-                
+
                 if (icicle.y > this.boss.y + this.boss.distanceToFloor) {
                     icicle.destroy();
                     cleanupEvent.remove(false);
@@ -90,26 +95,20 @@ export default class BossSadIcicleState extends BaseBossAttackState {
             callbackScope: this,
             loop: true
         });
-        
+
         // Registrar evento para limpieza
         if (!this.cleanupEvents) {
             this.cleanupEvents = [];
         }
         this.cleanupEvents.push(cleanupEvent);
     }
-    
+
     /**
      * Destruye todas las advertencias visuales
      */
     destroyAllWarnings() {
         super.destroyAllWarnings();
-        
-        // Limpiar eventos de cleanup
-        if (this.cleanupEvents) {
-            this.cleanupEvents.forEach(event => {
-                if (event) event.remove(false);
-            });
-            this.cleanupEvents = null;
-        }
+
+        // No necesitamos limpiar eventos de cleanup ya que usamos delayedCall
     }
 }
