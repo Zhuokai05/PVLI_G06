@@ -130,10 +130,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                 //Enemigos
 
                 case "ira":
-                    //this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move', 'basicEnemyAngry_melee_anim'));
+                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move', 'basicEnemyAngry_melee_anim'));
                     break;
                 case "tristeza":
-                    //this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad', 0, 'Tristeza_BasicEnemy_Move', 'basicEnemySad_melee_anim'));
+                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad', 0, 'Tristeza_BasicEnemy_Move', 'basicEnemySad_melee_anim'));
                     break;
 
                 case "alegria":
@@ -383,9 +383,6 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
             }
         })
-
-        this.enemies.add(new BasicMeleeEnemy(this, 1450, 1550, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move', 'basicEnemyAngry_melee_anim'));
-
         this.cheatManager = new CheatManager(this, this.player);
 
         //puertas conectadas
