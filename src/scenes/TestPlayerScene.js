@@ -239,21 +239,30 @@ export default class TestPlayerScene extends Phaser.Scene {
                 //buttons
                 case "redbutton":
                     this.redButton = new Button(this, objeto.x, objeto.y, 'rbutton', 'rojo');
+                    if(PlayerDataManager.data.buttonStatus.red) this.redButton.changeTexture();
                     break;
                 case "greenbutton":
                     this.greenButton = new Button(this, objeto.x, objeto.y, 'gbutton', 'verde');
+                    if(PlayerDataManager.data.buttonStatus.green) this.greenButton.changeTexture();
                     break;
                 case "bluebutton":
                     this.blueButton = new Button(this, objeto.x, objeto.y, 'bbutton', 'azul');
+                    if(PlayerDataManager.data.buttonStatus.blue) this.blueButton.changeTexture();
                     break;
                 case "redshow":
                     this.redshow = new ShowButton(this, objeto.x, objeto.y, 'rshowA', 'rshowE');
+                    this.redshow.isOn = PlayerDataManager.data.buttonStatus.red;
+                    this.redshow.changeTexture();
                     break;
                 case "greenshow":
                     this.greenshow = new ShowButton(this, objeto.x, objeto.y, 'gshowA', 'gshowE');
+                    this.greenshow.isOn = PlayerDataManager.data.buttonStatus.green;
+                    this.greenshow.changeTexture();
                     break;
                 case "blueshow":
                     this.blueshow = new ShowButton(this, objeto.x, objeto.y, 'bshowA', 'bshowE');
+                    this.blueshow.isOn = PlayerDataManager.data.buttonStatus.blue;
+                    this.blueshow.changeTexture();
                     break;
 
                 //showbutton    

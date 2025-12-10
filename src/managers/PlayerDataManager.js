@@ -15,6 +15,11 @@ export default class PlayerDataManager {
       sadness: false, // Ejemplo: Boss Tristeza
       anger: false,   // Ejemplo: Boss Ira
       fear: false     // Ejemplo: Boss Miedo
+    },
+    buttonStatus: {
+      red: false,
+      blue: false,
+      green: false
     }
   };
 

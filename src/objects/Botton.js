@@ -1,3 +1,5 @@
+import PlayerDataManager from "../managers/PlayerDataManager.js";
+
 export default class Button extends Phaser.Physics.Arcade.Sprite {
 
     constructor(scene, x, y, texture, color) {
@@ -25,30 +27,34 @@ export default class Button extends Phaser.Physics.Arcade.Sprite {
         this.show = show;
     }
 
+    changeTexture(){
+        this.setTexture(this.pressedText);
+    }
     press() {
-        if (this.show) {
-            this.show.cambio();
-        }
 
+        this.show.isOn = true;
+        
         if (!this.door) {
             console.warn("Button: No tiene puerta asignada.");
             return;
         }
 
-        this.setTexture(this.pressedText);
+        this.changeTexture();
         
         switch (this.color) {
             case 'rojo':
-                this.door.activarRojo();
+                PlayerDataManager.data.buttonStatus.red = true;
                 break;
 
             case 'azul':
-                this.door.activarAzul();
+                PlayerDataManager.data.buttonStatus.blue = true;
                 break;
 
             case 'verde':
-                this.door.activarVerde();
+                PlayerDataManager.data.buttonStatus.green = true;
                 break;
         }
+
+        this.show.changeTexture();
     }
 }

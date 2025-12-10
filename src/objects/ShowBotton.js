@@ -16,9 +16,7 @@ export default class ShowButton extends Phaser.Physics.Arcade.Sprite {
         this.setImmovable(true);
     }
 
-    cambio() {
-        this.isOn = !this.isOn;
-
+    changeTexture(){
         if (this.isOn) {
             this.setTexture(this.textureOn);
         } else {
