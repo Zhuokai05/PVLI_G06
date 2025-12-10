@@ -35,4 +35,6 @@ export default class MapDoor extends Door
         this.setVisible(true);
         console.log("MapDoor cerrada y reactivada");
     }
+
+
 }

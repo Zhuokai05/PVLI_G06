@@ -47,11 +47,11 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 0.33,
-            "selectedLayer": 1,
+            "scale": 0.75,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 16698.484848484848,
-                "y": 925.7575757575759
+                "x": 8304.666666666666,
+                "y": 7726
             }
         },
         "map.json#Ira": {
@@ -107,8 +107,8 @@
     "project": "mapa1.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "iraboss.json",
         "map.json",
+        "iraboss.json",
         "map2.json",
         "mapa3.json",
         "Ira.tsx"
