@@ -82,15 +82,20 @@ export default class BossSadRadialState extends BaseBossAttackState {
             const velocityX = Math.cos(angle) * speed;
             const velocityY = Math.sin(angle) * speed;
             
-            const icicle = this.boss.radialIcicles.create(
+            // Crear sprite con Phaser
+            const icicle = this.scene.physics.add.sprite(
                 this.boss.x,
                 this.boss.y,
                 this.config.texture
             );
             
+            // Añadir al grupo unificado de ataques
+            this.boss.addAttack(icicle);
+            
             icicle.setVelocity(velocityX, velocityY);
             icicle.setScale(1);
             icicle.body.allowGravity = false;
+            icicle.isProjectile = true;
             
             const rotationAngle = Math.atan2(velocityY, velocityX);
             icicle.setRotation(rotationAngle);

@@ -85,18 +85,22 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
         const x = Phaser.Math.Between(minX, maxX);
         const y = worldView.top - 50;
         
-        // Crear taza
-        const cup = this.boss.cups.create(x, y, this.config.texture);
+        // Crear taza usando Phaser (no grupo específico)
+        const cup = this.scene.physics.add.sprite(x, y, this.config.texture);
         
         if (!cup) {
             console.error('No se pudo crear la taza');
             return;
         }
         
+        // Añadir al grupo unificado de ataques del boss
+        this.boss.addAttack(cup);
+        
         cup.setScale(1.5);
         cup.setVelocityY(this.boss.cupSpeed);
         cup.body.allowGravity = false;
         cup.setCollideWorldBounds(false);
+        cup.isProjectile = true;
         
         // Efecto de aparición
         cup.setAlpha(0);
@@ -174,11 +178,6 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
             }
         });
         this.activeCups = [];
-        
-        // Limpiar grupo de tazas
-        if (this.boss && this.boss.cups) {
-            this.boss.cups.clear(true, true);
-        }
     }
     
     /**

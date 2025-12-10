@@ -53,11 +53,15 @@ export default class BossAngryPunchPlatformState extends BaseBossAttackState {
     spawnPunch() {
         const Yspeed = this.boss.punchYSpeed;
         
-        const punch = this.boss.punches.create(
+        // Usar create de Phaser en lugar del grupo específico
+        const punch = this.scene.physics.add.sprite(
             this.spawnX,
             this.boss.y - 300,
             this.config.texture
         );
+        
+        // Añadir al grupo de ataques del boss
+        this.boss.addAttack(punch);
         
         punch.setVelocityY(Yspeed);
         punch.setScale(2.5);

@@ -50,16 +50,21 @@ export default class BossSadIcicleState extends BaseBossAttackState {
     spawnIcicle() {
         const Yspeed = this.boss.icicleSpeed;
         
-        const icicle = this.boss.icicles.create(
+        // Crear sprite con Phaser
+        const icicle = this.scene.physics.add.sprite(
             this.spawnX,
             this.boss.y - 400,
             this.config.texture
         );
         
+        // Añadir al grupo unificado de ataques
+        this.boss.addAttack(icicle);
+        
         icicle.setVelocityY(Yspeed);
         icicle.setScale(1.5);
         icicle.body.allowGravity = false;
         icicle.setRotation(Math.PI / 2); // Apuntar hacia abajo
+        icicle.isProjectile = true;
         
         this.cleanupIcicle(icicle);
     }

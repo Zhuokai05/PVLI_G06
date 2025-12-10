@@ -210,24 +210,18 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         const cam = this.scene.cameras.main;
         let punch;
         
-        if (this.attackDirection === 'left') {
-            punch = this.boss.punches.create(
-                this.boss.x - cam.width / 2,
-                this.fixedSpawnY,
-                this.config.texture
-            );
-            punch.setVelocityX(Xspeed);
-            punch.setAngle(-90);
-        } else {
-            punch = this.boss.punches.create(
-                this.boss.x + cam.width / 2,
-                this.fixedSpawnY,
-                this.config.texture
-            );
-            punch.setVelocityX(-Xspeed);
-            punch.setAngle(90);
-        }
+        // Usar create de Phaser en lugar del grupo específico
+        punch = this.scene.physics.add.sprite(
+            this.attackDirection === 'left' ? this.boss.x - cam.width / 2 : this.boss.x + cam.width / 2,
+            this.fixedSpawnY,
+            this.config.texture
+        );
         
+        // Añadir al grupo de ataques del boss
+        this.boss.addAttack(punch);
+        
+        punch.setVelocityX(this.attackDirection === 'left' ? Xspeed : -Xspeed);
+        punch.setAngle(this.attackDirection === 'left' ? -90 : 90);
         punch.setScale(2.5);
         punch.body.allowGravity = false;
         punch.isPlatformPunch = false; // Puños laterales NO son platformPunch

@@ -11,8 +11,8 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
             texture: texture,
             attackName: 'Bola de Agua Perseguidora',
             phases: ['spawn', 'follow', 'explode', 'cooldown'],
-            warningDuration: 0, // No tiene fase warning tradicional
-            attackDuration: 6000, // Duración total del ataque
+            warningDuration: 0,
+            attackDuration: 6000,
             cooldownDuration: 500
         });
         
@@ -63,7 +63,6 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
                 this.followPlayer();
                 this.checkPlayerCollision();
                 
-                // Solo iniciar explosión si la bola NO ha sido destruida
                 if (this.stateTime >= this.fixedPhases.follow && !this.ballDestroyed) {
                     this.startExplodePhase();
                 }
@@ -83,22 +82,13 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         }
     }
     
-    /**
-     * Crea advertencias (este ataque no tiene warning tradicional)
-     */
     createWarning() {
         // Este ataque no tiene fase de warning tradicional
-        // La advertencia es la bola misma
     }
     
-    /**
-     * Ejecuta el ataque de bola de agua
-     */
     executeAttack() {
         // El ataque se ejecuta en las fases específicas
     }
-    
-    // Métodos específicos de WaterBallState
     
     /**
      * Inicia la fase de spawn de la bola de agua
@@ -106,7 +96,6 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
     startSpawnPhase() {
         this.currentPhase = 'spawn';
         this.stateTime = 0;
-        
         this.spawnWaterBall();
     }
     
@@ -114,18 +103,21 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
      * Genera la bola de agua
      */
     spawnWaterBall() {
-        this.waterBall = this.boss.waterBalls.create(
+        // Crear sprite con Phaser
+        this.waterBall = this.scene.physics.add.sprite(
             this.boss.x,
             this.boss.y - 50,
             this.config.texture
         );
         
+        // Añadir al grupo unificado de ataques
+        this.boss.addAttack(this.waterBall);
+        
         this.waterBall.setScale(1.4);
         this.waterBall.body.allowGravity = false;
-        
-        // Propiedades de seguimiento
         this.waterBall.following = false;
         this.waterBall.speed = this.boss.waterBallSpeed;
+        this.waterBall.isProjectile = true;
         
         // Efecto de aparición
         this.waterBall.setAlpha(0);
