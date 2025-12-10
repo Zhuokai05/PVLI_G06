@@ -1,116 +1,154 @@
-import BaseState from '../../../stateMachine/BaseState.js';
+import BaseBossAttackState from '../BaseBossAttackState.js';
 
-export default class BossFearCupAttackState extends BaseState {
+export default class BossFearCupAttackState extends BaseBossAttackState {
     constructor(texture = 'vaso') {
-        super(); 
-        this.texture = texture;
-    }
-    enter(context) {
-        this.boss = context;
-        this.stateTime = 0;
-        this.currentPhase = 'attack'; // attack -> cooldown
-        this.attackDuration = 6000; 
-        this.cooldownDuration = 1500;
+        super({
+            texture: texture,
+            attackName: 'Ataque de Tazas',
+            phases: ['attack', 'cooldown'], // Sin fase de warning
+            attackDuration: 6000,
+            cooldownDuration: 1500,
+            logOnEnter: true
+        });
         
         this.cupsSpawned = 0;
         this.maxCups = 10;
         this.cupSpawnInterval = 400;
         this.timeSinceLastSpawn = 0;
-        
-        console.log("Ataque de tazas iniciado");
+        this.activeCups = [];
     }
-
+    
+    enter(context) {
+        super.enter(context);
+        this.cupsSpawned = 0;
+        this.timeSinceLastSpawn = 0;
+        this.activeCups = [];
+    }
+    
     execute(context, time, delta) {
-        this.stateTime += delta;
-        this.timeSinceLastSpawn += delta;
-
-        switch (this.currentPhase) {
-            case 'attack':
-                // Spawnear cups en intervalos
-                if (this.timeSinceLastSpawn >= this.cupSpawnInterval && this.cupsSpawned < this.maxCups) {
-                    this.spawnCup();
-                    this.timeSinceLastSpawn = 0;
-                    this.cupsSpawned++;
-                }
-                
-                // Terminar ataque después de la duración
-                if (this.stateTime >= this.attackDuration) {
-                    this.startCooldownPhase();
-                }
-                break;
-                
-            case 'cooldown':
-                if (this.stateTime >= this.cooldownDuration) {
-                    this.boss.selectNextState();
-                }
-                break;
+        super.execute(context, time, delta);
+        
+        // Lógica específica de spawn durante la fase attack
+        if (this.currentPhase === 'attack') {
+            this.timeSinceLastSpawn += delta;
+            
+            if (this.timeSinceLastSpawn >= this.cupSpawnInterval && 
+                this.cupsSpawned < this.maxCups) {
+                this.spawnCup();
+                this.timeSinceLastSpawn = 0;
+                this.cupsSpawned++;
+            }
         }
     }
-
+    
+    createWarning() {
+        // Este ataque no tiene fase de warning tradicional
+        // Podrías añadir algún efecto visual de advertencia aquí si lo deseas
+    }
+    
+    executeAttack() {
+        // El spawn de tazas se maneja en el método execute
+        // Esta función se llama al inicio de la fase attack
+    }
+    
     spawnCup() {
-        const { scene, cups } = this.boss;
-        const cam = scene.cameras.main;
-        
-        // Calcular límites del mundo visible en la cámara actual
+        const cam = this.scene.cameras.main;
         const worldView = cam.worldView;
+        
+        // Calcular posición aleatoria dentro del área visible
         const minX = worldView.left + 100;
         const maxX = worldView.right - 100;
-        
-        // Spawnear en posición aleatoria dentro del área visible
         const x = Phaser.Math.Between(minX, maxX);
-        const y = worldView.top - 50; // Arriba de la pantalla
+        const y = worldView.top - 50;
         
-        const cup = cups.create(x, y, this.texture);
-
+        // Crear taza
+        const cup = this.boss.cups.create(x, y, this.config.texture);
+        
+        if (!cup) {
+            console.error('No se pudo crear la taza');
+            return;
+        }
+        
         cup.setScale(1.5);
         cup.setVelocityY(this.boss.cupSpeed);
         cup.body.allowGravity = false;
         cup.setCollideWorldBounds(false);
-
-        this.cleanupCup(cup);
-        console.log(`Cup spawned at (${x}, ${y})`);
+        
+        // Efecto de aparición
+        cup.setAlpha(0);
+        this.scene.tweens.add({
+            targets: cup,
+            alpha: 1,
+            scale: 1.5,
+            duration: 200,
+            ease: 'Back.easeOut'
+        });
+        
+        // Registrar para limpieza
+        this.activeCups.push(cup);
+        this.setupCupCleanup(cup);
     }
-
-    cleanupCup(cup) {
-        const scene = this.boss.scene;
-        const cleanupCheck = () => {
-            if (!cup.active) return;
-            
-            // Destruir si sale de los límites del mundo visible
-            const cam = scene.cameras.main;
-            const worldView = cam.worldView;
-            
-            if (cup.y > worldView.bottom + 200) {
+    
+    setupCupCleanup(cup) {
+        const cleanupEvent = this.scene.time.addEvent({
+            delay: 100,
+            callback: () => {
+                if (!cup || !cup.active) {
+                    cleanupEvent.remove(false);
+                    this.removeCupFromActive(cup);
+                    return;
+                }
+                
+                // Destruir si sale de los límites visibles
+                const cam = this.scene.cameras.main;
+                const worldView = cam.worldView;
+                
+                if (cup.y > worldView.bottom + 200) {
+                    cup.destroy();
+                    cleanupEvent.remove(false);
+                    this.removeCupFromActive(cup);
+                }
+            },
+            callbackScope: this,
+            loop: true
+        });
+        
+        // Timer de seguridad
+        this.scene.time.delayedCall(5000, () => {
+            if (cup && cup.active) {
                 cup.destroy();
+                this.removeCupFromActive(cup);
             }
-        };
+        });
+    }
+    
+    removeCupFromActive(cup) {
+        const index = this.activeCups.indexOf(cup);
+        if (index > -1) {
+            this.activeCups.splice(index, 1);
+        }
+    }
+    
+    destroyAllWarnings() {
+        super.destroyAllWarnings();
         
-        // Verificar cada frame
-        scene.events.on('update', cleanupCheck);
-        
-        // También agregar un timer de seguridad
-        scene.time.delayedCall(5000, () => {
+        // Limpiar tazas activas
+        this.activeCups.forEach(cup => {
             if (cup && cup.active) {
                 cup.destroy();
             }
         });
-    }
-
-    startCooldownPhase() {
-        this.currentPhase = 'cooldown';
-        this.stateTime = 0;
-        console.log("Ataque de tazas terminado, entrando en cooldown");
-    }
-    
-    // NUEVO MÉTODO
-    destroyAllWarnings() {
-        // En este estado no hay warnings visuales, pero podemos limpiar las tazas
+        this.activeCups = [];
+        
+        // Limpiar grupo de tazas
         if (this.boss && this.boss.cups) {
             this.boss.cups.clear(true, true);
         }
     }
-
+    
     exit(context) {
         this.destroyAllWarnings();
+        this.cupsSpawned = 0;
+        this.activeCups = [];
     }
 }
