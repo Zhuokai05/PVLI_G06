@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 /**
  * Panel de tutorial que muestra texto al jugador cuando está cerca
  * @class TutorialPanel
