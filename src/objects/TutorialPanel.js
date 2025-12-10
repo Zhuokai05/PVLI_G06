@@ -1,4 +1,19 @@
+import Phaser from 'phaser';
+
+/**
+ * Panel de tutorial que muestra texto al jugador cuando está cerca
+ * @class TutorialPanel
+ * @extends Phaser.Physics.Arcade.Sprite
+ */
 export default class TutorialPanel extends Phaser.Physics.Arcade.Sprite {
+    /**
+     * Constructor del panel de tutorial
+     * @param {Phaser.Scene} scene - Escena donde se añade el panel
+     * @param {number} x - Posición X inicial
+     * @param {number} y - Posición Y inicial
+     * @param {string} texture - Textura del sprite (generalmente invisible)
+     * @param {string} tutorialText - Texto del tutorial a mostrar
+     */
     constructor(scene, x, y, texture, tutorialText) {
         super(scene, x, y, texture);
 
@@ -29,6 +44,9 @@ export default class TutorialPanel extends Phaser.Physics.Arcade.Sprite {
         this.createTextPanel();
     }
 
+    /**
+     * Crea el panel de texto con fondo y formato
+     */
     createTextPanel() {
         // Aumentar el tamaño del panel
         const panelWidth = 450; // Antes: 400
@@ -67,6 +85,9 @@ export default class TutorialPanel extends Phaser.Physics.Arcade.Sprite {
         this.textObject.setShadow(2, 2, 'rgba(0,0,0,0.8)', 3);
     }
 
+    /**
+     * Muestra el panel de tutorial con animación
+     */
     showTutorial() {
         if (this.isActive) return;
         
@@ -83,6 +104,9 @@ export default class TutorialPanel extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
+    /**
+     * Oculta el panel de tutorial con animación
+     */
     hideTutorial() {
         if (!this.isActive) return;
         
@@ -100,6 +124,10 @@ export default class TutorialPanel extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
+    /**
+     * Actualiza el estado del panel de tutorial
+     * @param {Phaser.Physics.Arcade.Sprite} player - Referencia al jugador
+     */
     update(player) {
         // Verificar si el jugador está en el rango usando el collider
         if (player) {
@@ -116,7 +144,11 @@ export default class TutorialPanel extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    // Método alternativo más preciso usando overlap
+    /**
+     * Verifica solapamiento con el jugador (método alternativo)
+     * @param {Phaser.Physics.Arcade.Sprite} player - Jugador a verificar
+     * @returns {boolean} - True si hay solapamiento
+     */
     checkOverlap(player) {
         if (!player) return false;
         
@@ -127,6 +159,11 @@ export default class TutorialPanel extends Phaser.Physics.Arcade.Sprite {
         return Phaser.Geom.Rectangle.Overlaps(bounds1, bounds2);
     }
 
+    /**
+     * Establece la posición del panel y actualiza su contenedor
+     * @param {number} x - Nueva posición X
+     * @param {number} y - Nueva posición Y
+     */
     setPosition(x, y) {
         super.setPosition(x, y);
         
@@ -136,6 +173,9 @@ export default class TutorialPanel extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    /**
+     * Destruye el panel y sus componentes
+     */
     destroy() {
         // Limpiar el contenedor y objetos gráficos
         if (this.panelContainer) {
