@@ -15,11 +15,31 @@ export default class MeleeEnemyAttackState extends BaseEnemyAttackState {
         super.enter(enemy);
         this.hasAttacked = false;               // evita doble ataque
         this.meleeSprite = null;                // referencia al sprite de ataque
+        this.attackTween = null;
         let direction = enemy.player.x > enemy.x ? 1 : -1;
 
         if (!this.hasAttacked) {
-            this.meleeAttack(direction);
-            this.hasAttacked = true;
+
+            this.attackTween = this.enemy.scene.tweens.add({
+                // tween animacion ataque
+                targets: this.enemy,
+                scaleX: 1.3,         
+                scaleY: 0.7,         
+                duration: enemy.attackDuration * 0.8,       
+                yoyo: true,          // Vuelve a su forma original al terminar
+                
+                onYoyo: () => { 
+                    // momento para soltar el golpe
+                    if (this.enemy.active) {
+                        this.meleeAttack(direction);
+                        this.hasAttacked = true;
+                    }
+                },
+                onComplete: () => {
+                    // Limpiamos el tinte por seguridad al terminar todo
+                    this.enemy.clearTint();
+                }
+            });
         }
     }
 
@@ -42,59 +62,25 @@ export default class MeleeEnemyAttackState extends BaseEnemyAttackState {
         let h = this.enemy.meleeAttackHeight;    // alto hitbox
         let offsetX = direction * this.enemy.meleeAttackDist;
 
-        // Determinar qué animación usar basado en el tipo de enemigo
-        let meleeAnimationKey = '';
-        let meleeTexture = '';
         
-        // USAR LA TEXTURE KEY DIRECTAMENTE PARA DETERMINAR
-        if (this.enemy.texture.key.includes('Angry') || this.enemy.texture.key === 'basicEnemyAngry') {
-            meleeAnimationKey = 'basicEnemyAngry_melee_anim';
-            meleeTexture = 'basicEnemyAngry_melee';
-        } else if (this.enemy.texture.key.includes('Sad') || this.enemy.texture.key === 'basicEnemySad') {
-            meleeAnimationKey = 'basicEnemySad_melee_anim';
-            meleeTexture = 'basicEnemySad_melee';
-        } else {
-            // O usar una propiedad específica si existe
-            if (this.enemy.meleeAttackAnimationKey) {
-                meleeAnimationKey = this.enemy.meleeAttackAnimationKey;
-                meleeTexture = this.enemy.meleeAttackAnimationKey.replace('_anim', '');
-            } else {
-                meleeAnimationKey = 'basicEnemyAngry_melee_anim';
-                meleeTexture = 'basicEnemyAngry_melee';
-            }
-        }
-
-        console.log(`Enemy texture key: ${this.enemy.texture.key}`);
-        console.log(`Using animation: ${meleeAnimationKey}`);
-        console.log(`Using texture: ${meleeTexture}`);
-
         // Crear sprite de animación de ataque
         this.meleeSprite = this.enemy.scene.add.sprite(
             this.enemy.x + offsetX,
             this.enemy.y,
-            meleeTexture
+            this.enemy?.attackAnimationKey
         );
         
-        this.meleeSprite.setDepth(this.enemy.depth + 1); // Un nivel arriba del enemigo
-        
-        // Verificar que la animación existe antes de reproducirla
-        if (this.enemy.scene.anims.exists(meleeAnimationKey)) {
-            this.meleeSprite.play(meleeAnimationKey);
-        } else {
-            console.error(`Animation ${meleeAnimationKey} does not exist!`);
-            // Usar la textura estática como fallback
-            this.meleeSprite.setFrame(0);
-        }
+        let sprite = this.meleeSprite;
+        sprite.setDepth(this.enemy.depth + 1); // Un nivel arriba del enemigo
+           
+        sprite.play(this.enemy.attackAnimationKey);
 
         // Ajustar dirección/flip de la animación
-        if (direction === -1) {
-            this.meleeSprite.setFlipX(true);
-        } else {
-            this.meleeSprite.setFlipX(false);
-        }
+        
+        this.meleeSprite.setFlipX(direction === -1);
 
         // Crear hitbox (puedes ajustar la posición según la animación)
-        this.hitbox = this.enemy.scene.add.rectangle(
+        let hitbox = this.enemy.scene.add.rectangle(
             this.enemy.x + offsetX,
             this.enemy.y,
             h,
@@ -103,14 +89,19 @@ export default class MeleeEnemyAttackState extends BaseEnemyAttackState {
             0.3 // Alpha reducido para ver mejor la animación
         );
 
-        this.enemy.scene.physics.add.existing(this.hitbox);
-        this.hitbox.body.allowGravity = false;
+        this.enemy.scene.physics.add.existing(hitbox);
+        hitbox.body.allowGravity = false;
+
+        sprite.once('animationcomplete', () => {
+            sprite.destroy();
+            if(hitbox) hitbox.destroy();
+        })
 
         let damaged = false;
 
         // Colision con jugador
         this.enemy.scene.physics.add.overlap(
-            this.hitbox,
+            hitbox,
             this.enemy.player,
             (hb, player) => {
                 if (damaged) return;
@@ -120,38 +111,6 @@ export default class MeleeEnemyAttackState extends BaseEnemyAttackState {
                 player.takeDamage(this.enemy.damage, knockDir);
             }
         );
-
-        // Destruir sprite y hitbox cuando termine la animación
-        this.meleeSprite.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-            if (this.meleeSprite) {
-                this.meleeSprite.destroy();
-                this.meleeSprite = null;
-            }
-        });
-
-        // También destruir después de un tiempo por seguridad
-        this.enemy.scene.time.delayedCall(500, () => {
-            if (this.meleeSprite && this.meleeSprite.active) {
-                this.meleeSprite.destroy();
-                this.meleeSprite = null;
-            }
-        });
     }
 
-    /**
-     * Sale del estado de ataque cuerpo a cuerpo
-     * @param {Object} enemy - Enemigo que ejecuta el ataque
-     */
-    exit(enemy) {
-        // Destruir hitbox y sprite si aún existen
-        if (this.hitbox) {
-            this.hitbox.destroy();
-            this.hitbox = null;
-        }
-        
-        if (this.meleeSprite) {
-            this.meleeSprite.destroy();
-            this.meleeSprite = null;
-        }
-    }
 }

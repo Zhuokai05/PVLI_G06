@@ -101,9 +101,14 @@ export default class BossAngryFireBallState extends BaseBossAttackState {
      */
     spawnColumnFireballs() {
         const colX = Phaser.Math.RND.pick(this.columns);
-        const fireball = this.boss.fireballs.create(colX, this.boss.y - 350, this.config.texture);
+        
+        // Usar create de Phaser en lugar del grupo específico
+        const fireball = this.scene.physics.add.sprite(colX, this.boss.y - 350, this.config.texture);
+        
+        // Añadir al grupo de ataques del boss
+        this.boss.addAttack(fireball);
+        
         fireball.play('fireball_move');
-
         fireball.setScale(4);
         fireball.body.allowGravity = false;
         fireball.setVelocityY(this.boss.fireballSpeed);
@@ -126,11 +131,8 @@ export default class BossAngryFireBallState extends BaseBossAttackState {
      * @param {Phaser.GameObjects.Sprite} fireball - Bola de fuego a limpiar
      */
     autoCleanup(fireball) {
-        const scene = this.boss.scene;
-        if (this.boss && this.boss.scene) {
-            this.boss.scene.time.delayedCall(3000, () => {
-                if (fireball.active) fireball.destroy();
-            });
-        }
+        this.scene.time.delayedCall(3000, () => {
+            if (fireball.active) fireball.destroy();
+        });
     }
 }

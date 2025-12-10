@@ -1,4 +1,5 @@
 import StateMachine from '../../../stateMachine/StateMachine.js';
+import PlayerDataManager from '../../../managers/PlayerDataManager.js';
 
 /**
  * Clase base para todos los jefes del juego
@@ -6,24 +7,31 @@ import StateMachine from '../../../stateMachine/StateMachine.js';
  * @extends Phaser.Physics.Arcade.Sprite
  */
 export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
+    /**
+     * Constructor de la clase base del jefe
+     * @param {Phaser.Scene} scene - Escena del juego
+     * @param {number} x - Posición X inicial
+     * @param {number} y - Posición Y inicial
+     * @param {string} texture - Textura del jefe
+     * @param {number} frame - Frame inicial de la textura
+     * @param {Object} player - Referencia al jugador
+     * @param {Object} config - Configuración específica del jefe
+     */
     constructor(scene, x, y, texture, frame, player, config) {
         super(scene, x, y, texture, frame);
 
-        // Configuración básica
         this.scene = scene;
         this.player = player;
         this.config = config || {};
 
-        // Añadir a la escena y físicas
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        // Estado del boss
         this.isActivated = false;
         this.notdead = true;
         this.phase = 1;
 
-        // Configuración por defecto
+        // Stats
         this.health = this.config.health || 10;
         this.maxHealth = this.config.maxHealth || 10;
         this.damage = this.config.damage || 1;
@@ -34,33 +42,23 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.minCooldown = this.config.minCooldown || 1000;
         this.maxCooldown = this.config.maxCooldown || 1500;
 
-        // Grupos de ataque
-        this.attackGroups = {};
-
-        // Estados disponibles
+        // Grupo único para todos los ataques
+        this.bossAttacks = scene.physics.add.group();
+        
+        // Estados y colisiones
         this.availableStates = this.config.availableStates || [];
-
-        // Máquina de estados
         this.stateMachine = new StateMachine(this, 'boss');
-
-        // Para el PlayerDataManager (no revivir tras matarlo)
         this.bossName = this.config.bossName || '';
-
-        // Puertas y pisos
         this.Bossdoors = null;
         this.floors = null;
-
-        // Colisiones específicas (para poder limpiarlas y recrearlas)
         this.colliders = {};
+        this.platforms = null;
 
-        // Configuración física por defecto
+        // Configuración inicial
         this.setupDefaultPhysics();
-
-        // Estado inicial inactivo
         this.setupInactiveState();
         this.stateMachine.setState('inactive');
 
-        // Configurar visualmente como inactivo
         this.setVisible(false);
         this.setActive(false);
     }
@@ -71,13 +69,8 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
     setupDefaultPhysics() {
         this.setCollideWorldBounds(true);
         this.setImmovable(true);
-
-        const spriteWidth = this.displayWidth;
-        const spriteHeight = this.displayHeight;
-
-        // Configuración por defecto del body (puede ser sobrescrita)
-        this.body.setSize(spriteWidth / 35, spriteHeight / 35);
-        this.body.setOffset(spriteWidth / 9.9, spriteHeight / 10.5);
+        this.body.setSize(this.displayWidth / 35, this.displayHeight / 35);
+        this.body.setOffset(this.displayWidth / 9.9, this.displayHeight / 10.5);
         this.body.moves = false;
     }
 
@@ -86,20 +79,16 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
      */
     setupInactiveState() {
         this.stateMachine.addState('inactive', {
-            enter: () => {
-                console.log(`${this.constructor.name} inactivo`);
-            },
-            step: () => {
-                // No ejecutar lógica de estado
-            },
-            exit: () => { }
+            enter: () => console.log(`${this.constructor.name} inactivo`),
+            step: () => {},
+            exit: () => {}
         });
     }
 
     /**
      * Actualiza el jefe en cada frame
      * @param {number} time - Tiempo actual
-     * @param {number} delta - Delta time desde la última actualización
+     * @param {number} delta - Delta time
      */
     update(time, delta) {
         if (this.notdead && this.isActivated) {
@@ -109,27 +98,13 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
 
     /**
      * Aplica daño al jefe
-     * @param {number} damage - Cantidad de daño a aplicar
+     * @param {number} damage - Cantidad de daño
      */
     takeDamage(damage) {
         if (!this.isActivated || !this.notdead) return;
 
         this.health -= damage;
-
-        // Efecto visual de daño
-        this.setTint(this.getDamageTintColor());
-
-        this.scene.tweens.add({
-            targets: this,
-            alpha: 0.5,
-            duration: 100,
-            yoyo: true,
-            repeat: 2,
-            onComplete: () => {
-                this.clearTint();
-                this.setAlpha(1);
-            }
-        });
+        this.applyDamageEffect();
 
         if (this.health <= 0) {
             this.nextPhase();
@@ -137,24 +112,78 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
     }
 
     /**
+     * Aplica efecto visual de daño
+     */
+    applyDamageEffect() {
+        // Aplicar tint a todos los elementos visuales del boss
+        const visualElements = [this, this.bossMask, this.leftClaw, this.rightClaw]
+            .filter(element => element && element.visible);
+        
+        visualElements.forEach(element => element.setTint(this.getDamageTintColor()));
+
+        this.scene.tweens.add({
+            targets: visualElements,
+            alpha: 0.5,
+            duration: 100,
+            yoyo: true,
+            repeat: 2,
+            onComplete: () => {
+                visualElements.forEach(element => {
+                    element.clearTint();
+                    element.setAlpha(1);
+                });
+            }
+        });
+    }
+
+    /**
      * Obtiene el color del tint al recibir daño
      * @returns {number} - Color del tint
      */
     getDamageTintColor() {
-        // Sobrescribir en clases hijas para diferentes colores
         return 0xff0000;
     }
 
     /**
-     * Avanza a la siguiente fase del jefe
+     * Maneja la colisión de cualquier ataque con el jugador
+     * @param {Object} player - Jugador
+     * @param {Object} attack - Ataque que colisiona
      */
-    nextPhase() {
-        // Método abstracto - debe ser implementado por clases hijas
-        throw new Error('nextPhase() debe ser implementado por la clase hija');
+    attackCollisionWithPlayer(player, attack) {
+        if (!attack.active || !player.active) return;
+        
+        const dir = player.x < attack.x ? -1 : 1;
+        player.takeDamage(this.damage, dir);
+        
+        // Solo destruir proyectiles, no advertencias
+        if (attack.isProjectile !== false && attack.destroy) {
+            attack.destroy();
+        }
     }
 
     /**
-     * Inicia un estado aleatorio de los disponibles
+     * Maneja colisión de ataques con plataformas
+     * @param {Object} attack - Ataque
+     * @param {Object} platform - Plataforma
+     */
+    attackCollisionWithPlatform(attack, platform) {
+        if (!attack.active || !platform.active) return;
+        
+        if (attack.isPlatformPunch || attack.destroyOnPlatform) {
+            platform.deactivateByPunch?.();
+            attack.destroy();
+        }
+    }
+
+    /**
+     * Avanza a la siguiente fase (método abstracto)
+     */
+    nextPhase() {
+        // Debe ser implementado por clases hijas
+    }
+
+    /**
+     * Inicia un estado aleatorio
      */
     startRandomState() {
         if (!this.isActivated) return;
@@ -188,47 +217,43 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.notdead = false;
         this.isActivated = false;
 
-        // Limpiar warnings
+        // Limpieza completa
         this.cleanupAllWarnings();
+        this.destroyAllAttackObjects();
 
-        // Desactivar estado actual
-        if (this.stateMachine && this.stateMachine.currentState &&
-            this.stateMachine.currentState.exit) {
+        if (this.stateMachine?.currentState?.exit) {
             this.stateMachine.currentState.exit(this);
         }
 
-        // Cambiar a estado inactivo
         if (this.stateMachine) {
             this.stateMachine.setState('inactive');
         }
 
-        // Abrir puertas
-        if (this.Bossdoors) {
-            this.Bossdoors.getChildren().forEach(door => {
-                if (door.abrirPuerta) {
-                    door.abrirPuerta();
-                }
-            });
+        // Abrir puertas y plataformas
+        [this.Bossdoors, this.floors].forEach(group => {
+            group?.getChildren().forEach(obj => obj.abrirPuerta?.());
+        });
+
+        // Marcar boss como derrotado en PlayerDataManager
+        if (this.bossName) {
+            PlayerDataManager.killBoss(this.bossName);
         }
 
-        if (this.floors) {
-            this.floors.getChildren().forEach(floor => {
-                if (floor.abrirPuerta) {
-                    floor.abrirPuerta();
-                }
-            });
-        }
+        // Emitir evento para actualizar UI
+        this.scene.events.emit('bossDefeated');
 
-        // Desactivar físicas
-        this.setActive(false);
+        // Ocultar todos los elementos visuales
         this.setVisible(false);
-
-        // Destruir objetos de ataque
-        this.destroyAllAttackObjects();
+        this.setActive(false);
+        
+        // Limpiar máscara y garras si existen
+        this.bossMask?.destroy();
+        this.bossMask = null;
+        this.destroyClaws();
     }
 
     /**
-     * Asigna las puertas y pisos del boss
+     * Asigna puertas y pisos al jefe
      * @param {Phaser.GameObjects.Group} doors - Grupo de puertas
      * @param {Phaser.GameObjects.Group} floors - Grupo de pisos
      */
@@ -238,40 +263,72 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
     }
 
     /**
-     * Activa el jefe y establece su vida
+     * Asigna la puerta final
+     * @param {Object} finaldoor - Puerta final
+     */
+    setFinalDoor(finaldoor) {
+        this.finaldoor = finaldoor;
+    }
+
+    /**
+     * Activa el jefe
      */
     setLife() {
-        // Verificar si el boss ya fue derrotado antes de activarlo
-        if (this.bossName && this.scene.PlayerDataManager.data.bossStatus[this.bossName]) {
-            console.log(`${this.bossName} ya fue derrotado, no se activará`);
-            this.setVisible(false);
-            this.setActive(false);
-            this.isActivated = false;
-            return; // No activar el boss si ya fue derrotado
+        if (this.bossName && PlayerDataManager.data.bossStatus[this.bossName]) {
+            console.log(`${this.bossName} ya fue derrotado`);
+            this.handleAlreadyDefeated();
+            return;
         }
 
         this.setVisible(true);
         this.setActive(true);
         this.isActivated = true;
 
-        // Configurar colisiones
         this.setupCollisions();
-
-        // Iniciar cooldown antes del primer ataque
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
+    }
+
+    /**
+     * Maneja el caso cuando el jefe ya fue derrotado
+     */
+    handleAlreadyDefeated() {
+        this.setVisible(false);
+        this.setActive(false);
+        this.isActivated = false;
+        this.bossMask?.setVisible(false);
+        this.Bossdoors?.getChildren().forEach(door => door.abrirPuerta?.());
     }
 
     /**
      * Configura las colisiones del jefe
      */
     setupCollisions() {
-        // Método abstracto - debe ser implementado por clases hijas
-        throw new Error('setupCollisions() debe ser implementado por la clase hija');
+        // Colisión jugador-ataques
+        if (!this.colliders.attackOverlap) {
+            this.registerCollider('attackOverlap', this.scene.physics.add.overlap(
+                this.bossAttacks,
+                this.player,
+                this.attackCollisionWithPlayer,
+                null,
+                this
+            ));
+        }
+
+        // Colisión plataformas-ataques (si hay plataformas)
+        if (this.platforms && !this.colliders.platformOverlap) {
+            this.registerCollider('platformOverlap', this.scene.physics.add.overlap(
+                this.bossAttacks,
+                this.platforms,
+                this.attackCollisionWithPlatform,
+                null,
+                this
+            ));
+        }
     }
 
     /**
-     * Resetea todas las colisiones del jefe
+     * Resetea todas las colisiones
      */
     resetAllCollisions() {
         this.removeAllColliders();
@@ -282,32 +339,19 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
      * Limpia todas las advertencias visuales
      */
     cleanupAllWarnings() {
-        if (this.stateMachine && this.stateMachine.currentState) {
-            const currentState = this.stateMachine.currentState;
-
-            if (typeof currentState.destroyAllWarnings === 'function') {
-                currentState.destroyAllWarnings();
-            }
-
-            // Limpiar elementos de advertencia comunes
+        // Limpiar elementos de advertencia del estado actual
+        if (this.stateMachine?.currentState) {
+            const state = this.stateMachine.currentState;
+            state.destroyAllWarnings?.();
+            
+            // Lista de posibles elementos de advertencia
             const warningElements = [
-                'warningRect', 'warningBorder', 'warningText',
-                'warningCircle', 'waterBall', 'leftWarning',
-                'rightWarning', 'warningLine'
+                'warningRect', 'warningBorder', 'warningText', 'warningCircle',
+                'waterBall', 'leftWarning', 'rightWarning', 'warningLine'
             ];
-
-            warningElements.forEach(element => {
-                if (currentState[element] && currentState[element].destroy) {
-                    currentState[element].destroy();
-                }
-            });
-
-            // Limpiar flechas si existen
-            if (currentState.arrows) {
-                currentState.arrows.forEach(arrow => {
-                    if (arrow && arrow.destroy) arrow.destroy();
-                });
-            }
+            
+            warningElements.forEach(el => state[el]?.destroy?.());
+            state.arrows?.forEach(arrow => arrow?.destroy?.());
         }
     }
 
@@ -315,14 +359,7 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
      * Destruye todos los objetos de ataque
      */
     destroyAllAttackObjects() {
-        // Limpiar todos los grupos de ataque
-        Object.values(this.attackGroups).forEach(group => {
-            if (group && group.clear) {
-                group.clear(true, true);
-            }
-        });
-
-        // Limpiar colisiones específicas
+        this.bossAttacks?.clear(true, true);
         this.removeAllColliders();
     }
 
@@ -330,12 +367,8 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
      * Elimina todos los colliders registrados
      */
     removeAllColliders() {
-        // Eliminar todas las colisiones registradas
-        Object.values(this.colliders).forEach(collider => {
-            if (collider) {
-                this.scene.physics.world.removeCollider(collider);
-            }
-        });
+        Object.values(this.colliders).forEach(collider => 
+            collider && this.scene.physics.world.removeCollider(collider));
         this.colliders = {};
     }
 
@@ -349,21 +382,11 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
     }
 
     /**
-     * Agrega un grupo de ataque
-     * @param {string} name - Nombre del grupo
-     * @param {Phaser.Physics.Arcade.Group} group - Grupo a agregar
+     * Agrega un ataque al grupo de ataques
+     * @param {Object} attack - Ataque a agregar
      */
-    addAttackGroup(name, group) {
-        this.attackGroups[name] = group;
-    }
-
-    /**
-     * Obtiene un grupo de ataque por nombre
-     * @param {string} name - Nombre del grupo
-     * @returns {Phaser.Physics.Arcade.Group} - Grupo de ataque
-     */
-    getAttackGroup(name) {
-        return this.attackGroups[name];
+    addAttack(attack) {
+        this.bossAttacks.add(attack);
     }
 
     /**
@@ -376,20 +399,56 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
     }
 
     /**
-     * Establece escala y configuración del body
+     * Crea garras para el jefe
+     * @param {string} texture - Textura de las garras
+     * @param {number} scale - Escala de las garras
+     * @param {number} offsetX - Offset en X desde la posición del jefe
+     */
+    createClaws(texture = 'garra', scale = 3.5, offsetX = 380) {
+        this.leftClaw = this.scene.physics.add.sprite(this.x - offsetX, this.y - 50, texture);
+        this.rightClaw = this.scene.physics.add.sprite(this.x + offsetX, this.y - 50, texture);
+
+        [this.leftClaw, this.rightClaw].forEach(claw => {
+            claw.setScale(scale).setDepth(5);
+            claw.body.allowGravity = false;
+            claw.body.setSize(claw.displayWidth / 3.5, claw.displayHeight / 5.5);
+            claw.body.setOffset(0, claw.displayHeight / 20);
+            this.addAttack(claw);
+        });
+
+        this.clawsActive = true;
+    }
+
+    /**
+     * Destruye las garras del jefe
+     */
+    destroyClaws() {
+        [this.leftClaw, this.rightClaw].forEach(claw => claw?.destroy());
+        this.leftClaw = this.rightClaw = null;
+        this.clawsActive = false;
+    }
+
+    /**
+     * Establece escala y configuración del cuerpo
      * @param {number} scale - Escala del sprite
-     * @param {number} widthDivisor - Divisor para el ancho del body
-     * @param {number} heightDivisor - Divisor para el alto del body
-     * @param {number} offsetXDivisor - Divisor para el offset X
-     * @param {number} offsetYDivisor - Divisor para el offset Y
+     * @param {number} widthDivisor - Divisor para el ancho
+     * @param {number} heightDivisor - Divisor para el alto
+     * @param {number} offsetXDivisor - Divisor para offset X
+     * @param {number} offsetYDivisor - Divisor para offset Y
      */
     setScaleAndBody(scale, widthDivisor = 35, heightDivisor = 35,
         offsetXDivisor = 9.9, offsetYDivisor = 10.5) {
         this.setScale(scale);
+        this.body.setSize(this.displayWidth / widthDivisor, this.displayHeight / heightDivisor);
+        this.body.setOffset(this.displayWidth / offsetXDivisor, this.displayHeight / offsetYDivisor);
+    }
 
-        const spriteWidth = this.displayWidth;
-        const spriteHeight = this.displayHeight;
-        this.body.setSize(spriteWidth / widthDivisor, spriteHeight / heightDivisor);
-        this.body.setOffset(spriteWidth / offsetXDivisor, spriteHeight / offsetYDivisor);
+    /**
+     * Asigna plataformas al jefe
+     * @param {Phaser.GameObjects.Group} platforms - Grupo de plataformas
+     */
+    setPlatforms(platforms) {
+        this.platforms = platforms;
+        this.setupCollisions();
     }
 }
