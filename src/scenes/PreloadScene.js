@@ -125,6 +125,7 @@ export class PreloadScene extends Phaser.Scene {
 
     //final
     this.load.image('final', './assets/sprites/Bosses/final.png');
+    this.load.image('final2', './assets/sprites/Bosses/final2.png');
     this.load.image('fgarra', './assets/sprites/Bosses/FGarra.png');
     this.load.image('fvaso', './assets/sprites/Bosses/FVaso.png');
     this.load.image('ffire_ball', 'assets/sprites/Bosses/FFire_ball.png');
