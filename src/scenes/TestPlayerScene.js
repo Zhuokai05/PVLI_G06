@@ -226,7 +226,7 @@ export default class TestPlayerScene extends Phaser.Scene {
                     break;
 
                 case "finalbossdoor":
-                    this.finalbossdoor = new FinalBossDoor(this, objeto.x, objeto.y, 'puertamiedo');
+                    this.finalbossdoor = new FinalBossDoor(this, objeto.x, objeto.y, 'puertafinal');
                     break;
                 case "finalbossdoorcontrary":
                     this.finalbossdoorcontrary = new FinalBossDoor(this, objeto.x, objeto.y, 'puertamiedo');

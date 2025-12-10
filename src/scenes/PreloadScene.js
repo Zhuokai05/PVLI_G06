@@ -111,7 +111,7 @@ export class PreloadScene extends Phaser.Scene {
     });
     this.load.image('fire_ball', 'assets/sprites/Bosses/Fire_ball.png');
     this.load.image('punch', 'assets/sprites/Bosses/Angry_punch.png');
-//----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
     this.load.image('tristeza', './assets/sprites/Bosses/tristeza.png');
     this.load.image('icicle', './assets/sprites/Bosses/Sad_ice.png');
     this.load.image('water_ball', './assets/sprites/Bosses/Water_ball.png');
@@ -152,6 +152,7 @@ export class PreloadScene extends Phaser.Scene {
     });
     this.load.image('puertatriste', './assets/sprites/Escena/Puertatristeza.png');
     this.load.image('puertamiedo', './assets/sprites/Escena/Puertamiedo.png');
+    this.load.image('puertafinal', './assets/sprites/Escena/PuertaFinal.png');
     this.load.image('platform', './assets/sprites/Escena/platform.png');
     this.load.image('PuertaBoss', './assets/sprites/Escena/PuertaBoss.png');
     this.load.image('bloque', './assets/sprites/Escena/Bloque.png');
