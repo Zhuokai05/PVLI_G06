@@ -17,17 +17,17 @@ export default class BaseBossAttackState extends BaseState {
             cooldownDuration: config.cooldownDuration || 500,
             logOnEnter: config.logOnEnter !== undefined ? config.logOnEnter : true
         };
-        
+
         this.boss = null;
         this.scene = null;
         this.player = null;
         this.stateTime = 0;
         this.currentPhase = this.config.phases[0];
-        
+
         // Elementos de advertencia
         this.warningElements = {};
     }
-    
+
     /**
      * Entra al estado de ataque
      * @param {Object} context - Contexto del boss
@@ -38,11 +38,11 @@ export default class BaseBossAttackState extends BaseState {
         this.player = this.boss.player;
         this.stateTime = 0;
         this.currentPhase = this.config.phases[0];
-        
+
         /*if (this.config.logOnEnter) {
             console.log(`${this.boss.constructor.name}: ${this.config.attackName}`);
         }*/
-        
+
         // Iniciar fase según configuración
         if (this.currentPhase === 'warning') {
             this.startWarningPhase();
@@ -50,7 +50,7 @@ export default class BaseBossAttackState extends BaseState {
             this.startAttackPhase();
         }
     }
-    
+
     /**
      * Ejecuta la lógica del estado de ataque
      * @param {Object} context - Contexto del boss
@@ -59,20 +59,20 @@ export default class BaseBossAttackState extends BaseState {
      */
     execute(context, time, delta) {
         this.stateTime += delta;
-        
+
         switch (this.currentPhase) {
             case 'warning':
                 if (this.stateTime >= this.config.warningDuration) {
                     this.startAttackPhase();
                 }
                 break;
-                
+
             case 'attack':
                 if (this.stateTime >= this.config.attackDuration) {
                     this.startCooldownPhase();
                 }
                 break;
-                
+
             case 'cooldown':
                 if (this.stateTime >= this.config.cooldownDuration) {
                     this.boss.selectNextState();
@@ -80,33 +80,33 @@ export default class BaseBossAttackState extends BaseState {
                 break;
         }
     }
-    
+
     /**
      * Inicia la fase de advertencia
      */
     startWarningPhase() {
         this.currentPhase = 'warning';
         this.stateTime = 0;
-        
+
         // Método abstracto - implementar en clases hijas
         this.createWarning();
     }
-    
+
     /**
      * Inicia la fase de ataque
      */
     startAttackPhase() {
         this.currentPhase = 'attack';
         this.stateTime = 0;
-        
-        
+
+
         // Limpiar advertencias
         this.destroyAllWarnings();
-        
+
         // Método abstracto - implementar en clases hijas
         this.executeAttack();
     }
-    
+
     /**
      * Inicia la fase de cooldown
      */
@@ -114,21 +114,21 @@ export default class BaseBossAttackState extends BaseState {
         this.currentPhase = 'cooldown';
         this.stateTime = 0;
     }
-    
+
     /**
      * Crea las advertencias visuales del ataque
      */
     createWarning() {
         throw new Error('createWarning() debe ser implementado por la clase hija');
     }
-    
+
     /**
      * Ejecuta el ataque
      */
     executeAttack() {
         throw new Error('executeAttack() debe ser implementado por la clase hija');
     }
-    
+
     /**
      * Destruye todas las advertencias visuales
      */
@@ -141,7 +141,7 @@ export default class BaseBossAttackState extends BaseState {
         });
         this.warningElements = {};
     }
-    
+
     /**
      * Registra un elemento de advertencia
      * @param {string} name - Nombre del elemento
@@ -150,7 +150,7 @@ export default class BaseBossAttackState extends BaseState {
     registerWarningElement(name, element) {
         this.warningElements[name] = element;
     }
-    
+
     /**
      * Obtiene un elemento de advertencia por nombre
      * @param {string} name - Nombre del elemento
@@ -159,7 +159,7 @@ export default class BaseBossAttackState extends BaseState {
     getWarningElement(name) {
         return this.warningElements[name];
     }
-    
+
     /**
      * Sale del estado de ataque
      * @param {Object} context - Contexto del boss
@@ -169,7 +169,7 @@ export default class BaseBossAttackState extends BaseState {
         this.destroyAllWarnings();
         this.stateTime = 0;
     }
-    
+
     /**
      * Crea un efecto de pulso visual
      * @param {Array} targets - Objetivos para el efecto
@@ -186,7 +186,7 @@ export default class BaseBossAttackState extends BaseState {
             repeat: -1
         });
     }
-    
+
     /**
      * Crea texto flotante como advertencia
      * @param {number} x - Posición X
@@ -203,14 +203,14 @@ export default class BaseBossAttackState extends BaseState {
             stroke: '#000000',
             strokeThickness: 4
         };
-        
+
         const textObject = this.scene.add.text(x, y, text, { ...defaultStyle, ...style })
             .setOrigin(0.5);
-        
+
         this.registerWarningElement('warningText', textObject);
         return textObject;
     }
-    
+
     /**
      * Crea un rectángulo de advertencia
      * @param {number} x - Posición X
@@ -226,7 +226,7 @@ export default class BaseBossAttackState extends BaseState {
         this.registerWarningElement('warningRect', rect);
         return rect;
     }
-    
+
     /**
      * Crea un borde de advertencia
      * @param {number} x - Posición X
@@ -242,5 +242,18 @@ export default class BaseBossAttackState extends BaseState {
         border.strokeRect(x - width / 2, y - height / 2, width, height);
         this.registerWarningElement('warningBorder', border);
         return border;
+    }
+
+    /**
+    * Configura la auto-destrucción por tiempo de un objeto
+    * @param {Phaser.GameObjects.Sprite} obj - Objeto a limpiar
+    * @param {number} delay - Tiempo en ms antes de destruir
+    */
+    setupTimedCleanup(obj, delay = 3000) {
+        this.scene.time.delayedCall(delay, () => {
+            if (obj && obj.active) {
+                obj.destroy();
+            }
+        });
     }
 }
