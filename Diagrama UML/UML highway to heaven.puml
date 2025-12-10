@@ -1,0 +1,1409 @@
+@startuml
+
+' 0. CONFIGURACIÓN ESTÉTICA´
+
+'no iconos
+skinparam classAttributeIconSize 0 
+'conexiones rectas
+skinparam linetype ortho
+' no sombre de bloques
+skinparam shadow false
+'package en forma rectangular
+skinparam packageStyle rectangle
+' herencia por grupo
+skinparam groupInheritance 2
+' padre a la derecha
+left to right direction
+' distancia entre bloques
+skinparam ranksep 100
+skinparam nodesep 50
+
+
+' 1. MOTOR PHASER
+package "Phaser Core" #F5F5F5 {
+    class Phaser_Game {
+        + constructor(config)
+    }
+
+    class Phaser_Scene {
+        + add : GameObjectFactory
+        + physics : ArcadePhysics
+        + sound : SoundManager
+        + input : InputPlugin
+        + time : Clock
+        + tweens : TweenManager
+        + anims : AnimationManager
+        + cameras : CameraManager
+        + events : EventEmitter
+        + make : TilemapCreator
+        + cache : CacheManager
+        + load : LoaderPlugin
+        + scale : ScaleManager
+        + scene : ScenePlugin
+        + constructor(key)
+        + init(data)
+        + preload()
+        + create(data)
+        + update(time, delta)
+    }
+
+    class Phaser_Physics_Arcade_Sprite {
+        + body : Body
+        + x : number
+        + y : number
+        + depth : number
+        + texture : object
+        + flipX : boolean
+        + alpha : number
+        + scaleX : number
+        + scaleY : number
+        + setCollideWorldBounds(value)
+        + setGravityY(value)
+        + setMaxVelocity(x, y)
+        + setVelocity(x, y)
+        + setVelocityX(x)
+        + setVelocityY(y)
+        + setImmovable(value)
+        + setTint(color)
+        + clearTint()
+        + setDepth(value)
+        + setFlipX(value)
+        + setAngle(degrees)
+        + setScale(x, y)
+        + setOrigin(x, y)
+        + setInteractive(config)
+        + setTexture(key)
+        + setFrame(frame)
+        + setPosition(x, y)
+        + play(key, ignoreIfPlaying)
+        + emit(event, args)
+        + on(event, callback)
+        + once(event, callback)
+        + getBounds()
+        + destroy()
+        + disableBody(disableGameObject, hideGameObject)
+        + enableBody(reset, x, y, show, setEnable)
+        + setActive(value)
+        + setVisible(value)
+    }
+
+    class Phaser_Physics_Arcade_Body {
+        + onFloor() : boolean
+        + allowGravity : boolean
+        + velocity : Vector2
+        + enable : boolean
+        + moves : boolean
+        + onWorldBounds : boolean
+        + pushable : boolean
+        + setAllowGravity(value)
+        + setSize(width, height)
+        + setOffset(x, y)
+        + setImmovable(value)
+        + setGravity(x, y)
+    }
+
+    class Phaser_GameObjects_TileSprite {
+        + tilePositionX : number
+        + tilePositionY : number
+        + setOrigin(x, y)
+        + setDepth(depth)
+        + setScrollFactor(x, y)
+        + preUpdate(time, delta)
+    }
+
+    class Phaser_GameObjects_Zone {
+        + body : Body
+        + setOrigin(x, y)
+        + setSize(width, height)
+        + setInteractive()
+        + destroy()
+    }
+
+    class Phaser_GameObjects_Image {
+        + setScrollFactor(x, y)
+        + setScale(scale)
+        + setDepth(depth)
+        + setAlpha(alpha)
+        + setVisible(value)
+        + setTexture(key)
+        + setFlipX(value)
+        + setAngle(degrees)
+        + destroy()
+    }
+}
+
+
+' 2. JUGADOR
+package "Player System" #E1F5FE {
+    class Player {
+        + scene : Phaser.Scene
+        + health : number
+        + maxHealth : number
+        + dead : boolean
+        + damage : number
+        + rangeDamage : number
+        - meleeAttackDist : number
+        - meleeAttackWidge : number
+        - meleeAttackHeight : number
+        - attackCooldown : number
+        - attackDuration : number
+        + isAttacking : boolean
+        - rangeAttackDuration : number
+        - rangeAttackSpeed : number
+        - rangeAttackCooldownTimer : number
+        - rangeAttackCooldown : number
+        + direction : number
+        + grounded : boolean
+        + movementSpeed : number
+        - maxVelocityX : number
+        - maxVelocityY : number
+        + canMove : boolean
+        + jumpSpeed : number
+        + canPogoJump : boolean
+        - pogoJumpJudgeTime : number
+        + pogoJumpSpeed : number
+        - jumpBufferTime : number
+        - jumpBufferTimer : number
+        - speedReduceRatioAtJump : number
+        + canDash : boolean
+        + isDashing : boolean
+        - dashSpeed : number
+        - dashDuration : number
+        - dashCooldown : number
+        - dashCooldownTimer : number
+        + canShield : boolean
+        + hasShield : boolean
+        - shieldCooldown : number
+        - shieldCooldownTimer : number
+        + invulnerable : boolean
+        - invulnerableTime : number
+        - knockbackTime : number
+        - knockbackDistance : number
+        + orbs : Array
+        + equippedOrbs : Array
+        + activeOrbIndex : number
+        + damageMultiplier : number
+        + speedMultiplier : number
+        + bloodStealAmount : number
+        + jumpSpeedModifier : number
+        + attackRangeMultiplier : number
+        - orbTint : number
+        + respawnPoint : object
+        - keys : object
+        - stateMachine : StateMachine
+        - attackDir : string
+        - shieldAura : Image
+        - attackSound : Sound
+        - attackHitSound : Sound
+        - jumpSound : Sound
+        - shieldSound : Sound
+        - shieldBlockSound : Sound
+        - jumpEndSound : Sound
+        - damagedSound : Sound
+        - takeOrbSound : Sound
+        - changeOrbSound : Sound
+        - rangeAttackSound : Sound
+        - dashSound : Sound
+        --
+        + constructor(scene, x, y)
+        - createSFX()
+        + update(time, delta)
+        + takeDamage(damage, knockbackdirection)
+        + collectOrb(orb)
+        + equipOrb(slotIndex, orb)
+        + desEquipOrb(slotIndex)
+        + switchActiveOrb()
+        - ActivateOrb(slotIndex)
+        + die()
+        + isGrounded() : boolean
+        - getAttackDirection() : string
+        + performMeleeAttack(direction)
+        - safeDelay(time, callback)
+        + performRangeAttack()
+    }
+
+    class PlayerProjectilePool {
+        - scene : Phaser.Scene
+        - textureKey : string
+        - pool : Phaser.Physics.Arcade.Group
+        --
+        + constructor(scene, textureKey)
+        + fire(x, y, direction, duration, speed, damageCallback)
+        + release(projectile)
+    }
+
+    class InputManager {
+        - scene : Phaser.Scene
+        + keys : object
+        --
+        + constructor(scene)
+    }
+
+    package "Player States" {
+        class PlayerIdleState {
+            + enter(player)
+            + execute(player)
+        }
+        class PlayerMoveState {
+            + enter(player)
+            + execute(player)
+            + exit(player)
+        }
+        class PlayerJumpState {
+            + enter(player)
+            + execute(player)
+            + exit(player)
+        }
+        class PlayerDashState {
+            - dashSpawnShadowFrequency : number
+            - dashShadowDuration : number
+            - player : Player
+            - previousGravity : number
+            - previousVelX : number
+            - collisionHandler : function
+            - ghostTimer : TimerEvent
+            --
+            + enter(player)
+            + execute(player)
+            + exit(player)
+            - spawnDashGhost()
+        }
+        class PlayerKnockbackState {
+            + enter(player, direction)
+            + execute(player, time, delta)
+            + exit(player)
+        }
+        class PlayerDeathState {
+            + enter(player)
+            + execute(player)
+        }
+    }
+}
+
+
+' 3. ENEMIGOS COMUNES 
+package "Enemy System" #FFEBEE {
+    class BaseEnemy {
+        + scene : Phaser.Scene
+        + player : Player
+        + moveAnimationKey : string
+        + attackAnimationKey : string
+        + deathAnimationKey : string
+        + projectileTexture : string
+        + projectileTextureFrame : number
+        - colliderWidthDivider : number
+        - colliderHeightDivider : number
+        + health : number
+        + speed : number
+        + verticalSpeed : number
+        + attackRange : number
+        + damage : number
+        + collisionDamage : number
+        + startAttackTime : number
+        + attackDuration : number
+        + distanceBtwEnemies : number
+        + dead : boolean
+        + isAttacking : boolean
+        + applyKnockbackToPlayer : boolean
+        + detectPlayerRangeX : number
+        + detectPlayerRangeY : number
+        - maxVelocityX : number
+        - maxVelocityY : number
+        + inmune : boolean
+        - stateMachine : StateMachine
+        - playerOverlap : Collider
+        --
+        + constructor(scene, x, y, texture, frame, ...)
+        + update(time, delta)
+        + canSeePlayer() : boolean
+        + DivideCollider(divW, divH)
+        + CollisionWithPlayer(player, enemy)
+        + takeDamage(amount)
+        + die()
+        + playMoveAnimation()
+        + playAttackAnimation()
+    }
+
+    class RangedEnemyProjectile {
+        + constructor(scene, x, y, owner, texture, frame, target)
+    }
+
+    package "Enemy Types" {
+        class GroundMeleeEnemy {
+            + speed : number
+            + attackRange : number
+            + meleeAttackWidge : number
+            + meleeAttackHeight : number
+            + meleeAttackDist : number
+            --
+            + constructor(...)
+        }
+        class MineEnemy {
+            + speed : number
+            + attackRange : number
+            + attackDuration : number
+            + damage : number
+            + meleeAttackWidge : number
+            + meleeAttackHeight : number
+            + startAttackTime : number
+            --
+            + constructor(...)
+            + CollisionWithPlayer(player, enemy)
+        }
+        class RangedEnemy {
+            - colliderWidthDivisor : number
+            - colliderHeightDivisor : number
+            + attackRange : number
+            + attackDuration : number
+            + detectPlayerRangeX : number
+            + detectPlayerRangeY : number
+            --
+            + constructor(...)
+        }
+        class FlyingRangedEnemy {
+            - colliderWidthDivisor : number
+            - colliderHeightDivisor : number
+            + speed : number
+            + verticalSpeed : number
+            + attackDuration : number
+            + attackRange : number
+            + damage : number
+            + detectPlayerRangeX : number
+            + detectPlayerRangeY : number
+            --
+            + constructor(...)
+        }
+        class BaseTrap {
+            + speed : number
+            + inmune : boolean
+            + collisionDamage : number
+            --
+            + constructor(scene, x, y, sprite)
+        }
+    }
+
+    package "Enemy States" {
+        class BaseEnemyAttackState {
+            - enemy : BaseEnemy
+            --
+            + enter(enemy)
+            + execute(enemy, time, delta)
+        }
+        class MeleeEnemyAttackState {
+            - hasAttacked : boolean
+            - hitbox : Rectangle
+            --
+            + enter(enemy)
+            + execute(enemy, time, delta)
+            - meleeAttack(direction)
+            + exit(enemy)
+        }
+        class MineEnemyAttackState {
+            - hitbox : Rectangle
+            --
+            + enter(enemy)
+            + execute(enemy, time, delta)
+            - Explode(enemy)
+            + exit(enemy)
+        }
+        class RangedEnemyAttackState {
+            - hasAttacked : boolean
+            --
+            + enter(enemy)
+            + execute(enemy, time, delta)
+            - shootProjectile(enemy)
+        }
+        class GroundEnemyMoveState
+        class FlyingEnemyMoveState
+    }
+}
+
+' 4. SISTEMA DE BOSSES
+package "Boss System" #D1C4E9 {
+    
+    ' === CLASE BASE DE BOSSES ===
+    class BaseBoss {
+        + scene : Phaser_Scene
+        + player : Player
+        + config : object
+        + isActivated : boolean
+        + notdead : boolean
+        + phase : number
+        + health : number
+        + maxHealth : number
+        + damage : number
+        + startCooldown : number
+        + attackCooldown : number
+        + minCooldown : number
+        + maxCooldown : number
+        + attackGroups : object
+        + availableStates : Array
+        + stateMachine : StateMachine
+        + Bossdoors : Group
+        + floors : Group
+        + colliders : object
+        --
+        + constructor(scene, x, y, texture, frame, player, config)
+        + setupDefaultPhysics()
+        + setupInactiveState()
+        + update(time, delta)
+        + takeDamage(damage)
+        + getDamageTintColor()
+        + nextPhase()
+        + startRandomState()
+        + selectNextState()
+        + generateNewCooldown()
+        + die()
+        + getDoors(doors, floors)
+        + setLife()
+        + setupCollisions()
+        + resetAllCollisions()
+        + cleanupAllWarnings()
+        + destroyAllAttackObjects()
+        + removeAllColliders()
+        + registerCollider(name, collider)
+        + addAttackGroup(name, group)
+        + getAttackGroup(name)
+        + addState(name, state)
+        + setScaleAndBody(scale, ...)
+    }
+
+    class BaseBossAttackState {
+        + config : object
+        + boss : BaseBoss
+        + scene : Phaser_Scene
+        + player : Player
+        + stateTime : number
+        + currentPhase : string
+        + warningElements : object
+        --
+        + constructor(config)
+        + enter(context)
+        + execute(context, time, delta)
+        + startWarningPhase()
+        + startAttackPhase()
+        + startCooldownPhase()
+        + createWarning()
+        + executeAttack()
+        + destroyAllWarnings()
+        + registerWarningElement(name, element)
+        + getWarningElement(name)
+        + exit(context)
+        + createPulseEffect(targets, duration, alphaFrom, alphaTo)
+        + createFloatingText(x, y, text, style)
+        + createWarningRectangle(x, y, width, height, color, alpha)
+        + createWarningBorder(x, y, width, height, lineStyle)
+    }
+
+    class BaseCooldownState {
+        + config : object
+        + boss : BaseBoss
+        + cooldownTime : number
+        --
+        + constructor(config)
+        + enter(context)
+        + execute(context, time, delta)
+        + exit(context)
+    }
+
+    '  BOSSES ESPECÍFICOS 
+    package "Boss Angry" {
+        class BossAngry {
+            + distanceToFloor : number
+            + fireballSpeed : number
+            + punchYSpeed : number
+            + punchXSpeed : number
+            + platforms : Group
+            + fireballs : Group
+            + punches : Group
+            + finaldoor : FinalBossDoor
+            --
+            + constructor(...)
+            + createAnimations()
+            + setupStates()
+            + setupCollisions()
+            + FireballCollisionWithPlayer(player, fireball)
+            + PunchCollisionWithPlayer(player, punch)
+            + punchCollisionWithPlatform(punch, platform)
+            + nextPhase()
+            + die()
+            + getDoors(iraDoors, iraFloors)
+            + setLife()
+            + setFinalDoor(finaldoor)
+            + setPlatforms(platforms)
+            + removeAllColliders()
+            + getDamageTintColor()
+        }
+
+        class BossAngryFireBallState {
+            - timeSinceLastSpawn : number
+            - spawnInterval : number
+            - columnSpread : number
+            - numColumns : number
+            - columns : Array
+            --
+            + enter(context)
+            + execute(context, time, delta)
+            + generateColumns()
+            + createWarning()
+            + executeAttack()
+            + spawnColumnFireballs()
+            + autoCleanup(fireball)
+        }
+
+        class BossAngryPunchState {
+            - fixedSpawnY : number
+            - attackDirection : string
+            - spawnY : number
+            - spawnX : number
+            - arrows : Array
+            --
+            + enter(context)
+            + createWarning()
+            + createDirectionArrows()
+            + createBigDirectionArrow()
+            + executeAttack()
+            + spawnPunch()
+            + cleanupPunch(punch)
+            + destroyAllWarnings()
+        }
+
+        class BossAngryPunchPlatformState {
+            - spawnX : number
+            --
+            + createWarning()
+            + executeAttack()
+            + spawnPunch()
+            + cleanupPunch(punch)
+        }
+
+        class BossAngryCooldownState
+    }
+
+    package "Boss Sad" {
+        class BossSad {
+            + distanceToFloor : number
+            + icicleSpeed : number
+            + waterBallSpeed : number
+            + radialSpeed : number
+            + icicles : Group
+            + waterBalls : Group
+            + radialIcicles : Group
+            + finaldoor : FinalBossDoor
+            --
+            + constructor(...)
+            + setupStates()
+            + setupCollisions()
+            + icicleCollisionWithPlayer(player, icicle)
+            + waterBallCollisionWithPlayer(player, waterBall)
+            + radialIcicleCollisionWithPlayer(player, icicle)
+            + getDamageTintColor()
+            + nextPhase()
+            + die()
+            + cleanupAllWarnings()
+            + destroyWaterBall(waterBall)
+            + getDoors(iceDoors, iceFloors)
+            + setLife()
+            + setFinalDoor(finaldoor)
+            + clearActiveAttackObjects()
+            + destroyAllAttackObjects()
+            + removeAllColliders()
+            + takeDamage(damage)
+        }
+
+        class BossSadIcicleState {
+            - spawnX : number
+            - cleanupEvents : Array
+            --
+            + createWarning()
+            + executeAttack()
+            + spawnIcicle()
+            + cleanupIcicle(icicle)
+            + destroyAllWarnings()
+        }
+
+        class BossSadRadialState {
+            - cleanupEvents : Array
+            --
+            + createWarning()
+            + createWarningCircle(x, y, radius, color, alpha)
+            + executeAttack()
+            + spawnRadialIcicles(count)
+            + setupIcicleCleanup(icicle)
+            + destroyAllWarnings()
+        }
+
+        class BossSadWaterBallState {
+            - fixedPhases : object
+            - damageApplied : boolean
+            - ballDestroyed : boolean
+            - waterBall : Phaser_Sprite
+            - timeSinceLastSpawn : number
+            - spawnInterval : number
+            - explosionX : number
+            - explosionY : number
+            --
+            + enter(context)
+            + execute(context, time, delta)
+            + createWarning()
+            + executeAttack()
+            + startSpawnPhase()
+            + spawnWaterBall()
+            + startFollowPhase()
+            + followPlayer()
+            + createTrailEffect()
+            + checkPlayerCollision()
+            + createImpactEffect()
+            + startExplodePhase()
+            + destroyWaterBallWithEffect()
+            + createExplosion()
+            + startCooldownPhase()
+            + destroyAllWarnings()
+            + exit(context)
+        }
+
+        class BossSadCooldownState
+    }
+
+    package "Boss Fear" {
+        class BossFear {
+            + cupSpeed : number
+            + clawsActive : boolean
+            + leftClaw : Phaser_Sprite
+            + rightClaw : Phaser_Sprite
+            + cups : Group
+            + bossMask : Phaser_Image
+            --
+            + constructor(...)
+            + setCustomBodySize(scale)
+            + createBossParts()
+            + setupStates()
+            + setupCollisions()
+            + cupCollisionWithPlayer(player, cup)
+            + update(time, delta)
+            + getDamageTintColor()
+            + takeDamage(damage)
+            + nextPhase()
+            + die()
+            + createClaws()
+            + destroyClaws()
+            + setupClawCollisions()
+            + onClawHitPlayer(claw, player)
+            + cleanupAllWarnings()
+            + clearActiveAttackObjects()
+            + destroyAllAttackObjects()
+            + removeAllColliders()
+            + getDoors(doors)
+            + setLife()
+            + setVisible(value)
+            + setActive(value)
+        }
+
+        class BossFearXAttackState {
+            - flashTween : Tween
+            - leftClawTween : Tween
+            - rightClawTween : Tween
+            --
+            + enter(context)
+            + createWarning()
+            + createXPatternWarning(x, y)
+            + startWarningFlash()
+            + executeAttack()
+            + moveClawsInXPattern()
+            + destroyAllWarnings()
+            + exit(context)
+        }
+
+        class BossFearCupAttackState {
+            - cupsSpawned : number
+            - maxCups : number
+            - cupSpawnInterval : number
+            - timeSinceLastSpawn : number
+            - activeCups : Array
+            --
+            + enter(context)
+            + execute(context, time, delta)
+            + createWarning()
+            + executeAttack()
+            + spawnCup()
+            + setupCupCleanup(cup)
+            + removeCupFromActive(cup)
+            + destroyAllWarnings()
+            + exit(context)
+        }
+
+        class BossFearCooldownState
+    }
+
+    package "Boss Tutorial" {
+        class BossTutorial {
+            + _hitPlayerThisSweep : boolean
+            --
+            + constructor(...)
+            + setTutorialBody()
+            + setupStates()
+            + setupCollisions()
+            + onHitPlayer(boss, player)
+            + getDamageTintColor()
+            + nextPhase()
+            + die()
+            + cleanupAllWarnings()
+            + destroyAllAttackObjects()
+            + resetHitFlag()
+            + didHitPlayerThisSweep()
+            + getDoors(tutorialDoors)
+            + setLife()
+            + removeAllColliders()
+        }
+
+        class BossTutorialSideAttackState {
+            - initialY : number
+            - initialX : number
+            - leftBoundary : number
+            - rightBoundary : number
+            - centerX : number
+            - direction : string
+            - tween : Tween
+            - worldView : object
+            --
+            + enter(context)
+            + createWarning()
+            + calculateCameraBoundaries()
+            + getWorldViewWidth()
+            + getDefaultWorldView()
+            + createDirectionArrows()
+            + createArrow(x, y, direction)
+            + executeAttack()
+            + startSideSweep()
+            + onSweepComplete()
+            + execute(context, time, delta)
+            + exit(context)
+        }
+
+        class BossTutorialJumpAttackState {
+            - groundY : number
+            - liftTween : Tween
+            - fallTween : Tween
+            - targetX : number
+            --
+            + enter(context)
+            + createWarning()
+            + executeAttack()
+            + execute(context, time, delta)
+            + startLift()
+            + startFall()
+            + calculateTargetPosition()
+            + getDefaultWorldView()
+            + createGroundWarning()
+            + performFall()
+            + onLand()
+            + createLandingEffect()
+            + startFinish()
+            + exit(context)
+        }
+
+        class BossTutorialCooldownState
+    }
+
+    package "Boss Final" {
+        class BossFinal {
+            + fireballSpeed : number
+            + punchYSpeed : number
+            + punchXSpeed : number
+            + cupSpeed : number
+            + icicleSpeed : number
+            + waterBallSpeed : number
+            + distanceToFloor : number
+            + clawsActive : boolean
+            + leftClaw : Phaser_Sprite
+            + rightClaw : Phaser_Sprite
+            + fireballs : Group
+            + punches : Group
+            + cups : Group
+            + icicles : Group
+            + waterBalls : Group
+            + radialIcicles : Group
+            + allStates : Array
+            --
+            + constructor(...)
+            + setFinalBody()
+            + initAllAttackGroups()
+            + setupStates()
+            + selectRandomStates(count)
+            + setupCollisions()
+            + setupFireballCollision()
+            + setupPunchCollision()
+            + setupCupCollision()
+            + setupIcicleCollision()
+            + setupWaterBallCollision()
+            + setupRadialIcicleCollision()
+            + fireballCollisionWithPlayer(player, fireball)
+            + punchCollisionWithPlayer(player, punch)
+            + cupCollisionWithPlayer(player, cup)
+            + icicleCollisionWithPlayer(player, icicle)
+            + waterBallCollisionWithPlayer(player, waterBall)
+            + radialIcicleCollisionWithPlayer(player, icicle)
+            + startRandomState()
+            + getDamageTintColor()
+            + nextPhase()
+            + die()
+            + createClaws()
+            + setupClawCollisions()
+            + onClawHitPlayer(claw, player)
+            + destroyClaws()
+            + getDoors(iraDoors)
+            + cleanupAllWarnings()
+            + clearActiveAttackObjects()
+            + destroyAllAttackObjects()
+            + removeAllColliders()
+            + setLife()
+        }
+
+        class FinalBossCooldownState {
+            + enter(context)
+        }
+    }
+}
+
+' 5. MÁQUINA DE ESTADOS 
+package "State Machine Core" #FFF3E0 {
+    class StateMachine {
+        + id : string
+        + context : object
+        - states : Map
+        - currentState : BaseState
+        - previousState : BaseState
+        --
+        + constructor(context, id)
+        + addState(name, state)
+        + setState(name, data)
+        + step(time, delta)
+        + getStateName()
+    }
+
+    abstract class BaseState {
+        + stateMachine : StateMachine
+        --
+        + constructor()
+        + enter(context, data)
+        + execute(context, time, delta)
+        + exit(context)
+    }
+}
+
+' 6. GESTIÓN DEL JUEGO (Managers)
+package "Game Managers" #F3E5F5 {
+    class UIManager {
+        - scene : Phaser.Scene
+        - player : Player
+        - hearts : Array
+        - heartSpacing : number
+        - heartX : number
+        - heartY : number
+        - maxHearts : number
+        - orbs : Array
+        - orbSpacing : number
+        - orbX : number
+        - orbY : number
+        - maxOrbs : number
+        - bossTrackerX : number
+        - bossTrackerY : number
+        - bossPieces : object
+        --
+        + constructor(scene, player)
+        - createHearts()
+        + updateHearts(currentHealth, removeHealthAnimation)
+        - createOrbs()
+        - createOrbSlots()
+        + updateOrbs()
+        - createBossTracker()
+        + updateBossTracker()
+    }
+
+    class CheatManager {
+        - scene : Phaser.Scene
+        - player : Player
+        - visible : boolean
+        - locations : Array
+        - keyTeleport : Key
+        - keyShift : Key
+        - menuContainer : Container
+        --
+        + constructor(scene, player)
+        - createMenu()
+        + update()
+        + toggleMenu()
+        + teleportTo(location)
+    }
+
+    class MapManager {
+        - scene : Phaser.Scene
+        - tileSheetKey : string
+        - tileWidth : number
+        - tileHeight : number
+        - startX : number
+        - startY : number
+        - mapFile : Array
+        - tileGroup : StaticGroup
+        --
+        + constructor(scene, fileData, tileSheet, tileWidth, tileHeight)
+        - parseFile(fileData)
+        - createMap()
+        + addCollisionWith(player)
+    }
+
+    class PlayerDataManager <<Static>> {
+        {static} + data : object
+        {static} + saveDataFromPlayer(player)
+        {static} + applyDataToPlayer(player)
+        {static} + killBoss(bossName)
+    }
+
+    class MusicManager <<Static>> {
+        {static} + music : Sound
+        {static} + play(scene, key, volume)
+        {static} + stop()
+        {static} + setVolume(v)
+    }
+}
+
+' 7. ORBES 
+package "Orbs System" #E0F2F1 {
+    abstract class BaseOrb {
+        - scene : Phaser.Scene
+        + name : string
+        + description : string
+        + texture : string
+        + equipped : boolean
+        - player : Player
+        --
+        + constructor(scene, x, y, texture, name, description)
+        + setPlayer(player)
+        + collect(player)
+        + onEquip()
+        + onDesequip()
+        + onActivate()
+        + onDesactivate()
+    }
+
+    class AttackRangeOrb {
+    }
+    class BloodStealOrb {
+    }
+    class DamageOrb {
+    }
+    class DashOrb {
+    }
+    class JumpOrb {
+    }
+    class MoveSpeedOrb {
+    }
+    class RangedOrb {
+    }
+    class ShieldOrb {
+    }
+}
+
+' 8. OBJETOS DEL MUNDO
+package "World Objects" #FFFDE7 {
+    package "Doors" {
+        class Door {
+            + abrir : boolean
+            --
+            + constructor(scene, x, y, texture)
+            + cambiarAbrir()
+            + abrirPuerta()
+            + cerrarPuerta()
+        }
+        class MapDoor {
+            + constructor(...)
+            + cambiarAbrir()
+            + abrirPuerta()
+            + cerrarPuerta()
+        }
+        class DoorBoss {
+            + contrary : DoorBoss
+            - isOpening : boolean
+            - prompt : Text
+            --
+            + constructor(...)
+            + getPosition()
+            + setContrary(contraryDoor)
+            + abrirPuerta()
+            + realizarTeletransporte()
+            - createAnimations(textureKey)
+        }
+        class SadnessBossDoor {
+            - bottonRojo : boolean
+            - bottonAzul : boolean
+            - bottonVerde : boolean
+            --
+            + constructor(...)
+            + activarRojo()
+            + activarAzul()
+            + activarVerde()
+            + abrirPuerta()
+        }
+        class FinalBossDoor {
+            - iraboss : boolean
+            - tristeboss : boolean
+            --
+            + constructor(...)
+            + activarIra()
+            + activarTriste()
+            + abrirPuerta()
+        }
+    }
+
+    package "Interactables & Platforms" {
+        class BasePlatform {
+            + isDeactivated : boolean
+            + isShaking : boolean
+            - particles : object
+            - breakSound : Sound
+            --
+            + constructor(...)
+            + deactivateByPunch()
+            - startShakeEffect()
+            - breakPlatform()
+            - createBreakParticles()
+            + reactivate()
+            + action()
+        }
+        class IcePlatform {
+            + congelado : boolean
+            --
+            + constructor(...)
+            + congelar()
+            + descongelar()
+            - _activarPlataforma()
+            - _desactivarPlataforma()
+            + action()
+        }
+        class Checkpoint {
+            + activated : boolean
+            + playerNearby : boolean
+            - prompt : Text
+            - activateSound : Sound
+            --
+            + constructor(...)
+            + activate(player)
+            + deactivate()
+        }
+        class InvisibleTrigger {
+            + doors : Array
+            - boss : any
+            + primer : boolean
+            --
+            + constructor(...)
+            + getBoss(boss)
+            + getDoors(doorsArray)
+            + llamar()
+        }
+        class TutorialPanel {
+            + isActive : boolean
+            + playerInRange : boolean
+            - textPanel : Graphics
+            - textObject : Text
+            - panelContainer : Container
+            --
+            + constructor(...)
+            - createTextPanel()
+            + showTutorial()
+            + hideTutorial()
+            + update(player)
+            + checkOverlap(player)
+            + setPosition(x, y)
+            + destroy()
+        }
+        class Button {
+            - color : string
+            - door : DoorBoss
+            - show : ShowButton
+            --
+            + constructor(...)
+            + setDoor(door)
+            + setShow(show)
+            + press()
+        }
+        class ShowButton {
+            - textureOff : string
+            - textureOn : string
+            + isOn : boolean
+            --
+            + constructor(...)
+            + cambio()
+        }
+        class StaticLava {
+            - flowSpeedX : number
+            - flowSpeedY : number
+            --
+            + constructor(...)
+            + preUpdate(time, delta)
+        }
+        class FloorIsLava {
+            - riseSpeed : number
+            - playerRef : Player
+            + isRising : boolean
+            --
+            + constructor(...)
+            + preUpdate(time, delta)
+            + startLava()
+        }
+        class BossRoom {
+            - scene : Phaser.Scene
+            --
+            + constructor(...)
+        }
+    }
+}
+
+' 9. ESCENAS 
+package "Scenes" #dee48dff {
+    class MainMenuScene {
+        + background : Image
+        + name : Image
+        --
+        + create()
+    }
+    class PreloadScene {
+        + preload()
+        + create()
+    }
+    class LoadingScene {
+        + progressBar : Rectangle
+        + progressText : Text
+        + progress : number
+        --
+        + create()
+        + updateProgressBar()
+    }
+    class OrbSelectScene {
+        + fromScene : string
+        + player : Player
+        + collectedOrbs : Array
+        + equipped : Array
+        + selectedOrb : BaseOrb
+        --
+        + create(data)
+        + createOrbGrid()
+        + selectOrb(orb)
+        + toggleEquip(orb)
+    }
+    class PauseScene {
+        + file : string
+        --
+        + init(data)
+        + create()
+    }
+    class GameOverScene {
+        + background : Image
+        --
+        + create()
+        + respawnPlayer()
+    }
+    class WinScene {
+        + create()
+    }
+    class NarrativeScene {
+        + narrativeIndex : number
+        + narrativeLines : Array
+        --
+        + startNarrative()
+        + skipAll()
+    }
+    class TestPlayerScene {
+        + inputManager : InputManager
+        + uiManager : UiManager
+        + cheatManager : CheatManager
+        + player : Player
+        + enemies : Group
+        + orbGroup : Group
+        + checkpoints : StaticGroup
+        + doors : StaticGroup
+        --
+        + create()
+        + update(time, delta)
+    }
+}
+
+
+' 10. RELACIONES (Links)
+
+' Herencia de Phaser
+Phaser_Game *-- Phaser_Scene 
+Player --|> Phaser_Physics_Arcade_Sprite
+BaseEnemy --|> Phaser_Physics_Arcade_Sprite
+BaseOrb --|> Phaser_Physics_Arcade_Sprite
+Door --|> Phaser_Physics_Arcade_Sprite
+BasePlatform --|> Phaser_Physics_Arcade_Sprite
+Checkpoint --|> Phaser_Physics_Arcade_Sprite
+InvisibleTrigger --|> Phaser_Physics_Arcade_Sprite
+TutorialPanel --|> Phaser_Physics_Arcade_Sprite
+Button --|> Phaser_Physics_Arcade_Sprite
+ShowButton --|> Phaser_Physics_Arcade_Sprite
+RangedEnemyProjectile --|> Phaser_Physics_Arcade_Sprite
+
+StaticLava --|> Phaser_GameObjects_TileSprite
+FloorIsLava --|> Phaser_GameObjects_TileSprite
+BossRoom --|> Phaser_GameObjects_Zone
+
+PreloadScene --|> Phaser_Scene
+MainMenuScene --|> Phaser_Scene
+NarrativeScene --|> Phaser_Scene
+LoadingScene --|> Phaser_Scene
+TestPlayerScene --|> Phaser_Scene
+OrbSelectScene --|> Phaser_Scene
+PauseScene --|> Phaser_Scene
+GameOverScene --|> Phaser_Scene
+WinScene --|> Phaser_Scene
+
+BaseBoss --|> Phaser_Physics_Arcade_Sprite
+
+' Relaciones Player
+Player *-- StateMachine
+Player ..> PlayerProjectilePool 
+PlayerIdleState --|> BaseState
+PlayerMoveState --|> BaseState
+PlayerJumpState --|> BaseState
+PlayerDashState --|> BaseState
+PlayerKnockbackState --|> BaseState
+PlayerDeathState --|> BaseState
+FloorIsLava --> Player 
+PlayerProjectilePool ..> BaseEnemy 
+
+' Relaciones State Machine
+StateMachine o-- BaseState
+
+' Relaciones Enemy
+BaseEnemy *-- StateMachine
+GroundMeleeEnemy --|> BaseEnemy
+MineEnemy --|> BaseEnemy
+RangedEnemy --|> BaseEnemy
+FlyingRangedEnemy --|> BaseEnemy
+BaseTrap --|> BaseEnemy
+
+' Estados Enemy
+BaseEnemyAttackState --|> BaseState
+MeleeEnemyAttackState --|> BaseEnemyAttackState
+MineEnemyAttackState --|> BaseEnemyAttackState
+RangedEnemyAttackState --|> BaseEnemyAttackState
+GroundEnemyMoveState --|> BaseState
+FlyingEnemyMoveState --|> BaseState
+RangedEnemyAttackState ..> RangedEnemyProjectile 
+RangedEnemyProjectile --> Player 
+
+' Boss (Heredan de BaseBoss)
+BaseBoss *-- StateMachine
+BossAngry --|> BaseBoss
+BossSad --|> BaseBoss
+BossFear --|> BaseBoss
+BossTutorial --|> BaseBoss
+BossFinal --|> BaseBoss
+BaseBossAttackState ..> Player : ataca/detecta
+InvisibleTrigger --> BaseBoss : activa
+
+' Estados Bosses
+BaseBossAttackState --|> BaseState
+BaseCooldownState --|> BaseState
+
+' Estados de BossAngry
+BossAngryFireBallState --|> BaseBossAttackState
+BossAngryPunchState --|> BaseBossAttackState
+BossAngryPunchPlatformState --|> BaseBossAttackState
+BossAngryCooldownState --|> BaseCooldownState
+BossAngry ..> BasePlatform 
+BossAngry o-- BossAngryFireBallState
+BossAngry o-- BossAngryPunchState
+BossAngry o-- BossAngryPunchPlatformState
+BossAngry o-- BossAngryCooldownState
+BossAngry --> FinalBossDoor 
+
+' Estados de BossSad
+BossSadIcicleState --|> BaseBossAttackState
+BossSadRadialState --|> BaseBossAttackState
+BossSadWaterBallState --|> BaseBossAttackState
+BossSadCooldownState --|> BaseCooldownState
+BossSad o-- BossSadIcicleState
+BossSad o-- BossSadRadialState
+BossSad o-- BossSadWaterBallState
+BossSad o-- BossSadCooldownState
+BossSad --> FinalBossDoor
+' Estados de BossFear
+BossFearXAttackState --|> BaseBossAttackState
+BossFearCupAttackState --|> BaseBossAttackState
+BossFearCooldownState --|> BaseCooldownState
+
+BossFear o-- BossFearXAttackState
+BossFear o-- BossFearCupAttackState
+BossFear o-- BossFearCooldownState
+
+' Estados de BossTutorial
+BossTutorialSideAttackState --|> BaseBossAttackState
+BossTutorialJumpAttackState --|> BaseBossAttackState
+BossTutorialCooldownState --|> BaseCooldownState
+
+BossTutorial o-- BossTutorialSideAttackState
+BossTutorial o-- BossTutorialJumpAttackState
+BossTutorial o-- BossTutorialCooldownState
+
+' Estados de FinalBoss
+FinalBossCooldownState --|> BaseCooldownState
+BossFinal o-- FinalBossCooldownState
+BossFinal ..> BossAngryFireBallState 
+BossFinal ..> BossAngryPunchState 
+BossFinal ..> BossFearXAttackState 
+BossFinal ..> BossSadIcicleState 
+
+' Relaciones Orbs
+AttackRangeOrb --|> BaseOrb
+BloodStealOrb --|> BaseOrb
+DamageOrb --|> BaseOrb
+DashOrb --|> BaseOrb
+JumpOrb --|> BaseOrb
+MoveSpeedOrb --|> BaseOrb
+RangedOrb --|> BaseOrb
+ShieldOrb --|> BaseOrb
+BaseOrb ..> Player 
+
+
+' Relaciones Doors
+MapDoor --|> Door
+DoorBoss --|> Door
+SadnessBossDoor --|> DoorBoss
+FinalBossDoor --|> DoorBoss
+DoorBoss o-- DoorBoss 
+
+' Relaciones Platform
+IcePlatform --|> BasePlatform
+
+' Relaciones interaccion
+DoorBoss ..> Player 
+Button o-- ShowButton
+Button --> SadnessBossDoor
+InvisibleTrigger --> Door 
+InvisibleTrigger --> BaseEnemy 
+Checkpoint ..> Player 
+TutorialPanel ..> Player 
+
+' Relaciones Escena (Composición)
+TestPlayerScene *-- Player 
+TestPlayerScene *-- UIManager 
+TestPlayerScene *-- CheatManager 
+TestPlayerScene *-- MapManager 
+TestPlayerScene o-- BaseEnemy 
+TestPlayerScene o-- BaseBoss
+TestPlayerScene o-- BaseOrb 
+TestPlayerScene o-- Door 
+TestPlayerScene *-- FloorIsLava
+
+' Managers
+Player ..> InputManager 
+BaseOrb ..> PlayerDataManager 
+Checkpoint ..> PlayerDataManager 
+UIManager --> Player 
+CheatManager --> Player 
+TestPlayerScene ..> PlayerDataManager 
+TestPlayerScene ..> MusicManager 
+
+@enduml

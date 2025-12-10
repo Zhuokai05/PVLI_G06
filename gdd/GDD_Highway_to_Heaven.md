@@ -127,11 +127,10 @@ Dependiendo de la zona del boss, se usará un color específico, por
 ejemplo la ira, color rojo, la tristeza, color azul. Pero, siempre
 combinando con el negro.
 
-Concept Art de las zonas bosses (ejemplo, no está en pixel art):
+Ejemplo de arte de la zona boss ira:
 
 ![](images/1.png)
 
-![](images/2.png)
 
 ## **Mundo**
 El juego se desarolla en el inframundo, que esta dividido en 4 zonas, zona inicial (izquierda arriba), zona ira(roja), zona tristeza(azul), zona boss final(amarilla), en el que hay una sala boss por zona y una sala boss extra (boss miedo) que esta en zona tristeza.
@@ -450,6 +449,10 @@ checkpoint para regenerar su vida hasta máximo, y al colisionar con ese
 checkpoint, lo activa. A la hora de morir (ver detalle en [[sistema de
 vida]](#sistema-de-vida)), reaparece en el último checkpoint
 que ha activado.
+
+![](images/Checkpoint1.png)
+![](images/Checkpoint2.png)
+
 
 **Puerta con Botones**
 El jugador puedo interactuar con botones que se activa al pulsar E, se cambia la textura y envía señal a su puertas correspondiente,
@@ -823,10 +826,8 @@ Estilo musica rock, con sfx estilo 8 bits
 ![](images/bocetoHUD.png)
 
 ## **HUD**
+Algunos ejemplos de arte UI
 
--   Engranaje como botón de ajuste o pausa.
-
-![](images/engranajes.png) 
 
 -   Algunos orbe de emociones: ira, tristeza
 
