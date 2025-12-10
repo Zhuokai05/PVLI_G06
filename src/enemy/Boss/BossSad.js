@@ -4,6 +4,11 @@ import BossSadRadialState from './BossSadState/BossSadRadialState.js';
 import BossSadWaterBallState from './BossSadState/BossSadWaterBallState.js';
 import BossSadCooldownState from './BossSadState/BossSadCooldownState.js';
 
+/**
+ * Jefe de la emoción Tristeza
+ * @class BossSad
+ * @extends BaseBoss
+ */
 export default class BossSad extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'tristeza', undefined, player, {
@@ -28,6 +33,9 @@ export default class BossSad extends BaseBoss {
         this.setupStates();
     }
 
+    /**
+     * Reproduce la intro del jefe Tristeza
+     */
     playIntro() {
         this.setVisible(true);
         this.setActive(true);
@@ -45,10 +53,17 @@ export default class BossSad extends BaseBoss {
         this.addState('cooldown', new BossSadCooldownState());
     }
 
+    /**
+     * Obtiene el color del tint para el daño de Tristeza
+     * @returns {number} - Color azul
+     */
     getDamageTintColor() {
         return 0x0000ff;
     }
 
+    /**
+     * Avanza a la siguiente fase del jefe Tristeza
+     */
     nextPhase() {
         if (this.phase === 1) {
             this.phase = 2;
@@ -61,6 +76,9 @@ export default class BossSad extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la transición entre fases del jefe Tristeza
+     */
     handlePhaseTransition() {
         this.cleanupAllWarnings();
         this.destroyAllAttackObjects();

@@ -4,6 +4,11 @@ import BossAngryPunchState from './BossAngryState/BossAngryPunchState.js';
 import BossAngryPunchPlatformState from './BossAngryState/BossAngryPunchPlatformState.js';
 import BossAngryCooldownState from './BossAngryState/BossAngryCooldownState.js';
 
+/**
+ * Jefe de la emoción Ira
+ * @class BossAngry
+ * @extends BaseBoss
+ */
 export default class BossAngry extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'IraSheet', 0, player, {
@@ -28,6 +33,9 @@ export default class BossAngry extends BaseBoss {
         this.play('bossira_idle');
     }
 
+    /**
+     * Crea las animaciones del jefe Ira
+     */
     createAnimations() {
         const anims = this.scene.anims;
         
@@ -49,6 +57,9 @@ export default class BossAngry extends BaseBoss {
         });
     }
 
+    /**
+     * Reproduce la intro del jefe Ira
+     */
     playIntro() {
         this.setVisible(true).setActive(true);
         this.play({ key: 'bossira_idle', repeat: 3 });
@@ -64,6 +75,9 @@ export default class BossAngry extends BaseBoss {
         });
     }
 
+    /**
+     * Configura los estados específicos del jefe Ira
+     */
     setupStates() {
         this.addState('punch', new BossAngryPunchState());
         this.addState('fireball', new BossAngryFireBallState());
@@ -71,6 +85,9 @@ export default class BossAngry extends BaseBoss {
         this.addState('cooldown', new BossAngryCooldownState());
     }
 
+    /**
+     * Avanza a la siguiente fase del jefe Ira
+     */
     nextPhase() {
         if (this.phase === 1) {
             this.phase = 2;
@@ -83,6 +100,9 @@ export default class BossAngry extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la transición entre fases
+     */
     handlePhaseTransition() {
         this.cleanupAllWarnings();
         this.destroyAllAttackObjects();
@@ -117,6 +137,10 @@ export default class BossAngry extends BaseBoss {
         });
     }
 
+    /**
+     * Obtiene el color del tint para el daño de Ira
+     * @returns {number} - Color rojo
+     */
     getDamageTintColor() {
         return 0xff0000;
     }

@@ -3,6 +3,11 @@ import BossTutorialSideAttackState from './BossTutorialState/BossTutorialSideAtt
 import BossTutorialJumpAttackState from './BossTutorialState/BossTutorialJumpAttackState.js';
 import BossTutorialCooldownState from './BossTutorialState/BossTutorialCooldownState.js';
 
+/**
+ * Jefe del tutorial
+ * @class BossTutorial
+ * @extends BaseBoss
+ */
 export default class BossTutorial extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'tutorial', undefined, player, {
@@ -21,13 +26,23 @@ export default class BossTutorial extends BaseBoss {
         this.setupStates();
     }
 
+    /**
+     * Configura escala y cuerpo del jefe Tutorial
+     * @param {number} scale - Escala del sprite
+     * @param {number} widthRatio - Ratio de ancho del cuerpo
+     * @param {number} heightRatio - Ratio de alto del cuerpo
+     * @param {number} offsetX - Offset X del cuerpo
+     * @param {number} offsetY - Offset Y del cuerpo
+     */
     setScaleAndBody(scale, widthRatio = 0.45, heightRatio = 0.4, offsetX = 0, offsetY = 0.05) {
         this.setScale(scale);
         this.body.setSize(this.displayWidth * widthRatio, this.displayHeight * heightRatio);
         this.body.setOffset(this.displayWidth * offsetX, this.displayHeight * offsetY);
     }
 
-    // De momento no se usa, para futuro
+    /**
+     * Reproduce la intro del jefe Tutorial
+     */
     playIntro() {
         this.setVisible(true);
         this.setActive(true);
@@ -44,7 +59,9 @@ export default class BossTutorial extends BaseBoss {
         this.addState('cooldown', new BossTutorialCooldownState());
     }
 
-    // Configurar colisiones adicionales (colisión directa con el boss)
+    /**
+     * Configura las colisiones específicas del jefe Tutorial
+     */
     setupCollisions() {
         super.setupCollisions();
         
@@ -59,6 +76,11 @@ export default class BossTutorial extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja colisión directa con el jugador
+     * @param {Object} boss - Referencia al boss
+     * @param {Object} player - Jugador que colisiona
+     */
     onHitPlayer(boss, player) {
         if (!boss.active || !player.active || player._recentlyHitByBoss) return;
         
@@ -72,10 +94,17 @@ export default class BossTutorial extends BaseBoss {
         });
     }
 
+    /**
+     * Obtiene el color del tint para el daño de Tutorial
+     * @returns {number} - Color rojo
+     */
     getDamageTintColor() {
         return 0xff0000;
     }
 
+    /**
+     * Avanza a la siguiente fase del jefe Tutorial
+     */
     nextPhase() {
         if (this.phase === 1) {
             this.phase = 2;
@@ -88,6 +117,9 @@ export default class BossTutorial extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la transición entre fases del jefe Tutorial
+     */
     handlePhaseTransition() {
         this.cleanupAllWarnings();
         this.destroyAllAttackObjects();
@@ -115,6 +147,9 @@ export default class BossTutorial extends BaseBoss {
         });
     }
 
+    /**
+     * Maneja la muerte del jefe Tutorial
+     */
     die() {
         // Desactivar físicas antes de morir
         if (this.body) {
@@ -124,15 +159,25 @@ export default class BossTutorial extends BaseBoss {
         super.die();
     }
 
+    /**
+     * Limpia todas las advertencias visuales
+     */
     cleanupAllWarnings() {
         super.cleanupAllWarnings();
         this._hitPlayerThisSweep = false;
     }
 
+    /**
+     * Resetea el flag de golpe al jugador
+     */
     resetHitFlag() {
         this._hitPlayerThisSweep = false;
     }
 
+    /**
+     * Verifica si golpeó al jugador en este barrido
+     * @returns {boolean} - True si golpeó al jugador
+     */
     didHitPlayerThisSweep() {
         return this._hitPlayerThisSweep;
     }

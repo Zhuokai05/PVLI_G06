@@ -9,6 +9,11 @@ import BossSadRadialState from './BossSadState/BossSadRadialState.js';
 import BossSadWaterBallState from './BossSadState/BossSadWaterBallState.js';
 import FinalBossCooldownState from './BossFinalState/BossFinalCooldownState.js';
 
+/**
+ * Jefe final que combina todos los ataques
+ * @class FinalBoss
+ * @extends BaseBoss
+ */
 export default class FinalBoss extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'final', undefined, player, {
@@ -46,6 +51,9 @@ export default class FinalBoss extends BaseBoss {
         this.play('Final');
     }
 
+    /**
+     * Reproduce la intro del jefe final
+     */
     playIntro() {
         this.setVisible(true).setActive(true);
         
@@ -58,6 +66,9 @@ export default class FinalBoss extends BaseBoss {
         });
     }
     
+    /**
+     * Configura todos los estados del jefe final
+     */
     setupStates() {
         const stateConfigs = [
             ['fireball', new BossAngryFireBallState('ffire_ball')],
@@ -74,16 +85,28 @@ export default class FinalBoss extends BaseBoss {
         stateConfigs.forEach(([name, state]) => this.addState(name, state));
     }
     
+    /**
+     * Selecciona estados aleatorios para el jefe final
+     * @param {number} count - Número de estados a seleccionar
+     * @returns {Array} - Estados seleccionados
+     */
     selectRandomStates(count) {
         return [...this.allStates]
             .sort(() => Math.random() - 0.5)
             .slice(0, count);
     }
     
+    /**
+     * Obtiene el color del tint para el daño del jefe final
+     * @returns {number} - Color magenta
+     */
     getDamageTintColor() {
         return 0xff00ff;
     }
     
+    /**
+     * Avanza a la siguiente fase del jefe final
+     */
     nextPhase() {
         if (this.phase === 1) {
             this.phase = 2;
@@ -98,6 +121,9 @@ export default class FinalBoss extends BaseBoss {
         }
     }
     
+    /**
+     * Maneja la transición entre fases del jefe final
+     */
     handlePhaseTransition() {
         this.cleanupAllWarnings();
         this.destroyAllAttackObjects();
@@ -126,6 +152,9 @@ export default class FinalBoss extends BaseBoss {
         });
     }
     
+    /**
+     * Maneja la muerte del jefe final
+     */
     die() {
         this.scene.cameras.main.shake(2000, 0.05).flash(1500, 255, 215, 0);
         super.die();
@@ -137,7 +166,9 @@ export default class FinalBoss extends BaseBoss {
         });
     }
     
-    // Usa el método createClaws heredado de BaseBoss
+    /**
+     * Crea garras específicas para el jefe final
+     */
     createClaws() {
         super.createClaws('fgarra', 3.5, 380);
     }

@@ -3,6 +3,11 @@ import BossFearXAttackState from './BossFearState/BossFearXAttackState.js';
 import BossFearCupAttackState from './BossFearState/BossFearCupAttackState.js';
 import BossFearCooldownState from './BossFearState/BossFearCooldownState.js';
 
+/**
+ * Jefe de la emoción Miedo
+ * @class BossFear
+ * @extends BaseBoss
+ */
 export default class BossFear extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'corazon', undefined, player, {
@@ -24,15 +29,20 @@ export default class BossFear extends BaseBoss {
             .setScale(4.3).setDepth(6).setVisible(false);
         
         this.setupStates();
-
     }
 
+    /**
+     * Configura los estados específicos del jefe Miedo
+     */
     setupStates() {
         this.addState('xAttack', new BossFearXAttackState());
         this.addState('cupAttack', new BossFearCupAttackState());
         this.addState('cooldown', new BossFearCooldownState());
     }
 
+    /**
+     * Reproduce la intro del jefe Miedo
+     */
     playIntro() {
         this.setVisible(true).setActive(true);
         this.bossMask?.setVisible(true);
@@ -45,6 +55,9 @@ export default class BossFear extends BaseBoss {
         });
     }
 
+    /**
+     * Avanza a la siguiente fase del jefe Miedo
+     */
     nextPhase() {
         if (this.phase === 1) {
             this.phase = 2;
@@ -57,6 +70,9 @@ export default class BossFear extends BaseBoss {
         }
     }
 
+    /**
+     * Maneja la transición entre fases del jefe Miedo
+     */
     handlePhaseTransition() {
         this.cleanupAllWarnings();
         this.destroyAllAttackObjects();
@@ -94,6 +110,11 @@ export default class BossFear extends BaseBoss {
         });
     }
 
+    /**
+     * Actualiza la posición de la máscara
+     * @param {number} time - Tiempo actual
+     * @param {number} delta - Delta time
+     */
     update(time, delta) {
         super.update(time, delta);
         
@@ -103,6 +124,10 @@ export default class BossFear extends BaseBoss {
         }
     }
 
+    /**
+     * Obtiene el color del tint para el daño de Miedo
+     * @returns {number} - Color rojo
+     */
     getDamageTintColor() {
         return 0xff0000;
     }
