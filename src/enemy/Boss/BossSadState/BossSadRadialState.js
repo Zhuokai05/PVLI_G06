@@ -1,147 +1,82 @@
-import BaseState from '../../../stateMachine/BaseState.js';
+import BaseBossAttackState from '../BaseBossAttackState.js';
 
-export default class BossSadRadialState extends BaseState {
+export default class BossSadRadialState extends BaseBossAttackState {
     constructor(texture = 'icicle') {
-        super(); 
-        this.texture = texture;
+        super({
+            texture: texture,
+            attackName: 'Ataque Radial',
+            phases: ['warning', 'attack', 'cooldown'],
+            warningDuration: 1200,
+            attackDuration: 900,
+            cooldownDuration: 1500
+        });
     }
-   
     
-    enter(context) {
-        this.boss = context;
-        this.stateTime = 0;
-        this.currentPhase = 'warning'; // warning -> attack -> cooldown
-        this.warningDuration = 1200;
-        this.attackDuration = 900;
-        this.cooldownDuration = 1500;
-        
-        this.startWarningPhase();
-        
-        console.log("Ataque radial con warning");
-    }
-
-    startWarningPhase() {
-        const { scene } = this.boss;
-        const cam = scene.cameras.main;
-
+    createWarning() {
         // Crear advertencia circular alrededor del boss
-        this.warningCircle = scene.add.circle(
-            this.boss.x,
-            this.boss.y,
-            150, // Radio del área de advertencia
-            0x4169e1, // Azul
-            0.3
-        );
-        
-        // También podemos añadir un borde para mayor visibilidad
-        this.warningBorder = scene.add.circle(
+        const warningCircle = this.createWarningCircle(
             this.boss.x,
             this.boss.y,
             150,
-            0x4169e1, // Azul
+            0x4169e1,
+            0.3
+        );
+        
+        // Borde para mayor visibilidad
+        const warningBorder = this.scene.add.circle(
+            this.boss.x,
+            this.boss.y,
+            150,
+            0x4169e1,
             0
         );
-        this.warningBorder.setStrokeStyle(4, 0x87ceeb); // Borde azul claro
+        warningBorder.setStrokeStyle(4, 0x87ceeb);
         
-        // Efecto de pulso durante el warning
-        scene.tweens.add({
-            targets: [this.warningCircle, this.warningBorder],
-            scale: { from: 1, to: 1.2 },
-            alpha: { from: 0.5, to: 0.8 },
-            duration: 600,
-            yoyo: true,
-            repeat: -1
-        });
+        this.registerWarningElement('warningCircle', warningCircle);
+        this.registerWarningElement('warningBorder', warningBorder);
+        
+        // Efecto de pulso
+        this.createPulseEffect([warningCircle, warningBorder], 600, 0.5, 0.8, 1, 1.2);
     }
-
-    execute(context, time, delta) {
-        this.stateTime += delta;
-
-        switch (this.currentPhase) {
-            case 'warning':
-                if (this.stateTime >= this.warningDuration) {
-                    this.startAttackPhase();
-                }
-                break;
-                
-            case 'attack':
-                if (this.stateTime >= this.attackDuration) {
-                    this.startCooldownPhase();
-                }
-                break;
-                
-            case 'cooldown':
-                if (this.stateTime >= this.cooldownDuration) {
-                    this.boss.selectNextState();
-                }
-                break;
-        }
+    
+    createWarningCircle(x, y, radius, color, alpha) {
+        const circle = this.scene.add.circle(x, y, radius, color, alpha);
+        this.registerWarningElement('warningCircle', circle);
+        return circle;
     }
-
-    startAttackPhase() {
-        this.currentPhase = 'attack';
-        this.stateTime = 0;
-        
-        // Destruir advertencias
-        this.destroyAllWarnings();
-        
-        // Lanzar carámbanos
+    
+    executeAttack() {
         this.spawnRadialIcicles(12);
     }
     
-    // NUEVO MÉTODO (renombrar destroyWarning a destroyAllWarnings)
-    destroyAllWarnings() {
-        if (this.warningCircle && this.warningCircle.active) {
-            this.warningCircle.destroy();
-            this.warningCircle = null;
-        }
-        if (this.warningBorder && this.warningBorder.active) {
-            this.warningBorder.destroy();
-            this.warningBorder = null;
-        }
-    }
-
     spawnRadialIcicles(count) {
-        const { scene, radialIcicles } = this.boss;
-        
-        // Posición de lanzamiento desde el boss
-        const startX = this.boss.x;
-        const startY = this.boss.y;
         const speed = this.boss.radialSpeed || 300;
-        
-        // Ángulo de dispersión (360 grados = círculo completo)
         const angleStep = (Math.PI * 2) / count;
         
         for (let i = 0; i < count; i++) {
             const angle = i * angleStep;
-            
-            // Calcular dirección
             const velocityX = Math.cos(angle) * speed;
             const velocityY = Math.sin(angle) * speed;
             
-            // Crear carámbano
-            const icicle = radialIcicles.create(startX, startY, this.texture);
+            const icicle = this.boss.radialIcicles.create(
+                this.boss.x,
+                this.boss.y,
+                this.config.texture
+            );
             
-            // Configurar física
             icicle.setVelocity(velocityX, velocityY);
             icicle.setScale(1);
             icicle.body.allowGravity = false;
-            ///icicle.setTint(0xadd8e6);
             
-            // Rotación
             const rotationAngle = Math.atan2(velocityY, velocityX);
             icicle.setRotation(rotationAngle);
-
-            // Configurar cleanup
+            
             this.setupIcicleCleanup(icicle);
         }
     }
-
+    
     setupIcicleCleanup(icicle) {
-        const scene = this.boss.scene;
-        
-        // Usar time.addEvent para checkear periódicamente
-        scene.time.addEvent({
+        const cleanupEvent = this.scene.time.addEvent({
             delay: 100,
             callback: () => {
                 if (!icicle.active) return;
@@ -154,10 +89,11 @@ export default class BossSadRadialState extends BaseState {
                 
                 if (distance > 800) {
                     icicle.destroy();
+                    cleanupEvent.remove(false);
                 }
                 
-                // También destruir si sale completamente de pantalla
-                const cam = scene.cameras.main;
+                // Destruir si sale de pantalla
+                const cam = this.scene.cameras.main;
                 const bounds = new Phaser.Geom.Rectangle(
                     cam.worldView.x - 200,
                     cam.worldView.y - 200,
@@ -167,20 +103,29 @@ export default class BossSadRadialState extends BaseState {
                 
                 if (!bounds.contains(icicle.x, icicle.y)) {
                     icicle.destroy();
+                    cleanupEvent.remove(false);
                 }
             },
             callbackScope: this,
             loop: true
         });
+        
+        // Registrar evento para limpieza
+        if (!this.cleanupEvents) {
+            this.cleanupEvents = [];
+        }
+        this.cleanupEvents.push(cleanupEvent);
     }
-
-    startCooldownPhase() {
-        this.currentPhase = 'cooldown';
-        this.stateTime = 0;
-    }
-
-    exit(context) {
-        // Asegurarse de limpiar las advertencias si aún existen
-        this.destroyAllWarnings();
+    
+    destroyAllWarnings() {
+        super.destroyAllWarnings();
+        
+        // Limpiar eventos de cleanup
+        if (this.cleanupEvents) {
+            this.cleanupEvents.forEach(event => {
+                if (event) event.remove(false);
+            });
+            this.cleanupEvents = null;
+        }
     }
 }
