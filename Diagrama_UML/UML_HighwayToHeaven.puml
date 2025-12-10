@@ -1049,8 +1049,6 @@ package "World Objects" #FFFDE7 {
             - tristeboss : boolean
             --
             + constructor(...)
-            + activarIra()
-            + activarTriste()
             + abrirPuerta()
         }
     }
@@ -1271,6 +1269,7 @@ PlayerKnockbackState --|> BaseState
 PlayerDeathState --|> BaseState
 FloorIsLava --> Player 
 PlayerProjectilePool ..> BaseEnemy 
+Player ..> InputManager 
 
 ' Relaciones State Machine
 StateMachine o-- BaseState
@@ -1300,6 +1299,7 @@ BossSad --|> BaseBoss
 BossFear --|> BaseBoss
 BossTutorial --|> BaseBoss
 BossFinal --|> BaseBoss
+BaseBoss ..> PlayerDataManager
 BaseBossAttackState ..> Player : ataca/detecta
 InvisibleTrigger --> BaseBoss : activa
 
@@ -1365,6 +1365,7 @@ MoveSpeedOrb --|> BaseOrb
 RangedOrb --|> BaseOrb
 ShieldOrb --|> BaseOrb
 BaseOrb ..> Player 
+BaseOrb ..> PlayerDataManager
 
 
 ' Relaciones Doors
@@ -1372,6 +1373,7 @@ MapDoor --|> Door
 DoorBoss --|> Door
 SadnessBossDoor --|> DoorBoss
 FinalBossDoor --|> DoorBoss
+FinalBossDoor ..> PlayerDataManager
 DoorBoss o-- DoorBoss 
 
 ' Relaciones Platform
@@ -1385,8 +1387,9 @@ InvisibleTrigger --> Door
 InvisibleTrigger --> BaseEnemy 
 Checkpoint ..> Player 
 TutorialPanel ..> Player 
+Checkpoint ..> PlayerDataManager 
 
-' Relaciones Escena (Composición)
+' Relaciones Escena 
 TestPlayerScene *-- Player 
 TestPlayerScene *-- UIManager 
 TestPlayerScene *-- CheatManager 
@@ -1396,14 +1399,13 @@ TestPlayerScene o-- BaseBoss
 TestPlayerScene o-- BaseOrb 
 TestPlayerScene o-- Door 
 TestPlayerScene *-- FloorIsLava
-
-' Managers
-Player ..> InputManager 
-BaseOrb ..> PlayerDataManager 
-Checkpoint ..> PlayerDataManager 
-UIManager --> Player 
-CheatManager --> Player 
 TestPlayerScene ..> PlayerDataManager 
 TestPlayerScene ..> MusicManager 
+
+' Managers
+
+UIManager --> Player 
+CheatManager --> Player 
+
 
 @enduml
