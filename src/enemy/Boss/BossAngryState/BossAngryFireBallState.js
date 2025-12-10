@@ -1,27 +1,28 @@
-import BaseState from '../../../stateMachine/BaseState.js';
+import BaseBossAttackState from '../BaseBossAttackState.js';
 
-export default class BossAngryFireBallState extends BaseState {
+export default class BossAngryFireBallState extends BaseBossAttackState {
     constructor(texture = 'fire_ball') {
-        super(); 
-        this.texture = texture;
-    }
-    enter(context) {
-        this.boss = context;
-        this.stateTime = 0;
-        this.currentPhase = 'attack'; // attack -> cooldown
+        super({
+            texture: texture,
+            attackName: 'Bolas de Fuego',
+            phases: ['attack', 'cooldown'], // Sin fase de warning
+            attackDuration: 6000,
+            cooldownDuration: 500,
+            logOnEnter: true
+        });
         
         this.timeSinceLastSpawn = 0;
-        this.attackDuration = 6000;
-        this.cooldownDuration = 500;
         this.spawnInterval = 500;
         this.columnSpread = 100;
-        this.numColumns = 8;    
-        
-        this.columns = this.generateColumns();
-
-        console.log("lanza bolas")
+        this.numColumns = 8;
+        this.columns = [];
     }
-
+    
+    enter(context) {
+        super.enter(context);
+        this.columns = this.generateColumns();
+    }
+    
     execute(context, time, delta) {
         this.stateTime += delta;
         this.timeSinceLastSpawn += delta;
@@ -32,66 +33,62 @@ export default class BossAngryFireBallState extends BaseState {
                     this.spawnColumnFireballs();
                     this.timeSinceLastSpawn = 0;
                 }
-                if (this.stateTime >= this.attackDuration) {
+                if (this.stateTime >= this.config.attackDuration) {
                     this.startCooldownPhase();
                 }
                 break;
                 
             case 'cooldown':
-                if (this.stateTime >= this.cooldownDuration) {
+                if (this.stateTime >= this.config.cooldownDuration) {
                     this.boss.selectNextState();
                 }
                 break;
         }
     }
-
+    
     generateColumns() {
         const columns = [];
         const half = Math.floor(this.numColumns / 2);
-
+        
         for (let i = 0; i < this.numColumns; i++) {
             let offset = (i - half) * this.columnSpread;
             let x = this.boss.x + offset;
             columns.push(x);
         }
-
+        
         return columns;
     }
-
+    
+    createWarning() {
+        // Este ataque no tiene fase de warning
+        this.startAttackPhase();
+    }
+    
+    executeAttack() {
+        // El ataque se ejecuta continuamente durante la fase attack
+        // La lógica está en el método execute()
+    }
+    
     spawnColumnFireballs() {
-        const scene = this.boss.scene;
-        let fireballs = this.boss.fireballs;
-
         const colX = Phaser.Math.RND.pick(this.columns);
-
-        let fireball = fireballs.create(colX, this.boss.y - 350, this.texture);
-
+        const fireball = this.boss.fireballs.create(colX, this.boss.y - 350, this.config.texture);
+        
         fireball.setScale(1.4);
         fireball.body.allowGravity = false;
         fireball.setVelocityY(this.boss.fireballSpeed);
         fireball.setCollideWorldBounds(false);
-
+        
+        // Auto-destrucción
         this.autoCleanup(fireball);
     }
-
-     autoCleanup(fireball) {
-        const scene = this.boss.scene;
-
+    
+    autoCleanup(fireball) {
+        const scene = this.scene;
         scene.events.on('update', () => {
             if (!fireball.active) return;
-
             if (fireball.y > this.boss.y + this.boss.distanceToFloor + 150) {
                 fireball.destroy();
             }
         });
-    }
-
-    startCooldownPhase() {
-        this.currentPhase = 'cooldown';
-        this.stateTime = 0;
-    }
-
-    exit(context) {
-        
     }
 }
