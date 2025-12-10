@@ -635,6 +635,18 @@ export default class TestPlayerScene extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+
+            key: 'Final',
+            frames: [
+                { key: 'final' },
+                { key: 'final2' },
+                
+            ],
+            frameRate: 2,
+            repeat: -1
+        });
+
 
         this.anims.create({
 

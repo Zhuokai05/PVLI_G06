@@ -60,7 +60,8 @@ export default class FinalBoss extends BaseBoss {
         
         // Fase 1: seleccionar 3 ataques aleatorios
         this.availableStates = this.selectRandomStates(3);
-        console.log('FinalBoss Fase 1 - Ataques:', this.availableStates);
+        console.log('FinalBoss Fase 1 - Ataques:', this.availableStates); 
+        this.play('Final')
     }
     
     setFinalBody() {
