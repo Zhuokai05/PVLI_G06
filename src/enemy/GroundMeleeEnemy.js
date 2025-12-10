@@ -3,7 +3,9 @@ import GroundEnemyMoveState from './enemyMove/GroundEnemyMoveState.js';
 import MeleeEnemyAttackState from './enemyAttack/MeleeEnemyAttackState.js';
 
 /**
- * enemigo terrestre melee
+ * Enemigo terrestre de ataque cuerpo a cuerpo
+ * @class MeleeEnemy
+ * @extends BaseEnemy
  */
 export default class MeleeEnemy extends BaseEnemy {
 
@@ -31,7 +33,8 @@ export default class MeleeEnemy extends BaseEnemy {
   }
 
   /**
-   * Obtener la clave de animación de ataque según el tipo de enemigo
+   * Obtiene la clave de animación de ataque según el tipo de enemigo
+   * @returns {string} - Clave de la animación de ataque
    */
   getMeleeAttackKey() {
     if (this.texture.key === 'basicEnemyAngry') {

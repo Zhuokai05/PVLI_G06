@@ -1,10 +1,16 @@
 import BaseEnemyAttackState from './BaseEnemyAttackState.js';
 
 /**
- * estado de ataque melee con animación
+ * Estado de ataque cuerpo a cuerpo con animación
+ * @class MeleeEnemyAttackState
+ * @extends BaseEnemyAttackState
  */
 export default class MeleeEnemyAttackState extends BaseEnemyAttackState {
     
+    /**
+     * Entra al estado de ataque cuerpo a cuerpo
+     * @param {Object} enemy - Enemigo que ejecuta el ataque
+     */
     enter(enemy) {
         super.enter(enemy);
         this.hasAttacked = false;               // evita doble ataque
@@ -17,12 +23,19 @@ export default class MeleeEnemyAttackState extends BaseEnemyAttackState {
         }
     }
 
+    /**
+     * Ejecuta la lógica del estado de ataque
+     * @param {Object} enemy - Enemigo que ejecuta el ataque
+     * @param {number} time - Tiempo actual
+     * @param {number} delta - Delta time
+     */
     execute(enemy, time, delta) {
         super.execute(enemy, time, delta);       // termina ataque si ya acabo
     }
 
     /**
-     * ataque melee con hitbox y animación
+     * Realiza ataque cuerpo a cuerpo con hitbox y animación
+     * @param {number} direction - Dirección del ataque (1: derecha, -1: izquierda)
      */
     meleeAttack(direction) {
         let w = this.enemy.meleeAttackWidge;     // ancho hitbox
@@ -125,6 +138,10 @@ export default class MeleeEnemyAttackState extends BaseEnemyAttackState {
         });
     }
 
+    /**
+     * Sale del estado de ataque cuerpo a cuerpo
+     * @param {Object} enemy - Enemigo que ejecuta el ataque
+     */
     exit(enemy) {
         // Destruir hitbox y sprite si aún existen
         if (this.hitbox) {
