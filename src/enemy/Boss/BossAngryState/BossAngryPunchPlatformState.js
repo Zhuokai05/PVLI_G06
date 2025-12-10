@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque de puño vertical para plataformas (jefe Ira)
+ * @class BossAngryPunchPlatformState
+ * @extends BaseBossAttackState
+ */
 export default class BossAngryPunchPlatformState extends BaseBossAttackState {
     constructor(texture = 'punch') {
         super({
@@ -14,6 +19,9 @@ export default class BossAngryPunchPlatformState extends BaseBossAttackState {
         this.spawnX = 0;
     }
     
+    /**
+     * Crea las advertencias visuales para el puño vertical
+     */
     createWarning() {
         const cam = this.scene.cameras.main;
         
@@ -31,10 +39,16 @@ export default class BossAngryPunchPlatformState extends BaseBossAttackState {
         );
     }
     
+    /**
+     * Ejecuta el ataque de puño vertical
+     */
     executeAttack() {
         this.spawnPunch();
     }
     
+    /**
+     * Genera un puño vertical
+     */
     spawnPunch() {
         const Yspeed = this.boss.punchYSpeed;
         
@@ -53,6 +67,10 @@ export default class BossAngryPunchPlatformState extends BaseBossAttackState {
         this.cleanupPunch(punch);
     }
     
+    /**
+     * Configura la auto-destrucción del puño vertical
+     * @param {Phaser.GameObjects.Sprite} punch - Puño a limpiar
+     */
     cleanupPunch(punch) {
         const scene = this.scene;
         scene.events.on('update', () => {

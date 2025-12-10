@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque de bolas de fuego para el jefe Ira
+ * @class BossAngryFireBallState
+ * @extends BaseBossAttackState
+ */
 export default class BossAngryFireBallState extends BaseBossAttackState {
     constructor(texture = 'fire_ball') {
         super({
@@ -18,11 +23,21 @@ export default class BossAngryFireBallState extends BaseBossAttackState {
         this.columns = [];
     }
 
+    /**
+     * Entra al estado de bolas de fuego
+     * @param {Object} context - Contexto del boss
+     */
     enter(context) {
         super.enter(context);
         this.columns = this.generateColumns();
     }
 
+    /**
+     * Ejecuta la lógica del estado de bolas de fuego
+     * @param {Object} context - Contexto del boss
+     * @param {number} time - Tiempo actual
+     * @param {number} delta - Delta time
+     */
     execute(context, time, delta) {
         this.stateTime += delta;
         this.timeSinceLastSpawn += delta;
@@ -46,6 +61,10 @@ export default class BossAngryFireBallState extends BaseBossAttackState {
         }
     }
 
+    /**
+     * Genera las columnas donde aparecerán las bolas de fuego
+     * @returns {Array} - Array de posiciones X de las columnas
+     */
     generateColumns() {
         const columns = [];
         const half = Math.floor(this.numColumns / 2);
@@ -59,16 +78,25 @@ export default class BossAngryFireBallState extends BaseBossAttackState {
         return columns;
     }
 
+    /**
+     * Crea advertencias (este ataque no tiene fase de warning)
+     */
     createWarning() {
         // Este ataque no tiene fase de warning
         this.startAttackPhase();
     }
 
+    /**
+     * Ejecuta el ataque de bolas de fuego
+     */
     executeAttack() {
         // El ataque se ejecuta continuamente durante la fase attack
         // La lógica está en el método execute()
     }
 
+    /**
+     * Genera bolas de fuego en una columna aleatoria
+     */
     spawnColumnFireballs() {
         const colX = Phaser.Math.RND.pick(this.columns);
         const fireball = this.boss.fireballs.create(colX, this.boss.y - 350, this.config.texture);
@@ -91,6 +119,10 @@ export default class BossAngryFireBallState extends BaseBossAttackState {
         this.autoCleanup(fireball);
     }
 
+    /**
+     * Configura la auto-destrucción de las bolas de fuego
+     * @param {Phaser.GameObjects.Sprite} fireball - Bola de fuego a limpiar
+     */
     autoCleanup(fireball) {
         const scene = this.boss.scene;
         if (this.boss && this.boss.scene) {

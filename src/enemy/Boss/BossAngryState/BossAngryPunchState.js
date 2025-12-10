@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque de puño horizontal para el jefe Ira
+ * @class BossAngryPunchState
+ * @extends BaseBossAttackState
+ */
 export default class BossAngryPunchState extends BaseBossAttackState {
     constructor(texture = 'punch') {
         super({
@@ -18,12 +23,19 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         this.arrows = [];
     }
     
+    /**
+     * Entra al estado de puño horizontal
+     * @param {Object} context - Contexto del boss
+     */
     enter(context) {
         // Calcular posición Y fija antes de llamar al padre
         this.fixedSpawnY = context.y + context.distanceToFloor;
         super.enter(context);
     }
     
+    /**
+     * Crea las advertencias visuales para el puño horizontal
+     */
     createWarning() {
         const cam = this.scene.cameras.main;
         
@@ -73,6 +85,9 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         this.createPulseEffect(warningText, 200, 0.3, 1);
     }
     
+    /**
+     * Crea flechas direccionales para indicar la dirección del ataque
+     */
     createDirectionArrows() {
         const cam = this.scene.cameras.main;
         const warningHeight = 120;
@@ -135,6 +150,10 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         this.warningElements.arrows = this.arrows;
     }
     
+    /**
+     * Crea una flecha grande central para destacar la dirección
+     * @returns {Phaser.GameObjects.Graphics} - Flecha grande creada
+     */
     createBigDirectionArrow() {
         const cam = this.scene.cameras.main;
         const bigArrowSize = 60;
@@ -176,10 +195,16 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         return bigArrow;
     }
     
+    /**
+     * Ejecuta el ataque de puño horizontal
+     */
     executeAttack() {
         this.spawnPunch();
     }
     
+    /**
+     * Genera un puño horizontal
+     */
     spawnPunch() {
         const Xspeed = this.boss.punchXSpeed;
         const cam = this.scene.cameras.main;
@@ -221,6 +246,10 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         this.cleanupPunch(punch);
     }
     
+    /**
+     * Configura la auto-destrucción del puño
+     * @param {Phaser.GameObjects.Sprite} punch - Puño a limpiar
+     */
     cleanupPunch(punch) {
         const scene = this.scene;
         scene.events.on('update', () => {
@@ -234,6 +263,9 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         });
     }
     
+    /**
+     * Destruye todas las advertencias visuales
+     */
     destroyAllWarnings() {
         super.destroyAllWarnings();
         

@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque lateral para el jefe Tutorial
+ * @class BossTutorialSideAttackState
+ * @extends BaseBossAttackState
+ */
 export default class BossTutorialSideAttackState extends BaseBossAttackState {
     constructor() {
         super({
@@ -22,6 +27,10 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         this.tween = null;
     }
     
+    /**
+     * Entra al estado de ataque lateral
+     * @param {Object} context - Contexto del boss
+     */
     enter(context) {
         // Configurar primero las variables específicas
         this.boss = context;
@@ -44,6 +53,9 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         super.enter(context);
     }
     
+    /**
+     * Crea las advertencias visuales para el ataque lateral
+     */
     createWarning() {
         // Obtener límites de la cámara de forma segura
         this.calculateCameraBoundaries();
@@ -74,6 +86,9 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         );
     }
     
+    /**
+     * Calcula los límites de la cámara
+     */
     calculateCameraBoundaries() {
         const cam = this.scene.cameras.main;
         
@@ -90,6 +105,10 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         this.worldView = worldView;
     }
     
+    /**
+     * Obtiene el ancho del área visible
+     * @returns {number} - Ancho del worldView
+     */
     getWorldViewWidth() {
         if (this.worldView && this.worldView.width) {
             return this.worldView.width;
@@ -99,6 +118,10 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         return this.scene.sys.game.config.width || 800;
     }
     
+    /**
+     * Obtiene un worldView por defecto
+     * @returns {Object} - WorldView por defecto
+     */
     getDefaultWorldView() {
         return {
             x: this.boss.x - 400,
@@ -108,6 +131,9 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         };
     }
     
+    /**
+     * Crea flechas direccionales para indicar la dirección
+     */
     createDirectionArrows() {
         const arrowCount = 3;
         const arrowSpacing = 80;
@@ -126,6 +152,12 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Crea una flecha individual
+     * @param {number} x - Posición X
+     * @param {number} y - Posición Y
+     * @param {string} direction - Dirección de la flecha
+     */
     createArrow(x, y, direction) {
         const arrowSize = 30;
         const arrow = this.scene.add.graphics();
@@ -160,10 +192,16 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         this.registerWarningElement(`arrowTween_${x}_${y}`, arrowTween);
     }
     
+    /**
+     * Ejecuta el ataque lateral
+     */
     executeAttack() {
         this.startSideSweep();
     }
     
+    /**
+     * Inicia el barrido lateral del boss
+     */
     startSideSweep() {
         // Recalcular límites por si la cámara se movió
         this.calculateCameraBoundaries();
@@ -202,6 +240,9 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         this.registerWarningElement('sweepTween', this.tween);
     }
     
+    /**
+     * Maneja la finalización del barrido
+     */
     onSweepComplete() {
         // Si no golpeó al jugador, auto-daño
         if (!this.boss._hitPlayerThisSweep) {
@@ -219,7 +260,12 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         this.stateTime = 0;
     }
     
-    // Sobrescribir el método execute para manejar la fase finish
+    /**
+     * Ejecuta la lógica del estado
+     * @param {Object} context - Contexto del boss
+     * @param {number} time - Tiempo actual
+     * @param {number} delta - Delta time
+     */
     execute(context, time, delta) {
         // Llamar al método base primero
         super.execute(context, time, delta);
@@ -234,6 +280,10 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Sale del estado de ataque lateral
+     * @param {Object} context - Contexto del boss
+     */
     exit(context) {
         super.exit(context);
         

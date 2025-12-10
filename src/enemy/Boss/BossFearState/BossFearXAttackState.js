@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque en X para el jefe Miedo
+ * @class BossFearXAttackState
+ * @extends BaseBossAttackState
+ */
 export default class BossFearXAttackState extends BaseBossAttackState {
     constructor(texture = 'garra') {
         super({
@@ -13,6 +18,10 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         });
     }
     
+    /**
+     * Entra al estado de ataque en X
+     * @param {Object} context - Contexto del boss
+     */
     enter(context) {
         super.enter(context);
         
@@ -20,6 +29,9 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         this.boss.createClaws();
     }
     
+    /**
+     * Crea las advertencias visuales para el ataque en X
+     */
     createWarning() {
         const bossX = this.boss.x;
         const bossY = this.boss.y;
@@ -31,6 +43,11 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         this.startWarningFlash();
     }
     
+    /**
+     * Crea el patrón en X de advertencia
+     * @param {number} x - Posición X central
+     * @param {number} y - Posición Y central
+     */
     createXPatternWarning(x, y) {
         // Rectángulo izquierdo (45 grados)
         const leftWarning = this.scene.add.rectangle(
@@ -59,6 +76,9 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         this.registerWarningElement('rightWarning', rightWarning);
     }
     
+    /**
+     * Inicia el efecto de parpadeo en las advertencias
+     */
     startWarningFlash() {
         // Crear efecto de parpadeo
         this.flashTween = this.scene.tweens.add({
@@ -72,11 +92,17 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         this.registerWarningElement('flashTween', this.flashTween);
     }
     
+    /**
+     * Ejecuta el ataque en X moviendo las garras
+     */
     executeAttack() {
         // Mover garras en forma de X
         this.moveClawsInXPattern();
     }
     
+    /**
+     * Mueve las garras en patrón en X
+     */
     moveClawsInXPattern() {
         const bossX = this.boss.x;
         const bossY = this.boss.y;
@@ -125,6 +151,9 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         this.registerWarningElement('rightClawTween', this.rightClawTween);
     }
     
+    /**
+     * Destruye todas las advertencias visuales
+     */
     destroyAllWarnings() {
         super.destroyAllWarnings();
         
@@ -134,6 +163,10 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Sale del estado de ataque en X
+     * @param {Object} context - Contexto del boss
+     */
     exit(context) {
         this.destroyAllWarnings();
         

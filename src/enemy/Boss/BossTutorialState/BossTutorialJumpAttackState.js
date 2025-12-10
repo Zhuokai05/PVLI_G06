@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque de salto para el jefe Tutorial
+ * @class BossTutorialJumpAttackState
+ * @extends BaseBossAttackState
+ */
 export default class BossTutorialJumpAttackState extends BaseBossAttackState {
     constructor() {
         super({
@@ -19,6 +24,10 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
         this.targetX = 0;
     }
     
+    /**
+     * Entra al estado de ataque de salto
+     * @param {Object} context - Contexto del boss
+     */
     enter(context) {
         // Configurar primero
         this.boss = context;
@@ -42,15 +51,27 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
     
     // Sobrescribir métodos base ya que este ataque tiene fases personalizadas
     
+    /**
+     * Crea advertencias (este ataque tiene fases personalizadas)
+     */
     createWarning() {
         // Este ataque no tiene warning tradicional
         // El warning es el rectángulo en el suelo durante la caída
     }
     
+    /**
+     * Ejecuta el ataque (se maneja en las fases específicas)
+     */
     executeAttack() {
         // El ataque se ejecuta en las fases específicas
     }
     
+    /**
+     * Ejecuta la lógica del estado de salto
+     * @param {Object} context - Contexto del boss
+     * @param {number} time - Tiempo actual
+     * @param {number} delta - Delta time
+     */
     execute(context, time, delta) {
         this.stateTime += delta;
         
@@ -83,6 +104,9 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
     
     // Métodos específicos del ataque de salto
     
+    /**
+     * Inicia la fase de ascenso
+     */
     startLift() {
         this.currentPhase = 'lift';
         this.stateTime = 0;
@@ -102,6 +126,9 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
         this.registerWarningElement('liftTween', this.liftTween);
     }
     
+    /**
+     * Inicia la fase de caída
+     */
     startFall() {
         this.currentPhase = 'fall';
         this.stateTime = 0;
@@ -116,6 +143,9 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
         this.performFall();
     }
     
+    /**
+     * Calcula la posición objetivo para la caída
+     */
     calculateTargetPosition() {
         const cam = this.scene.cameras.main;
         const worldView = cam.worldView || this.getDefaultWorldView();
@@ -128,6 +158,10 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
         this.boss.flipX = (this.targetX > this.boss.x);
     }
     
+    /**
+     * Obtiene un worldView por defecto
+     * @returns {Object} - WorldView por defecto
+     */
     getDefaultWorldView() {
         return {
             x: this.boss.x - 400,
@@ -136,6 +170,9 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
         };
     }
     
+    /**
+     * Crea advertencia en el suelo donde caerá el boss
+     */
     createGroundWarning() {
         const warningRect = this.createWarningRectangle(
             this.targetX,
@@ -150,6 +187,9 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
         this.createPulseEffect([warningRect], 400, 0.3, 0.6);
     }
     
+    /**
+     * Realiza la caída del boss
+     */
     performFall() {
         this.fallTween = this.scene.tweens.add({
             targets: this.boss,
@@ -165,6 +205,9 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
         this.registerWarningElement('fallTween', this.fallTween);
     }
     
+    /**
+     * Maneja el aterrizaje del boss
+     */
     onLand() {
         this.currentPhase = 'warning';
         this.stateTime = 0;
@@ -181,6 +224,9 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
         this.createLandingEffect();
     }
     
+    /**
+     * Crea efecto visual de impacto al aterrizar
+     */
     createLandingEffect() {
         // Círculo de impacto
         const impactCircle = this.scene.add.circle(
@@ -224,11 +270,18 @@ export default class BossTutorialJumpAttackState extends BaseBossAttackState {
         });
     }
     
+    /**
+     * Inicia la fase final del ataque
+     */
     startFinish() {
         this.currentPhase = 'finish';
         this.stateTime = 0;
     }
     
+    /**
+     * Sale del estado de ataque de salto
+     * @param {Object} context - Contexto del boss
+     */
     exit(context) {
         super.exit(context);
         

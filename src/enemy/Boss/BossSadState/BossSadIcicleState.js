@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque de carámbanos verticales para el jefe Tristeza
+ * @class BossSadIcicleState
+ * @extends BaseBossAttackState
+ */
 export default class BossSadIcicleState extends BaseBossAttackState {
     constructor(texture = 'icicle') {
         super({
@@ -14,6 +19,9 @@ export default class BossSadIcicleState extends BaseBossAttackState {
         this.spawnX = 0;
     }
     
+    /**
+     * Crea las advertencias visuales para los carámbanos verticales
+     */
     createWarning() {
         const cam = this.scene.cameras.main;
         this.spawnX = this.player.x;
@@ -29,10 +37,16 @@ export default class BossSadIcicleState extends BaseBossAttackState {
         );
     }
     
+    /**
+     * Ejecuta el ataque de carámbanos verticales
+     */
     executeAttack() {
         this.spawnIcicle();
     }
     
+    /**
+     * Genera un carámbano vertical
+     */
     spawnIcicle() {
         const Yspeed = this.boss.icicleSpeed;
         
@@ -50,6 +64,10 @@ export default class BossSadIcicleState extends BaseBossAttackState {
         this.cleanupIcicle(icicle);
     }
     
+    /**
+     * Configura la auto-destrucción de un carámbano
+     * @param {Phaser.GameObjects.Sprite} icicle - Carámbano a limpiar
+     */
     cleanupIcicle(icicle) {
         const cleanupEvent = this.scene.time.addEvent({
             delay: 50,
@@ -75,6 +93,9 @@ export default class BossSadIcicleState extends BaseBossAttackState {
         this.cleanupEvents.push(cleanupEvent);
     }
     
+    /**
+     * Destruye todas las advertencias visuales
+     */
     destroyAllWarnings() {
         super.destroyAllWarnings();
         

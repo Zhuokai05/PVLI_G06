@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque radial de icicles para el jefe Tristeza
+ * @class BossSadRadialState
+ * @extends BaseBossAttackState
+ */
 export default class BossSadRadialState extends BaseBossAttackState {
     constructor(texture = 'icicle') {
         super({
@@ -12,6 +17,9 @@ export default class BossSadRadialState extends BaseBossAttackState {
         });
     }
     
+    /**
+     * Crea las advertencias visuales para el ataque radial
+     */
     createWarning() {
         // Crear advertencia circular alrededor del boss
         const warningCircle = this.createWarningCircle(
@@ -39,16 +47,32 @@ export default class BossSadRadialState extends BaseBossAttackState {
         this.createPulseEffect([warningCircle, warningBorder], 600, 0.5, 0.8, 1, 1.2);
     }
     
+    /**
+     * Crea un círculo de advertencia
+     * @param {number} x - Posición X
+     * @param {number} y - Posición Y
+     * @param {number} radius - Radio del círculo
+     * @param {number} color - Color del círculo
+     * @param {number} alpha - Transparencia
+     * @returns {Phaser.GameObjects.Circle} - Círculo creado
+     */
     createWarningCircle(x, y, radius, color, alpha) {
         const circle = this.scene.add.circle(x, y, radius, color, alpha);
         this.registerWarningElement('warningCircle', circle);
         return circle;
     }
     
+    /**
+     * Ejecuta el ataque radial de icicles
+     */
     executeAttack() {
         this.spawnRadialIcicles(12);
     }
     
+    /**
+     * Genera icicles en patrón radial
+     * @param {number} count - Número de icicles a generar
+     */
     spawnRadialIcicles(count) {
         const speed = this.boss.radialSpeed || 300;
         const angleStep = (Math.PI * 2) / count;
@@ -75,6 +99,10 @@ export default class BossSadRadialState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Configura la auto-destrucción de un icicle
+     * @param {Phaser.GameObjects.Sprite} icicle - Icicle a limpiar
+     */
     setupIcicleCleanup(icicle) {
         const cleanupEvent = this.scene.time.addEvent({
             delay: 100,
@@ -117,6 +145,9 @@ export default class BossSadRadialState extends BaseBossAttackState {
         this.cleanupEvents.push(cleanupEvent);
     }
     
+    /**
+     * Destruye todas las advertencias visuales
+     */
     destroyAllWarnings() {
         super.destroyAllWarnings();
         

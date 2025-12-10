@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque de bola de agua perseguidora para el jefe Tristeza
+ * @class BossSadWaterBallState
+ * @extends BaseBossAttackState
+ */
 export default class BossSadWaterBallState extends BaseBossAttackState {
     constructor(texture = 'water_ball') {
         super({
@@ -25,6 +30,10 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         this.spawnInterval = 500;
     }
     
+    /**
+     * Entra al estado de bola de agua
+     * @param {Object} context - Contexto del boss
+     */
     enter(context) {
         super.enter(context);
         
@@ -33,6 +42,12 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         this.startSpawnPhase();
     }
     
+    /**
+     * Ejecuta la lógica del estado de bola de agua
+     * @param {Object} context - Contexto del boss
+     * @param {number} time - Tiempo actual
+     * @param {number} delta - Delta time
+     */
     execute(context, time, delta) {
         this.stateTime += delta;
         this.timeSinceLastSpawn += delta;
@@ -68,17 +83,26 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Crea advertencias (este ataque no tiene warning tradicional)
+     */
     createWarning() {
         // Este ataque no tiene fase de warning tradicional
         // La advertencia es la bola misma
     }
     
+    /**
+     * Ejecuta el ataque de bola de agua
+     */
     executeAttack() {
         // El ataque se ejecuta en las fases específicas
     }
     
     // Métodos específicos de WaterBallState
     
+    /**
+     * Inicia la fase de spawn de la bola de agua
+     */
     startSpawnPhase() {
         this.currentPhase = 'spawn';
         this.stateTime = 0;
@@ -86,6 +110,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         this.spawnWaterBall();
     }
     
+    /**
+     * Genera la bola de agua
+     */
     spawnWaterBall() {
         this.waterBall = this.boss.waterBalls.create(
             this.boss.x,
@@ -113,6 +140,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         });
     }
     
+    /**
+     * Inicia la fase de seguimiento al jugador
+     */
     startFollowPhase() {
         this.currentPhase = 'follow';
         this.stateTime = 0;
@@ -123,6 +153,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         this.ballDestroyed = false;
     }
     
+    /**
+     * Hace que la bola de agua siga al jugador
+     */
     followPlayer() {
         if (!this.waterBall || !this.waterBall.active || !this.waterBall.following || this.ballDestroyed) return;
         
@@ -142,6 +175,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Crea efecto de rastro tras la bola de agua
+     */
     createTrailEffect() {
         if (!this.waterBall || !this.waterBall.active || this.ballDestroyed) return;
         
@@ -166,6 +202,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         });
     }
     
+    /**
+     * Verifica colisión con el jugador
+     */
     checkPlayerCollision() {
         if (!this.waterBall || !this.waterBall.active || this.damageApplied || this.ballDestroyed) return;
         
@@ -193,6 +232,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Crea efecto visual de impacto con el jugador
+     */
     createImpactEffect() {
         const impactCircle = this.scene.add.circle(
             this.waterBall.x,
@@ -261,6 +303,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         });
     }
     
+    /**
+     * Inicia la fase de explosión de la bola
+     */
     startExplodePhase() {
         if (this.ballDestroyed || this.damageApplied) {
             this.startCooldownPhase();
@@ -283,6 +328,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Destruye la bola de agua con efecto visual
+     */
     destroyWaterBallWithEffect() {
         if (!this.waterBall || !this.waterBall.active) return;
         
@@ -299,6 +347,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         });
     }
     
+    /**
+     * Crea efecto visual de explosión
+     */
     createExplosion() {
         if (this.damageApplied) return;
         
@@ -397,6 +448,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Inicia la fase de cooldown
+     */
     startCooldownPhase() {
         this.currentPhase = 'cooldown';
         this.stateTime = 0;
@@ -404,6 +458,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         this.ballDestroyed = false;
     }
     
+    /**
+     * Destruye todas las advertencias visuales
+     */
     destroyAllWarnings() {
         super.destroyAllWarnings();
         
@@ -413,6 +470,10 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Sale del estado de bola de agua
+     * @param {Object} context - Contexto del boss
+     */
     exit(context) {
         this.destroyAllWarnings();
         this.damageApplied = false;
