@@ -14,7 +14,8 @@ export default class BossAngry extends BaseBoss {
             startCooldown: 2000,
             minCooldown: 1000,
             maxCooldown: 1500,
-            availableStates: ['punch', 'fireball']
+            availableStates: ['punch', 'fireball'],
+            bossName: 'anger'
         };
 
         super(scene, x, y, 'IraSheet', 0, player, config);
@@ -201,8 +202,8 @@ export default class BossAngry extends BaseBoss {
         console.log('Boss derrotado definitivamente');
 
         // Llama al método die de BaseBoss primero
-        
-        
+
+
         super.die();
 
         // Completar acciones específicas de BossAngry
@@ -234,10 +235,9 @@ export default class BossAngry extends BaseBoss {
             }
         });
 
-            if(this.finaldoor) 
-            {
-                this.finaldoor.activarIra();
-            }
+        if (this.finaldoor) {
+            this.finaldoor.activarIra();
+        }
         super.die();
 
         PlayerDataManager.killBoss('anger');
@@ -248,18 +248,45 @@ export default class BossAngry extends BaseBoss {
         this.floors = iraFloors;
     }
     setLife() {
+        // Verificar si el boss ya fue derrotado
+        if (PlayerDataManager.data.bossStatus.anger) {
+            console.log('Boss Anger ya derrotado, no se activará');
+            this.setVisible(false);
+            this.setActive(false);
+            this.isActivated = false;
+
+            // Abrir puertas automáticamente si ya fue derrotado
+            if (this.Bossdoors) {
+                this.Bossdoors.getChildren().forEach(door => {
+                    if (door.abrirPuerta) {
+                        door.abrirPuerta();
+                    }
+                });
+            }
+
+            if (this.floors) {
+                this.floors.getChildren().forEach(floor => {
+                    if (floor.abrirPuerta) {
+                        floor.abrirPuerta();
+                    }
+                });
+            }
+
+            return;
+        }
+
+        // Si no ha sido derrotado, activar normalmente
         this.setVisible(true);
         this.setActive(true);
-        this.isActivated = true; // Activar el boss
+        this.isActivated = true;
         this.setupCollisions();
 
         // Iniciar cooldown antes del primer ataque
         this.generateNewCooldown();
         this.stateMachine.setState('cooldown');
     }
-    setFinalDoor(finaldoor)
-    {
-       this.finaldoor = finaldoor
+    setFinalDoor(finaldoor) {
+        this.finaldoor = finaldoor
     }
     // Método para configurar las plataformas (llamado desde la escena)
     setPlatforms(platforms) {
