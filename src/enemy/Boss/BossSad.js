@@ -11,9 +11,9 @@ export default class BossSad extends BaseBoss {
             health: 10,
             maxHealth: 10,
             damage: 1,
-            startCooldown: 3000,
-            minCooldown: 2500,
-            maxCooldown: 3000,
+            startCooldown: 2000,
+            minCooldown: 2000,
+            maxCooldown: 2500,
             availableStates: ['radial', 'waterball'],
             bossName: 'sadness'
         };
