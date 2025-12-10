@@ -12,7 +12,11 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('basicEnemyAngry', './assets/sprites/Enemigos/Enemigos_basicos/Fire.png');
     this.load.spritesheet('basicEnemyAngry_move', './assets/sprites/Enemigos/Enemigos_basicos/Fire_move.png',
       { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('basicEnemyAngry_melee', './assets/sprites/Enemigos/Enemigos_basicos/Fire_Melee.png',
+      { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('basicEnemySad_move', './assets/sprites/Enemigos/Enemigos_basicos/Water_move.png',
+      { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('basicEnemySad_melee', './assets/sprites/Enemigos/Enemigos_basicos/Water_Melee.png',
       { frameWidth: 64, frameHeight: 64 });
     this.load.image('basicEnemySad', './assets/sprites/Enemigos/Enemigos_basicos/Water.png');
     this.load.image('basicEnemyHappy', './assets/sprites/Enemigos/Enemigos_basicos/Sun.png');

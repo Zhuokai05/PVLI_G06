@@ -129,10 +129,10 @@ export default class TestPlayerScene extends Phaser.Scene {
                 //Enemigos
 
                 case "ira":
-                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move'));
+                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemyAngry', 0, 'Ira_BasicEnemy_Move', 'basicEnemyAngry_melee_anim'));
                     break;
                 case "tristeza":
-                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad', 0, 'Tristeza_BasicEnemy_Move'));
+                    this.enemies.add(new BasicMeleeEnemy(this, objeto.x, objeto.y, 'basicEnemySad', 0, 'Tristeza_BasicEnemy_Move', 'basicEnemySad_melee_anim'));
                     break;
 
                 case "alegria":
@@ -725,6 +725,22 @@ export default class TestPlayerScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('basicEnemySad_move', { start: 0, end: 2 }),
             frameRate: 8,
             repeat: -1
+        });
+
+        // Animación de ataque melee para enemigo angry
+        this.anims.create({
+            key: 'basicEnemyAngry_melee_anim',
+            frames: this.anims.generateFrameNumbers('basicEnemyAngry_melee', { start: 0, end: 4 }),
+            frameRate: 24,
+            repeat: 0
+        });
+
+        // Animación de ataque melee para enemigo sad
+        this.anims.create({
+            key: 'basicEnemySad_melee_anim',
+            frames: this.anims.generateFrameNumbers('basicEnemySad_melee', { start: 0, end: 4 }),
+            frameRate: 24,
+            repeat: 0
         });
 
         //enemigos voladores
