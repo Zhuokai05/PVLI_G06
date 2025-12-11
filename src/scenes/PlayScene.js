@@ -233,15 +233,15 @@ export default class PlayScene extends Phaser.Scene {
                 //buttons
                 case "redbutton":
                     this.redButton = new Button(this, objeto.x, objeto.y, 'rbutton', 'rojo');
-                    if(PlayerDataManager.data.buttonStatus.red) this.redButton.changeTexture();
+                    if (PlayerDataManager.data.buttonStatus.red) this.redButton.changeTexture();
                     break;
                 case "greenbutton":
                     this.greenButton = new Button(this, objeto.x, objeto.y, 'gbutton', 'verde');
-                    if(PlayerDataManager.data.buttonStatus.green) this.greenButton.changeTexture();
+                    if (PlayerDataManager.data.buttonStatus.green) this.greenButton.changeTexture();
                     break;
                 case "bluebutton":
                     this.blueButton = new Button(this, objeto.x, objeto.y, 'bbutton', 'azul');
-                    if(PlayerDataManager.data.buttonStatus.blue) this.blueButton.changeTexture();
+                    if (PlayerDataManager.data.buttonStatus.blue) this.blueButton.changeTexture();
                     break;
                 case "redshow":
                     this.redshow = new ShowButton(this, objeto.x, objeto.y, 'rshowA', 'rshowE');
@@ -278,7 +278,7 @@ export default class PlayScene extends Phaser.Scene {
                     break;
 
                 case "finaltrigger":
-                    this.finaltrigger = new InvisibleTrigger(this, objeto.x, objeto.y,1000,100);
+                    this.finaltrigger = new InvisibleTrigger(this, objeto.x, objeto.y, 1000, 100);
                     break;
                 //orbes 
                 case "speedorb":
@@ -450,8 +450,8 @@ export default class PlayScene extends Phaser.Scene {
         if (this.finalbossdoor && this.iraboss) this.iraboss.setFinalDoor(this.finalbossdoor);
         //bossdoors y triggers
 
-   
-       
+
+
         if (this.iratrigger) this.iratrigger.getDoors(this.irabossdoors);
         if (this.iratrigger && this.iraboss) this.iratrigger.getBoss(this.iraboss);
 
@@ -459,7 +459,7 @@ export default class PlayScene extends Phaser.Scene {
             door.openDoor();
         });
 
-   
+
         if (this.icetrigger) this.icetrigger.getDoors(this.icebossdoors);
         if (this.icetrigger && this.tristeboss) this.icetrigger.getBoss(this.tristeboss);
 
@@ -500,13 +500,13 @@ export default class PlayScene extends Phaser.Scene {
         if (this.tutoboss) this.tutoboss.getDoors(this.tutobossdoors);
         if (this.finalboss) this.finalboss.getDoors(this.finalbossdoors);
 
-        if(PlayerDataManager.data.bossStatus.anger){
+        if (PlayerDataManager.data.bossStatus.anger) {
             this.irabossdoors.getChildren().forEach(door => {
                 door.openDoor();
             });
         }
 
-        if(PlayerDataManager.data.bossStatus.sadness){
+        if (PlayerDataManager.data.bossStatus.sadness) {
             this.icefloordoors.getChildren().forEach(door => {
                 door.openDoor();
             });
@@ -1009,7 +1009,36 @@ export default class PlayScene extends Phaser.Scene {
         this.cameras.main.once('camerafadeoutcomplete', () => {
 
             // Teletransportar al jugador a la posicion frente al boss
-            this.player.setPosition(boss.x, boss.y);
+            let spawnX = boss.x;                    // Misma coordenada X que el boss
+            let spawnY = boss.y;                    // Misma altura que el boss
+
+            switch (boss.bossName) {
+                case 'tutorial':                    // Boss Tutorial
+                    spawnX = boss.x - 400;
+                    spawnY = boss.y;
+                    break;
+                case 'anger':                       // Boss Ira
+                    spawnX = boss.x - 600;
+                    spawnY = boss.y + 150; 
+                    break;
+
+                case 'sadness':                     // Boss Tristeza
+                    spawnX = boss.x - 400;
+                    spawnY = boss.y;
+                    break;
+
+                case 'fear':                        // Boss Miedo
+                    spawnX = boss.x;
+                    spawnY = boss.y + 150;
+                    break;
+
+                case 'final':                       // Boss Final
+                    spawnX = boss.x;
+                    spawnY = boss.y + 150;
+                    break;
+            }
+
+            this.player.setPosition(spawnX, spawnY);
 
             boss.setVisible(true);
 

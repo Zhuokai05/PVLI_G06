@@ -35,11 +35,13 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
      * @param {Object} context - Contexto del boss
      */
     enter(context) {
+        this.boss = context;
         super.enter(context);
 
         // Iniciar fase de spawn directamente
         this.currentPhase = 'spawn';
         this.startSpawnPhase();
+        if (this.boss.bossName === 'sadness') this.boss.play('bosssadness_attack');
     }
 
     /**
@@ -328,7 +330,7 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
      */
     destroyWaterBallWithEffect() {
         if (!this.waterBall || !this.waterBall.active) return;
-        
+
         this.scene.tweens.add({
             targets: this.waterBall,
             scale: 2,

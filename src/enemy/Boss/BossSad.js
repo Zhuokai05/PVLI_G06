@@ -11,7 +11,7 @@ import BossSadCooldownState from './BossSadState/BossSadCooldownState.js';
  */
 export default class BossSad extends BaseBoss {
     constructor(scene, x, y, player) {
-        super(scene, x, y, 'tristeza', undefined, player, {
+        super(scene, x, y, 'SadnessSheet', 0, player, {
             health: 10,
             maxHealth: 10,
             damage: 1,
@@ -22,25 +22,61 @@ export default class BossSad extends BaseBoss {
             bossName: 'sadness'
         });
 
-        this.setScaleAndBody(3.8, 35, 35, 8.9, 12);
-        
+        this.setScaleAndBody(3.8, 30, 30, 10.5, 8);
+
         // Velocidades específicas
         this.icicleSpeed = 900;
         this.waterBallSpeed = 200;
         this.radialSpeed = 400;
         this.distanceToFloor = 250;
 
+        this.createAnimations();
         this.setupStates();
+        this.play('bosssadness_idle');
+    }
+
+    /**
+     * Crea las animaciones del jefe Tristeza
+     */
+    createAnimations() {
+        const anims = this.scene.anims;
+
+        const animations = [
+            { key: 'bosssadness_idle', texture: 'SadnessSheet', start: 0, end: 2, fps: 8, repeat: -1 },
+            { key: 'bosssadness_attack', texture: 'SadnessSheet', start: 2, end: 9, fps: 8, repeat: 0 },
+        ];
+
+        animations.forEach(config => {
+            if (!anims.exists(config.key)) {
+                anims.create({
+                    key: config.key,
+                    frames: anims.generateFrameNumbers(config.texture, { start: config.start, end: config.end }),
+                    frameRate: config.fps,
+                    repeat: config.repeat
+                });
+            }
+        });
     }
 
     /**
      * Reproduce la intro del jefe Tristeza
      */
     playIntro() {
-        this.setVisible(true);
-        this.setActive(true);
-        this.setLife();
-        this.scene.events.emit('bossIntroFinished');
+        this.setVisible(true).setActive(true);
+        this.play({ key: 'bosssadness_idle', repeat: 3 });
+
+        this.once('animationcomplete', () => {
+            this.play({ key: 'bosssadness_attack', repeat: 0 });
+            this.once('animationcomplete', () => {
+                this.scene.cameras.main.shake(2500, 0.05);
+                this.play({ key: 'bosssadness_attack', repeat: 3 });
+
+                this.once('animationcomplete', () => {
+                    super.setLife();
+                    this.scene.events.emit('bossIntroFinished');
+                });
+            });
+        });
     }
 
     /**
@@ -69,7 +105,7 @@ export default class BossSad extends BaseBoss {
             this.phase = 2;
             this.health = this.maxHealth + 3;
             this.availableStates.push('icicle');
-            
+
             this.handlePhaseTransition();
         } else {
             this.die();
@@ -86,7 +122,7 @@ export default class BossSad extends BaseBoss {
 
         this.setActive(false).setVisible(false);
         this.isActivated = false;
-        
+
         this.scene.cameras.main.shake(800, 0.02).flash(500, 50, 50, 255);
 
         this.scene.time.delayedCall(2000, () => {

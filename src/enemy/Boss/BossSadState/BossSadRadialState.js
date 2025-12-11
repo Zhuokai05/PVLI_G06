@@ -66,6 +66,7 @@ export default class BossSadRadialState extends BaseBossAttackState {
      * Ejecuta el ataque radial de icicles
      */
     executeAttack() {
+        if(this.boss.bossName === 'sadness')this.boss.play('bosssadness_attack');
         this.spawnRadialIcicles(12);
     }
 

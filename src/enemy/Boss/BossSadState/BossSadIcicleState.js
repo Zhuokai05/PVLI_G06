@@ -41,6 +41,7 @@ export default class BossSadIcicleState extends BaseBossAttackState {
      * Ejecuta el ataque de carámbanos verticales
      */
     executeAttack() {
+        if(this.boss.bossName === 'sadness')this.boss.play('bosssadness_attack');
         this.spawnIcicle();
     }
 
