@@ -1,53 +1,66 @@
 import PlayerDataManager from '../managers/PlayerDataManager.js';
 
+/**
+ * clase orbselectscene
+ * escena de interfaz para que el jugador gestione y equipe sus orbes
+ */
 export class OrbSelectScene extends Phaser.Scene {
+
+    /**
+     * constructor de la escena de seleccion de orbes
+     */
     constructor() {
         super('OrbSelect');
     }
 
+    /**
+     * hook de phaser para la creacion de elementos de la escena
+     * @param {object} data - datos pasados, incluyendo la escena de origen y el objeto jugador
+     */
     create(data) {
 
-        this.fromScene = data.fromScene;
+        this.fromScene = data.fromScene;             // clave de la escena de origen
+        this.player = data.tPlayer;                  // referencia al objeto jugador
 
-        this.player = data.tPlayer;
-
-        //orbes recogidos
+        // orbes recogidos
         this.collectedOrbs = this.player.orbs || [];
         
-        //orbes equipados
+        // orbes equipados (referencia al array del jugador)
         this.equipped = this.player.equippedOrbs || [null, null];
 
-        //orbe seleccionado 
+        // orbe seleccionado
         this.selectedOrb = null;
 
-        //creamos el fondo
+        // creamos el fondo
         this.createBackground();
 
-        //creamos el panel de inventario de orbes
+        // creamos el panel de inventario de orbes
         this.createInventoryPanel();
 
-        //creamos el grid de orbes obtenidos
+        // creamos el grid de orbes obtenidos
         this.createOrbGrid();
 
-        //creamos el panel derecho
+        // creamos el panel derecho
         this.createRightPanel();
         
-        //creamos boton de cerrar el juego
+        // creamos boton de cerrar el juego
         this.createCloseButton();
 
-        //al abrir el panel salen los slots actualizados
+        // al abrir el panel salen los slots actualizados
         this.refreshSlots(); 
 
-        
+        // input: tecla esc para cerrar el menu
         this.input.keyboard.on('keydown-ESC', () => {
-            this.scene.resume(this.fromScene); //carga la escena de la que venimos
+            this.scene.resume(this.fromScene); // carga la escena de la que venimos
             this.scene.stop();
-            PlayerDataManager.saveDataFromPlayer(this.player); //guarda en el player los cambios aplicados  
+            PlayerDataManager.saveDataFromPlayer(this.player); // guarda en el player los cambios aplicados
         });
 
     }
 
-    //fondo transparente
+    /**
+     * crea el fondo semitransparente del menu
+     */
     createBackground() {
         this.add.rectangle(
             this.cameras.main.centerX,
@@ -55,45 +68,48 @@ export class OrbSelectScene extends Phaser.Scene {
             this.cameras.main.width,
             this.cameras.main.height,
             0x000000,
-            0.6 //transparencia del fondo
+            0.6 // transparencia del fondo
         ).setDepth(1);
     }
 
-    // penel izquierdo, inventario
+    /**
+     * crea el panel izquierdo que contiene el inventario de orbes
+     */
     createInventoryPanel() {
         let centerX = this.cameras.main.centerX - 240;
         let centerY = this.cameras.main.centerY;
         let width = 460;
         let height = 460;
 
-        //creamos el panel
+        // creamos el panel
         this.inventoryPanel = this.add.rectangle(
             centerX, centerY,
             width, height,
             0x333333
         )
-
-        //le ponemos un marco al panel
+        // le ponemos un marco al panel
         .setStrokeStyle(2, 0xffffff)
         .setDepth(4);
     }
 
-    // grid de orbes
+    /**
+     * crea el grid visual con todos los orbes recogidos
+     */
     createOrbGrid() {
 
-        this.orbIcons = []; //iconos de orbes
-        this.orbBackgrounds = []; //fondo de orbes
-        this.orbNames = []; // nombre de orbes 
+        this.orbIcons = [];         // iconos de orbes
+        this.orbBackgrounds = [];   // fondo de orbes
+        this.orbNames = [];         // nombre de orbes 
 
-        //posicion del primer orbe (izquierda arriba)
+        // posicion del primer orbe (izquierda arriba)
         let startX = this.inventoryPanel.x - 165;
         let startY = this.inventoryPanel.y - 140;
 
-        //espacio entre orbes
+        // espacio entre orbes
         let spacingX = 110;
         let spacingY = 120;
 
-        //orbes por fila
+        // orbes por fila
         let iconsPerRow = 4;
 
         // fondo detras del icono
@@ -108,13 +124,13 @@ export class OrbSelectScene extends Phaser.Scene {
             let posX = startX + col * spacingX;
             let posY = startY + row * spacingY;
 
-            //creamos el fondo detras del orbe para poder poner un marco 
+            // creamos el fondo detras del orbe para poder poner un marco 
             let bg = this.add.rectangle(
                 posX, posY,
                 bgWidth, bgHeight, 
-                orb.equipped ? 0x00AA00 : 0x222222 //depende de si esta equipado cambia de color
+                orb.equipped ? 0x00AA00 : 0x222222 // depende de si esta equipado cambia de color
             )
-            .setStrokeStyle(2, 0xffffff) //ponemos el marco
+            .setStrokeStyle(2, 0xffffff) // ponemos el marco
             .setDepth(5);
 
             this.orbBackgrounds.push({ bg, orb });
@@ -125,7 +141,7 @@ export class OrbSelectScene extends Phaser.Scene {
                 .setInteractive({ useHandCursor: true })
                 .setDepth(6);
 
-            icon.on("pointerdown", () => this.selectOrb(orb)); //el orbe seleccionado 
+            icon.on("pointerdown", () => this.selectOrb(orb)); // el orbe seleccionado 
 
             this.orbIcons.push({ icon, orb });
 
@@ -134,7 +150,7 @@ export class OrbSelectScene extends Phaser.Scene {
                 posX, posY + 50,
                 orb.name,
                 {
-                    font: "14px Arial",
+                    font: "14px arial",
                     fill: "#ffffff"
                 }
             )
@@ -145,7 +161,7 @@ export class OrbSelectScene extends Phaser.Scene {
 
             col++;
 
-            //si hemos llenado una fila
+            // si hemos llenado una fila
             if (col >= iconsPerRow) {
                 col = 0;
                 row++;
@@ -153,43 +169,45 @@ export class OrbSelectScene extends Phaser.Scene {
         }
     }
 
-    // panel derecho donde incluye el orbe seleccionado y la informacion de los slots
+    /**
+     * crea el panel derecho que muestra el orbe seleccionado y los slots de equipamiento
+     */
     createRightPanel() {
 
         let centerX = this.cameras.main.centerX + 250;
         let centerY = this.cameras.main.centerY;
 
-        //fondo
+        // fondo
         this.panel = this.add.rectangle(centerX, centerY, 300, 400, 0x222222)
             .setStrokeStyle(2, 0xffffff)
             .setDepth(5);
 
-        //icono del orbe seleccionado
+        // icono del orbe seleccionado
         this.panelIcon = this.add.image(centerX, centerY - 120, '')
             .setScale(0.6)
             .setVisible(false)
             .setDepth(6);
 
-        //nombre del orbe seleccionado
+        // nombre del orbe seleccionado
         this.panelName = this.add.text(centerX, centerY - 40, "", {
-            font: "20px Arial",
+            font: "20px arial",
             fill: "#ffffff"
         })
         .setOrigin(0.5)
         .setDepth(6);
 
-        //descropcion del orbe seleccionado
+        // descripcion del orbe seleccionado
         this.panelDesc = this.add.text(centerX, centerY, "", {
-            font: "16px Arial",
+            font: "16px arial",
             fill: "#cccccc",
             wordWrap: { width: 260 }
         })
         .setOrigin(0.5)
         .setDepth(6);
 
-        //el boton de equipar
-        this.btnEquip = this.add.text(centerX, centerY + 80, "Equip", {
-            font: "18px Arial",
+        // el boton de equipar
+        this.btnEquip = this.add.text(centerX, centerY + 80, "equip", {
+            font: "18px arial",
             fill: "#fff",
             backgroundColor: "#444",
             padding: { x: 10, y: 5 }
@@ -199,14 +217,15 @@ export class OrbSelectScene extends Phaser.Scene {
         .setDepth(6);
 
         this.btnEquip.on("pointerdown", () => {
-            if (!this.selectedOrb) return; //si no has seleccionado
+            if (!this.selectedOrb) return; // si no has seleccionado
 
-            if (!this.selectedOrb.equipped && this.noSlot()) { //si no queda slot libres
-                this.screenShake();
+            // si no esta equipado y no queda slot libre
+            if (!this.selectedOrb.equipped && this.noSlot()) { 
+                this.screenShake(); // feedback visual de error
             }
 
-            this.toggleEquip(this.selectedOrb);
-            this.updateRightPanel();
+            this.toggleEquip(this.selectedOrb); // equipar/desequipar
+            this.updateRightPanel(); // actualizar la interfaz
         });
 
         this.slotSprites = [];
@@ -218,7 +237,7 @@ export class OrbSelectScene extends Phaser.Scene {
 
         for (let i = 0; i < 2; i++) {
 
-            // Fondo del slot
+            // fondo del slot
             let slotBg = this.add.image(
                 slotXStart + i * slotSpacing, 
                 slotY,
@@ -228,6 +247,8 @@ export class OrbSelectScene extends Phaser.Scene {
             .setDepth(6)
             .setScale(0.3)
             .setInteractive({ useHandCursor: true });
+            
+            // al hacer click en el slot, si tiene orbe, seleccionarlo
             slotBg.on("pointerdown", () => {
                 let orb = this.equipped[i];
                 if (orb) {
@@ -237,7 +258,7 @@ export class OrbSelectScene extends Phaser.Scene {
 
             this.slotSprites.push(slotBg);
 
-            // Icono del orbe equipado
+            // icono del orbe equipado
             let orbIcon = this.add.image(
                 slotBg.x,
                 slotBg.y,
@@ -248,6 +269,7 @@ export class OrbSelectScene extends Phaser.Scene {
             .setDepth(7)
             .setInteractive({ useHandCursor: true }); 
 
+            // al hacer click en el icono, si tiene orbe, seleccionarlo
             orbIcon.on("pointerdown", () => { 
                 let orb = this.equipped[i];
                 if (orb) {
@@ -259,17 +281,22 @@ export class OrbSelectScene extends Phaser.Scene {
         }
     }
 
-    // Al seleccionar orbe
+    /**
+     * al seleccionar un orbe del inventario o slot
+     * @param {object} orb - orbe seleccionado
+     */
     selectOrb(orb) {
         this.selectedOrb = orb;
         this.updateRightPanel();
         this.refreshOrbGridColors();
     }
 
-    // actualizar el panel derecho
+    /**
+     * actualiza el panel derecho con la informacion del orbe seleccionado
+     */
     updateRightPanel() {
 
-        if (!this.selectedOrb) return; //si no has seleccionado nada, el panel queda vacio
+        if (!this.selectedOrb) return; // si no has seleccionado nada, el panel queda vacio
 
         this.panelIcon
             .setTexture(this.selectedOrb.texture.key)
@@ -278,27 +305,32 @@ export class OrbSelectScene extends Phaser.Scene {
         this.panelName.setText(this.selectedOrb.name);
         this.panelDesc.setText(this.selectedOrb.description);
 
-        if (!this.selectedOrb.equipped && this.noSlot()) { //si no hay hueco libre
-            this.btnEquip.setText("Slots lleno");
+        // logica del boton equipar/desequipar/slots lleno
+        if (!this.selectedOrb.equipped && this.noSlot()) { // si no hay hueco libre y no esta equipado
+            this.btnEquip.setText("slots lleno");
             this.btnEquip.setStyle({
-                fill: "#FFFFFF",
-                backgroundColor: "#AA0000"
+                fill: "#ffffff",
+                backgroundColor: "#aa0000" // rojo para error
             });
         } else {
-            this.btnEquip.setText(this.selectedOrb.equipped ? "Desequipar" : "Equip");
+            // texto normal y color normal
+            this.btnEquip.setText(this.selectedOrb.equipped ? "desequipar" : "equip");
             this.btnEquip.setStyle({
-                fill: "#FFFFFF",
+                fill: "#ffffff",
                 backgroundColor: "#444444"
             });
         }
     }
 
-    // equipar o desequipar orbes
+    /**
+     * equipar o desequipar el orbe seleccionado
+     * @param {object} orb - orbe a manipular
+     */
     toggleEquip(orb) {
 
         let index = this.equipped.indexOf(orb);
 
-        if (index !== -1) { // si esta equipado el orbe lo desequipamos
+        if (index !== -1) { // si esta equipado el orbe, lo desequipamos
             this.player.desEquipOrb(index); 
         }
         else { // sino, buscamos el slot libre si lo hay
@@ -308,12 +340,14 @@ export class OrbSelectScene extends Phaser.Scene {
             }
         }
 
-        //actualizamos
+        // actualizamos la ui
         this.refreshSlots();
         this.refreshOrbGridColors();
     }
 
-    // actualizar ui de los slots
+    /**
+     * actualiza la ui de los slots de equipamiento
+     */
     refreshSlots() {
 
         for (let i = 0; i < 2; i++) {
@@ -329,23 +363,29 @@ export class OrbSelectScene extends Phaser.Scene {
         }
     }
 
-    // actualizar color de los orbes equipados
+    /**
+     * actualiza el color de fondo y el borde del grid de orbes
+     */
     refreshOrbGridColors() {
 
         for (let entry of this.orbBackgrounds) {
             let { bg, orb } = entry;
 
-            bg.setFillStyle(orb.equipped ? 0x00AA00 : 0x222222); //si esta equipado, se pone verde el relleno
+            // si esta equipado, se pone verde el relleno, sino gris
+            bg.setFillStyle(orb.equipped ? 0x00AA00 : 0x222222); 
 
             if (this.selectedOrb === orb) {
                 bg.setStrokeStyle(3, 0xFFD700); // el borde del orbe seleccionado se pone amarillo
             } else {
-                bg.setStrokeStyle(2, 0xffffff);
+                bg.setStrokeStyle(2, 0xffffff); // borde normal
             }
         }
     }
 
-    // si hay hueco libre
+    /**
+     * verifica si hay slots de equipamiento libres
+     * @returns {boolean} true si no hay slots libres
+     */
     noSlot() {
         let count = 0;
         for (let orb of this.equipped) {
@@ -354,19 +394,23 @@ export class OrbSelectScene extends Phaser.Scene {
         return count >= this.equipped.length;
     }
 
-    //vibra la pantalla 
+    /**
+     * aplica un efecto de vibracion a la pantalla
+     */
     screenShake() {
         this.cameras.main.shake(150, 0.015);
     }
 
-    // boton de cerrar el panel de orbes
+    /**
+     * crea el boton para cerrar el panel de orbes
+     */
     createCloseButton() {
         let btn = this.add.text(
             this.cameras.main.centerX,
             this.cameras.main.height - 50,
-            "Cerrar",
+            "cerrar",
             {
-                font: "18px Arial",
+                font: "18px arial",
                 fill: "#fff",
                 backgroundColor: "#444",
                 padding: { x: 10, y: 5 }
@@ -377,9 +421,9 @@ export class OrbSelectScene extends Phaser.Scene {
         .setDepth(10);
 
         btn.on("pointerdown", () => {
-            this.scene.resume(this.fromScene); //carga la escena de la que venimos
+            this.scene.resume(this.fromScene); // carga la escena de la que venimos
             this.scene.stop();
-            PlayerDataManager.saveDataFromPlayer(this.player); //guarda en el player los cambios aplicados
+            PlayerDataManager.saveDataFromPlayer(this.player); // guarda en el player los cambios aplicados
         });
     }
 }
