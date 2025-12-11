@@ -22,7 +22,7 @@ export default class BossAngry extends BaseBoss {
             bossName: 'anger'
         });
 
-        this.setScaleAndBody(4.3);
+        this.setScaleAndBody(4.3, 35, 35, 9.9, 11);
         this.distanceToFloor = 250;
         this.fireballSpeed = 450;
         this.punchYSpeed = 1200;
