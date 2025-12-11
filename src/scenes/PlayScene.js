@@ -367,7 +367,7 @@ export default class PlayScene extends Phaser.Scene {
                 case "rangeorb":
                     this.orbGroup.add(new RangedOrb(this, objeto.x, objeto.y));
                     break;
-                case "attackeorb":
+                case "attackorb":
                     this.orbGroup.add(new AttackRangeOrb(this, objeto.x, objeto.y));
                     break;
                 case "shieldeorb":

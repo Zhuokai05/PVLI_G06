@@ -6,7 +6,7 @@ import BaseOrb from './BaseOrb.js';
 export default class DamageOrb extends BaseOrb {
 
  constructor(scene, x, y) {
-    super(scene, x, y, 'orbDamage', 'Orb Damage', 'Aumenta el danio un 50%');
+    super(scene, x, y, 'orbDamage', 'Orb Damage', 'Haces mas daño de lo normal');
  }
 
  onActivate(player) {

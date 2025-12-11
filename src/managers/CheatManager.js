@@ -30,6 +30,7 @@ export default class CheatManager {
             { name: "boton 1", x: 8728, y: 8921 },
             { name: "boton 2", x: 4936, y: 6996 },
             { name: "boton 3", x: 10662, y: 6610 },
+            { name: "sala secreta orbes", x: 7178, y: 15265 },
             { name: "Aumentar daño player", x: player.x, y: player.y },
         ];
 
