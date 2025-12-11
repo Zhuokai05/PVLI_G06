@@ -1018,8 +1018,8 @@ export default class PlayScene extends Phaser.Scene {
                     spawnY = boss.y;
                     break;
                 case 'anger':                       // Boss Ira
-                    spawnX = boss.x - 600;
-                    spawnY = boss.y + 150; 
+                    spawnX = boss.x;
+                    spawnY = boss.y + 200; 
                     break;
 
                 case 'sadness':                     // Boss Tristeza
