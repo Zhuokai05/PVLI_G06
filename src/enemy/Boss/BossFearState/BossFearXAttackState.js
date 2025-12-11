@@ -107,9 +107,21 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         const bossX = this.boss.x;
         const bossY = this.boss.y;
 
-        if (!this.boss.leftClaw || !this.boss.rightClaw) {
-            console.error('Garras no creadas correctamente');
-            return;
+        // VERIFICACIÓN MÁS ROBUSTA
+        if (!this.boss || !this.boss.leftClaw || !this.boss.rightClaw) {
+            console.warn('Garras no disponibles, recreando...');
+
+            // Intentar recrear las garras
+            if (this.boss && this.boss.createClaws) {
+                this.boss.createClaws();
+            }
+
+            // Verificar nuevamente
+            if (!this.boss || !this.boss.leftClaw || !this.boss.rightClaw) {
+                console.error('No se pudieron crear las garras, abortando ataque');
+                this.boss.selectNextState(); // Saltar a siguiente estado
+                return;
+            }
         }
 
         // Posiciones iniciales y finales
@@ -119,6 +131,31 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         const endLeftX = bossX + 300;
         const endRightX = bossX - 300;
         const endY = bossY + 400;
+
+        // Asegurar que las garras estén en posición inicial
+        this.boss.leftClaw.setPosition(startLeftX, startY);
+        this.boss.rightClaw.setPosition(startRightX, startY);
+
+        // Activar las garras
+        this.boss.leftClaw.setActive(true).setVisible(true);
+        this.boss.rightClaw.setActive(true).setVisible(true);
+
+        // Contador para saber cuándo ambas animaciones terminaron
+        let completedAnimations = 0;
+        const totalAnimations = 2;
+
+        const checkAllAnimationsComplete = () => {
+            completedAnimations++;
+            if (completedAnimations === totalAnimations) {
+                // SOLO AQUÍ destruir las garras después de completar TODO el movimiento X
+                this.scene.time.delayedCall(300, () => {
+                    if (this.boss && this.boss.destroyClaws) {
+                        this.boss.destroyClaws();
+                        console.log('Garras destruidas después del movimiento X completo');
+                    }
+                });
+            }
+        };
 
         // Animación de la garra izquierda (hacia abajo-derecha)
         this.leftClawTween = this.scene.tweens.add({
@@ -130,17 +167,9 @@ export default class BossFearXAttackState extends BaseBossAttackState {
             onUpdate: (tween, target) => {
                 const progress = tween.progress;
                 target.y = startY + (endY - startY) * progress + Math.sin(progress * Math.PI * 2) * 20;
-
-                // sonido ataque
-                this?.boss?.bossAttackSound?.play();
             },
             onComplete: () => {
-                // Auto-destrucción después de la animación
-                this.scene.time.delayedCall(500, () => {
-                    if (this.boss && this.boss.destroyClaws) {
-                        this.boss.destroyClaws();
-                    }
-                });
+                checkAllAnimationsComplete();
             }
         });
 
@@ -154,9 +183,9 @@ export default class BossFearXAttackState extends BaseBossAttackState {
             onUpdate: (tween, target) => {
                 const progress = tween.progress;
                 target.y = startY + (endY - startY) * progress + Math.sin(progress * Math.PI * 2) * 20;
-
-                // sonido ataque
-                this?.boss?.bossAttackSound?.play();
+            },
+            onComplete: () => {
+                checkAllAnimationsComplete();
             }
         });
 
