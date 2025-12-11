@@ -49,34 +49,34 @@ export default class PlayScene extends Phaser.Scene {
         // ========================================
         // INICIALIZACIÓN BÁSICA
         // ========================================
-        
+
         // Gestor de inputs del jugador
         this.inputManager = new InputManager(this);
-        
+
         // Mundo de física enorme (140,000 de ancho para todo el mapa)
         this.physics.world.setBounds(-200, 0, 140000, 100000);
-        
+
         // Gestor de datos persistentes del jugador
         this.PlayerDataManager = PlayerDataManager;
 
         // ========================================
         // CARGA DEL TILEMAP (Tiled)
         // ========================================
-        
+
         const map = this.make.tilemap({ key: 'mappy' });
         const tileset = map.addTilesetImage('Ira', 'tiles');
         let layer = map.createLayer('mapa', tileset, 0, 0);
-        
+
         // Activar colisiones en tiles marcados con la propiedad "colision: true"
         layer.setCollisionByProperty({ colision: true });
-        
+
         // Obtener capa de objetos (donde están posicionados enemigos, puertas, etc.)
         let obsj = map.getObjectLayer('objetos');
 
         // ========================================
         // CREACIÓN DE GRUPOS DE FÍSICA
         // ========================================
-        
+
         // Grupo de salas de jefes (zonas que cambian cámara)
         this.Bossrooms = this.physics.add.group({
             allowGravity: false,
@@ -133,10 +133,10 @@ export default class PlayScene extends Phaser.Scene {
 
         // Grupo de orbes coleccionables (power-ups)
         this.orbGroup = this.physics.add.group();
-        
+
         // Grupo de todos los enemigos
         this.enemies = this.physics.add.group();
-        
+
         // Pool de proyectiles del jugador (optimización)
         this.playerProjectilePool = new PlayerProjectilePool(this, "plume");
 
@@ -147,7 +147,7 @@ export default class PlayScene extends Phaser.Scene {
         // PARSING DE OBJETOS DEL TILEMAP
         // ========================================
         // Recorre cada objeto del mapa y crea las entidades correspondientes
-        
+
         obsj.objects.forEach((objeto) => {
             switch (objeto.name) {
 
@@ -248,7 +248,7 @@ export default class PlayScene extends Phaser.Scene {
                 // ====================================
                 // PUERTAS DE JEFES (con animaciones)
                 // ====================================
-                
+
                 // Puertas del boss de Ira
                 case "bossdoor":
                     this.irabossdoor = new DoorBoss(this, objeto.x, objeto.y, 'puertairaSheet');
@@ -346,7 +346,10 @@ export default class PlayScene extends Phaser.Scene {
                     this.tutotrigger = new InvisibleTrigger(this, objeto.x, objeto.y);
                     break;
                 case "finaltrigger":
-                    this.finaltrigger = new InvisibleTrigger(this, objeto.x, objeto.y, 1000, 100);
+                    this.finaltrigger = new InvisibleTrigger(this, objeto.x, objeto.y, 200, 300);
+                    break;
+                case "finaltrigger2":
+                    this.finaltrigger2 = new InvisibleTrigger(this, objeto.x, objeto.y, 200, 300);
                     break;
 
                 // ====================================
@@ -479,7 +482,7 @@ export default class PlayScene extends Phaser.Scene {
         // ========================================
         // CONEXIÓN DE PUERTAS (TELEPORTS)
         // ========================================
-        
+
         // Puertas de Ira (conectadas entre sí)
         if (this.irabossdoor && this.irabossdoorcontrary) {
             this.irabossdoor.setContrary(this.irabossdoorcontrary);
@@ -538,7 +541,7 @@ export default class PlayScene extends Phaser.Scene {
         if (this.finalbossdoor) this.doors.add(this.finalbossdoor);
         if (this.finalbossdoorcontrary) this.doors.add(this.finalbossdoorcontrary);
         if (this.finalbossdoorexit) this.doors.add(this.finalbossdoorexit);
-        
+
         // Asignar puerta final a bosses anteriores
         if (this.finalbossdoor && this.tristeboss) this.tristeboss.setFinalDoor(this.finalbossdoor);
         if (this.finalbossdoor && this.iraboss) this.iraboss.setFinalDoor(this.finalbossdoor);
@@ -546,7 +549,7 @@ export default class PlayScene extends Phaser.Scene {
         // ========================================
         // CONEXIÓN DE TRIGGERS Y JEFES
         // ========================================
-        
+
         // Trigger de Ira
         if (this.iratrigger) this.iratrigger.getDoors(this.irabossdoors);
         if (this.iratrigger && this.iraboss) this.iratrigger.getBoss(this.iraboss);
@@ -595,7 +598,7 @@ export default class PlayScene extends Phaser.Scene {
         // ========================================
         // PERSISTENCIA DE PUERTAS (según progreso)
         // ========================================
-        
+
         // Si ya derrotaste al boss de ira, mantener puertas abiertas
         if (PlayerDataManager.data.bossStatus.anger) {
             this.irabossdoors.getChildren().forEach(door => {
@@ -619,7 +622,7 @@ export default class PlayScene extends Phaser.Scene {
         // COLISIONES (COLLIDERS)
         // ========================================
         // Objetos que colisionan físicamente (no se atraviesan)
-        
+
         this.physics.add.collider(this.player, layer);                    // Jugador con tilemap
         this.physics.add.collider(this.player, this.irabossdoors);        // Jugador con puertas de ira
         this.physics.add.collider(this.player, this.irafloordoors);       // Jugador con bloques de ira
@@ -642,7 +645,7 @@ export default class PlayScene extends Phaser.Scene {
         // OVERLAPS (detección sin colisión física)
         // ========================================
         // Objetos que se detectan pero se pueden atravesar
-        
+
         // ====================================
         // SISTEMA DE LAVA ASCENDENTE
         // ====================================
@@ -894,7 +897,7 @@ export default class PlayScene extends Phaser.Scene {
         // ========================================
         // ANIMACIONES ENEMIGOS VOLADORES
         // ========================================
-        
+
         // Enemigo volador de Ira
         this.anims.create({
             key: 'Ira_FlyingEnemy_Move',
@@ -942,7 +945,7 @@ export default class PlayScene extends Phaser.Scene {
         // ========================================
         // ANIMACIONES ENEMIGOS A DISTANCIA
         // ========================================
-        
+
         // Enemigo ranged de Ira
         this.anims.create({
             key: 'Ira_RangedEnemy_Move',
@@ -990,7 +993,7 @@ export default class PlayScene extends Phaser.Scene {
         // ========================================
         // ANIMACIONES ENEMIGOS MINA
         // ========================================
-        
+
         // Enemigo mina de Ira
         this.anims.create({
             key: 'Ira_MineEnemy_Move',
@@ -1081,7 +1084,7 @@ export default class PlayScene extends Phaser.Scene {
         // ========================================
         // GESTIÓN DE PUERTAS
         // ========================================
-        
+
         // Si había una puerta actual, verificar si aún estamos en contacto
         if (this.currentDoor) {
             if (!this.physics.overlap(this.player, this.currentDoor)) {
@@ -1134,12 +1137,12 @@ export default class PlayScene extends Phaser.Scene {
         // ========================================
         this.Bossrooms.getChildren().forEach(bossRoom => {
             const inside = this.physics.overlap(this.player, bossRoom);
-            
+
             // Si entra en sala de jefe
             if (inside && !bossRoom.playerInside) {
                 bossRoom.playerInside = true;
                 this.handleBossRoom(bossRoom);                            // Cambiar cámara a sala fija
-            } 
+            }
             // Si sale de sala de jefe
             else if (!inside && bossRoom.playerInside && !this.player.dead) {
                 bossRoom.playerInside = false;

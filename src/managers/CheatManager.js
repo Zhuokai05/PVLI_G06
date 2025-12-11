@@ -25,7 +25,7 @@ export default class CheatManager {
             { name: "boss miedo", x: 3036, y: 2392 },
             { name: "floor is lava", x: 18111, y: 11876 },
             { name: "boss final izquierda", x: 17233, y: 8351 },
-            { name: "boss final derecha", x: 18955, y: 8685 },
+            { name: "boss final derecha", x: 19356, y: 8636 },
             { name: "subida de dos zonas", x: 1936, y: 5412 },
             { name: "boton 1", x: 8728, y: 8921 },
             { name: "boton 2", x: 4936, y: 6996 },
