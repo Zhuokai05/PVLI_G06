@@ -12,8 +12,8 @@ import BossAngryCooldownState from './BossAngryState/BossAngryCooldownState.js';
 export default class BossAngry extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'IraSheet', 0, player, {
-            health: 10,
-            maxHealth: 10,
+            health: 45,
+            maxHealth: 45,
             damage: 1,
             startCooldown: 2000,
             minCooldown: 1000,
@@ -93,7 +93,8 @@ export default class BossAngry extends BaseBoss {
             this.phase = 2;
             this.health = this.maxHealth * 1.5;
             this.availableStates.push('punchPlatform');
-            
+            this.minCooldown = 750;
+            this.maxCooldown = 1250;
             this.handlePhaseTransition();
         } else {
             this.die();
