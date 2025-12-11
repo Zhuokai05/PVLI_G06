@@ -173,6 +173,10 @@ export class PreloadScene extends Phaser.Scene {
       frameHeight: 128
     });
     this.load.image('puertatriste', './assets/sprites/Escena/Puertatristeza.png');
+    this.load.spritesheet('puertatristezaSheet', './assets/sprites/Escena/PuertatristezaSheet.png', {
+      frameWidth: 128,
+      frameHeight: 128
+    });
     this.load.image('puertamiedo', './assets/sprites/Escena/Puertamiedo.png');
     this.load.image('puertafinal', './assets/sprites/Escena/PuertaFinal.png');
     this.load.image('PuertaBoss', './assets/sprites/Escena/PuertaBoss.png');
