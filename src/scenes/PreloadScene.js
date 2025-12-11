@@ -138,6 +138,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('fwater_ball', './assets/sprites/Bosses/FWater_ball.png');
     // Menus
     this.load.image('defeat_background', './assets/sprites/Menu/Fondo_derrota.png');
+    this.load.image('defeat', './assets/sprites/Menu/derrota.png');
     this.load.image('defeat_player', './assets/sprites/Menu/Player_derrota.png');
     this.load.image('loading', './assets/sprites/Menu/carga.png');
 

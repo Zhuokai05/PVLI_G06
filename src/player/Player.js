@@ -127,6 +127,28 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             .setScale(1.2);
 
         this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);
+
+
+this.timeline = this.scene.tweens.createTimeline();
+
+// Primer tween (sube un poco)
+this.timeline.add({
+    targets: this,
+    y: '-=120',     // relativo a su posición actual
+    duration: 700,
+    ease: 'Quad.Out'
+});
+
+// Segundo tween (cae fuera de cámara)
+this.timeline.add({
+    targets: this,
+    y: '+=500',     // relativo a su posición final del primer tween
+    duration: 900,
+    ease: 'Quad.In'
+});
+ 
+this.deadtexture = 'defeat_player';
+
     }
 
     /**
@@ -174,6 +196,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   * controla inputs, estado, ataques, timers y efectos
   */
     update(time, delta) {
+
+         if (this.dead || !this.body) return;
 
         // si un efecto impide movimiento, cancelar input
         if (!this.canMove) {
@@ -397,19 +421,31 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     /**
      * muerte del jugador
      */
-    die() {
-        if (this.dead) return;
+   die() {
+    if (this.dead) return;
 
-        if (this.shieldAura) this.shieldAura.setVisible(false);
-
-        this.health = this.maxHealth;
+    if (this.shieldAura) this.shieldAura.setVisible(false);
+    
+    this.health = this.maxHealth;
+    this.dead = true;
+    this.canMove = false;
+    this.isAttacking = false;
+    this.isDashing = false;
+    this.anims.stop();
+    this.setTexture(this.deadtexture);
+    this.scene.cameras.main.stopFollow();
+    this.timeline.play();
+    
+    // Retrasar lo siguiente 3 segundos (3000 ms)
+    this.scene.time.delayedCall(1500, () => {
         this.scene.scene.stop();
         this.scene.scene.launch('GameOver');
 
-        this.dead = true;
+       
         this.setVelocity(0, 0);
         this.stateMachine.setState('dead');
-    }
+    });
+}
 
     /**
      * jugador esta tocando el suelo

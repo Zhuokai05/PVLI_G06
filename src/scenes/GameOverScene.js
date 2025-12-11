@@ -11,17 +11,11 @@ class GameOverScene extends Phaser.Scene {
         this.background = this.add.image(
             this.cameras.main.width / 2,
             this.cameras.main.height / 2,
-            'defeat_background'
+            'defeat'
         );
-        this.background.setScale(5, 5);
+        this.background.setScale(0.75, 1);
 
-        // Player muerto en el centro
-        this.deadPlayer = this.add.image(
-            this.cameras.main.width / 2,
-            this.cameras.main.height / 2,
-            'defeat_player'
-        );
-        this.deadPlayer.setScale(5);
+
 
         /* Botón para volver al menú principal
         var backButton = this.add.image(
@@ -35,7 +29,7 @@ class GameOverScene extends Phaser.Scene {
         backButton.on('pointerdown', () => {
             this.scene.stop();
             this.scene.start('MainMenu');
-        });
+        })
 
         // Efecto de hover para el botón
         backButton.on('pointerover', () => {
