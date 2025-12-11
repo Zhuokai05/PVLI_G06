@@ -1,83 +1,44 @@
+/**
+ * clase winscene
+ * representa la pantalla de victoria del juego
+ */
 class WinScene extends Phaser.Scene 
 {
+    /**
+     * constructor de la escena de victoria
+     */
     constructor() 
     {
-        super('Win'); 
+        super('Win'); // clave de la escena
         
     }
 
+    /**
+     * hook de phaser para la creacion de elementos de la escena
+     */
     create() 
     {
-       this.background = this.add.image(this.cameras.main.width /2 ,this.cameras.main.height / 2,'win');
-       this.background.setScale(1, 0.75);
-       this.name = this.add.image(this.cameras.main.width /2 ,this.cameras.main.height / 4,'victoria');
-       this.name.setScale(0.5, 0.45);
-       var play = this.add.image(this.cameras.main.width /2 ,this.cameras.main.height / 1.25,'jugar');
-       play.setScale(0.3);
-       play.setInteractive();
+        // agregar imagen de fondo, centrada
+        this.background = this.add.image(this.cameras.main.width /2 ,this.cameras.main.height / 2,'win');
+        this.background.setScale(1, 0.75); // ajustar escala del fondo
 
+        // agregar imagen del titulo 'victoria', centrada
+        this.name = this.add.image(this.cameras.main.width /2 ,this.cameras.main.height / 4,'victoria');
+        this.name.setScale(0.5, 0.45); // ajustar escala del titulo
+
+        // agregar boton 'jugar' (reintentar o volver al inicio)
+        var play = this.add.image(this.cameras.main.width /2 ,this.cameras.main.height / 1.25,'jugar');
+        play.setScale(0.3); // ajustar escala del boton
+        play.setInteractive(); // hacerlo interactivo
+
+        // evento al hacer click en el boton 'jugar'
         play.on('pointerdown', () => {
-            this.scene.stop();
-            this.scene.start('Loading');
+            this.scene.stop();      // detener la escena actual
+            this.scene.start('Loading'); // iniciar la escena de carga/reinicio del juego
             
         });
 
-                /*const mapData = this.cache.text.get('map');
-     
-        this.map = new MapManager(this, mapData, 'tiles', 32, 32, 5); 
-        //pantalla de 32 x 25
-
-      this.inputManager = new InputManager(this);
-       this.player = new Player(this, 100, 100);
-           this.uiManager = new UiManager(this, this.player);
-   
-           this.anims.create({
-               key: 'idle',
-               frames: [{ key: 'angel_sword_idle' }],
-               frameRate: 1,
-               repeat: -1
-           });
-   
-           this.anims.create({
-   
-               key: 'walk',
-               frames: [
-               { key: 'angel_sword_walk_1' },
-               { key: 'angel_sword_walk_2' },
-               { key: 'angel_sword_walk_3' }
-               ],
-               frameRate: 6, 
-               repeat: -1
-           });
-   
-           this.anims.create({
-   
-               key: 'jump',
-               frames: [{ key: 'angel_sword_jump' }],
-               frameRate: 1, 
-               repeat: -1
-           });
-   
-           this.anims.create({
-               key: 'heartbreakAnimation',
-               frames: this.anims.generateFrameNumbers('heartbreak', { start: 0, end: 10 }),
-               frameRate: 12,
-               repeat: 0
-           });
-   
-
-        this.map.addCollisionWith(this.player);*/
-
-    }
-
-    update(time, delta) 
-    {
-            /*this.player.update(time, delta);
-
-        if (this.player.x > 1100) {
-             this.scene.stop(); 
-            this.scene.launch('BossScene'); 
-       }*/
+             
     }
 }
 export {WinScene}

@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque de puño vertical para plataformas (jefe Ira)
+ * @class BossAngryPunchPlatformState
+ * @extends BaseBossAttackState
+ */
 export default class BossAngryPunchPlatformState extends BaseBossAttackState {
     constructor(texture = 'punch') {
         super({
@@ -10,17 +15,20 @@ export default class BossAngryPunchPlatformState extends BaseBossAttackState {
             attackDuration: 500,
             cooldownDuration: 500
         });
-        
+
         this.spawnX = 0;
     }
-    
+
+    /**
+     * Crea las advertencias visuales para el puño vertical
+     */
     createWarning() {
         const cam = this.scene.cameras.main;
-        
+
         // Crear advertencia vertical en la posición del jugador
         this.spawnX = this.player.x;
         const warningWidth = 120;
-        
+
         this.createWarningRectangle(
             this.spawnX,
             this.boss.y,
@@ -30,34 +38,51 @@ export default class BossAngryPunchPlatformState extends BaseBossAttackState {
             0.5
         );
     }
-    
+
+    /**
+     * Ejecuta el ataque de puño vertical
+     */
     executeAttack() {
+        if (this.boss.bossName === 'anger') this.boss.play('bossira_attack');
         this.spawnPunch();
     }
-    
+
+    /**
+     * Genera un puño vertical
+     */
     spawnPunch() {
         const Yspeed = this.boss.punchYSpeed;
-        
-        const punch = this.boss.punches.create(
+
+        // Usar create de Phaser en lugar del grupo específico
+        const punch = this.scene.physics.add.sprite(
             this.spawnX,
             this.boss.y - 300,
             this.config.texture
         );
-        
+
+        // Añadir al grupo de ataques del boss
+        this.boss.addAttack(punch);
+
         punch.setVelocityY(Yspeed);
         punch.setScale(2.5);
         punch.body.allowGravity = false;
         punch.isPlatformPunch = true; // Marcar como puño de plataforma
-        
+
+        // Sonido de puño
+        this.boss?.bossAttackSound?.play();
+
         // Auto-destrucción
         this.cleanupPunch(punch);
     }
-    
+
+    /**
+     * Configura la auto-destrucción del puño vertical
+     * @param {Phaser.GameObjects.Sprite} punch - Puño a limpiar
+     */
     cleanupPunch(punch) {
-        const scene = this.scene;
-        scene.events.on('update', () => {
-            if (!punch.active) return;
-            if (punch.y > this.boss.y + this.boss.distanceToFloor + 150) {
+        // Timer para auto-destrucción por tiempo
+        this.scene.time.delayedCall(3000, () => {
+            if (punch && punch.active) {
                 punch.destroy();
             }
         });

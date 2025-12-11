@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque de tazas para el jefe Miedo
+ * @class BossFearCupAttackState
+ * @extends BaseBossAttackState
+ */
 export default class BossFearCupAttackState extends BaseBossAttackState {
     constructor(texture = 'vaso') {
         super({
@@ -18,6 +23,10 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
         this.activeCups = [];
     }
     
+    /**
+     * Entra al estado de ataque de tazas
+     * @param {Object} context - Contexto del boss
+     */
     enter(context) {
         super.enter(context);
         this.cupsSpawned = 0;
@@ -25,6 +34,12 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
         this.activeCups = [];
     }
     
+    /**
+     * Ejecuta la lógica del estado de ataque de tazas
+     * @param {Object} context - Contexto del boss
+     * @param {number} time - Tiempo actual
+     * @param {number} delta - Delta time
+     */
     execute(context, time, delta) {
         super.execute(context, time, delta);
         
@@ -41,16 +56,25 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Crea advertencias (este ataque no tiene fase de warning)
+     */
     createWarning() {
         // Este ataque no tiene fase de warning tradicional
         // Podrías añadir algún efecto visual de advertencia aquí si lo deseas
     }
     
+    /**
+     * Ejecuta el ataque de tazas
+     */
     executeAttack() {
         // El spawn de tazas se maneja en el método execute
         // Esta función se llama al inicio de la fase attack
     }
     
+    /**
+     * Genera una taza en posición aleatoria
+     */
     spawnCup() {
         const cam = this.scene.cameras.main;
         const worldView = cam.worldView;
@@ -61,19 +85,26 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
         const x = Phaser.Math.Between(minX, maxX);
         const y = worldView.top - 50;
         
-        // Crear taza
-        const cup = this.boss.cups.create(x, y, this.config.texture);
+        // Crear taza usando Phaser (no grupo específico)
+        const cup = this.scene.physics.add.sprite(x, y, this.config.texture);
         
         if (!cup) {
             console.error('No se pudo crear la taza');
             return;
         }
         
+        // Añadir al grupo unificado de ataques del boss
+        this.boss.addAttack(cup);
+        
         cup.setScale(1.5);
         cup.setVelocityY(this.boss.cupSpeed);
         cup.body.allowGravity = false;
         cup.setCollideWorldBounds(false);
+        cup.isProjectile = true;
         
+        // Sonido de taza
+        this.boss?.fearCupSound?.play();
+
         // Efecto de aparición
         cup.setAlpha(0);
         this.scene.tweens.add({
@@ -89,6 +120,10 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
         this.setupCupCleanup(cup);
     }
     
+    /**
+     * Configura la auto-destrucción de una taza
+     * @param {Phaser.GameObjects.Sprite} cup - Taza a limpiar
+     */
     setupCupCleanup(cup) {
         const cleanupEvent = this.scene.time.addEvent({
             delay: 100,
@@ -122,6 +157,10 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
         });
     }
     
+    /**
+     * Elimina una taza de la lista de activas
+     * @param {Phaser.GameObjects.Sprite} cup - Taza a remover
+     */
     removeCupFromActive(cup) {
         const index = this.activeCups.indexOf(cup);
         if (index > -1) {
@@ -129,6 +168,9 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
         }
     }
     
+    /**
+     * Destruye todas las advertencias visuales y tazas
+     */
     destroyAllWarnings() {
         super.destroyAllWarnings();
         
@@ -139,13 +181,12 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
             }
         });
         this.activeCups = [];
-        
-        // Limpiar grupo de tazas
-        if (this.boss && this.boss.cups) {
-            this.boss.cups.clear(true, true);
-        }
     }
     
+    /**
+     * Sale del estado de ataque de tazas
+     * @param {Object} context - Contexto del boss
+     */
     exit(context) {
         this.destroyAllWarnings();
         this.cupsSpawned = 0;

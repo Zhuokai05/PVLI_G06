@@ -1,5 +1,10 @@
 import BaseBossAttackState from '../BaseBoss/BaseBossAttackState.js';
 
+/**
+ * Estado de ataque en X para el jefe Miedo
+ * @class BossFearXAttackState
+ * @extends BaseBossAttackState
+ */
 export default class BossFearXAttackState extends BaseBossAttackState {
     constructor(texture = 'garra') {
         super({
@@ -12,25 +17,37 @@ export default class BossFearXAttackState extends BaseBossAttackState {
             logOnEnter: true
         });
     }
-    
+
+    /**
+     * Entra al estado de ataque en X
+     * @param {Object} context - Contexto del boss
+     */
     enter(context) {
         super.enter(context);
-        
+
         // Crear garras para el ataque
         this.boss.createClaws();
     }
-    
+
+    /**
+     * Crea las advertencias visuales para el ataque en X
+     */
     createWarning() {
         const bossX = this.boss.x;
         const bossY = this.boss.y;
-        
+
         // Crear indicadores de trayectoria en forma de X
         this.createXPatternWarning(bossX, bossY);
-        
+
         // Iniciar efecto de parpadeo
         this.startWarningFlash();
     }
-    
+
+    /**
+     * Crea el patrón en X de advertencia
+     * @param {number} x - Posición X central
+     * @param {number} y - Posición Y central
+     */
     createXPatternWarning(x, y) {
         // Rectángulo izquierdo (45 grados)
         const leftWarning = this.scene.add.rectangle(
@@ -42,7 +59,7 @@ export default class BossFearXAttackState extends BaseBossAttackState {
             0.5
         );
         leftWarning.setAngle(45);
-        
+
         // Rectángulo derecho (-45 grados)
         const rightWarning = this.scene.add.rectangle(
             x + 300,
@@ -53,12 +70,15 @@ export default class BossFearXAttackState extends BaseBossAttackState {
             0.5
         );
         rightWarning.setAngle(-45);
-        
+
         // Registrar elementos para limpieza
         this.registerWarningElement('leftWarning', leftWarning);
         this.registerWarningElement('rightWarning', rightWarning);
     }
-    
+
+    /**
+     * Inicia el efecto de parpadeo en las advertencias
+     */
     startWarningFlash() {
         // Crear efecto de parpadeo
         this.flashTween = this.scene.tweens.add({
@@ -68,24 +88,42 @@ export default class BossFearXAttackState extends BaseBossAttackState {
             yoyo: true,
             repeat: -1
         });
-        
+
         this.registerWarningElement('flashTween', this.flashTween);
     }
-    
+
+    /**
+     * Ejecuta el ataque en X moviendo las garras
+     */
     executeAttack() {
         // Mover garras en forma de X
         this.moveClawsInXPattern();
     }
-    
+
+    /**
+     * Mueve las garras en patrón en X
+     */
     moveClawsInXPattern() {
         const bossX = this.boss.x;
         const bossY = this.boss.y;
-        
-        if (!this.boss.leftClaw || !this.boss.rightClaw) {
-            console.error('Garras no creadas correctamente');
-            return;
+
+        // VERIFICACIÓN MÁS ROBUSTA
+        if (!this.boss || !this.boss.leftClaw || !this.boss.rightClaw) {
+            console.warn('Garras no disponibles, recreando...');
+
+            // Intentar recrear las garras
+            if (this.boss && this.boss.createClaws) {
+                this.boss.createClaws();
+            }
+
+            // Verificar nuevamente
+            if (!this.boss || !this.boss.leftClaw || !this.boss.rightClaw) {
+                console.error('No se pudieron crear las garras, abortando ataque');
+                this.boss.selectNextState(); // Saltar a siguiente estado
+                return;
+            }
         }
-        
+
         // Posiciones iniciales y finales
         const startLeftX = bossX - 380;
         const startRightX = bossX + 380;
@@ -93,7 +131,35 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         const endLeftX = bossX + 300;
         const endRightX = bossX - 300;
         const endY = bossY + 400;
-        
+
+        // Asegurar que las garras estén en posición inicial
+        this.boss.leftClaw.setPosition(startLeftX, startY);
+        this.boss.rightClaw.setPosition(startRightX, startY);
+
+        // Activar las garras
+        this.boss.leftClaw.setActive(true).setVisible(true);
+        this.boss.rightClaw.setActive(true).setVisible(true);
+
+        // Contador para saber cuándo ambas animaciones terminaron
+        let completedAnimations = 0;
+        const totalAnimations = 2;
+
+        // sonido de ataque
+        this.boss?.bossAttackSound?.play();
+
+        const checkAllAnimationsComplete = () => {
+            completedAnimations++;
+            if (completedAnimations === totalAnimations) {
+                // SOLO AQUÍ destruir las garras después de completar TODO el movimiento X
+                this.scene.time.delayedCall(300, () => {
+                    if (this.boss && this.boss.destroyClaws) {
+                        this.boss.destroyClaws();
+                        console.log('Garras destruidas después del movimiento X completo');
+                    }
+                });
+            }
+        };
+
         // Animación de la garra izquierda (hacia abajo-derecha)
         this.leftClawTween = this.scene.tweens.add({
             targets: this.boss.leftClaw,
@@ -104,9 +170,12 @@ export default class BossFearXAttackState extends BaseBossAttackState {
             onUpdate: (tween, target) => {
                 const progress = tween.progress;
                 target.y = startY + (endY - startY) * progress + Math.sin(progress * Math.PI * 2) * 20;
+            },
+            onComplete: () => {
+                checkAllAnimationsComplete();
             }
         });
-        
+
         // Animación de la garra derecha (hacia abajo-izquierda)
         this.rightClawTween = this.scene.tweens.add({
             targets: this.boss.rightClaw,
@@ -117,26 +186,36 @@ export default class BossFearXAttackState extends BaseBossAttackState {
             onUpdate: (tween, target) => {
                 const progress = tween.progress;
                 target.y = startY + (endY - startY) * progress + Math.sin(progress * Math.PI * 2) * 20;
+            },
+            onComplete: () => {
+                checkAllAnimationsComplete();
             }
         });
-        
+
         // Registrar tweens para limpieza
         this.registerWarningElement('leftClawTween', this.leftClawTween);
         this.registerWarningElement('rightClawTween', this.rightClawTween);
     }
-    
+
+    /**
+     * Destruye todas las advertencias visuales
+     */
     destroyAllWarnings() {
         super.destroyAllWarnings();
-        
+
         // Detener efecto de parpadeo si existe
         if (this.flashTween && this.flashTween.stop) {
             this.flashTween.stop();
         }
     }
-    
+
+    /**
+     * Sale del estado de ataque en X
+     * @param {Object} context - Contexto del boss
+     */
     exit(context) {
         this.destroyAllWarnings();
-        
+
         // Asegurarse de que las garras se destruyan
         if (this.boss && this.boss.destroyClaws) {
             this.boss.destroyClaws();

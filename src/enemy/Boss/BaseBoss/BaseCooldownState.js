@@ -1,5 +1,10 @@
 import BaseState from '../../../stateMachine/BaseState.js';
 
+/**
+ * Estado base de cooldown para todos los jefes
+ * @class BaseCooldownState
+ * @extends BaseState
+ */
 export default class BaseCooldownState extends BaseState {
     constructor(config = {}) {
         super();
@@ -11,6 +16,10 @@ export default class BaseCooldownState extends BaseState {
         };
     }
 
+    /**
+     * Entra al estado de cooldown
+     * @param {Object} context - Contexto del boss
+     */
     enter(context) {
         this.boss = context;
         this.cooldownTime = 0;
@@ -34,6 +43,12 @@ export default class BaseCooldownState extends BaseState {
         console.log(`${this.config.logPrefix} en cooldown: ${this.boss.attackCooldown}ms${this.boss.phase ? ` - Fase ${this.boss.phase}` : ''}`);
     }
 
+    /**
+     * Ejecuta la lógica del estado de cooldown
+     * @param {Object} context - Contexto del boss
+     * @param {number} time - Tiempo actual
+     * @param {number} delta - Delta time
+     */
     execute(context, time, delta) {
         this.cooldownTime += delta;
         
@@ -42,6 +57,10 @@ export default class BaseCooldownState extends BaseState {
         }
     }
 
+    /**
+     * Sale del estado de cooldown
+     * @param {Object} context - Contexto del boss
+     */
     exit(context) {
         this.cooldownTime = 0;
         

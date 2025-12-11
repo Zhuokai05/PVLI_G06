@@ -1,73 +1,84 @@
+/**
+ * clase loadingscene
+ * escena que simula el proceso de carga del juego
+ */
 class LoadingScene extends Phaser.Scene {
+
+    /**
+     * constructor de la escena de carga
+     */
     constructor() {
-        super('Loading');
+        super('Loading'); // clave de la escena
     }
 
+    /**
+     * hook de phaser para la creacion de elementos de la escena
+     */
     create() {
-        // Fondo
+        // fondo de la pantalla de carga
         this.background = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'loading');
 
-        // Crear contenedor para la barra de carga
+        // crear contenedor para la barra de carga
         const centerX = this.cameras.main.width / 2;
         const centerY = this.cameras.main.height / 2;
         
-        // Dimensiones del rectángulo 
+        // dimensiones del rectangulo de la barra
         const barWidth = 600; 
         const barHeight = 80; 
         const borderThickness = 8; 
         
-        // Crear rectángulo de fondo (borde)
+        // crear rectangulo de fondo (borde negro)
         const border = this.add.rectangle(
             centerX, 
-            centerY + 30, // Bajado menos
+            centerY + 30, // posicion y
             barWidth + borderThickness * 2, 
             barHeight + borderThickness * 2, 
             0x000000
         ).setOrigin(0.5);
         
-        // Crear rectángulo de fondo interior (blanco)
+        // crear rectangulo de fondo interior (blanco)
         const backgroundBar = this.add.rectangle(
             centerX, 
-            centerY + 30, // Bajado menos
+            centerY + 30, // posicion y
             barWidth, 
             barHeight, 
             0xFFFFFF
         ).setOrigin(0.5);
         
-        // Crear rectángulo de progreso (rojo)
+        // crear rectangulo de progreso (rojo), inicialmente con ancho 0
         this.progressBar = this.add.rectangle(
-            centerX - barWidth / 2, 
+            centerX - barWidth / 2, // inicio en el borde izquierdo
             centerY + 30, 
-            0, 
+            0,                      // ancho inicial cero
             barHeight, 
-            0xFF0000 // Color rojo
-        ).setOrigin(0, 0.5);
+            0xFF0000 // color rojo de progreso
+        ).setOrigin(0, 0.5); // origen en la izquierda central
         
-        // Texto del porcentaje 
+        // texto del porcentaje
         this.progressText = this.add.text(
             centerX,
             centerY + 30, 
             '0%',
             {
-                fontFamily: 'Arial',
+                fontFamily: 'arial',
                 fontSize: '48px', 
                 fontWeight: 'bold',
-                color: '#FFFFFF',
+                color: '#ffffff',
                 stroke: '#000000',
                 strokeThickness: 6 
             }
         ).setOrigin(0.5);
         
-        // Texto de "Cargando..." 
+        // texto de "cargando..."
         this.loadingText = this.add.text(
             centerX,
-            centerY - barHeight/2 - 10, // Menos espacio arriba
-            'CARGANDO......',
+            centerY - barHeight/2 - 10, // encima de la barra
+            'cargando......',
             {
-                fontFamily: 'Arial',
+                fontFamily: 'arial',
                 fontSize: '64px', 
                 fontWeight: 'bold',
-                color: '#FFFFFF',
+                color: '#ffffff',
                 stroke: '#000000',
                 strokeThickness: 8, 
                 shadow: {
@@ -80,27 +91,27 @@ class LoadingScene extends Phaser.Scene {
             }
         ).setOrigin(0.5);
 
-        // Simular progreso de carga
+        // --- simulacion de progreso ---
         this.progress = 0;
         this.targetProgress = 1.0; // 100%
         
-        // Temporizador para simular carga
+        // temporizador para simular carga incremental
         this.time.addEvent({
             delay: 80,
             callback: () => {
                 if (this.progress < this.targetProgress) {
-                    // Incrementar progreso
+                    // incrementar progreso con un valor aleatorio
                     this.progress += Math.random() * 0.08 + 0.02;
                     
-                    // Asegurarse de que no supere el 100%
+                    // asegurarse de que no supere el 100%
                     if (this.progress > this.targetProgress) {
                         this.progress = this.targetProgress;
                     }
                     
-                    // Actualizar barra de progreso
+                    // actualizar barra de progreso visual y texto
                     this.updateProgressBar();
                     
-                    // Cuando llegue al 100%, iniciar la siguiente escena
+                    // cuando llegue al 100%, iniciar la siguiente escena
                     if (this.progress >= this.targetProgress) {
                         this.startNextScene();
                     }
@@ -109,7 +120,7 @@ class LoadingScene extends Phaser.Scene {
             loop: true
         });
         
-        // Efecto de brillo para el texto de "CARGANDO"
+        // efecto de brillo/pulso para el texto de "cargando"
         this.time.addEvent({
             delay: 500,
             callback: () => {
@@ -126,30 +137,33 @@ class LoadingScene extends Phaser.Scene {
         });
     }
 
+    /**
+     * actualiza el ancho de la barra de progreso y el texto de porcentaje
+     */
     updateProgressBar() {
-        // Calcular porcentaje entero
+        // calcular porcentaje entero
         const percentage = Math.floor(this.progress * 100);
         
-        // Actualizar ancho de la barra
+        // actualizar ancho de la barra
         const barWidth = 600;
         const currentWidth = barWidth * this.progress;
         this.progressBar.width = currentWidth;
         
-        // Actualizar texto del porcentaje
+        // actualizar texto del porcentaje
         this.progressText.setText(`${percentage}%`);
         
-        // Cambiar color del texto según progreso
+        // cambiar color del texto segun progreso
         if (percentage > 50) {
-            this.progressText.setColor('#FFFF00');
+            this.progressText.setColor('#FFFF00'); // amarillo
         }
         if (percentage > 80) {
-            this.progressText.setColor('#00FF00');
+            this.progressText.setColor('#00FF00'); // verde
         }
         if (percentage === 100) {
-            this.progressText.setColor('#00FFFF');
+            this.progressText.setColor('#00FFFF'); // cian
         }
         
-        // Efecto de pulso para el texto de porcentaje en múltiplos de 25
+        // efecto de pulso para el texto de porcentaje en multiplos de 25
         if (percentage % 25 === 0 && percentage < 100) {
             this.tweens.add({
                 targets: this.progressText,
@@ -160,11 +174,14 @@ class LoadingScene extends Phaser.Scene {
         }
     }
 
+    /**
+     * detiene la carga e inicia la escena de juego
+     */
     startNextScene() {
-        // Detener el loop de actualización
+        // detener el loop de actualizacion de progreso
         this.time.removeAllEvents();
         
-        // Efecto final para el 100%
+        // efecto final para el 100%
         this.tweens.add({
             targets: [this.progressBar, this.progressText],
             scale: { from: 1, to: 1.1 },
@@ -172,33 +189,40 @@ class LoadingScene extends Phaser.Scene {
             yoyo: true,
             ease: 'Sine.easeInOut',
             onComplete: () => {
-                // Cambiar el texto a "¡COMPLETO!"
-                this.progressText.setText('¡COMPLETO!');
-                this.progressText.setColor('#FFD700');
+                // cambiar el texto a "¡completo!"
+                this.progressText.setText('¡completo!');
+                this.progressText.setColor('#FFD700'); // dorado
                 
-                // Cambiar a la siguiente escena
-                const sceneKey = "TestPlayerScene";
+                // cambiar a la siguiente escena
+                const sceneKey = "PlayScene";
 
                 if (!this.scene.get(sceneKey)) {
                     console.warn(`⚠️ ${sceneKey} no existe, creando...`);
+                    // si la escena aun no existe (solo en desarrollo si falta el import)
                     this.scene.launch(sceneKey);
                 } else {
                     console.log(`▶️ ${sceneKey} existe, iniciando...`);
+                    // iniciar la escena de juego
                     this.scene.start(sceneKey);
                 }
 
-                this.scene.stop('Loading');
+                this.scene.stop('Loading'); // detener la escena de carga
             }
         });
         
-        // Cambiar el texto "CARGANDO" a "LISTO"
-        this.loadingText.setText('¡LISTO!');
+        // cambiar el texto "cargando" a "listo"
+        this.loadingText.setText('¡listo!');
         this.loadingText.setColor('#00FF00');
     }
 
+    /**
+     * hook de phaser para la actualizacion logica
+     * @param {number} time - tiempo total
+     * @param {number} delta - delta de tiempo
+     */
     update(time, delta) {
-        // Efecto de pulso en el texto
-        if (this.loadingText) {
+        // efecto de pulso en el texto "listo"
+        if (this.loadingText && this.progress >= this.targetProgress) {
             const pulse = Math.sin(time / 400) * 0.3 + 0.7;
             this.loadingText.setAlpha(pulse);
         }

@@ -31,12 +31,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.dead = false;                                     // estado muerto
 
         // ataque
-        this.damage = 3;                                      // daño melee
+        this.damage = 3;                                       // daño melee
         this.rangeDamage = 1;                                  // daño a distancia
         this.meleeAttackDist = 100;                            // distancia hitbox
         this.meleeAttackWidge = 120;                           // ancho hitbox
         this.meleeAttackHeight = 70;                           // alto hitbox
-        this.attackCooldown = 300;                             // cooldown melee
+        this.attackCooldown = 750;                             // cooldown melee
         this.attackDuration = 200;                             // duracion hitbox
         this.isAttacking = false;                              // esta atacando
 
@@ -127,6 +127,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             .setScale(1.2);
 
         this.setMaxVelocity(this.maxVelocityX, this.maxVelocityY);
+
+
+        this.timeline = this.scene.tweens.createTimeline();
+
+        // Primer tween (sube un poco)
+        this.timeline.add({
+            targets: this,
+            y: '-=120',     // relativo a su posición actual
+            duration: 700,
+            ease: 'Quad.Out'
+        });
+
+        // Segundo tween (cae fuera de cámara)
+        this.timeline.add({
+            targets: this,
+            y: '+=500',     // relativo a su posición final del primer tween
+            duration: 900,
+            ease: 'Quad.In'
+        });
+
+        this.deadtexture = 'defeat_player';
     }
 
     /**
@@ -141,7 +162,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackHitSound = this.scene.sound.add('PlayerAttack_sound', { volume: 0.6 });
 
         // sonido salto
-        this.jumpSound = this.scene.sound.add('PlayerJump_sound', { volume: 3 });
+        this.jumpSound = this.scene.sound.add('PlayerJump_sound', { volume: 1 });
 
         // sonido activacion del escudo
         this.shieldSound = this.scene.sound.add('PlayerShield_sound', { volume: 0.9 });
@@ -162,18 +183,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.changeOrbSound = this.scene.sound.add('PlayerChangeOrb_sound', { volume: 0.9 });
 
         // sonido ataque rango
-        this.rangeAttackSound = this.scene.sound.add('PlayerRangeAttack_sound', { volume: 3 });
+        this.rangeAttackSound = this.scene.sound.add('PlayerRangeAttack_sound', { volume: 1 });
 
         // sonido dash
         this.dashSound = this.scene.sound.add('PlayerDash_sound', { volume: 0.9 });
-    }
 
+    }
 
     /**
   * update principal del jugador
   * controla inputs, estado, ataques, timers y efectos
   */
     update(time, delta) {
+
+        if (this.dead || !this.body) return;
 
         // si un efecto impide movimiento, cancelar input
         if (!this.canMove) {
@@ -403,12 +426,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.shieldAura) this.shieldAura.setVisible(false);
 
         this.health = this.maxHealth;
-        this.scene.scene.stop();
-        this.scene.scene.launch('GameOver');
-
         this.dead = true;
-        this.setVelocity(0, 0);
-        this.stateMachine.setState('dead');
+        this.canMove = false;
+        this.isAttacking = false;
+        this.isDashing = false;
+        this.anims.stop();
+        this.setTexture(this.deadtexture);
+        this.scene.cameras.main.stopFollow();
+        this.timeline.play();
+
+        // Retrasar lo siguiente 3 segundos (3000 ms)
+        this.scene.time.delayedCall(1500, () => {
+            this.scene.scene.stop();
+            this.scene.scene.launch('GameOver');
+
+
+            this.setVelocity(0, 0);
+            this.stateMachine.setState('dead');
+        });
     }
 
     /**

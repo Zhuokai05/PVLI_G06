@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map.json",
+    "activeFile": "",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
         "."
@@ -13,10 +13,10 @@
     "exportAsImage.includeBackgroundColor": true,
     "exportAsImage.useCurrentScale": true,
     "exportAsImage.visibleLayersOnly": false,
-    "file.lastUsedOpenFilter": "Todos los archivos (*)",
+    "file.lastUsedOpenFilter": "全部文件 (*)",
     "fileStates": {
         "": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.75,
             "scaleInEditor": 1
         },
         "#Ira": {
@@ -24,6 +24,20 @@
         },
         "C:/assets/Maps/Ira.tsx": {
             "scaleInDock": 1
+        },
+        "E:/下载/map.json": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.0625,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 8616,
+                "y": 4352
+            }
+        },
+        "E:/下载/map.json#Ira": {
+            "scaleInDock": 0.75
         },
         "Ira.tsx": {
             "scaleInDock": 1,
@@ -43,28 +57,43 @@
         "iraboss.json#Ira": {
             "scaleInDock": 1
         },
-        "map.json": {
+        "maap.json": {
             "expandedObjectLayers": [
                 2
             ],
             "scale": 0.33,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 16698.484848484848,
-                "y": 925.7575757575759
+                "x": 19366.666666666664,
+                "y": 4531.818181818182
+            }
+        },
+        "maap.json#Ira": {
+            "scaleInDock": 1
+        },
+        "map.json": {
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 8653,
+                "y": 5143
             }
         },
         "map.json#Ira": {
             "dynamicWrapping": false,
+            "scaleInDock": 0.75,
+            "scaleInEditor": 1
+        },
+        "map.json#tiles": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "map.tmj": {
-            "scale": 0.10400390625,
+            "scale": 0.03125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 5120,
-                "y": 4004.6572769953054
+                "x": 11728,
+                "y": 11792
             }
         },
         "map.tmj#Ira": {
@@ -95,23 +124,23 @@
     },
     "last.exportedFilePath": "C:/Users/javic/OneDrive/Escritorio/clon/PVLI_G06/assets/Maps",
     "last.externalTilesetPath": "C:/Users/javic/OneDrive/Escritorio/clon/PVLI_G06/assets/Maps",
-    "last.imagePath": "C:/Users/javic/OneDrive/Escritorio/clon/PVLI_G06/assets/Escena",
+    "last.imagePath": "E:/GithubRepositories/PVLI_G06/assets/Escena",
     "map.fixedSize": false,
     "map.height": 250,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "json",
     "map.width": 320,
     "openFiles": [
-        "map.json"
     ],
     "project": "mapa1.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "iraboss.json",
+        "Ira.tsx",
         "map.json",
+        "E:/下载/map.json",
+        "iraboss.json",
         "map2.json",
-        "mapa3.json",
-        "Ira.tsx"
+        "mapa3.json"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFormat": "tsx"

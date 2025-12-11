@@ -16,20 +16,14 @@ export default class GroundEnemyMoveState extends BaseState {
     let direction = player.x > enemy.x ? 1 : -1;  // direccion hacia jugador
     let distance = Math.abs(enemy.x - player.x);  // distancia horizontal
 
-    // evitar juntarse con otros enemigos
-    if (this.closeEnemy(enemy, direction)) {
-      enemy.setVelocityX(0);
-    }
-
     if (enemy.canSeePlayer()) {
 
+      enemy.setVelocityX(0);
       // perseguir jugador si no esta muy cerca y no esta en rango
-      if (!this.closeEnemy(enemy, direction) && distance >= enemy.attackRange) {
+      if (distance >= enemy.attackRange) {
         enemy.setVelocityX(direction * enemy.speed);
         enemy.setFlipX(direction < 0);
-      } else {
-        enemy.setVelocityX(0);
-      }
+      } 
 
       // cargar ataque cuando esta en rango
       if (distance < enemy.attackRange) {
@@ -53,18 +47,4 @@ export default class GroundEnemyMoveState extends BaseState {
     enemy.setVelocityX(0);                        // detener al salir
   }
 
-  /**
-   * detecta si hay enemigo demasiado cerca
-   */
-  closeEnemy(enemy, direction) {
-
-    let closeEnemy = enemy.scene.enemies.getChildren().find(other => {
-      if (other === enemy || other.dead) return false;
-      let distX = other.x - enemy.x;
-      return Math.sign(distX) === direction &&
-             Math.abs(distX) < enemy.distanceBtwEnemies;
-    });
-
-    return closeEnemy;
-  }
 }

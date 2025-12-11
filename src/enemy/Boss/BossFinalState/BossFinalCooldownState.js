@@ -1,5 +1,10 @@
 import BaseCooldownState from '../BaseBoss/BaseCooldownState.js';
 
+/**
+ * Estado de cooldown específico para el jefe Final
+ * @class FinalBossCooldownState
+ * @extends BaseCooldownState
+ */
 export default class FinalBossCooldownState extends BaseCooldownState {
     constructor() {
         super({
@@ -9,7 +14,10 @@ export default class FinalBossCooldownState extends BaseCooldownState {
         });
     }
     
-    // Sobrescribir enter para logging específico de fase
+    /**
+     * Entra al estado de cooldown con logging específico de fase
+     * @param {Object} context - Contexto del boss
+     */
     enter(context) {
         super.enter(context);
         

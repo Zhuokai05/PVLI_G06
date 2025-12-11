@@ -1,46 +1,63 @@
+/**
+ * clase preloadscene
+ * se encarga de precargar todos los assets (imagenes, sprites, sonidos, mapas)
+ * necesarios para el juego
+ */
 export class PreloadScene extends Phaser.Scene {
+
+  /**
+   * metodo preload
+   * define y carga todos los recursos del juego
+   */
   preload() {
-    //imagenes  y sprites
-    this.load.image('ground', './assets/sprites/Escena/Plataforma_Ira.png');
+    // --- imagenes estaticas y sprites de ui/menu ---
+
+    // fondos y elementos de menu
     this.load.image('background', './assets/sprites/Menu/logo.png');
     this.load.image('win', './assets/sprites/Menu/win.png');
     this.load.image('victoria', './assets/sprites/Menu/victory.png');
     this.load.image('jugar', './assets/sprites/Menu/jugar.png');
     this.load.image('name', './assets/sprites/Menu/name.png');
+    this.load.image('defeat_background', './assets/sprites/Menu/Fondo_derrota.png');
+    this.load.image('defeat', './assets/sprites/Menu/derrota.png');
+    this.load.image('defeat_player', './assets/sprites/Menu/Player_derrota.png');
+    this.load.image('loading', './assets/sprites/Menu/carga.png');
 
-    //enemgigos melee
-    this.load.image('basicEnemyAngry', './assets/sprites/Enemigos/Enemigos_basicos/Fire.png');
-    this.load.spritesheet('basicEnemyAngry_move', './assets/sprites/Enemigos/Enemigos_basicos/Fire_move.png',
+    // ui general
+    this.load.image('angelHealth', './assets/sprites/UI/AngelHeart.png');
+    this.load.spritesheet('heartbreak', './assets/sprites/UI/heartbreak.png',
+      { frameWidth: 25, frameHeight: 25 });
+    this.load.image('boss_tracker_base', './assets/sprites/UI/BossTracker/BossesSlots.png');
+    this.load.image('piece_anger', './assets/sprites/UI/BossTracker/AngerPiece.png');
+    this.load.image('piece_sadness', './assets/sprites/UI/BossTracker/SadnessPiece.png');
+    this.load.image('piece_fear', './assets/sprites/UI/BossTracker/FearPiece.png');
+
+    // --- sprites del jugador (player) ---
+
+    // angel espada (version avanzada)
+    this.load.image('angel_sword_idle', 'assets/sprites/Player/Angel_Espada_normal_1.png');
+    this.load.image('angel_sword_walk_1', 'assets/sprites/Player/Angel_Espada_normal_1.png');
+    this.load.image('angel_sword_walk_2', 'assets/sprites/Player/Angel_Espada_normal_2.png');
+    this.load.image('angel_sword_walk_3', 'assets/sprites/Player/Angel_Espada_normal_3.png');
+    this.load.image('angel_sword_jump', 'assets/sprites/Player/Angel_Espada_normal_Salto.png');
+
+    // angel inicial
+    this.load.image('angel_idle', 'assets/sprites/Player/Angel_Inicial_1.png');
+    this.load.image('angel_walk_1', 'assets/sprites/Player/Angel_Inicial_1.png');
+    this.load.image('angel_walk_2', 'assets/sprites/Player/Angel_Inicial_2.png');
+    this.load.image('angel_walk_3', 'assets/sprites/Player/Angel_Inicial_3.png');
+    this.load.image('angel_jump', 'assets/sprites/Player/Angel_Inicial_Salto.png');
+
+    // objetos de ataque/defensa del jugador
+    this.load.image('plume', 'assets/sprites/Player/Pluma.png');
+    this.load.spritesheet('melee', 'assets/sprites/Player/Melee.png',
       { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('basicEnemySad_move', './assets/sprites/Enemigos/Enemigos_basicos/Water_move.png',
-      { frameWidth: 64, frameHeight: 64 });
-    this.load.image('basicEnemySad', './assets/sprites/Enemigos/Enemigos_basicos/Water.png');
-    this.load.image('basicEnemyHappy', './assets/sprites/Enemigos/Enemigos_basicos/Sun.png');
-    this.load.image('basicEnemyFear', './assets/sprites/Enemigos/Enemigos_basicos/Ghost.png');
-
-    //enemigos rango
-    // this.load.image('rangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/RangedEnemyPlaceHolder.png');
-
-    this.load.spritesheet('Ira_RangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/Ira_RangedEnemy.png',
-      { frameWidth: 160, frameHeight: 128 });
-    this.load.spritesheet('Tristeza_RangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/Tristeza_RangedEnemy.png',
-      { frameWidth: 160, frameHeight: 128 });
+    this.load.spritesheet('melee_Ampliado', 'assets/sprites/Player/Melee_Ancho.png',
+      { frameWidth: 128, frameHeight: 64 });
+    this.load.image('playerShieldAura', 'assets/sprites/Player/PlayerShieldAura.png');
 
 
-
-    //enemigos voladores
-    this.load.spritesheet('Ira_FlyingEnemy', './assets/sprites/Enemigos/Enemigos_voladores/Ira_FlyingEnemy.png',
-      { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('Tristeza_FlyingEnemy', './assets/sprites/Enemigos/Enemigos_voladores/Tristeza_FlyingEnemy.png',
-      { frameWidth: 64, frameHeight: 64 });
-
-    //enemigos mina
-    this.load.spritesheet('Ira_MineEnemy', './assets/sprites/Enemigos/Enemigos_mina/Ira_MineEnemy.png',
-      { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('Tristeza_MineEnemy', './assets/sprites/Enemigos/Enemigos_mina/Tristeza_MineEnemy.png',
-      { frameWidth: 32, frameHeight: 32 });
-
-    //Ui
+    // --- orbes (habilidades/stats) ---
     this.load.image('orbSlot', './assets/sprites/UI/Orbes/OrbSlot.png');
     this.load.image('orbDamage', './assets/sprites/UI/Orbes/OrbeFuego.png');
     this.load.image('orbMoveSpeed', './assets/sprites/UI/Orbes/OrbeHielo.png');
@@ -51,52 +68,45 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('orbJump', './assets/sprites/UI/Orbes/OrbJump.png');
     this.load.image('orbAttackRange', './assets/sprites/UI/Orbes/OrbAttackRange.png');
 
-    //Objetos de la escena
-    this.load.image('lava_tex', './assets/sprites/Escena/Plataforma_Ira.png');
-    this.load.spritesheet('checkpoint', './assets/sprites/Escena/checkpointSheet.png', {
-      frameWidth: 32,
-      frameHeight: 40
-    });
 
+    // --- enemigos basicos ---
 
-
-
-
-    // Angel espada normal
-    this.load.image('angel_sword_idle', 'assets/sprites/Player/Angel_Espada_normal_1.png');
-    this.load.image('angel_sword_walk_1', 'assets/sprites/Player/Angel_Espada_normal_1.png');
-    this.load.image('angel_sword_walk_2', 'assets/sprites/Player/Angel_Espada_normal_2.png');
-    this.load.image('angel_sword_walk_3', 'assets/sprites/Player/Angel_Espada_normal_3.png');
-    this.load.image('angel_sword_jump', 'assets/sprites/Player/Angel_Espada_normal_Salto.png');
-    this.load.image('angelHealth', './assets/sprites/UI/AngelHeart.png');
-
-    // Angel inicial
-    this.load.image('angel_idle', 'assets/sprites/Player/Angel_Inicial_1.png');
-    this.load.image('angel_walk_1', 'assets/sprites/Player/Angel_Inicial_1.png');
-    this.load.image('angel_walk_2', 'assets/sprites/Player/Angel_Inicial_2.png');
-    this.load.image('angel_walk_3', 'assets/sprites/Player/Angel_Inicial_3.png');
-    this.load.image('angel_jump', 'assets/sprites/Player/Angel_Inicial_Salto.png');
-
-    // Objetos angel
-    this.load.image('plume', 'assets/sprites/Player/Pluma.png');
-    this.load.spritesheet('melee', 'assets/sprites/Player/Melee.png',
+    // enemigos melee
+    this.load.image('basicEnemyAngry', './assets/sprites/Enemigos/Enemigos_basicos/Fire.png');
+    this.load.spritesheet('basicEnemyAngry_move', './assets/sprites/Enemigos/Enemigos_basicos/Fire_move.png',
       { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('melee_Ampliado', 'assets/sprites/Player/Melee_Ancho.png',
-      { frameWidth: 128, frameHeight: 64 });
-    this.load.image('playerShieldAura', 'assets/sprites/Player/PlayerShieldAura.png');
+    this.load.spritesheet('basicEnemyAngry_melee', './assets/sprites/Enemigos/Enemigos_basicos/Fire_Melee.png',
+      { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('basicEnemySad_move', './assets/sprites/Enemigos/Enemigos_basicos/Water_move.png',
+      { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('basicEnemySad_melee', './assets/sprites/Enemigos/Enemigos_basicos/Water_Melee.png',
+      { frameWidth: 64, frameHeight: 64 });
+    this.load.image('basicEnemySad', './assets/sprites/Enemigos/Enemigos_basicos/Water.png');
+    this.load.image('basicEnemyHappy', './assets/sprites/Enemigos/Enemigos_basicos/Sun.png');
+    this.load.image('basicEnemyFear', './assets/sprites/Enemigos/Enemigos_basicos/Ghost.png');
 
-    // UI
-    //this.load.image('angelHealth', './assets/UI/Ghost.png');
-    this.load.spritesheet('heartbreak', './assets/sprites/UI/heartbreak.png',
-      { frameWidth: 25, frameHeight: 25 });
-    this.load.image('boss_tracker_base', './assets/sprites/UI/BossTracker/BossesSlots.png');
-    this.load.image('piece_anger', './assets/sprites/UI/BossTracker/AngerPiece.png');
-    this.load.image('piece_sadness', './assets/sprites/UI/BossTracker/SadnessPiece.png');
-    this.load.image('piece_fear', './assets/sprites/UI/BossTracker/FearPiece.png');
+    // enemigos rango
+    this.load.spritesheet('Ira_RangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/Ira_RangedEnemy.png',
+      { frameWidth: 160, frameHeight: 128 });
+    this.load.spritesheet('Tristeza_RangedEnemy', './assets/sprites/Enemigos/Enemigos_rango/Tristeza_RangedEnemy.png',
+      { frameWidth: 160, frameHeight: 128 });
 
-    // Bosses
-    // Ira
-    //----------------------------------------------------------------------------------------
+    // enemigos voladores
+    this.load.spritesheet('Ira_FlyingEnemy', './assets/sprites/Enemigos/Enemigos_voladores/Ira_FlyingEnemy.png',
+      { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('Tristeza_FlyingEnemy', './assets/sprites/Enemigos/Enemigos_voladores/Tristeza_FlyingEnemy.png',
+      { frameWidth: 64, frameHeight: 64 });
+
+    // enemigos mina
+    this.load.spritesheet('Ira_MineEnemy', './assets/sprites/Enemigos/Enemigos_mina/Ira_MineEnemy.png',
+      { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('Tristeza_MineEnemy', './assets/sprites/Enemigos/Enemigos_mina/Tristeza_MineEnemy.png',
+      { frameWidth: 32, frameHeight: 32 });
+
+
+    // --- jefes (bosses) ---
+
+    // ira
     this.load.spritesheet('IraSheet', 'assets/sprites/Bosses/IraAnimSheet.png', {
       frameWidth: 256,
       frameHeight: 256
@@ -111,19 +121,26 @@ export class PreloadScene extends Phaser.Scene {
     });
     this.load.image('fire_ball', 'assets/sprites/Bosses/Fire_ball.png');
     this.load.image('punch', 'assets/sprites/Bosses/Angry_punch.png');
-    //----------------------------------------------------------------------------------------
+
+    // tristeza
+    this.load.spritesheet('SadnessSheet', 'assets/sprites/Bosses/SadnessAnimSheet.png', {
+      frameWidth: 128,
+      frameHeight: 128
+    });
     this.load.image('tristeza', './assets/sprites/Bosses/tristeza.png');
     this.load.image('icicle', './assets/sprites/Bosses/Sad_ice.png');
     this.load.image('water_ball', './assets/sprites/Bosses/Water_ball.png');
 
+    // miedo
     this.load.image('mascara', './assets/sprites/Bosses/Mascara.png');
     this.load.image('garra', './assets/sprites/Bosses/Garra.png');
     this.load.image('corazon', './assets/sprites/Bosses/Corazon.png');
     this.load.image('vaso', './assets/sprites/Bosses/Vaso.png');
 
+    // tutorial
     this.load.image('tutorial', './assets/sprites/Bosses/bossTutorial.png');
 
-    //final
+    // jefe final
     this.load.image('final', './assets/sprites/Bosses/final.png');
     this.load.image('final2', './assets/sprites/Bosses/final2.png');
     this.load.image('fgarra', './assets/sprites/Bosses/FGarra.png');
@@ -132,19 +149,24 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('fpunch', 'assets/sprites/Bosses/FAngry_punch.png');
     this.load.image('ficicle', './assets/sprites/Bosses/FSad_ice.png');
     this.load.image('fwater_ball', './assets/sprites/Bosses/FWater_ball.png');
-    // Menus
-    this.load.image('defeat_background', './assets/sprites/Menu/Fondo_derrota.png');
-    this.load.image('defeat_player', './assets/sprites/Menu/Player_derrota.png');
-    this.load.image('loading', './assets/sprites/Menu/carga.png');
 
-    // Tiles
+    // --- elementos de escenario y colision ---
+
+    this.load.image('ground', './assets/sprites/Escena/Plataforma_Ira.png');
+    this.load.image('lava_tex', './assets/sprites/Escena/Plataforma_Ira.png'); // textura para lava/tiledsprite
+    this.load.spritesheet('checkpoint', './assets/sprites/Escena/checkpointSheet.png', {
+      frameWidth: 32,
+      frameHeight: 40
+    });
     this.load.spritesheet('tiles', './assets/sprites/Escena/tiles.png', {
       frameWidth: 32,
       frameHeight: 32
     });
     this.load.image('iceplatform', './assets/sprites/Escena/iceplatform.png');
+    this.load.image('platform', './assets/sprites/Escena/platform.png');
+    this.load.image('bloque', './assets/sprites/Escena/Bloque.png');
 
-    // Puertas
+    // puertas
     this.load.image('puertaira', './assets/sprites/Escena/PuertaIra.png');
     this.load.spritesheet('puertairaSheet', './assets/sprites/Escena/PuertaIraSheet.png', {
       frameWidth: 128,
@@ -153,16 +175,13 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('puertatriste', './assets/sprites/Escena/Puertatristeza.png');
     this.load.image('puertamiedo', './assets/sprites/Escena/Puertamiedo.png');
     this.load.image('puertafinal', './assets/sprites/Escena/PuertaFinal.png');
-    this.load.image('platform', './assets/sprites/Escena/platform.png');
     this.load.image('PuertaBoss', './assets/sprites/Escena/PuertaBoss.png');
-    this.load.image('bloque', './assets/sprites/Escena/Bloque.png');
 
-    //buttons
+    // botones y shows
     this.load.image('rbutton', './assets/sprites/Escena/rbutton1.png');
     this.load.image('bbutton', './assets/sprites/Escena/bbutton1.png');
     this.load.image('gbutton', './assets/sprites/Escena/ybutton1.png');
     this.load.image('closedbutton', './assets/sprites/Escena/Closedbutton1.png');
-    //shows   
     this.load.image('bshowA', './assets/sprites/Escena/Boton_Apagado_1.png');
     this.load.image('rshowA', './assets/sprites/Escena/Boton_Apagado_2.png');
     this.load.image('gshowA', './assets/sprites/Escena/Boton_Apagado_3.png');
@@ -170,13 +189,12 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('rshowE', './assets/sprites/Escena/Boton_Encendido_2.png');
     this.load.image('gshowE', './assets/sprites/Escena/Boton_Encendido_3.png');
 
-
-
+    // --- mapas tiled ---
     this.load.tilemapTiledJSON("mappy", "./assets/Maps/map.json");
 
-    // Efecto de sonidos
+    // --- efectos de sonido (sfx) ---
 
-    //player
+    // player
     this.load.audio('PlayerJump_sound', './assets/Sounds/Player/PlayerJump.wav');
     this.load.audio('PlayerJumpEnd_sound', './assets/Sounds/Player/PlayerJumpEnd.wav');
     this.load.audio('PlayerAttack_sound', './assets/Sounds/Player/PlayerAttack.wav');
@@ -189,20 +207,39 @@ export class PreloadScene extends Phaser.Scene {
     this.load.audio('PlayerShield_sound', './assets/Sounds/Player/PlayerShield.wav');
     this.load.audio('PlayerShieldBlock_sound', './assets/Sounds/Player/PlayerShieldBlock.wav');
 
-
-    //objetos
+    // objetos
     this.load.audio('ActivateCheckpoint_sound', './assets/Sounds/Object/Checkpoint.wav');
     this.load.audio('Teleport_sound', './assets/Sounds/Object/OpenDoor.wav');
 
-    //musica    
+    // --- musica (bgm) ---
     this.load.audio('bg_Music', 'assets/Sounds/Music/MainMusic.wav');
 
+    // Bosses
+    this.load.audio('BossAngry_roar', './assets/Sounds/Enemy/BossIra/Roar.mp3');
+    this.load.audio('BossAngry_fire_ball', './assets/Sounds/Enemy/BossIra/FireBall.wav');
+    this.load.audio('BossAngry_vertical_punch', './assets/Sounds/Enemy/BossIra/VerticalPunch.mp3');
 
+    this.load.audio('BossSad_laugh', './assets/Sounds/Enemy/BossTristeza/Reir.mp3');
+    this.load.audio('BossSad_bubble_explode', './assets/Sounds/Enemy/BossTristeza/Burbuja_explota.mp3');
+    this.load.audio('BossSad_bubble_invoke', './assets/Sounds/Enemy/BossTristeza/Burbuja_invoca.mp3');
+    this.load.audio('BossSad_icicle', './assets/Sounds/Enemy/BossTristeza/Carambanos.mp3');
+
+    this.load.audio('BossFear_laugh', './assets/Sounds/Enemy/BossMiedo/Payaso.mp3');
+    this.load.audio('BossFear_cup', './assets/Sounds/Enemy/BossMiedo/Vaso.mp3');
+
+    this.load.audio('BossTutorial_land', './assets/Sounds/Enemy/BossTutorial/Aterrizar.mp3');
+
+    this.load.audio('BossFinal_cry', './assets/Sounds/Enemy/BossFinal/Lloro.wav');
+
+    this.load.audio('Boss_Ataque', './assets/Sounds/Enemy/Ataque.mp3');
   }
 
+  /**
+   * metodo create
+   * se llama cuando la precarga ha terminado
+   */
   create() {
-    this.scene.stop();
-    this.scene.start('MainMenu');
-
+    this.scene.stop();           // detener la escena de precarga
+    this.scene.start('MainMenu'); // iniciar la escena del menu principal
   }
 }

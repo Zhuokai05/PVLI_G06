@@ -152,7 +152,7 @@ El ciclo de juego consiste en:
 
 1.  Tutorial.
 
-2.  Derrotar a los bosses para recuperar el poder (1-4).
+2.  Derrotar a los bosses para recuperar el poder (1-3).
 
 3.  Volver al lugar inicial para abrir el camino hacia el cielo.
 
@@ -161,21 +161,16 @@ El ciclo de juego consiste en:
 5.  Derrotar al jefe final.
 
 ![](gdd_images/loop.png)
+*(En la version final del juego solo se incluye dos zonas, morada y verde no incluido)*
 
-Al principio el jugador aparecerá en el centro del mapa, lugar donde
-será el inicio y el fin del juego, ya que aquí es el lugar donde se
+Al principio el jugador aparecerá en el la zona inicial del mapa, lugar donde será el inicio y el fin del juego, ya que aquí es el lugar donde se
 encuentra el camino que conecta el infierno.
 
 Después de un pequeño tutorial que enseña al jugador como controlarse,
 aparecerá un mini boss, que el jugador tendrá que derrotarlo, pero no se
 preocupe, este no atacará al jugador.
 
-Tras derrotarlo, dropear una espada, de esta manera el jugador tendrá la
-capacidad de poder atacar a los enemigos.
-
-Ahora empieza la aventura, el jugador tendrá que ir derrotando a los
-bosses del juego para recuperar el poder, los cuales le permite avanzar
-y descubrir nuevas zonas del mapa.
+Tras derrotarlo, empieza la aventura, el jugador tendrá que ir derrotando a los bosses del juego para recuperar el poder, los cuales le permite avanzar y descubrir nuevas zonas del mapa.
 
 Cuando se recupera todo el poder, debe volver a la zona inicial y abrir
 el camino hacia el cielo. Mientras subes, la lava del infierno te
@@ -397,15 +392,14 @@ un checkpoint.
 **Orbe de daño:** El jugador hará mas daño a los enemigos con sus
 ataques básicos.
 
-     ***Parámetros*** Daño aumentado: Cantidad de daño que aumenta el
-ataque básico del jugador.
+     Parámetros: Daño aumentado: Cantidad de daño que aumenta el ataque cuerpo a cuerpo del jugador.
 
 
 **Orbe de escudo:** desbloquea el escudo de hielo (previamente
 especificado en [[sistema de combate]](#sistema-de-combate))
 
 
-**Orbe de ataque a distancia:** desbloquea el ataque con plumas del jugador
+**Orbe de ataque a distancia:** desbloquea el ataque a distancia del jugador
 (previamente especificado en [[sistema de
 combate]{.underline}](#sistema-de-combate))
 
@@ -416,23 +410,23 @@ especificado en [[sistema de combate]](#sistema-de-combate))
 
 **Orbe de velocidad movimiento:** aumenta la velocidad de movimiento del jugador
 
-     ***Parámetros*** Velocidad aumentado: Cantidad de velocidad que aumenta el jugador.
+     Parámetros: Velocidad aumentado: Cantidad de velocidad que aumenta el jugador.
 
 
 **Orbe de salto:** aumenta la altura de salto del jugador
 
-     ***Parámetros*** Altura aumentado: Cantidad de altura que aumenta el saltod de jugador.
+     Parámetros: Altura aumentado: Cantidad de altura que aumenta el saltod de jugador.
 
 
 **Orbe de rango de ataque:** aumenta rango de ataque melee del jugador
 
-     ***Parámetros*** Rango aumentado: Cantidad de rango que aumenta el
+     Parámetro: Rango aumentado: Cantidad de rango que aumenta el
 ataque básico del jugador.
 
 
 **Orbe de robar vida:** cuando el jugador mata un enemigo, regenera vida
 
-     ***Parámetros*** Vida regenerada: cantidad de vida que recupera el jugador
+     Parámetros: Vida regenerada: cantidad de vida que recupera el jugador
 
 
 ### **Sistema de interactuar**
@@ -445,10 +439,9 @@ recogible para conseguir el efecto de ese objeto.
 **Checkpoint:**
 
 El jugador puede interactuar(dar a la tecla de interactuar) con el
-checkpoint para regenerar su vida hasta máximo, y al colisionar con ese
-checkpoint, lo activa. A la hora de morir (ver detalle en [[sistema de
-vida]](#sistema-de-vida)), reaparece en el último checkpoint
-que ha activado.
+checkpoint para activarlo y regenerar su vida hasta máximo. A la hora de morir (ver detalle en [[sistema de vida]](#sistema-de-vida)), reaparece en el último checkpoint que ha activado.
+
+Si el jugador interactua con un checkpoint ya activado, puede abrir el panel de seleccion de orbes [[sistema de habilidades]](#sistema-de-habilidades).
 
 ![](gdd_images/Checkpoint1.png)
 ![](gdd_images/Checkpoint2.png)
@@ -458,12 +451,17 @@ que ha activado.
 El jugador puedo interactuar con botones que se activa al pulsar E, se cambia la textura y envía señal a su puertas correspondiente,
 es usados especialmente en el puzzle de la TristezaBossDoor
 
+![](gdd_images/SadBossDoor.png)
+
 **Puerta sala boss**
 Son puertas que lleva el juagdor a una sala boss o volver al mapa desde sala boss.
 Se activan al interactuar y teletransportan al jugador.
 
 **Puerta boss final**
 Funciona como una puerta sala boss normal pero no se activa hasta que hayas matado a los 3 bosses.
+
+![](gdd_images/FinalBossDoor.png)
+
 
 
 ### **Sistema de vida**
@@ -694,7 +692,7 @@ jugador a reaccionar.
 
 **Boss 2: Tristeza:** es un enemigo inmóvil que se sitúa a la derecha, tiene dos fases.
 
-Fase 1: tiene dos tipos de ataque. Primero el boss lanza una bola de agua, que persigue al player durante unos segundos, si durante esos segundos no daña al player, crea un área de explosión como otra manera de dañar al player. Segundo, lanza un ataque círcular, que son carámbanos en forma círculo.
+Fase 1: tiene dos tipos de ataque. Primero el boss lanza una bola de agua, que persigue al player durante unos segundos, si durante esos segundos no daña al player, crea un área de explosión como otra manera de dañar al player. También a esta bola de agua, el player puede hacer un ataque para destruirlo y no hacer daño. Segundo, lanza un ataque círcular, que son carámbanos en forma círculo.
 
 Cuando se queda sin vida, pasa a la fase 2.
 
@@ -715,6 +713,8 @@ Cuando se queda sin vida, pasa a la fase 2.
 -   Tiempo de seguimiento: Tiempo de la bola de agua que persigue la player.
 
 -   Cantidad de carámbanos: Números de carámbanos que lanza.
+
+-   Vida de bola de agua: Cuántos ataques puede aguantar la bola de agua del ataque player.
 
 Fase 2: se le añade un nuevo tipo de ataque, en esta fase, el boss tiene tres tipos de ataque. Los dos de la fase 1, más otro ataque, que desde el techo cae un carámbano que intenta dañar al player
 

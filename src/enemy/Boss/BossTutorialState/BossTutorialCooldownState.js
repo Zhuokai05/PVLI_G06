@@ -1,5 +1,10 @@
 import BaseCooldownState from '../BaseBoss/BaseCooldownState.js';
 
+/**
+ * Estado de cooldown específico para el jefe Tutorial
+ * @class BossTutorialCooldownState
+ * @extends BaseCooldownState
+ */
 export default class BossTutorialCooldownState extends BaseCooldownState {
     constructor() {
         super({
