@@ -71,6 +71,9 @@ export default class BossSad extends BaseBoss {
                 this.scene.cameras.main.shake(2500, 0.05);
                 this.play({ key: 'bosssadness_attack', repeat: 3 });
 
+                // Risa en la intro
+                this?.sadLaughSound?.play();
+
                 this.once('animationcomplete', () => {
                     super.setLife();
                     this.scene.events.emit('bossIntroFinished');
@@ -129,6 +132,9 @@ export default class BossSad extends BaseBoss {
             this.setActive(true).setVisible(true);
             this.isActivated = true;
             this.resetAllCollisions();
+
+            // Risa en la intro
+            this?.sadLaughSound?.play();
 
             this.scene.tweens.add({
                 targets: this,

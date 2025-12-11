@@ -68,7 +68,7 @@ export default class BossSadIcicleState extends BaseBossAttackState {
         icicle.isProjectile = true;
 
         // Sonidos de carambanos
-        this.boss?.sadCarambanosSound?.play();
+        this.boss?.sadIcicleSound?.play();
 
         // Auto-destrucción por tiempo (2 segundos)
         this.scene.time.delayedCall(2000, () => {
