@@ -98,7 +98,7 @@ export default class Checkpoint extends Phaser.Physics.Arcade.Sprite {
 
         // sonidos
         this.activateSound = this.scene.sound.add('ActivateCheckpoint_sound', {
-            volume: 0.3,
+            volume: 0.6,
             loop: false
         })
         

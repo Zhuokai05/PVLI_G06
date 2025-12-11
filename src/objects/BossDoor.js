@@ -29,7 +29,7 @@ export default class DoorBoss extends Door {
 
         // sonidos
         this.tpSound = this.scene.sound.add('Teleport_sound', {
-            volume: 0.3,
+            volume: 0.6,
             loop: false
         });
 
