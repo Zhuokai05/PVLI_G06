@@ -692,7 +692,7 @@ jugador a reaccionar.
 
 **Boss 2: Tristeza:** es un enemigo inmóvil que se sitúa a la derecha, tiene dos fases.
 
-Fase 1: tiene dos tipos de ataque. Primero el boss lanza una bola de agua, que persigue al player durante unos segundos, si durante esos segundos no daña al player, crea un área de explosión como otra manera de dañar al player. Segundo, lanza un ataque círcular, que son carámbanos en forma círculo.
+Fase 1: tiene dos tipos de ataque. Primero el boss lanza una bola de agua, que persigue al player durante unos segundos, si durante esos segundos no daña al player, crea un área de explosión como otra manera de dañar al player. También a esta bola de agua, el player puede hacer un ataque para destruirlo y no hacer daño. Segundo, lanza un ataque círcular, que son carámbanos en forma círculo.
 
 Cuando se queda sin vida, pasa a la fase 2.
 
@@ -713,6 +713,8 @@ Cuando se queda sin vida, pasa a la fase 2.
 -   Tiempo de seguimiento: Tiempo de la bola de agua que persigue la player.
 
 -   Cantidad de carámbanos: Números de carámbanos que lanza.
+
+-   Vida de bola de agua: Cuántos ataques puede aguantar la bola de agua del ataque player.
 
 Fase 2: se le añade un nuevo tipo de ataque, en esta fase, el boss tiene tres tipos de ataque. Los dos de la fase 1, más otro ataque, que desde el techo cae un carámbano que intenta dañar al player
 
