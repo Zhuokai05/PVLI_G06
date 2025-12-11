@@ -6,7 +6,7 @@ import Orb from './BaseOrb.js';
 export default class ShieldOrb extends Orb {
 
  constructor(scene, x, y) {
-    super(scene, x, y, 'orbShield', 'Orb Shield', 'Te permite activar un escudo que bloquea el siguiente ataque recibido');
+    super(scene, x, y, 'orbShield', 'Orb Shield', 'Te permite activar un escudo  que bloquea el siguiente ataque recibido con la tecla ‘C’');
  }
 
  onActivate(player) {

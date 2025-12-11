@@ -11,8 +11,8 @@ import BossTutorialCooldownState from './BossTutorialState/BossTutorialCooldownS
 export default class BossTutorial extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'tutorial', undefined, player, {
-            health: 6,
-            maxHealth: 6,
+            health: 9,
+            maxHealth: 12,
             damage: 1,
             startCooldown: 3000,
             minCooldown: 3000,

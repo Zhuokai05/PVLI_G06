@@ -6,7 +6,7 @@ import BaseOrb from './BaseOrb.js';
 export default class DashOrb extends BaseOrb {
 
  constructor(scene, x, y) {
-    super(scene, x, y, 'orbDash', 'Orb Dash', 'Efecto: Te permite hacer dash');
+    super(scene, x, y, 'orbDash', 'Orb Dash', 'Te permite hacer dash con la tecla ‘C’');
  }
 
  onActivate(player) {

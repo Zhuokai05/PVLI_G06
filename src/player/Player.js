@@ -496,7 +496,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         // crear hitbox
-        let hitbox = this.scene.add.rectangle(this.x + offsetX, this.y + offsetY, h, w, 0xff0000, 0.5);
+        let hitbox = this.scene.add.rectangle(this.x + offsetX, this.y + offsetY, h, w, 0xff0000, 0);
         this.scene.physics.add.existing(hitbox);
         hitbox.body.allowGravity = false;
 

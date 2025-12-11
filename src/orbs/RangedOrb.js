@@ -6,7 +6,7 @@ import Orb from './BaseOrb.js';
 export default class RangedOrb extends Orb {
 
  constructor(scene, x, y) {
-    super(scene, x, y, 'orbRanged', 'Orb Ranged', 'Te permite hacer ataque a distancia');
+    super(scene, x, y, 'orbRanged', 'Orb Ranged', 'Te permite hacer ataque a distancia con la tecla ‘C’');
  }
 
  onActivate(player) {

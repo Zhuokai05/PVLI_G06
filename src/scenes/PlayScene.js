@@ -206,10 +206,10 @@ export default class PlayScene extends Phaser.Scene {
                 // ====================================
                 // ENEMIGOS MINA (EXPLOTAN)
                 // ====================================
-                case "iramine":
+                case "iramina":
                     this.enemies.add(new MineEnemy(this, objeto.x, objeto.y, 'Ira_MineEnemy', 0, 'Ira_MineEnemy_Move', 'Ira_MineEnemy_Attack'));
                     break;
-                case "tristemine":
+                case "tristezamina":
                     this.enemies.add(new MineEnemy(this, objeto.x, objeto.y, 'Tristeza_MineEnemy', 0, 'Tristeza_MineEnemy_Move', 'Tristeza_MineEnemy_Attack'));
                     break;
 
@@ -367,7 +367,7 @@ export default class PlayScene extends Phaser.Scene {
                 case "rangeorb":
                     this.orbGroup.add(new RangedOrb(this, objeto.x, objeto.y));
                     break;
-                case "attackeorb":
+                case "attackorb":
                     this.orbGroup.add(new AttackRangeOrb(this, objeto.x, objeto.y));
                     break;
                 case "shieldeorb":

@@ -6,7 +6,7 @@ import Orb from './BaseOrb.js';
 export default class MoveSpeedOrb extends Orb {
 
  constructor(scene, x, y) {
-    super(scene, x, y, 'orbMoveSpeed', 'Orb MoveSpeed', '(Efecto: Aumenta la velocidad un 50%)');
+    super(scene, x, y, 'orbMoveSpeed', 'Orb MoveSpeed', 'Aumenta tu velocidad de movimiento');
  }
 
  onActivate(player) {

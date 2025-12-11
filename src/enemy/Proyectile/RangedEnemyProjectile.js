@@ -31,6 +31,9 @@ export default class RangedEnemyProjectile extends Phaser.Physics.Arcade.Sprite 
             }
         );
 
+        enemy?.scene?.time.delayedCall(5000,()=>{
+            this.destroy();
+        })
         // vector hacia jugador
         let dx = this.target.x - this.x;
         let dy = this.target.y - this.y;
