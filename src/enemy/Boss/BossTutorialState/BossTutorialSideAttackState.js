@@ -46,51 +46,6 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
             0xff0000,
             0.4
         );
-        
-        // Flechas direccionales
-        this.createDirectionArrows();
-    }
-    
-    createDirectionArrows() {
-        const worldView = this.scene.cameras.main.worldView || { width: 800 };
-        const centerX = worldView.x + worldView.width / 2;
-        
-        for (let i = 0; i < 3; i++) {
-            const arrowX = this.direction === 'right' 
-                ? centerX - worldView.width / 4 + (i * 80)
-                : centerX + worldView.width / 4 - (i * 80);
-            
-            const arrow = this.createArrow(arrowX, this.initialY, this.direction);
-            
-            this.scene.tweens.add({
-                targets: arrow,
-                x: this.direction === 'right' ? arrowX + 20 : arrowX - 20,
-                duration: 300,
-                yoyo: true,
-                repeat: -1
-            });
-        }
-    }
-    
-    createArrow(x, y, direction) {
-        const arrow = this.scene.add.graphics();
-        arrow.fillStyle(0xff4444, 0.8);
-        
-        arrow.beginPath();
-        arrow.moveTo(x, y);
-        
-        if (direction === 'right') {
-            arrow.lineTo(x - 30, y - 15);
-            arrow.lineTo(x - 30, y + 15);
-        } else {
-            arrow.lineTo(x + 30, y - 15);
-            arrow.lineTo(x + 30, y + 15);
-        }
-        
-        arrow.closePath();
-        arrow.fillPath();
-        
-        return arrow;
     }
     
     executeAttack() {
