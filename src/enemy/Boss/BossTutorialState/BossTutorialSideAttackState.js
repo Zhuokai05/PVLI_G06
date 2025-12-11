@@ -67,6 +67,9 @@ export default class BossTutorialSideAttackState extends BaseBossAttackState {
             this.boss.body.moves = true;
         }
         
+        // sonido de ataque
+        this.boss?.bossAttackSound?.play();
+
         this.tween = this.scene.tweens.add({
             targets: this.boss,
             x: toX,

@@ -98,6 +98,9 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
 
         // sonido ataque general
         this.bossAttackSound = this.scene.sound.add('Boss_Ataque', { volume: 1 });
+
+        // sonido aterrizar tutorial
+        this.tutorialLandSound = this.scene.sound.add('BossTutorial_land', { volume: 0.5 });
     }
 
     /**
