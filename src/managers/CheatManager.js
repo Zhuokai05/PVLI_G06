@@ -31,7 +31,8 @@ export default class CheatManager {
             { name: "boton 2", x: 4936, y: 6996 },
             { name: "boton 3", x: 10662, y: 6610 },
             { name: "sala secreta orbes", x: 7178, y: 15265 },
-            { name: "Aumentar daño player", x: player.x, y: player.y },
+            { name: "One shot mode", x: player.x, y: player.y },
+             { name: "Cerrar", x: player.x, y: player.y },
         ];
 
         // input (shift + t)
@@ -54,7 +55,7 @@ export default class CheatManager {
             this.scene.scale.width / 2,
             this.scene.scale.height / 2,
             400,
-            600,
+            800,
             0x000000,
             0.8
         );
@@ -86,10 +87,11 @@ export default class CheatManager {
             btnText.on('pointerover', () => btnText.setColor('#ffff00'));
             btnText.on('pointerout', () => btnText.setColor('#ffffff'));
             btnText.on('pointerdown', () => {
-                if(loc.name === "Aumentar daño player") {
+                if(loc.name === "One shot mode") {
                     this.player.damage = 100;
-                     this.toggleMenu(); 
+                    this.toggleMenu(); 
                 }
+                else if (loc.name === "Cerrar") this.toggleMenu(); 
                 else this.teleportTo(loc); // teletransportar al hacer click
             });
 
