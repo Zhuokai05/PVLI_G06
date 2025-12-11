@@ -53,7 +53,7 @@ export default class CheatManager {
             this.scene.scale.width / 2,
             this.scene.scale.height / 2,
             400,
-            500,
+            600,
             0x000000,
             0.8
         );
@@ -85,8 +85,11 @@ export default class CheatManager {
             btnText.on('pointerover', () => btnText.setColor('#ffff00'));
             btnText.on('pointerout', () => btnText.setColor('#ffffff'));
             btnText.on('pointerdown', () => {
-                if(loc.name === "Aumentar daño player") this.player.damage = 10;
-                else   this.teleportTo(loc); // teletransportar al hacer click
+                if(loc.name === "Aumentar daño player") {
+                    this.player.damage = 100;
+                     this.toggleMenu(); 
+                }
+                else this.teleportTo(loc); // teletransportar al hacer click
             });
 
             this.menuContainer.add(btnText);
