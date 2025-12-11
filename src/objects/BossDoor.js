@@ -80,7 +80,7 @@ export default class DoorBoss extends Door {
     }
 
     // Abrir la puerta y teletransportar al jugador
-    abrirPuerta() {
+    openDoor() {
         if (!this.contrary) return;
         if (this.isOpening) return;
 
@@ -101,17 +101,17 @@ export default class DoorBoss extends Door {
 
             this.once('animationcomplete', (animation) => {
                 if (animation.key === this.animOpenKey) {
-                    this.realizarTeletransporte();
+                    this.doTeleport();
                 }
             });
         } else {
             // Si es puerta normal, teletransportamos directamente
             this.scene.player.canMove = false;
-            this.realizarTeletransporte();
+            this.doTeleport();
         }
     }
 
-    realizarTeletransporte() {
+    doTeleport() {
         const destino = this.contrary.getPosition();
         const player = this.scene.player;
 

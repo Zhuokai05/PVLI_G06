@@ -14,19 +14,19 @@ export default class Door extends Phaser.Physics.Arcade.Sprite
     }
 
 
-    cambiarAbrir()
+    changeOpen()
     {
         this.abrir = !this.abrir;
 
     }
 
-    abrirPuerta()
+    openDoor()
     {
         // Se sobreescribirá en clases hijas
         console.log("Puerta abierta");
     }
 
-    cerrarPuerta()
+    closeDoor()
     {
         // Se sobreescribirá en clases hijas
         console.log("Puerta cerrada");

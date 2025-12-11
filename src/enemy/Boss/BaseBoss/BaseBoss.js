@@ -231,7 +231,7 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
 
         // Abrir puertas y plataformas
         [this.Bossdoors, this.floors].forEach(group => {
-            group?.getChildren().forEach(obj => obj.abrirPuerta?.());
+            group?.getChildren().forEach(obj => obj.openDoor?.());
         });
 
         // Marcar boss como derrotado en PlayerDataManager
@@ -297,7 +297,7 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.setActive(false);
         this.isActivated = false;
         this.bossMask?.setVisible(false);
-        this.Bossdoors?.getChildren().forEach(door => door.abrirPuerta?.());
+        this.Bossdoors?.getChildren().forEach(door => door.openDoor?.());
     }
 
     /**

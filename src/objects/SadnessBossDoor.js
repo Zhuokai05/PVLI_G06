@@ -7,12 +7,12 @@ export default class SadnessBossDoor extends DoorBoss {
 
     }
 
-    abrirPuerta() {
+    openDoor() {
        
         if (PlayerDataManager.data.buttonStatus.blue
             && PlayerDataManager.data.buttonStatus.green
             && PlayerDataManager.data.buttonStatus.red) {
-            super.abrirPuerta();
+            super.openDoor();
         }
         else console.log("No se puede abrir la puerta: faltan botones");
     }

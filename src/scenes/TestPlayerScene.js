@@ -12,7 +12,6 @@ import DashOrb from '../orbs/DashOrb.js';
 import RangedOrb from '../orbs/RangedOrb.js';
 import AttackRangeOrb from '../orbs/AttackRangeOrb.js';
 import BasePlatform from '../objects/Platform.js';
-import IcePlatform from '../objects/IcePlatform.js';
 import ShieldOrb from '../orbs/ShieldOrb.js';
 import JumpOrb from '../orbs/JumpOrb.js';
 import BloodStealOrb from '../orbs/BloodStealOrb.js';
@@ -92,11 +91,6 @@ export default class TestPlayerScene extends Phaser.Scene {
             allowGravity: false,
             immovable: true
         });
-        this.icePlatforms = this.physics.add.group({
-            allowGravity: false,
-            immovable: true
-        });
-
 
         this.doors = this.physics.add.group({
             allowGravity: false,
@@ -330,9 +324,6 @@ export default class TestPlayerScene extends Phaser.Scene {
                 case "platform":
                     this.iraPlatforms.add(new BasePlatform(this, objeto.x, objeto.y, 'platform'));
                     break;
-                case "iceplatform":
-                    this.icePlatforms.add(new IcePlatform(this, objeto.x, objeto.y, 'iceplatform'));
-                    break;
                 //bosses 
                 case "iraboss":
                     this.iraboss = new BossAngry(this, objeto.x, objeto.y, this.player);
@@ -468,7 +459,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.iratrigger && this.iraboss) this.iratrigger.getBoss(this.iraboss);
 
         this.irabossdoors.getChildren().forEach(door => {
-            door.abrirPuerta();
+            door.openDoor();
         });
 
    
@@ -476,7 +467,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.icetrigger && this.tristeboss) this.icetrigger.getBoss(this.tristeboss);
 
         this.icebossdoors.getChildren().forEach(door => {
-            door.abrirPuerta();
+            door.openDoor();
         });
 
 
@@ -484,7 +475,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.feartrigger && this.miedoboss) this.feartrigger.getBoss(this.miedoboss);
 
         this.fearbossdoors.getChildren().forEach(door => {
-            door.abrirPuerta();
+            door.openDoor();
         });
 
 
@@ -493,7 +484,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.tutotrigger && this.tutoboss) this.tutotrigger.getBoss(this.tutoboss);
 
         this.tutobossdoors.getChildren().forEach(door => {
-            door.abrirPuerta();
+            door.openDoor();
         });
 
 
@@ -503,7 +494,7 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.finaltrigger2 && this.finalboss) this.finaltrigger2.getBoss(this.finalboss);
 
         this.finalbossdoors.getChildren().forEach(door => {
-            door.abrirPuerta();
+            door.openDoor();
         });
 
         if (this.iraboss) this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
@@ -514,13 +505,13 @@ export default class TestPlayerScene extends Phaser.Scene {
 
         if(PlayerDataManager.data.bossStatus.anger){
             this.irabossdoors.getChildren().forEach(door => {
-                door.abrirPuerta();
+                door.openDoor();
             });
         }
 
         if(PlayerDataManager.data.bossStatus.sadness){
             this.icefloordoors.getChildren().forEach(door => {
-                door.abrirPuerta();
+                door.openDoor();
             });
         }
         //mapdoors
@@ -541,7 +532,6 @@ export default class TestPlayerScene extends Phaser.Scene {
 
 
 
-        this.physics.add.collider(this.player, this.icePlatforms);
         this.physics.add.collider(this.player, this.iraPlatforms);
         this.physics.add.collider(layer, this.enemies);
         this.cameras.main.startFollow(this.player);
@@ -939,7 +929,7 @@ export default class TestPlayerScene extends Phaser.Scene {
 
 
         if (this.currentDoor && Phaser.Input.Keyboard.JustDown(this.keyE)) {
-            this.currentDoor.abrirPuerta();
+            this.currentDoor.openDoor();
         }
 
 

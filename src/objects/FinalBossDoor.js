@@ -6,14 +6,14 @@ export default class FinalBossDoor extends DoorBoss {
         super(scene, x, y, texture);
     }
 
-    abrirPuerta() {
+    openDoor() {
         if (!PlayerDataManager.data.bossStatus.sadness || !PlayerDataManager.data.bossStatus.anger) {
             console.log("No se puede abrir la puerta: te falta matar dos bosses");
             this.showMessage("Necesitas derrotar como mínimo dos bosses, IRA y TRISTEZA");
             return;
         }
 
-        super.abrirPuerta();
+        super.openDoor();
     }
 
     showMessage(text) {
