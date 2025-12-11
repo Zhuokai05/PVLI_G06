@@ -17,8 +17,8 @@ import FinalBossCooldownState from './BossFinalState/BossFinalCooldownState.js';
 export default class FinalBoss extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'final', undefined, player, {
-            health: 1,
-            maxHealth: 1,
+            health: 45,
+            maxHealth: 45,
             damage: 1,
             startCooldown: 1500,
             minCooldown: 800,

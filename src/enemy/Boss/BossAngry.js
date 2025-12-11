@@ -12,7 +12,7 @@ import BossAngryCooldownState from './BossAngryState/BossAngryCooldownState.js';
 export default class BossAngry extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'IraSheet', 0, player, {
-            health: 45,
+            health: 35,
             maxHealth: 45,
             damage: 1,
             startCooldown: 2000,

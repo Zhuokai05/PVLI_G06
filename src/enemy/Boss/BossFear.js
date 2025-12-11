@@ -11,8 +11,8 @@ import BossFearCooldownState from './BossFearState/BossFearCooldownState.js';
 export default class BossFear extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'corazon', undefined, player, {
-            health: 10,
-            maxHealth: 10,
+            health: 45,
+            maxHealth: 45,
             damage: 1,
             startCooldown: 3000,
             minCooldown: 1500,

@@ -12,7 +12,7 @@ import BossSadCooldownState from './BossSadState/BossSadCooldownState.js';
 export default class BossSad extends BaseBoss {
     constructor(scene, x, y, player) {
         super(scene, x, y, 'SadnessSheet', 0, player, {
-            health: 45,
+            health: 35,
             maxHealth: 45,
             damage: 1,
             startCooldown: 2000,
