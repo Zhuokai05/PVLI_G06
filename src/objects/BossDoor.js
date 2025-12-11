@@ -21,7 +21,7 @@ export default class DoorBoss extends Door {
         this.setScale(4);
 
         // fisicas
-        this.body.setSize(this.width * 0.25, this.height * 0.9);
+        this.body.setSize(this.width * 0.25, this.height * 0.05);
         this.body.setOffset(
             (this.width - this.body.width) / 2,
             this.height - this.body.height
@@ -151,14 +151,23 @@ export default class DoorBoss extends Door {
 
             this.once('animationcomplete', (animation) => {
                 if (animation.key === this.animOpenKey) {
-                    this.doTeleport();
+                    this.FadeOutTP();
                 }
             });
         } else {
             // si es puerta normal, teletransportamos directamente
             this.scene.player.canMove = false;
-            this.doTeleport();
+            this.FadeOutTP();
         }
+    }
+
+    FadeOutTP() {
+        this.scene.cameras.main.fadeOut(1000, 0, 0, 0);
+        this.scene.cameras.main.once('camerafadeoutcomplete', () => {
+            this.scene.time.delayedCall(1000, () => {
+                this.doTeleport();
+            });
+        });
     }
 
     /**
@@ -169,11 +178,16 @@ export default class DoorBoss extends Door {
         const player = this.scene.player;
 
         if (player) {
-            // mover jugador al destino mas un offset en y
+            // Mover jugador al destino mas un offset en y
             player.setPosition(destino.x, destino.y + 210);
-            player.canMove = true;
+            this.scene.cameras.main.fadeIn(1000, 0, 0, 0);
 
-            // solo reseteamos animacion si es la puerta animada
+
+            this.scene.cameras.main.once('camerafadeincomplete', () => {
+                player.canMove = true;
+            });
+
+            // Reset animacion
             if (this.isAnimatedDoor && this.scene.anims.exists(this.animIdleKey)) {
                 this.play(this.animIdleKey);
             }
