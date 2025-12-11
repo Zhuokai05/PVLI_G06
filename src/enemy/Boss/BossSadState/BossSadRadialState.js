@@ -101,6 +101,9 @@ export default class BossSadRadialState extends BaseBossAttackState {
             const rotationAngle = Math.atan2(velocityY, velocityX);
             icicle.setRotation(rotationAngle);
 
+            // Sonido de carambanos
+            this.boss?.sadCarambanosSound?.play();
+
             // Auto-destrucción por tiempo (3 segundos)
             this.scene.time.delayedCall(3000, () => {
                 if (icicle && icicle.active) {

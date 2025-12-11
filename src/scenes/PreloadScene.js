@@ -219,6 +219,10 @@ export class PreloadScene extends Phaser.Scene {
     this.load.audio('BossAngry_fire_ball', './assets/Sounds/Enemy/BossIra/FireBall.wav');
     this.load.audio('BossAngry_vertical_punch', './assets/Sounds/Enemy/BossIra/VerticalPunch.mp3');
 
+    this.load.audio('BossSad_burbuja_explota', './assets/Sounds/Enemy/BossTristeza/Burbuja_explota.mp3');
+    this.load.audio('BossSad_burbuja_invoca', './assets/Sounds/Enemy/BossTristeza/Burbuja_invoca.mp3');
+    this.load.audio('BossSad_carambanos', './assets/Sounds/Enemy/BossTristeza/Carambanos.mp3');
+
   }
 
   /**

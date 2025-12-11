@@ -121,6 +121,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
         this.waterBall.speed = this.boss.waterBallSpeed;
         this.waterBall.isProjectile = true;
 
+        // Reproducir sonido de invocación
+        this.boss?.sadBurbujaInvocaSound?.play();
+
         // Efecto de aparición
         this.waterBall.setAlpha(0);
         this.waterBall.setScale(0.1);
@@ -321,6 +324,9 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
             this.ballDestroyed = true;
 
             this.destroyWaterBallWithEffect();
+
+            // Reproducir sonido de explosión
+            this.boss?.sadBurbujaExplotaSound?.play();
             this.createExplosion();
         }
     }

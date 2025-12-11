@@ -75,8 +75,17 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         // sonido fireball
         this.angryFireballSound = this.scene.sound.add('BossAngry_fire_ball', { volume: 1 });
 
-        // sonido puño vertical
+        // sonido puño vertical romper plataformas
         this.angryVerticalPunchSound = this.scene.sound.add('BossAngry_vertical_punch', { volume: 0.7 });
+
+        // sonido invocaion burbuja tristeza
+        this.sadBurbujaInvocaSound = this.scene.sound.add('BossSad_burbuja_invoca', { volume: 1 });
+
+        // sonido explosion burbuja tristeza
+        this.sadBurbujaExplotaSound = this.scene.sound.add('BossSad_burbuja_explota', { volume: 1 });
+
+        // sonido carambanos tristeza
+        this.sadCarambanosSound = this.scene.sound.add('BossSad_carambanos', { volume: 1 });
     }
 
     /**

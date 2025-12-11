@@ -67,6 +67,9 @@ export default class BossSadIcicleState extends BaseBossAttackState {
         icicle.setRotation(Math.PI / 2); // Apuntar hacia abajo
         icicle.isProjectile = true;
 
+        // Sonidos de carambanos
+        this.boss?.sadCarambanosSound?.play();
+
         // Auto-destrucción por tiempo (2 segundos)
         this.scene.time.delayedCall(2000, () => {
             if (icicle && icicle.active) {
