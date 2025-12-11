@@ -57,7 +57,7 @@ export default class FinalBoss extends BaseBoss {
     playIntro() {
         this.setVisible(true).setActive(true);
         
-        this.scene.cameras.main.shake(4000, 0.07);
+        this.scene.cameras.main.shake(2000, 0.07);
         this.scene.cameras.main.flash(2000, 255, 0, 255);
         
         this.scene.time.delayedCall(2000, () => {
