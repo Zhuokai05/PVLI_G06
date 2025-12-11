@@ -173,15 +173,15 @@ export default class TestPlayerScene extends Phaser.Scene {
 
                 //puertas
                 case "iradoor":
-                    this.irafloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'bloque'));
+                    this.irabossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
                 case "icedoor":
                     this.icebossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
                     break;
-                case "irabossdoor":
-                    this.irabossdoors.add(new MapDoor(this, objeto.x, objeto.y, 'PuertaBoss'));
+                case "irazonedoor":
+                    this.irafloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'bloque'));
                     break;
-                case "icebossdoor":
+                case "icezonedoor":
                     this.icefloordoors.add(new MapDoor(this, objeto.x, objeto.y, 'bloque'));
                     break;
                 case "feardoor":
@@ -462,24 +462,26 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.finalbossdoor && this.iraboss) this.iraboss.setFinalDoor(this.finalbossdoor);
         //bossdoors y triggers
 
-        this.irafloordoors.getChildren().forEach(door => {
-            door.cerrarPuerta();
-        });
-        this.irabossdoors.getChildren().forEach(door => {
-            door.abrirPuerta();
-        });
+   
+       
         if (this.iratrigger) this.iratrigger.getDoors(this.irabossdoors);
         if (this.iratrigger && this.iraboss) this.iratrigger.getBoss(this.iraboss);
 
+        this.irabossdoors.getChildren().forEach(door => {
+            door.abrirPuerta();
+        });
+
+   
+        if (this.icetrigger) this.icetrigger.getDoors(this.icebossdoors);
+        if (this.icetrigger && this.tristeboss) this.icetrigger.getBoss(this.tristeboss);
 
         this.icebossdoors.getChildren().forEach(door => {
             door.abrirPuerta();
         });
-        this.icefloordoors.getChildren().forEach(door => {
-            door.cerrarPuerta();
-        });
-        if (this.icetrigger) this.icetrigger.getDoors(this.icebossdoors);
-        if (this.icetrigger && this.tristeboss) this.icetrigger.getBoss(this.tristeboss);
+
+
+        if (this.feartrigger) this.feartrigger.getDoors(this.fearbossdoors);
+        if (this.feartrigger && this.miedoboss) this.feartrigger.getBoss(this.miedoboss);
 
         this.fearbossdoors.getChildren().forEach(door => {
             door.abrirPuerta();
@@ -487,30 +489,22 @@ export default class TestPlayerScene extends Phaser.Scene {
 
 
 
-        if (this.feartrigger) this.feartrigger.getDoors(this.fearbossdoors);
-
-        if (this.feartrigger && this.miedoboss) this.feartrigger.getBoss(this.miedoboss);
+        if (this.tutotrigger) this.tutotrigger.getDoors(this.tutobossdoors);
+        if (this.tutotrigger && this.tutoboss) this.tutotrigger.getBoss(this.tutoboss);
 
         this.tutobossdoors.getChildren().forEach(door => {
             door.abrirPuerta();
         });
 
 
-
-
-        if (this.tutotrigger) this.tutotrigger.getDoors(this.tutobossdoors);
-
-        if (this.tutotrigger && this.tutoboss) this.tutotrigger.getBoss(this.tutoboss);
-
+        if (this.finaltrigger) this.finaltrigger.getDoors(this.finalbossdoors);
+        if (this.finaltrigger && this.finalboss) this.finaltrigger.getBoss(this.finalboss);
+        if (this.finaltrigger2) this.finaltrigger2.getDoors(this.finalbossdoors);
+        if (this.finaltrigger2 && this.finalboss) this.finaltrigger2.getBoss(this.finalboss);
 
         this.finalbossdoors.getChildren().forEach(door => {
             door.abrirPuerta();
         });
-        if (this.finaltrigger) this.finaltrigger.getDoors(this.finalbossdoors);
-        if (this.finaltrigger && this.finalboss) this.finaltrigger.getBoss(this.finalboss);
-        if (this.finaltrigger2) this.finaltrigger2.getDoors(this.finalbossdoors);
-
-        if (this.finaltrigger2 && this.finalboss) this.finaltrigger2.getBoss(this.finalboss);
 
         if (this.iraboss) this.iraboss.getDoors(this.irabossdoors, this.irafloordoors);
         if (this.tristeboss) this.tristeboss.getDoors(this.icebossdoors, this.icefloordoors);
@@ -518,6 +512,17 @@ export default class TestPlayerScene extends Phaser.Scene {
         if (this.tutoboss) this.tutoboss.getDoors(this.tutobossdoors);
         if (this.finalboss) this.finalboss.getDoors(this.finalbossdoors);
 
+        if(PlayerDataManager.data.bossStatus.anger){
+            this.irabossdoors.getChildren().forEach(door => {
+                door.abrirPuerta();
+            });
+        }
+
+        if(PlayerDataManager.data.bossStatus.sadness){
+            this.icefloordoors.getChildren().forEach(door => {
+                door.abrirPuerta();
+            });
+        }
         //mapdoors
 
         //ui        
