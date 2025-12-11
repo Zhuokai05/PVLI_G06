@@ -37,9 +37,9 @@ import StaticLava from '../objects/StaticLava.js';
 import FinalBossDoor from '../objects/FinalBossDoor.js';
 
 
-export default class TestPlayerScene extends Phaser.Scene {
+export default class PlayScene extends Phaser.Scene {
     constructor() {
-        super('TestPlayerScene');
+        super('PlayScene');
     }
 
     create() {

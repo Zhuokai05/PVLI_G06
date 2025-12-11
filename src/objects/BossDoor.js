@@ -1,28 +1,42 @@
 import Door from '../objects/Doors.js';
 
+/**
+ * clase doorboss
+ * representa la puerta del jefe con logica de teletransporte
+ */
 export default class DoorBoss extends Door {
+
+    /**
+     * constructor de la puerta
+     * @param {object} scene - escena actual
+     * @param {number} x - posicion x
+     * @param {number} y - posicion y
+     * @param {string} texture - clave de textura
+     */
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
 
         this.contrary = null;
         this.isOpening = false;
         this.setScale(4);
+        
+        // fisicas
         this.body.setSize(this.width * 0.25, this.height * 0.9);
         this.body.setOffset(
             (this.width - this.body.width) / 2,
             this.height - this.body.height
         );
 
-        // Sonidos
+        // sonidos
         this.tpSound = this.scene.sound.add('Teleport_sound', {
             volume: 0.3,
             loop: false
         });
 
-        // Filtro temporal
+        // filtro temporal para saber si es animada
         this.isAnimatedDoor = (texture === 'puertairaSheet');
 
-        // Configuración específica para puertas animadas
+        // configuracion especifica para puertas animadas
         if (this.isAnimatedDoor) {
 
             this.animIdleKey = texture + '_idle';
@@ -30,15 +44,16 @@ export default class DoorBoss extends Door {
 
             this.createAnimations(texture);
 
-            // Intentar reproducir idle
+            // intentar reproducir idle
             if (this.scene.anims.exists(this.animIdleKey)) {
                 this.play(this.animIdleKey);
             }
         }
         else {
-            // CONFIGURACIÓN PARA PUERTAS NORMALES
+            // configuracion para puertas normales
         }
 
+        // texto de interaccion
         this.prompt = this.scene.add.text(this.x, this.y + (this.displayHeight/2) + 50, 'Presiona E para interactuar', {
             font: '16px Arial',
             fill: '#ffffff',
@@ -48,12 +63,16 @@ export default class DoorBoss extends Door {
 
     }
 
+    /**
+     * crea animaciones si la puerta es animada
+     * @param {string} textureKey - clave de la textura
+     */
     createAnimations(textureKey) {
-        // Solo creamos animaciones si estamos en modo animado
+        // solo creamos animaciones si estamos en modo animado
         if (!this.isAnimatedDoor) return;
 
         if (!this.scene.anims.exists(this.animIdleKey)) {
-            // IDLE
+            // animacion idle
             this.scene.anims.create({
                 key: this.animIdleKey,
                 frames: this.scene.anims.generateFrameNumbers(textureKey, { start: 0, end: 5 }),
@@ -61,7 +80,7 @@ export default class DoorBoss extends Door {
                 repeat: -1
             });
 
-            // OPEN
+            // animacion de apertura
             this.scene.anims.create({
                 key: this.animOpenKey,
                 frames: this.scene.anims.generateFrameNumbers(textureKey, { start: 6, end: 23 }),
@@ -71,15 +90,25 @@ export default class DoorBoss extends Door {
         }
     }
 
+    /**
+     * obtiene la posicion actual
+     * @returns {object} coordenadas x e y
+     */
     getPosition() {
         return { x: this.x, y: this.y };
     }
 
+    /**
+     * vincula la puerta de destino
+     * @param {object} contraryDoor - puerta contraria
+     */
     setContrary(contraryDoor) {
         this.contrary = contraryDoor;
     }
 
-    // Abrir la puerta y teletransportar al jugador
+    /**
+     * abrir la puerta y teletransportar al jugador
+     */
     openDoor() {
         if (!this.contrary) return;
         if (this.isOpening) return;
@@ -88,13 +117,14 @@ export default class DoorBoss extends Door {
         this.isOpening = true;
         this.tpSound?.play();
 
+        // detener jugador
         if (this.scene.player) {
             this.scene.player.canMove = false;
             this.scene.player.setVelocity(0, 0);
             this.scene.player.play('Player_idle', true);
         }
 
-        // Lógica de animación
+        // logica de animacion
         if (this.isAnimatedDoor && this.scene.anims.exists(this.animOpenKey)) {
             console.log("Abriendo puerta animada...");
             this.play(this.animOpenKey);
@@ -105,21 +135,25 @@ export default class DoorBoss extends Door {
                 }
             });
         } else {
-            // Si es puerta normal, teletransportamos directamente
+            // si es puerta normal, teletransportamos directamente
             this.scene.player.canMove = false;
             this.doTeleport();
         }
     }
 
+    /**
+     * ejecuta el teletransporte fisico del jugador
+     */
     doTeleport() {
         const destino = this.contrary.getPosition();
         const player = this.scene.player;
 
         if (player) {
+            // mover jugador al destino mas un offset en y
             player.setPosition(destino.x, destino.y + 210);
             player.canMove = true;
 
-            // Solo reseteamos animación si es la puerta animada
+            // solo reseteamos animacion si es la puerta animada
             if (this.isAnimatedDoor && this.scene.anims.exists(this.animIdleKey)) {
                 this.play(this.animIdleKey);
             }

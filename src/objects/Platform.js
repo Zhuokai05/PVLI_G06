@@ -1,65 +1,82 @@
+/**
+ * clase baseplatform
+ * plataforma que puede ser destruida temporalmente al ser golpeada
+ */
 export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
+
+    /**
+     * constructor de la plataforma base
+     * @param {object} scene - escena actual
+     * @param {number} x - posicion horizontal
+     * @param {number} y - posicion vertical
+     * @param {string} texture - clave de textura
+     */
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
 
-        this.scene = scene;
+        this.scene = scene;                          // referencia a la escena
 
-        scene.add.existing(this);
-        scene.physics.add.existing(this);
+        scene.add.existing(this);                    // agregar a la escena
+        scene.physics.add.existing(this);            // activar fisicas
 
-        this.setScale(2.5, 1);
+        this.setScale(2.5, 1);                       // escala inicial
 
-        this.body.setAllowGravity(false);
-        this.setImmovable(true);
-        this.body.moves = false;
+        this.body.setAllowGravity(false);            // sin gravedad
+        this.setImmovable(true);                     // inmovible
+        this.body.moves = false;                     // no se mueve por fisicas
 
-        this.active = true;
-        this.visible = true;
+        this.active = true;                          // estado activo
+        this.visible = true;                         // estado visible
 
-        // Nueva propiedad para rastrear si está desactivada
+        // nueva propiedad para rastrear si esta desactivada
         this.isDeactivated = false;
         
-        // Propiedad para controlar si está temblando
+        // propiedad para controlar si esta temblando
         this.isShaking = false;
         
-        // Propiedades para las partículas de rotura
+        // propiedades para las particulas de rotura
         this.particles = null;
         
-        // Sonido (asegúrate de tener el sonido cargado en tu escena)
+        // sonido
         this.breakSound = null;
     }
 
-    // Método para desactivar la plataforma (por colisión con puño)
+    /**
+     * metodo para desactivar la plataforma (por colision con puño)
+     */
     deactivateByPunch() {
+        // evitar doble activacion o si ya esta temblando
         if (this.isDeactivated || this.isShaking) return;
 
         this.isShaking = true;
         
-        // Iniciar efecto de temblor
+        // iniciar efecto de temblor
         this.startShakeEffect();
         
-        // Después del temblor, romper la plataforma
+        // despues del temblor, romper la plataforma
         this.scene.time.delayedCall(800, () => {
             this.breakPlatform();
             
-            // Reactivar después de X segundos
+            // reactivar despues de x segundos
             this.scene.time.delayedCall(2500, () => {
                 this.reactivate();
             });
         });
     }
 
-    // Efecto de temblor
+    /**
+     * efecto de temblor antes de romperse
+     */
     startShakeEffect() {
-        // Guardar posición original
+        // guardar posicion original
         this.originalX = this.x;
         this.originalY = this.y;
         
-        // Configurar el temblor
+        // configurar el temblor
         const shakeDuration = 800; // 0.8 segundos
-        const shakeIntensity = 4; // Intensidad del temblor
+        const shakeIntensity = 4; // intensidad del temblor
         
-        // Crear tween de temblor
+        // crear tween de temblor horizontal
         this.scene.tweens.add({
             targets: this,
             x: {
@@ -70,6 +87,7 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
                 yoyo: true,
                 repeat: Math.floor(shakeDuration / 100)
             },
+            // crear tween de temblor vertical
             y: {
                 from: this.originalY - shakeIntensity / 2,
                 to: this.originalY + shakeIntensity / 2,
@@ -79,13 +97,13 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
                 repeat: Math.floor(shakeDuration / 140)
             },
             onComplete: () => {
-                // Volver a la posición original
+                // volver a la posicion original
                 this.x = this.originalX;
                 this.y = this.originalY;
             }
         });
         
-        // Efecto visual adicional: parpadeo
+        // efecto visual adicional: parpadeo
         this.scene.tweens.add({
             targets: this,
             alpha: 0.7,
@@ -94,21 +112,23 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
             repeat: Math.floor(shakeDuration / 200)
         });
         
-        // Reproducir sonido de temblor (si existe)
+        // reproducir sonido de temblor (si existe)
         if (this.scene.sound.get('platformShake')) {
             this.scene.sound.play('platformShake', { volume: 0.5 });
         }
     }
 
-    // Romper la plataforma
+    /**
+     * rompe la plataforma
+     */
     breakPlatform() {
         this.isDeactivated = true;
         this.isShaking = false;
         
-        // Crear efecto de partículas para simular rotura
+        // crear efecto de particulas para simular rotura
         this.createBreakParticles();
         
-        // Efecto de desvanecimiento mientras se "rompe"
+        // efecto de desvanecimiento y transformacion al "romperse"
         this.scene.tweens.add({
             targets: this,
             alpha: 0,
@@ -118,23 +138,26 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
             duration: 300,
             ease: 'Cubic.easeIn',
             onComplete: () => {
-                this.setActive(false);
-                this.setVisible(false);
-                this.body.enable = false;
+                this.setActive(false);          // desactivar logica
+                this.setVisible(false);         // ocultar sprite
+                this.body.enable = false;       // desactivar fisicas
             }
         });
         
-        // Reproducir sonido de rotura
+        // reproducir sonido de rotura
         if (this.scene.sound.get('platformBreak')) {
             this.scene.sound.play('platformBreak', { volume: 0.7 });
         }
     }
 
-    // Crear partículas de rotura
+    /**
+     * crea particulas de rotura
+     */
     createBreakParticles() {
-        // Usar el mismo color que la plataforma o un color de rotura
+        // usar el mismo color que la plataforma o un color de rotura
         const color = this.tint || 0xffffff;
         
+        // crear emisor de particulas
         this.particles = this.scene.add.particles(this.x, this.y, null, {
             speed: { min: 50, max: 200 },
             angle: { min: 0, max: 360 },
@@ -146,10 +169,10 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
             tint: color
         });
         
-        // Emitir partículas una vez
+        // emitir particulas una vez
         this.particles.emitParticle(15);
         
-        // Destruir partículas después de un tiempo
+        // destruir particulas despues de un tiempo
         this.scene.time.delayedCall(1500, () => {
             if (this.particles) {
                 this.particles.destroy();
@@ -158,12 +181,14 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
-    // Método para reactivar la plataforma
+    /**
+     * metodo para reactivar la plataforma
+     */
     reactivate() {
-        // Animación de reconstrucción
+        // animacion de reconstruccion
         this.setVisible(true);
         this.setAlpha(0);
-        this.setScale(2.5 * 1.2, 1 * 0.3);
+        this.setScale(2.5 * 1.2, 1 * 0.3); // escala inicial deformada
         
         this.scene.tweens.add({
             targets: this,
@@ -172,8 +197,9 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
             scaleY: 1,
             angle: 0,
             duration: 500,
-            ease: 'Back.easeOut',
+            ease: 'Back.easeOut', // efecto de rebote
             onComplete: () => {
+                // restaurar estados y fisicas
                 this.isDeactivated = false;
                 this.setActive(true);
                 this.body.enable = true;
@@ -181,7 +207,7 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
                 this.setImmovable(true);
                 this.body.moves = false;
                 
-                // Efecto visual de parpadeo al reactivar
+                // efecto visual de parpadeo al reactivar
                 this.scene.tweens.add({
                     targets: this,
                     alpha: 0.8,
@@ -193,11 +219,13 @@ export default class BasePlatform extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
-    // Método action original modificado
+    /**
+     * metodo action original modificado para usar la desactivacion
+     */
     action() {
         if (!this.active || this.isDeactivated) return;
 
-        // Aquí podrías implementar un temblor diferente o similar
-        this.deactivateByPunch(); // Usar el mismo efecto que con el puño
+        // usar el mismo efecto que con el puño
+        this.deactivateByPunch();
     }
 }

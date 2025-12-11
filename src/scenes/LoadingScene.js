@@ -177,7 +177,7 @@ class LoadingScene extends Phaser.Scene {
                 this.progressText.setColor('#FFD700');
                 
                 // Cambiar a la siguiente escena
-                const sceneKey = "TestPlayerScene";
+                const sceneKey = "PlayScene";
 
                 if (!this.scene.get(sceneKey)) {
                     console.warn(`⚠️ ${sceneKey} no existe, creando...`);

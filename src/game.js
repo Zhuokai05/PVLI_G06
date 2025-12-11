@@ -1,8 +1,7 @@
-import TestPlayerScene from './scenes/testPlayerScene.js';
+import PlayScene from './scenes/PlayScene.js';
 import { PreloadScene } from './scenes/PreloadScene.js';
 import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
-import { BossTestScene } from './scenes/BossTestScene.js';
 import { GameOverScene } from './scenes/GameOverScene.js';
 import { WinScene } from './scenes/WinScene.js';
 import { OrbSelectScene } from './scenes/OrbSelectScene.js';
@@ -35,7 +34,7 @@ const config = {
     },
     
     },
-    scene: [PreloadScene,MainMenuScene, TestPlayerScene,LoadingScene,BossTestScene, PauseScene, GameOverScene,WinScene, OrbSelectScene, NarrativeScene],
+    scene: [PreloadScene,MainMenuScene, PlayScene ,LoadingScene, PauseScene, GameOverScene,WinScene, OrbSelectScene, NarrativeScene],
     title: "Highway To Heaven",
     version: "1.0.0"
 };
