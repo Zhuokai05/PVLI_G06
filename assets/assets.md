@@ -300,7 +300,8 @@ El boss *Miedo* es oculto y no posee tile propio para mantenerse oculto en el ma
 Los audios han sido extraídos de *Pixabay* y *FreeSound*.
 
 ### BGM  
-**(Audio BGM)**
+
+[🔊 BGM](../assets/Sounds/Music/MainMusic.wav)
 
 ### Player  
 **(Audio de player)**
