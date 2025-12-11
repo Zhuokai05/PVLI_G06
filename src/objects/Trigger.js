@@ -13,8 +13,8 @@ export default class InvisibleTrigger extends Phaser.GameObjects.Zone {
      * @param {number} x - posicion horizontal
      * @param {number} y - posicion vertical
      */
-    constructor(scene, x, y) {
-        super(scene, x, y, 256, 256); // dimension por defecto 256x256
+    constructor(scene, x, y, widge = 256,height = 256) {
+        super(scene, x, y, widge, height); // dimension por defecto 256x256
 
         this.scene = scene;                          // referencia a la escena
         this.doors = [];                             // lista de puertas a cerrar

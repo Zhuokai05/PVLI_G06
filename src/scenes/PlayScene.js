@@ -278,10 +278,7 @@ export default class PlayScene extends Phaser.Scene {
                     break;
 
                 case "finaltrigger":
-                    this.finaltrigger = new InvisibleTrigger(this, objeto.x, objeto.y);
-                    break;
-                case "finaltrigger2":
-                    this.finaltrigger2 = new InvisibleTrigger(this, objeto.x, objeto.y);
+                    this.finaltrigger = new InvisibleTrigger(this, objeto.x, objeto.y,1000,100);
                     break;
                 //orbes 
                 case "speedorb":
@@ -1012,7 +1009,7 @@ export default class PlayScene extends Phaser.Scene {
         this.cameras.main.once('camerafadeoutcomplete', () => {
 
             // Teletransportar al jugador a la posicion frente al boss
-            this.player.setPosition(boss.x, boss.y + 200);
+            this.player.setPosition(boss.x, boss.y);
 
             boss.setVisible(true);
 
