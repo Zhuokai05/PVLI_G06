@@ -466,7 +466,7 @@ export default class PlayScene extends Phaser.Scene {
                     this.tutorial_move_jump = new TutorialPanel(this, objeto.x, objeto.y, 'No hay', 'Presiona ESPACIO para saltar\nUsa WASD para mover');
                     break;
                 case "tutorial_attack":
-                    this.tutorial_attack = new TutorialPanel(this, objeto.x, objeto.y, 'No hay', 'Presiona ðŸ¡ ðŸ¡¡ðŸ¡¢ðŸ¡£ para atacar');
+                    this.tutorial_attack = new TutorialPanel(this, objeto.x, objeto.y, 'No hay', 'Presiona 🡠🡡🡢🡣 para atacar');
                     break;
             }
         })
