@@ -111,12 +111,10 @@ Alcance total: 12
 ## **Historia**
 
 El ángel, el personaje principal, por un accidente cayó al infierno, y
-sufrió graves lesiones. Su poder, se dividió en cuatro, formándose en
-cuatro seres poderosos de emociones distintas, eso implica a que el
-pobre angelito, ha perdido los respectivos sentimientos.
+sufrió graves lesiones. Su poder, se dividió en trozos, formándose en seres poderosos de emociones distintas, eso implica a que el pobre angelito, ha perdido los respectivos sentimientos.
 
 Para poder volver al cielo, el ángel debe de recuperar su poder, es
-decir debe derrotar a los cuatro bosses.
+decir debe derrotar a los bosses y ir recuperando sus sentimientos.
 
 ## **Estilo Artístico**
 
