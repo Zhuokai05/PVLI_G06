@@ -162,7 +162,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.attackHitSound = this.scene.sound.add('PlayerAttack_sound', { volume: 0.6 });
 
         // sonido salto
-        this.jumpSound = this.scene.sound.add('PlayerJump_sound', { volume: 3 });
+        this.jumpSound = this.scene.sound.add('PlayerJump_sound', { volume: 1 });
 
         // sonido activacion del escudo
         this.shieldSound = this.scene.sound.add('PlayerShield_sound', { volume: 0.9 });
@@ -183,7 +183,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.changeOrbSound = this.scene.sound.add('PlayerChangeOrb_sound', { volume: 0.9 });
 
         // sonido ataque rango
-        this.rangeAttackSound = this.scene.sound.add('PlayerRangeAttack_sound', { volume: 3 });
+        this.rangeAttackSound = this.scene.sound.add('PlayerRangeAttack_sound', { volume: 1 });
 
         // sonido dash
         this.dashSound = this.scene.sound.add('PlayerDash_sound', { volume: 0.9 });
