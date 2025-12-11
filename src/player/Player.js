@@ -36,7 +36,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.meleeAttackDist = 100;                            // distancia hitbox
         this.meleeAttackWidge = 120;                           // ancho hitbox
         this.meleeAttackHeight = 70;                           // alto hitbox
-        this.attackCooldown = 300;                             // cooldown melee
+        this.attackCooldown = 750;                             // cooldown melee
         this.attackDuration = 200;                             // duracion hitbox
         this.isAttacking = false;                              // esta atacando
 
@@ -187,7 +187,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // sonido dash
         this.dashSound = this.scene.sound.add('PlayerDash_sound', { volume: 0.9 });
-        
+
     }
 
     /**
