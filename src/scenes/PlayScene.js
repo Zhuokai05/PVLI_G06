@@ -1141,7 +1141,7 @@ export default class PlayScene extends Phaser.Scene {
                 this.handleBossRoom(bossRoom);                            // Cambiar cámara a sala fija
             } 
             // Si sale de sala de jefe
-            else if (!inside && bossRoom.playerInside) {
+            else if (!inside && bossRoom.playerInside && !this.player.dead) {
                 bossRoom.playerInside = false;
                 this.cameras.main.startFollow(this.player);               // Volver a seguir jugador
                 this.cameras.main.setBounds(-200, 0, 140000, 100000);     // Restaurar límites normales
@@ -1249,22 +1249,17 @@ export default class PlayScene extends Phaser.Scene {
 
             // Hacer visible al jefe
             boss.setVisible(true);
+            boss.setActive(true);
 
             // ========================================
-            // FASE 4: FADE IN (pantalla vuelve desde negro)
+            // FASE 4: FADE IN (pantalla vuelve desde negro) Y REPRODUCIR INTRO DEL JEFE
             // ========================================
+            boss.playIntro();                                             // Animación/diálogo de intro
             this.cameras.main.fadeIn(1000, 0, 0, 0);                      // 1 segundo de fade in
         });
 
         // ========================================
-        // FASE 5: REPRODUCIR INTRO DEL JEFE
-        // ========================================
-        this.cameras.main.once('camerafadeincomplete', () => {
-            boss.playIntro();                                             // Animación/diálogo de intro
-        });
-
-        // ========================================
-        // FASE 6: DESBLOQUEAR JUGADOR
+        // FASE 5: DESBLOQUEAR JUGADOR
         // ========================================
         this.events.once('bossIntroFinished', () => {
             if (this.player) this.player.canMove = true;                  // Devolver control al jugador

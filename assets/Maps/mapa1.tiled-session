@@ -47,24 +47,24 @@
             "expandedObjectLayers": [
                 2
             ],
-            "scale": 0.75,
+            "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 8304.666666666666,
-                "y": 7726
+                "x": 18653.030303030304,
+                "y": 1843.9393939393938
             }
         },
         "map.json#Ira": {
             "dynamicWrapping": false,
-            "scaleInDock": 1,
+            "scaleInDock": 0.75,
             "scaleInEditor": 1
         },
         "map.tmj": {
-            "scale": 0.10400390625,
+            "scale": 0.03125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 5120,
-                "y": 4004.6572769953054
+                "x": 11728,
+                "y": 11792
             }
         },
         "map.tmj#Ira": {
