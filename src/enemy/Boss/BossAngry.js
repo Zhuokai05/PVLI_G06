@@ -29,6 +29,7 @@ export default class BossAngry extends BaseBoss {
         this.punchXSpeed = 600;
 
         this.createAnimations();
+
         this.setupStates();
         this.play('bossira_idle');
     }
@@ -38,7 +39,7 @@ export default class BossAngry extends BaseBoss {
      */
     createAnimations() {
         const anims = this.scene.anims;
-        
+
         const animations = [
             { key: 'bossira_idle', frames: { start: 0, end: 6 }, frameRate: 12, repeat: -1 },
             { key: 'bossira_attack', frames: { start: 7, end: 14 }, frameRate: 12, repeat: 0 },
@@ -63,11 +64,14 @@ export default class BossAngry extends BaseBoss {
     playIntro() {
         this.setVisible(true).setActive(true);
         this.play({ key: 'bossira_idle', repeat: 3 });
-        
+
         this.once('animationcomplete', () => {
             this.scene.cameras.main.shake(2500, 0.05);
             this.play({ key: 'bossira_attack', repeat: 3 });
-            
+
+            // Rugido en la intro
+            this?.angryRoarSound?.play();
+
             this.once('animationcomplete', () => {
                 super.setLife();
                 this.scene.events.emit('bossIntroFinished');
@@ -111,7 +115,7 @@ export default class BossAngry extends BaseBoss {
 
         this.setActive(false).setVisible(false);
         this.isActivated = false;
-        
+
         this.scene.cameras.main.shake(800, 0.02).flash(500, 255, 50, 0);
 
         this.scene.time.delayedCall(2000, () => {
@@ -129,6 +133,10 @@ export default class BossAngry extends BaseBoss {
             this.once('animationcomplete', () => {
                 this.scene.cameras.main.shake(3000, 0.1);
                 this.play({ key: 'bossira_attack', repeat: 3 });
+
+                // Rugido en la intro
+                this?.angryRoarSound?.play();
+
                 this.once('animationcomplete', () => {
                     this.isActivated = true;
                     this.generateNewCooldown();

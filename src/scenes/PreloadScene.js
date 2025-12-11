@@ -214,6 +214,11 @@ export class PreloadScene extends Phaser.Scene {
     // --- musica (bgm) ---
     this.load.audio('bg_Music', 'assets/Sounds/Music/MainMusic.wav');
 
+    // Bosses
+    this.load.audio('BossAngry_roar', './assets/Sounds/Enemy/BossIra/Roar.mp3');
+    this.load.audio('BossAngry_fire_ball', './assets/Sounds/Enemy/BossIra/FireBall.wav');
+    this.load.audio('BossAngry_vertical_punch', './assets/Sounds/Enemy/BossIra/VerticalPunch.mp3');
+
   }
 
   /**

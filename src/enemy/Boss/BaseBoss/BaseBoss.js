@@ -44,7 +44,7 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
 
         // Grupo único para todos los ataques
         this.bossAttacks = scene.physics.add.group();
-        
+
         // Estados y colisiones
         this.availableStates = this.config.availableStates || [];
         this.stateMachine = new StateMachine(this, 'boss');
@@ -59,8 +59,24 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         this.setupInactiveState();
         this.stateMachine.setState('inactive');
 
+        this.createSFX();           // cargar sonidos
+
         this.setVisible(false);
         this.setActive(false);
+    }
+
+    /**
+    * crea los sonidos del boss ira
+    */
+    createSFX() {
+        // sonido rugido
+        this.angryRoarSound = this.scene.sound.add('BossAngry_roar', { volume: 1 });
+
+        // sonido fireball
+        this.angryFireballSound = this.scene.sound.add('BossAngry_fire_ball', { volume: 1 });
+
+        // sonido puño vertical
+        this.angryVerticalPunchSound = this.scene.sound.add('BossAngry_vertical_punch', { volume: 0.7 });
     }
 
     /**
@@ -80,8 +96,8 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
     setupInactiveState() {
         this.stateMachine.addState('inactive', {
             enter: () => console.log(`${this.constructor.name} inactivo`),
-            step: () => {},
-            exit: () => {}
+            step: () => { },
+            exit: () => { }
         });
     }
 
@@ -118,7 +134,7 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         // Aplicar tint a todos los elementos visuales del boss
         const visualElements = [this, this.bossMask, this.leftClaw, this.rightClaw]
             .filter(element => element && element.visible);
-        
+
         visualElements.forEach(element => element.setTint(this.getDamageTintColor()));
 
         this.scene.tweens.add({
@@ -151,10 +167,10 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
      */
     attackCollisionWithPlayer(player, attack) {
         if (!attack.active || !player.active) return;
-        
+
         const dir = player.x < attack.x ? -1 : 1;
         player.takeDamage(this.damage, dir);
-        
+
         // Solo destruir proyectiles, no advertencias
         if (attack.isProjectile !== false && attack.destroy) {
             attack.destroy();
@@ -168,9 +184,11 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
      */
     attackCollisionWithPlatform(attack, platform) {
         if (!attack.active || !platform.active) return;
-        
+
         if (attack.isPlatformPunch || attack.destroyOnPlatform) {
             platform.deactivateByPunch?.();
+            // Sonido de puño al impactar plataforma
+            this?.angryVerticalPunchSound?.play();
             attack.destroy();
         }
     }
@@ -245,7 +263,7 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         // Ocultar todos los elementos visuales
         this.setVisible(false);
         this.setActive(false);
-        
+
         // Limpiar máscara y garras si existen
         this.bossMask?.destroy();
         this.bossMask = null;
@@ -343,13 +361,13 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
         if (this.stateMachine?.currentState) {
             const state = this.stateMachine.currentState;
             state.destroyAllWarnings?.();
-            
+
             // Lista de posibles elementos de advertencia
             const warningElements = [
                 'warningRect', 'warningBorder', 'warningText', 'warningCircle',
                 'waterBall', 'leftWarning', 'rightWarning', 'warningLine'
             ];
-            
+
             warningElements.forEach(el => state[el]?.destroy?.());
             state.arrows?.forEach(arrow => arrow?.destroy?.());
         }
@@ -367,7 +385,7 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
      * Elimina todos los colliders registrados
      */
     removeAllColliders() {
-        Object.values(this.colliders).forEach(collider => 
+        Object.values(this.colliders).forEach(collider =>
             collider && this.scene.physics.world.removeCollider(collider));
         this.colliders = {};
     }

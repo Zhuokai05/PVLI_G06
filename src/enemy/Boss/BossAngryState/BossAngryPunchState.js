@@ -198,7 +198,7 @@ export default class BossAngryPunchState extends BaseBossAttackState {
      * Ejecuta el ataque de puño horizontal
      */
     executeAttack() {
-        if(this.boss.bossName === 'anger')this.boss.play('bossira_attack');
+        if (this.boss.bossName === 'anger') this.boss.play('bossira_attack');
         this.spawnPunch();
     }
 

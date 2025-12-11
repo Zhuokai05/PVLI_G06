@@ -187,8 +187,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // sonido dash
         this.dashSound = this.scene.sound.add('PlayerDash_sound', { volume: 0.9 });
+        
     }
-
 
     /**
   * update principal del jugador

@@ -31,7 +31,7 @@ export default class BossAngryFireBallState extends BaseBossAttackState {
         this.boss = context;
         super.enter(context);
         this.columns = this.generateColumns();
-        if(this.boss.bossName === 'anger') this.boss.play({ key: 'bossira_attack', repeat: 5 });
+        if (this.boss.bossName === 'anger') this.boss.play({ key: 'bossira_attack', repeat: 5 });
     }
 
     /**
@@ -101,25 +101,28 @@ export default class BossAngryFireBallState extends BaseBossAttackState {
      */
     spawnColumnFireballs() {
         const colX = Phaser.Math.RND.pick(this.columns);
-        
+
         // Usar create de Phaser en lugar del grupo específico
         const fireball = this.scene.physics.add.sprite(colX, this.boss.y - 350, this.config.texture);
-        
+
         // Añadir al grupo de ataques del boss
         this.boss.addAttack(fireball);
-        
+
         fireball.play('fireball_move');
         fireball.setScale(4);
         fireball.body.allowGravity = false;
         fireball.setVelocityY(this.boss.fireballSpeed);
         fireball.setCollideWorldBounds(false);
 
-        const nuevoAncho = 12;
-        const nuevaAlto = 24;
+        // Sonido de bolas de fuego
+        this.boss?.angryFireballSound?.play();
 
-        fireball.body.setSize(nuevoAncho, nuevaAlto);
-        const offsetX = (32 - nuevoAncho) / 2;
-        const offsetY = (32 - nuevaAlto) / 2;
+        const newWidth = 12;
+        const newHeight = 24;
+
+        fireball.body.setSize(newWidth, newHeight);
+        const offsetX = (32 - newWidth) / 2;
+        const offsetY = (32 - newHeight) / 2;
 
         fireball.body.setOffset(offsetX, offsetY);
 
