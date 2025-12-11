@@ -1,76 +1,176 @@
-# ASSETS — Highway to Heaven  
-**Hecho por “Rocky Games”: Zhuokai Zhu, Chenlinjia Yi, Javier Cáceres Polo y Antonio Bucero Coronel**
+# ASSETS — *Highway to Heaven*  
+**Hecho por “Rocky Games”:** Zhuokai Zhu, Chenlinjia Yi, Javier Cáceres Polo y Antonio Bucero Coronel  
 
------------------------------------------------------------------------
+---
 
-## Gestión de Assets
+## Gestión de Assets  
+Este directorio contiene los recursos gráficos, de audio y de diseño utilizados en el proyecto.
 
-Este directorio contiene los recursos gráficos, de audio, y de diseño utilizados en el proyecto.
+---
 
-### **Licencia de los Assets**
+## Licencia de los Assets
 
-*Assets de Creación Propia*
+### Assets de Creación Propia  
+Todos los assets desarrollados específicamente para este proyecto son de creación propia y su licencia es exclusiva de este proyecto.
 
-Todos los Assets desarrollados específicamente para este proyecto son de creación propia y su licencia es exclusiva de este proyecto.
+---
 
-## Mapa
+## Arte  
+Muchos de los artes han sido mejorados durante el Hito 3.
 
-El juego consta de cuatro zonas distintas y una zona final.
+---
 
-![](../gdd/images/mapa.png)
+### Player  
+Nuestro protagonista es un ángel que vivía en el cielo, pero debido a un accidente cayó al infierno.  
+Para su sprite hemos decidido representarlo como un ángel blanco y puro, pero con características demoníacas, como cuernos y una de sus alas oscurecida.  
+**(Imagen de player)**
 
-## Arte player
+---
 
-Nuestro protagonista es un ángel que vivía en el cielo, pero por un accidente cayó al infierno.
-Para su sprite hemos decidido hacer un ángel, blanco y puro, pero con características demoníacas.
+### Enemigos Básicos  
+El juego consta de dos bosses principales, por lo que existen dos tipos de enemigos básicos: uno del bando de *Ira* y otro del bando *Tristeza*.  
+**(Imagen de enemigos básicos)**
 
-![](../assets/Player/Angel_Inicial_1.png) ![](../assets/Player/Angel_Inicial_2.png) ![](../assets/Player/Angel_Inicial_3.png) ![](../assets/Player/Angel_Inicial_Salto.png)
+---
 
-## Arte enemigos básicos y bosses
+### Enemigos de Rango  
+El arte proviene de Itch.io. Existen dos tipos de sprites, uno para *Ira* y otro para *Tristeza*.  
+**(Imagen de enemigos rango)**
 
-Como podemos ver en el mapa, en el juego existe cuatro zonas distintas, cada zona, hay un boss.
-Estos bosses vienen del poder de las emociones del ángel. Por lo que cada zona define una emoción.
-Los enemigos básicos son creados por los bosses, por lo que son pequeños, como si fuera espiíritus elementales.
+---
 
-### **Zona de ira**
+### Enemigo Mina  
+Arte extraído de Itch.io. Se trata de un pequeño enemigo que se acerca rápidamente al jugador y explota.  
+**(Imagen de enemigo mina)**
 
-Principalmente se usa la paleta de color rojo, como el fuego, magma, lava, calor, etc.
+---
 
-![](../assets/Bosses/ira.png) ![](../assets/Bosses/iraflap1.png) ![](../assets/Bosses/iraflap2.png) ![](../assets/Bosses/iraflap3.png) ![](../assets/Enemigos_basicos/Fire.png)
+### Enemigos Voladores  
+Arte extraído de Itch.io. Existen dos sprites: uno del bando *Ira* y otro del bando *Tristeza*.  
+**(Imagen de enemigos voladores)**
 
-### **Zona de tristeza**
+---
 
-Principalmente se usa la paleta de color azul, como el agua, frío, hielo, etc.
+### Boss Tutorial  
+Consiste en un ojo demoníaco con boca. No tiene animación.  
+**(Imagen de boss tutorial)**
 
-![](../assets/Bosses/trsiteza.png) ![](../assets/Enemigos_basicos/Water.png)
+---
 
-### **Zona de alegría**
+### Boss Ira  
+Un demonio infernal tradicional. Tiene animación y ha recibido mejoras de sprite durante el Hito 3.  
+Ataca lanzando bolas de fuego y sus propios puños.  
+**(Imagen de boss ira)**
 
-Principalmente se usa la paleta de color amarillo, naranja, como el sol, cálido, luz, etc.
-El sprite de boss está en proceso de creación, quisiéramos centrarnos en las dos primeras zonas.
+---
 
-![](../assets/Enemigos_basicos/Sun.png)
+### Boss Tristeza  
+Un demonio cabra con animación, también mejorado en el Hito 3.  
+Su forma de atacar consiste en lanzar hechizos.  
+**(Imagen de boss tristeza)**
 
-### **Zona de miedo**
+---
 
-Principalmente se usa la paleta de color negro, morado, como la oscuridad, siniestro, escalofriante, etc.
-El sprite de boss está en proceso de creación, quisiéramos centrarnos en las dos primeras zonas.
+### Boss Miedo  
+Inspirado en un payaso de película. No tiene cuerpo visible, por lo que se imagina como un corazón suspendido en el vacío.  
+Ataca lanzando vasos y usando garras ocultas.  
+**(Imagen de boss miedo)**
 
-![](../assets/Enemigos_basicos/Ghost.png)
+---
+
+### Boss Final  
+Como es el último boss antes de volver al cielo, incorpora elementos angelicales.  
+Tiene animación y ataca utilizando las mecánicas de otros bosses, cambiando su sprite.  
+**(Imagen de boss final)**
+
+---
+
+## Puertas de Boss  
+Cada boss tiene su propio estilo de puerta.  
+
+- **Ira:** mejorada durante el Hito 3.  
+  **(Imagen de puerta ira)**  
+- **Tristeza:** mejorada durante el Hito 3.  
+  **(Imagen de puerta tristeza)**  
+- **Miedo**  
+  **(Imagen de puerta miedo)**  
+- **Final**  
+  **(Imagen de puerta final)**  
+
+---
 
 ## UI
 
-Para los ui del juego, también hemos optado por tener características del propio personaje principal y de los bosses.
+### Corazones del Player  
+Corazones con temática angelical. Incluyen animación de rotura cuando el jugador pierde vida.  
+**(Imagen de corazón)**
 
-### **Corazones de vida**
+### Rastreador de Bosses  
+Indica qué bosses han sido derrotados. Consiste en una piedra con forma de corazón en la que se colocan las piezas obtenidas al vencer a los bosses *Ira* y *Tristeza*.  
+Al derrotarlos, se muestra un sprite encima de ambos.  
+**(Imagen de rastreador)**
 
-Son típicos corazones de pixelart, pero metiendo el aro del ángel y animación del corazón partido al perder vida.
+### Orbes  
+Existe un sprite base de una piedra donde se colocan los orbes, acompañado de sprites adicionales para cada efecto distinto.  
+**(Imagen de orbes)**
 
-![](../assets/UI/heartbreak.png)
+---
 
-### **Orbes**
+## Menús  
+Para cada menú se ha generado una imagen y un texto mediante IA.  
+**(Imágenes de menús)**
 
-Son powerups que conseguimos tras derrotar a los bosses, o encontrarlos por el mapa.
-Por lo que sus sprites, tienen características de los bosses, o dependiendo del powerup que da.
+---
 
-![](../assets/UI/OrbeFuego.png) ![](../assets/UI/OrbeHielo.png)
+## Elementos de la Escena
+
+### Botones de la Puerta de Tristeza  
+Tres colores diferentes de botones y tres colores de luces para indicar qué botón ha sido pulsado.  
+Existe también un sprite para el botón presionado con la luz apagada.  
+**(Imagen de botones)**
+
+### Plataformas  
+Dos tipos de plataformas: una para la zona de *Ira* y otra para la zona de *Tristeza*.  
+**(Imagen de plataformas)**
+
+### Lava  
+Sprite mortal para el jugador al instante. Ha sido mejorado durante el Hito 3.  
+**(Imagen de lava)**
+
+### Bloque  
+Sprite tipo puerta que bloquea la frontera entre las zonas de *Ira* y *Tristeza*.  
+**(Imagen de bloque)**
+
+### Checkpoint  
+Sprite de un cuerno con animación:  
+- Desactivado: flota en el aire.  
+- Activado: golpea el suelo.  
+**(Imagen de checkpoint)**
+
+---
+
+## Tiles  
+Existen tres tipos de tiles:  
+- Tile de *Ira*  
+- Tile de *Tristeza*  
+- Tile de *Boss Final*  
+
+El boss *Miedo* es opcional y no posee tile propio para mantenerse oculto en el mapa.  
+**(Imagen de tiles)**
+
+---
+
+## Audio  
+Los audios han sido extraídos de *Pixabay* y *FreeSound*.
+
+### BGM  
+**(Audio BGM)**
+
+### Player  
+**(Audio de player)**
+
+### Bosses  
+**(Audio de bosses)**
+
+### Escena  
+**(Audio de escena)**
