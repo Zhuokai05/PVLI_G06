@@ -96,6 +96,7 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
         // Añadir al grupo unificado de ataques del boss
         this.boss.addAttack(cup);
         
+        cup.setDepth(7);
         cup.setScale(1.5);
         cup.setVelocityY(this.boss.cupSpeed);
         cup.body.allowGravity = false;
