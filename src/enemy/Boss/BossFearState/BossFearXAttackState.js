@@ -144,6 +144,9 @@ export default class BossFearXAttackState extends BaseBossAttackState {
         let completedAnimations = 0;
         const totalAnimations = 2;
 
+        // sonido de ataque
+        this.boss?.bossAttackSound?.play();
+
         const checkAllAnimationsComplete = () => {
             completedAnimations++;
             if (completedAnimations === totalAnimations) {
