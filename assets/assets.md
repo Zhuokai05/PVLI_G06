@@ -175,7 +175,7 @@ Antiguo
 ![](../assets/Sprites/Escena/Puertatristeza.png)
 
 Mejorado
-![](../assets/Sprites/Escena/PuertaIraSheet.png)
+![](../assets/Sprites/Escena/PuertatristezaSheet.png)
 
 - **Miedo**
 
