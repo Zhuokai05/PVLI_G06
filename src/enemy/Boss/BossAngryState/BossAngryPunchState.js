@@ -226,6 +226,9 @@ export default class BossAngryPunchState extends BaseBossAttackState {
         punch.body.allowGravity = false;
         punch.isPlatformPunch = false; // Puños laterales NO son platformPunch
 
+        // Sonido de puño
+        this.boss?.bossAttackSound?.play();
+
         // Efecto de aparición
         punch.setAlpha(0);
         this.scene.tweens.add({

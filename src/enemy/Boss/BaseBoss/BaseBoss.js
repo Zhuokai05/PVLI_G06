@@ -89,6 +89,15 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
 
         // sonido carambanos tristeza
         this.sadIcicleSound = this.scene.sound.add('BossSad_icicle', { volume: 1 });
+
+        // sonido risa miedo
+        this.fearLaughSound = this.scene.sound.add('BossFear_laugh', { volume: 1 });
+
+        // sonido vaso miedo
+        this.fearCupSound = this.scene.sound.add('BossFear_cup', { volume: 1 });
+
+        // sonido ataque general
+        this.bossAttackSound = this.scene.sound.add('Boss_Ataque', { volume: 1 });
     }
 
     /**

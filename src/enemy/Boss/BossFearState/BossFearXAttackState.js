@@ -130,6 +130,9 @@ export default class BossFearXAttackState extends BaseBossAttackState {
             onUpdate: (tween, target) => {
                 const progress = tween.progress;
                 target.y = startY + (endY - startY) * progress + Math.sin(progress * Math.PI * 2) * 20;
+
+                // sonido ataque
+                this?.boss?.bossAttackSound?.play();
             },
             onComplete: () => {
                 // Auto-destrucción después de la animación
@@ -151,6 +154,9 @@ export default class BossFearXAttackState extends BaseBossAttackState {
             onUpdate: (tween, target) => {
                 const progress = tween.progress;
                 target.y = startY + (endY - startY) * progress + Math.sin(progress * Math.PI * 2) * 20;
+
+                // sonido ataque
+                this?.boss?.bossAttackSound?.play();
             }
         });
 

@@ -102,6 +102,9 @@ export default class BossFearCupAttackState extends BaseBossAttackState {
         cup.setCollideWorldBounds(false);
         cup.isProjectile = true;
         
+        // Sonido de taza
+        this.boss?.fearCupSound?.play();
+
         // Efecto de aparición
         cup.setAlpha(0);
         this.scene.tweens.add({

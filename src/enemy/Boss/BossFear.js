@@ -48,6 +48,9 @@ export default class BossFear extends BaseBoss {
         this.bossMask?.setVisible(true);
         
         this.scene.cameras.main.shake(3000, 0.05);
+
+        // sonido risa
+        this?.fearLaughSound?.play();
         
         this.scene.time.delayedCall(1500, () => {
             this.setLife();

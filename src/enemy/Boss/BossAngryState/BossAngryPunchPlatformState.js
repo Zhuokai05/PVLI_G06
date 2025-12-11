@@ -68,6 +68,9 @@ export default class BossAngryPunchPlatformState extends BaseBossAttackState {
         punch.body.allowGravity = false;
         punch.isPlatformPunch = true; // Marcar como puño de plataforma
 
+        // Sonido de puño
+        this.boss?.bossAttackSound?.play();
+
         // Auto-destrucción
         this.cleanupPunch(punch);
     }
