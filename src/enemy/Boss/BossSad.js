@@ -67,16 +67,18 @@ export default class BossSad extends BaseBoss {
 
         this.once('animationcomplete', () => {
             this.play({ key: 'bosssadness_attack', repeat: 0 });
-            this.once('animationcomplete', () => {
+            this.scene.time.delayedCall(800, () => {
                 this.scene.cameras.main.shake(2500, 0.05);
-                this.play({ key: 'bosssadness_attack', repeat: 3 });
-
-                // Risa en la intro
-                this?.sadLaughSound?.play();
-
                 this.once('animationcomplete', () => {
-                    super.setLife();
-                    this.scene.events.emit('bossIntroFinished');
+                    this.play({ key: 'bosssadness_attack', repeat: 1 });
+
+                    // Risa en la intro
+                    this?.sadLaughSound?.play();
+
+                    this.once('animationcomplete', () => {
+                        super.setLife();
+                        this.scene.events.emit('bossIntroFinished');
+                    });
                 });
             });
         });
@@ -130,11 +132,8 @@ export default class BossSad extends BaseBoss {
 
         this.scene.time.delayedCall(2000, () => {
             this.setActive(true).setVisible(true);
-            this.isActivated = true;
+            this.isActivated = false;
             this.resetAllCollisions();
-
-            // Risa en la intro
-            this?.sadLaughSound?.play();
 
             this.scene.tweens.add({
                 targets: this,
@@ -143,8 +142,25 @@ export default class BossSad extends BaseBoss {
                 ease: 'Sine.easeInOut'
             });
 
-            this.generateNewCooldown();
-            this.stateMachine.setState('cooldown');
+            // Risa en la intro
+            this.play({ key: 'bosssadness_idle', repeat: 3 });
+            this?.sadLaughSound?.play();
+
+            this.once('animationcomplete', () => {
+                this.play({ key: 'bosssadness_attack', repeat: 0 });
+                this.scene.time.delayedCall(800, () => {
+                    this.scene.cameras.main.shake(2500, 0.1);
+                    this.once('animationcomplete', () => {
+                        this.play({ key: 'bosssadness_attack', repeat: 1 });
+
+                        this.once('animationcomplete', () => {
+                            this.isActivated = true;
+                            this.generateNewCooldown();
+                            this.stateMachine.setState('cooldown');
+                        });
+                    });
+                });
+            });
         });
     }
 }

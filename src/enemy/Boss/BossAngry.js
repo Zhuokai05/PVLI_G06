@@ -131,7 +131,7 @@ export default class BossAngry extends BaseBoss {
 
             this.play({ key: 'bossira_idle', repeat: 3 });
             this.once('animationcomplete', () => {
-                this.scene.cameras.main.shake(3000, 0.1);
+                this.scene.cameras.main.shake(2500, 0.1);
                 this.play({ key: 'bossira_attack', repeat: 3 });
 
                 // Rugido en la intro
