@@ -30,6 +30,7 @@ export default class CheatManager {
             { name: "boton 1", x: 8728, y: 8921 },
             { name: "boton 2", x: 4936, y: 6996 },
             { name: "boton 3", x: 10662, y: 6610 },
+            { name: "Aumentar daño player", x: player.x, y: player.y },
         ];
 
         // input (shift + t)
@@ -84,7 +85,8 @@ export default class CheatManager {
             btnText.on('pointerover', () => btnText.setColor('#ffff00'));
             btnText.on('pointerout', () => btnText.setColor('#ffffff'));
             btnText.on('pointerdown', () => {
-                this.teleportTo(loc); // teletransportar al hacer click
+                if(loc.name === "Aumentar daño player") this.player.damage = 10;
+                else   this.teleportTo(loc); // teletransportar al hacer click
             });
 
             this.menuContainer.add(btnText);
