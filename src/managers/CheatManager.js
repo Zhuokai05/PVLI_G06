@@ -21,7 +21,7 @@ export default class CheatManager {
             { name: "spawn inicial", x: 950, y: 900 },
             { name: "boss tutorial", x: 3700, y: 1554 },
             { name: "boss ira", x: 6000, y: 4500 },
-            { name: "boss tristeza", x: 16800, y: 3750 },
+            { name: "boss tristeza", x: 5294, y: 5160 },
             { name: "boss miedo", x: 3036, y: 2392 },
             { name: "floor is lava", x: 18111, y: 11876 },
             { name: "boss final izquierda", x: 17233, y: 8351 },
