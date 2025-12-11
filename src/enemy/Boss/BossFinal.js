@@ -26,9 +26,9 @@ export default class FinalBoss extends BaseBoss {
             availableStates: [],
             bossName: 'final'
         });
-        
+
         this.setScaleAndBody(2.5, 18, 18, 6, 6.5);
-        
+
         // Configuraciones de velocidad
         Object.assign(this, {
             fireballSpeed: 450,
@@ -39,13 +39,13 @@ export default class FinalBoss extends BaseBoss {
             waterBallSpeed: 200,
             distanceToFloor: 250
         });
-        
+
         this.allStates = [
             'fireball', 'punch', 'punchPlatform',
             'xAttack', 'cupAttack',
             'icicle', 'radial', 'waterball'
         ];
-        
+
         this.availableStates = this.selectRandomStates(3);
         this.setupStates();
         this.play('Final');
@@ -56,16 +56,19 @@ export default class FinalBoss extends BaseBoss {
      */
     playIntro() {
         this.setVisible(true).setActive(true);
-        
+
         this.scene.cameras.main.shake(2000, 0.07);
         this.scene.cameras.main.flash(2000, 255, 0, 255);
-        
+
+        // llanto final
+        this?.finalCrySound?.play();
+
         this.scene.time.delayedCall(2000, () => {
             this.setLife();
             this.scene.events.emit('bossIntroFinished');
         });
     }
-    
+
     /**
      * Configura todos los estados del jefe final
      */
@@ -81,10 +84,10 @@ export default class FinalBoss extends BaseBoss {
             ['waterball', new BossSadWaterBallState('fwater_ball')],
             ['cooldown', new FinalBossCooldownState()]
         ];
-        
+
         stateConfigs.forEach(([name, state]) => this.addState(name, state));
     }
-    
+
     /**
      * Selecciona estados aleatorios para el jefe final
      * @param {number} count - Número de estados a seleccionar
@@ -95,7 +98,7 @@ export default class FinalBoss extends BaseBoss {
             .sort(() => Math.random() - 0.5)
             .slice(0, count);
     }
-    
+
     /**
      * Obtiene el color del tint para el daño del jefe final
      * @returns {number} - Color magenta
@@ -103,7 +106,7 @@ export default class FinalBoss extends BaseBoss {
     getDamageTintColor() {
         return 0xff00ff;
     }
-    
+
     /**
      * Avanza a la siguiente fase del jefe final
      */
@@ -114,13 +117,13 @@ export default class FinalBoss extends BaseBoss {
             this.availableStates = [...this.allStates];
             this.minCooldown = 600;
             this.maxCooldown = 1000;
-            
+
             this.handlePhaseTransition();
         } else {
             this.die();
         }
     }
-    
+
     /**
      * Maneja la transición entre fases del jefe final
      */
@@ -140,6 +143,9 @@ export default class FinalBoss extends BaseBoss {
             this.isActivated = true;
             this.resetAllCollisions();
 
+            // llanto final
+            this?.finalCrySound?.play();
+
             this.scene.tweens.add({
                 targets: this,
                 alpha: { from: 0, to: 1 },
@@ -151,21 +157,21 @@ export default class FinalBoss extends BaseBoss {
             this.stateMachine.setState('cooldown');
         });
     }
-    
+
     /**
      * Maneja la muerte del jefe final
      */
     die() {
         this.scene.cameras.main.shake(2000, 0.05).flash(1500, 255, 215, 0);
         super.die();
-        
+
         this.scene.time.delayedCall(5000, () => {
             this.scene.scene.stop();
             this.scene.scene.launch('Win');
             this.destroy();
         });
     }
-    
+
     /**
      * Crea garras específicas para el jefe final
      */

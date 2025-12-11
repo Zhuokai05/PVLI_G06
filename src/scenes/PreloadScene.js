@@ -229,6 +229,8 @@ export class PreloadScene extends Phaser.Scene {
 
     this.load.audio('BossTutorial_land', './assets/Sounds/Enemy/BossTutorial/Aterrizar.mp3');
 
+    this.load.audio('BossFinal_cry', './assets/Sounds/Enemy/BossFinal/Lloro.wav');
+
     this.load.audio('Boss_Ataque', './assets/Sounds/Enemy/Ataque.mp3');
   }
 

@@ -23,11 +23,11 @@ export default class BossFear extends BaseBoss {
 
         this.setScaleAndBody(4.3, 6.5, 5, 25, 30);
         this.cupSpeed = 450;
-        
+
         // Crear máscara
         this.bossMask = this.scene.add.image(x, y - 200, 'mascara')
             .setScale(4.3).setDepth(6).setVisible(false);
-        
+
         this.setupStates();
     }
 
@@ -46,12 +46,12 @@ export default class BossFear extends BaseBoss {
     playIntro() {
         this.setVisible(true).setActive(true);
         this.bossMask?.setVisible(true);
-        
+
         this.scene.cameras.main.shake(3000, 0.05);
 
         // sonido risa
         this?.fearLaughSound?.play();
-        
+
         this.scene.time.delayedCall(1500, () => {
             this.setLife();
             this.scene.events.emit('bossIntroFinished');
@@ -66,7 +66,7 @@ export default class BossFear extends BaseBoss {
             this.phase = 2;
             this.health = this.maxHealth + 3;
             this.availableStates.push('cupAttack');
-            
+
             this.handlePhaseTransition();
         } else {
             this.die();
@@ -97,7 +97,10 @@ export default class BossFear extends BaseBoss {
 
             const visualElements = [this];
             if (this.bossMask) visualElements.push(this.bossMask);
-            
+
+            // sonido risa
+            this?.fearLaughSound?.play();
+
             visualElements.forEach(obj => {
                 obj.setAlpha(0);
                 this.scene.tweens.add({
@@ -120,7 +123,7 @@ export default class BossFear extends BaseBoss {
      */
     update(time, delta) {
         super.update(time, delta);
-        
+
         // Actualizar posición de la máscara
         if (this.bossMask?.visible) {
             this.bossMask.setPosition(this.x, this.y - 200);
