@@ -45,6 +45,15 @@ El juego combina combates ágiles, secciones de plataformas y power up precisas 
 | Cambiar orbe activo | **Q** |
 | Interactuar | **E** |
 | Menu pausa | **ESC** |
+| Panel Cheat para testeo de juego | **Shift + T** |
+
+## Panel de cheat 
+Se abre un panel para de Cheats para testeo de juego con las teclas  **Shift + T** 
+
+Todas las opciones te hacen teleport menos la ultima que hace al jugador oneshotear a todos los enemigos
+
+![](gdd_images/CheatMenu.png)
+
 
 ## Capturas del juego
 
