@@ -120,15 +120,16 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
   takeDamage(amount) {
     if (this.inmune) return;
 
-        // tint rojo breve para feedback visual
+    // tint rojo breve para feedback visual
     this.setTint(0xff0000);
 
-    // quitar tinte un poco antes de que acabe la invulnerabilidad
+    // quitar tinte en un tiempo
     this.scene.time.delayedCall(100, () => {
       if (!this || !this.active || !this.scene) return;
       this.clearTint();
     });
 
+    // tween de parpadeo del enemigo
     this.scene.tweens.add({
       targets: this,
       alpha: 0,
