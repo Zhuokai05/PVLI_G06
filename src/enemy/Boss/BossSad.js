@@ -107,7 +107,8 @@ export default class BossSad extends BaseBoss {
             this.phase = 2;
             this.health = this.maxHealth * 1.5;
             this.availableStates.push('icicle');
-
+            this.minCooldown = 750;
+            this.maxCooldown = 1250;
             this.handlePhaseTransition();
         } else {
             this.die();
