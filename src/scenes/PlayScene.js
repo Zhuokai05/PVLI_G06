@@ -453,6 +453,13 @@ export default class PlayScene extends Phaser.Scene {
                     this.physics.add.existing(this.lavastoptrigger);
                     this.lavastoptrigger.body.setAllowGravity(false);
                     this.lavastoptrigger.body.setImmovable(true);
+                case "lavastop2":
+                    // Segundo trigger que detiene la lava
+                    this.lavastoptrigger2 = this.add.zone(objeto.x, objeto.y, objeto.width, objeto.height);
+                    this.physics.add.existing(this.lavastoptrigger2);
+                    this.lavastoptrigger2.body.setAllowGravity(false);
+                    this.lavastoptrigger2.body.setImmovable(true);
+                    break;
                     break;
                 case "staticlava":
                     // Lava estática que mata al contacto
@@ -665,6 +672,15 @@ export default class PlayScene extends Phaser.Scene {
                 this.lava.stopLava();                                     // Detener ascenso de lava
             }
             this.lavastoptrigger.destroy();                               // Destruir trigger
+            this.cameras.main.shake(500, 0.01);                           // Screen shake
+        });
+        
+        // Segundo trigger para detener la lava
+        this.physics.add.overlap(this.player, this.lavastoptrigger2, () => {
+            if (this.lava) {
+                this.lava.stopLava();                                     // Detener ascenso de lava
+            }
+            this.lavastoptrigger2.destroy();                              // Destruir trigger
             this.cameras.main.shake(500, 0.01);                           // Screen shake
         });
 
