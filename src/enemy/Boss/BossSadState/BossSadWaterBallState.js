@@ -454,7 +454,7 @@ export default class BossSadWaterBallState extends BaseBossAttackState {
             scale: 2,
             alpha: 0,
             duration: 200,
-            onComplete: () => this.waterBall.destroy()
+            onComplete: () => this?.waterBall?.destroy()
         });
     }
 
