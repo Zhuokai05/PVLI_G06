@@ -288,7 +288,7 @@ export default class PlayScene extends Phaser.Scene {
                     this.finalbossdoor = new FinalBossDoor(this, objeto.x, objeto.y, 'puertafinal');
                     break;
                 case "finalbossdoorcontrary":
-                    this.finalbossdoorcontrary = new FinalBossDoor(this, objeto.x, objeto.y, 'puertamiedo');
+                    this.finalbossdoorcontrary = new FinalBossDoor(this, objeto.x, objeto.y, 'puertafinal');
                     break;
                 case "finalbossdoorexit":
                     this.finalbossdoorexit = new FinalBossDoor(this, objeto.x, objeto.y, 'puertamiedo');
