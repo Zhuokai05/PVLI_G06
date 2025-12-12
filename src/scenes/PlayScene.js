@@ -262,14 +262,14 @@ export default class PlayScene extends Phaser.Scene {
 
                 // Puertas del boss de Tristeza
                 case "sadnessbossdoor":
-                    this.tristebossdoor = new SadnessBossDoor(this, objeto.x, objeto.y, 'puertatriste');
+                    this.tristebossdoor = new SadnessBossDoor(this, objeto.x, objeto.y, 'puertatristezaSheet');
                     this.bottones = new TutorialPanel(this, objeto.x + 15, objeto.y + 150, 'No hay', 'Esta puerta se abre con botones');
                     break;
                 case "sadnessbossdoorcontrary":
-                    this.tristebossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste');
+                    this.tristebossdoorcontrary = new DoorBoss(this, objeto.x, objeto.y, 'puertatristezaSheet');
                     break;
                 case "sadnessbossdoorexit":
-                    this.tristebossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertatriste');
+                    this.tristebossdoorexit = new DoorBoss(this, objeto.x, objeto.y, 'puertatristezaSheet');
                     break;
 
                 // Puertas del boss de Miedo

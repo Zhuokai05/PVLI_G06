@@ -183,8 +183,6 @@ Los controles será solo con teclado.
 
 ![](gdd_images/controles.png)
 
-Los controles son muy parecidos a Hollow Knight, es decir no habrá ratón
-para apuntar, es totalmente controlado con el teclado.
 
 En juego:
 

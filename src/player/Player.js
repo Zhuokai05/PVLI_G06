@@ -79,7 +79,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // invulnerable
         this.invulnerable = false;                             // estado invulnerable
-        this.invulnerableTime = 1000;                          // duracion invulnerable
+        this.initialInvulnerableTime = 1000;                   // invulnerabilidad inicial
+        this.invulnerableTime = this.initialInvulnerableTime;  // duracion invulnerable
         this.knockbackTime = 200;                              // tiempo knockback
         this.knockbackDistance = 200;                          // distancia knockback
 

@@ -33,7 +33,7 @@ export default class StaticLava extends Phaser.GameObjects.TileSprite {
 
         // 3. configuracion de flujo (velocidad de movimiento de la textura)
         this.flowSpeedX = 0.5;  
-        this.flowSpeedY = 0.5; 
+        this.flowSpeedY = 0.25; 
     }
 
     /**
@@ -43,7 +43,6 @@ export default class StaticLava extends Phaser.GameObjects.TileSprite {
      * @param {number} delta - delta de tiempo
      */
     preUpdate(time, delta) {
-        //this.tilePositionX += this.flowSpeedX; // (movimiento horizontal comentado)
         this.tilePositionY -= this.flowSpeedY; // movimiento vertical de la textura
     }
 }

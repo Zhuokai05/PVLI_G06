@@ -13,6 +13,7 @@ export default class MineEnemy extends BaseEnemy {
     super(scene, x, y, texture, frame, moveAnimationKey, attackAnimationKey, deathAnimationKey);
 
     // stats
+    this.health = 3;    
     this.setScale(2);                                   // escalar sprite
     this.speed = 120;                                   // velocidad
     this.attackRange = 50;                              // rango

@@ -19,9 +19,9 @@ export default class DoorBoss extends Door {
         this.contrary = null;
         this.isOpening = false;
         this.setScale(4);
-        
+
         // fisicas
-        this.body.setSize(this.width * 0.25, this.height * 0.9);
+        this.body.setSize(this.width * 0.25, this.height * 0.05);
         this.body.setOffset(
             (this.width - this.body.width) / 2,
             this.height - this.body.height
@@ -34,7 +34,9 @@ export default class DoorBoss extends Door {
         });
 
         // filtro temporal para saber si es animada
-        this.isAnimatedDoor = (texture === 'puertairaSheet');
+        if (texture === 'puertairaSheet' || texture === 'puertatristezaSheet') {
+            this.isAnimatedDoor = true;
+        }
 
         // configuracion especifica para puertas animadas
         if (this.isAnimatedDoor) {
@@ -54,7 +56,7 @@ export default class DoorBoss extends Door {
         }
 
         // texto de interaccion
-        this.prompt = this.scene.add.text(this.x, this.y + (this.displayHeight/2) + 50, 'Presiona E para interactuar', {
+        this.prompt = this.scene.add.text(this.x, this.y + (this.displayHeight / 2) + 50, 'Presiona E para interactuar', {
             font: '16px Arial',
             fill: '#ffffff',
             backgroundColor: 'rgba(0,0,0,0.5)',
@@ -68,26 +70,44 @@ export default class DoorBoss extends Door {
      * @param {string} textureKey - clave de la textura
      */
     createAnimations(textureKey) {
-        // solo creamos animaciones si estamos en modo animado
         if (!this.isAnimatedDoor) return;
 
-        if (!this.scene.anims.exists(this.animIdleKey)) {
-            // animacion idle
-            this.scene.anims.create({
-                key: this.animIdleKey,
-                frames: this.scene.anims.generateFrameNumbers(textureKey, { start: 0, end: 5 }),
-                frameRate: 6,
-                repeat: -1
-            });
+        // Evitar recrear animaciones si ya existen globalmente
+        if (this.scene.anims.exists(this.animIdleKey)) return;
 
-            // animacion de apertura
-            this.scene.anims.create({
-                key: this.animOpenKey,
-                frames: this.scene.anims.generateFrameNumbers(textureKey, { start: 6, end: 23 }),
-                frameRate: 12,
-                repeat: 0
-            });
+        // --- CONFIGURACIÓN DE FRAMES ---
+        // Definimos valores por defecto (por si acaso)
+        let idleConfig = { start: 0, end: 0 };
+        let openConfig = { start: 0, end: 0 };
+
+        // Puerta de Ira
+        if (textureKey === 'puertairaSheet') {
+            idleConfig = { start: 0, end: 5 };
+            openConfig = { start: 6, end: 23 };
         }
+        // Puerta de Tristeza
+        else if (textureKey === 'puertatristezaSheet') {
+            idleConfig = { start: 0, end: 6 };
+            openConfig = { start: 7, end: 30 };
+        }
+
+        // Creacion de las animaciones
+
+        // Animacion Idle
+        this.scene.anims.create({
+            key: this.animIdleKey,
+            frames: this.scene.anims.generateFrameNumbers(textureKey, idleConfig),
+            frameRate: 6,
+            repeat: -1
+        });
+
+        // Animacion Open
+        this.scene.anims.create({
+            key: this.animOpenKey,
+            frames: this.scene.anims.generateFrameNumbers(textureKey, openConfig),
+            frameRate: 12,
+            repeat: 0
+        });
     }
 
     /**
@@ -122,6 +142,8 @@ export default class DoorBoss extends Door {
             this.scene.player.canMove = false;
             this.scene.player.setVelocity(0, 0);
             this.scene.player.play('Player_idle', true);
+            this.scene.player.invulnearbleTime = 10000;
+            this.scene.player.invulnerable = true;
         }
 
         // logica de animacion
@@ -131,14 +153,23 @@ export default class DoorBoss extends Door {
 
             this.once('animationcomplete', (animation) => {
                 if (animation.key === this.animOpenKey) {
-                    this.doTeleport();
+                    this.FadeOutTP();
                 }
             });
         } else {
             // si es puerta normal, teletransportamos directamente
             this.scene.player.canMove = false;
-            this.doTeleport();
+            this.FadeOutTP();
         }
+    }
+
+    FadeOutTP() {
+        this.scene.cameras.main.fadeOut(1000, 0, 0, 0);
+        this.scene.cameras.main.once('camerafadeoutcomplete', () => {
+            this.scene.time.delayedCall(1000, () => {
+                this.doTeleport();
+            });
+        });
     }
 
     /**
@@ -149,11 +180,18 @@ export default class DoorBoss extends Door {
         const player = this.scene.player;
 
         if (player) {
-            // mover jugador al destino mas un offset en y
+            // Mover jugador al destino mas un offset en y
             player.setPosition(destino.x, destino.y + 210);
-            player.canMove = true;
+            this.scene.cameras.main.fadeIn(1000, 0, 0, 0);
 
-            // solo reseteamos animacion si es la puerta animada
+
+            this.scene.cameras.main.once('camerafadeincomplete', () => {
+                player.canMove = true;
+                player.invulnerable = false;
+                player.invulnearbleTime = player.initialInvulnerableTime;
+            });
+
+            // Reset animacion
             if (this.isAnimatedDoor && this.scene.anims.exists(this.animIdleKey)) {
                 this.play(this.animIdleKey);
             }

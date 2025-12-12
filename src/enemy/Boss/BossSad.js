@@ -69,7 +69,7 @@ export default class BossSad extends BaseBoss {
         this.once('animationcomplete', () => {
             this.play({ key: 'bosssadness_attack', repeat: 0 });
             this.scene.time.delayedCall(800, () => {
-                this.scene.cameras.main.shake(2200, 0.05);
+                this.scene.cameras.main.shake(2000, 0.05);
                 this.once('animationcomplete', () => {
                     this.play({ key: 'bosssadness_attack', repeat: 1 });
                     this.once('animationcomplete', () => {
@@ -107,7 +107,8 @@ export default class BossSad extends BaseBoss {
             this.phase = 2;
             this.health = this.maxHealth * 1.5;
             this.availableStates.push('icicle');
-
+            this.minCooldown = 750;
+            this.maxCooldown = 1250;
             this.handlePhaseTransition();
         } else {
             this.die();
@@ -146,7 +147,7 @@ export default class BossSad extends BaseBoss {
             this.once('animationcomplete', () => {
                 this.play({ key: 'bosssadness_attack', repeat: 0 });
                 this.scene.time.delayedCall(800, () => {
-                    this.scene.cameras.main.shake(2200, 0.1);
+                    this.scene.cameras.main.shake(2000, 0.1);
                     this.once('animationcomplete', () => {
                         this.play({ key: 'bosssadness_attack', repeat: 1 });
 
