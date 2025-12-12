@@ -33,7 +33,7 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
     this.colliderHeightDivider = 1;                   // divisor alto collider
 
     // stats
-    this.health = 3;                                  // vida
+    this.health = 6;                                  // vida
     this.speed = 50;                                  // velocidad movimiento
     this.verticalSpeed = 0;                           // velocidad vertical
     this.attackRange = 80;                            // rango ataque melee
@@ -120,6 +120,28 @@ export default class BaseEnemy extends Phaser.Physics.Arcade.Sprite {
   takeDamage(amount) {
     if (this.inmune) return;
 
+        // tint rojo breve para feedback visual
+    this.setTint(0xff0000);
+
+    // quitar tinte un poco antes de que acabe la invulnerabilidad
+    this.scene.time.delayedCall(100, () => {
+      if (!this || !this.active || !this.scene) return;
+      this.clearTint();
+    });
+
+    this.scene.tweens.add({
+      targets: this,
+      alpha: 0,
+      duration: 100,
+      yoyo: true,
+      repeat: 3,
+      onComplete: () => {
+        this.alpha = 1;
+        this.clearTint();
+      }
+    });
+
+    
     this.health -= amount;                             // quitar vida
     console.log(`Enemy HP: ${this.health}`);
 
