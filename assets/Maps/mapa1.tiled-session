@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "map.json",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
         "."
@@ -75,8 +75,8 @@
             "scale": 0.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 8653,
-                "y": 5143
+                "x": 17596,
+                "y": 8625
             }
         },
         "map.json#Ira": {
@@ -131,12 +131,13 @@
     "map.lastUsedFormat": "json",
     "map.width": 320,
     "openFiles": [
+        "map.json"
     ],
     "project": "mapa1.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "Ira.tsx",
         "map.json",
+        "Ira.tsx",
         "E:/下载/map.json",
         "iraboss.json",
         "map2.json",
