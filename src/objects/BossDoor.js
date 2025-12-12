@@ -142,6 +142,8 @@ export default class DoorBoss extends Door {
             this.scene.player.canMove = false;
             this.scene.player.setVelocity(0, 0);
             this.scene.player.play('Player_idle', true);
+            this.scene.player.invulnearbleTime = 10000;
+            this.scene.player.invulnerable = true;
         }
 
         // logica de animacion
@@ -185,6 +187,8 @@ export default class DoorBoss extends Door {
 
             this.scene.cameras.main.once('camerafadeincomplete', () => {
                 player.canMove = true;
+                player.invulnerable = false;
+                player.invulnearbleTime = player.initialInvulnerableTime;
             });
 
             // Reset animacion
