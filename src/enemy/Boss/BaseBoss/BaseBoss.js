@@ -259,6 +259,7 @@ export default class BaseBoss extends Phaser.Physics.Arcade.Sprite {
      * Maneja la muerte del jefe
      */
     die() {
+        this.scene.cameras.main.shake(2000, 0.02).flash(1000, 255, 255, 255);
         this.notdead = false;
         this.isActivated = false;
 
